@@ -93,7 +93,11 @@ export namespace Math2D {
      * @returns the angle between the two vectors
      */
     export function angleBetween(a: Vector, b: Vector): number {
-        return Math.acos(dot(a, b) / Math.sqrt((a.x * a.x + a.y * a.y) * (b.x * b.x + b.y * b.y)));
+        const denominator = Math.sqrt((a.x * a.x + a.y * a.y) * (b.x * b.x + b.y * b.y));
+        if (denominator === 0) {
+            return 0;
+        }
+        return Math.acos(Math.min(Math.max(dot(a, b) / denominator, -1), 1));
     }
 
     /**
