@@ -152,10 +152,6 @@ query getIssue($id: ID!) {
             template {
                 ...DefaultIssueTemplateInfo
             }
-            estimatedTime
-            spentTime
-            startDate
-            dueDate
             manageIssues: hasPermission(permission: MANAGE_ISSUES)
             comment: hasPermission(permission: COMMENT)
             moderator: hasPermission(permission: MODERATOR)

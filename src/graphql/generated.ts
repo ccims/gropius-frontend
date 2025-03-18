@@ -16,7 +16,6 @@ export type Scalars = {
     Int: { input: number; output: number };
     Float: { input: number; output: number };
     DateTime: { input: any; output: any };
-    Duration: { input: any; output: any };
     JSON: { input: any; output: any };
     URL: { input: any; output: any };
 };
@@ -1014,7 +1013,7 @@ export enum AllPermissionEntry {
      *   - change the Template
      *   - add / remove Labels
      *   - add / remove Artefacts
-     *   - change any field on the Issue (title, startDate, dueDate, ...)
+     *   - change any field on the Issue (title, ...)
      *   - change templated fields
      * In contrast to `MODERATOR`, this does not allow editing / removing Comments of other users
      */
@@ -3016,7 +3015,7 @@ export enum ComponentPermissionEntry {
      *   - change the Template
      *   - add / remove Labels
      *   - add / remove Artefacts
-     *   - change any field on the Issue (title, startDate, dueDate, ...)
+     *   - change any field on the Issue (title, ...)
      *   - change templated fields
      * In contrast to `MODERATOR`, this does not allow editing / removing Comments of other users
      */
@@ -3124,6 +3123,8 @@ export type ComponentTemplate = BaseNode &
         hasPermission: Scalars["Boolean"]["output"];
         /** The unique id of this node */
         id: Scalars["ID"]["output"];
+        /** IntraComponentDependencySpecificationTypes which can be used in the context of Components with this template. */
+        intraComponentDependencySpecificationTypes: IntraComponentDependencySpecificationTypeConnection;
         /** If true, this template is deprecated and cannot be used for new entities any more. */
         isDeprecated: Scalars["Boolean"]["output"];
         /** The name of this entity. */
@@ -3186,6 +3187,22 @@ export type ComponentTemplateExtendsArgs = {
  */
 export type ComponentTemplateHasPermissionArgs = {
     permission?: InputMaybe<AllPermissionEntry>;
+};
+
+/**
+ * Template for Components.
+ *     Defines templated fields with specific types (defined using JSON schema).
+ *     Defines SubTemplate for ComponentVersions.
+ *
+ */
+export type ComponentTemplateIntraComponentDependencySpecificationTypesArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<IntraComponentDependencySpecificationTypeFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<IntraComponentDependencySpecificationTypeOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 /**
@@ -3312,6 +3329,8 @@ export type ComponentTemplateFilterInput = {
     extends?: InputMaybe<ComponentTemplateListFilterInput>;
     /** Filter by id */
     id?: InputMaybe<IdFilterInput>;
+    /** Filter by intraComponentDependencySpecificationTypes */
+    intraComponentDependencySpecificationTypes?: InputMaybe<IntraComponentDependencySpecificationTypeListFilterInput>;
     /** Filter by isDeprecated */
     isDeprecated?: InputMaybe<BooleanFilterInput>;
     /** Filter by name */
@@ -3860,6 +3879,8 @@ export type CreateComponentTemplateInput = {
     extends?: InputMaybe<Array<Scalars["ID"]["input"]>>;
     /** Style of the fill */
     fill?: InputMaybe<FillStyleInput>;
+    /** Set of all types IntraComponentDependencySpecifications of Components with the created Template can have */
+    intraComponentDependencySpecificationTypes: Array<IntraComponentDependencySpecificationTypeInput>;
     /** The name of the NamedNode, must not be blank */
     name: Scalars["String"]["input"];
     /** The corner radius of the shape, ignored for circle/ellipse */
@@ -4090,6 +4111,8 @@ export type CreateIntraComponentDependencySpecificationInput = {
     name: Scalars["String"]["input"];
     /** Initial outgoingParticipants, must not be empty */
     outgoingParticipants: Array<IntraComponentDependencyParticipantInput>;
+    /** The id of the type of the created IntraComponentDependencySpecification, must be compatible with the template of the Component */
+    type?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type CreateIntraComponentDependencySpecificationPayload = {
@@ -4158,13 +4181,13 @@ export type CreateIssueRelationPayload = {
 
 /** Input for the createIssueTemplate mutation. */
 export type CreateIssueTemplateInput = {
-    /** Set of all types Assignments to Issues with the created can have. */
+    /** Set of all types Assignments to Issues with the created Template can have. */
     assignmentTypes: Array<AssignmentTypeInput>;
     /** The description of the NamedNode */
     description: Scalars["String"]["input"];
     /** IDs of Templates the created template extends. Must be templates of the same type. */
     extends?: InputMaybe<Array<Scalars["ID"]["input"]>>;
-    /** Set of all priorities Issues with the created can have. */
+    /** Set of all priorities Issues with the created Template can have. */
     issuePriorities: Array<IssuePriorityInput>;
     /** Set of all states Issues with the created Template can have */
     issueStates: Array<IssueStateInput>;
@@ -4172,7 +4195,7 @@ export type CreateIssueTemplateInput = {
     issueTypes: Array<IssueTypeInput>;
     /** The name of the NamedNode, must not be blank */
     name: Scalars["String"]["input"];
-    /** Set of all types outgoing IssueRelations of Issues with the created can have */
+    /** Set of all types outgoing IssueRelations of Issues with the created Template can have */
     relationTypes: Array<IssueRelationTypeInput>;
     /**
      * Additional initial templateFieldSpecifications, should be a JSON schema JSON.
@@ -8044,6 +8067,12 @@ export type IntraComponentDependencySpecification = BaseNode &
         name: Scalars["String"]["output"];
         /** The outgoing Interfaces of this ServiceEffectSpecification. */
         outgoingParticipants: IntraComponentDependencyParticipantConnection;
+        /**
+         * The type of the IntraComponentDependencySpecification, e.g. CALLS.
+         *             Allowed IntraComponentDependencySpecificationTypes are defined by the template.
+         *
+         */
+        type?: Maybe<IntraComponentDependencySpecificationType>;
     };
 
 /**
@@ -8139,6 +8168,8 @@ export type IntraComponentDependencySpecificationFilterInput = {
     or?: InputMaybe<Array<IntraComponentDependencySpecificationFilterInput>>;
     /** Filter by outgoingParticipants */
     outgoingParticipants?: InputMaybe<IntraComponentDependencyParticipantListFilterInput>;
+    /** Filters for nodes where the related node match this filter */
+    type?: InputMaybe<IntraComponentDependencySpecificationTypeFilterInput>;
 };
 
 /** Used to filter by a connection-based property. Fields are joined by AND */
@@ -8161,6 +8192,153 @@ export type IntraComponentDependencySpecificationOrder = {
 
 /** Fields a list of IntraComponentDependencySpecification can be sorted by */
 export enum IntraComponentDependencySpecificationOrderField {
+    /** Order by id */
+    Id = "ID",
+    /** Order by name */
+    Name = "NAME",
+    /** Order by type_id */
+    TypeId = "TYPE_ID",
+    /** Order by type_name */
+    TypeName = "TYPE_NAME"
+}
+
+/**
+ * Type of an IntraComponentDependencySpecification like CALLS.
+ *     Part of a ComponentTemplate.
+ *     READ is always granted.
+ *
+ */
+export type IntraComponentDependencySpecificationType = BaseNode &
+    Named &
+    NamedNode &
+    Node & {
+        __typename?: "IntraComponentDependencySpecificationType";
+        /** The description of this entity. */
+        description: Scalars["String"]["output"];
+        /** Checks if the current user has a specific permission on this Node */
+        hasPermission: Scalars["Boolean"]["output"];
+        /** The unique id of this node */
+        id: Scalars["ID"]["output"];
+        /** IntraComponentDependencySpecifications with this type. */
+        intraComponentDependencySpecificationsWithType: IssueConnection;
+        /** The name of this entity. */
+        name: Scalars["String"]["output"];
+        /** ComponentTemplates this is a part of. */
+        partOf: ComponentTemplateConnection;
+    };
+
+/**
+ * Type of an IntraComponentDependencySpecification like CALLS.
+ *     Part of a ComponentTemplate.
+ *     READ is always granted.
+ *
+ */
+export type IntraComponentDependencySpecificationTypeHasPermissionArgs = {
+    permission?: InputMaybe<AllPermissionEntry>;
+};
+
+/**
+ * Type of an IntraComponentDependencySpecification like CALLS.
+ *     Part of a ComponentTemplate.
+ *     READ is always granted.
+ *
+ */
+export type IntraComponentDependencySpecificationTypeIntraComponentDependencySpecificationsWithTypeArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<IssueFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<IssueOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/**
+ * Type of an IntraComponentDependencySpecification like CALLS.
+ *     Part of a ComponentTemplate.
+ *     READ is always granted.
+ *
+ */
+export type IntraComponentDependencySpecificationTypePartOfArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<ComponentTemplateFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<ComponentTemplateOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/** The connection type for IntraComponentDependencySpecificationType. */
+export type IntraComponentDependencySpecificationTypeConnection = {
+    __typename?: "IntraComponentDependencySpecificationTypeConnection";
+    /** A list of all edges of the current page. */
+    edges: Array<IntraComponentDependencySpecificationTypeEdge>;
+    /** A list of all nodes of the current page. */
+    nodes: Array<IntraComponentDependencySpecificationType>;
+    /** Information to aid in pagination. */
+    pageInfo: PageInfo;
+    /** Identifies the total count of items in the connection. */
+    totalCount: Scalars["Int"]["output"];
+};
+
+/** An edge in a connection. */
+export type IntraComponentDependencySpecificationTypeEdge = {
+    __typename?: "IntraComponentDependencySpecificationTypeEdge";
+    /** A cursor used in pagination. */
+    cursor: Scalars["String"]["output"];
+    /** The item at the end of the edge. */
+    node: IntraComponentDependencySpecificationType;
+};
+
+/** Filter used to filter IntraComponentDependencySpecificationType */
+export type IntraComponentDependencySpecificationTypeFilterInput = {
+    /** Connects all subformulas via and */
+    and?: InputMaybe<Array<IntraComponentDependencySpecificationTypeFilterInput>>;
+    /** Filter by description */
+    description?: InputMaybe<StringFilterInput>;
+    /** Filter by id */
+    id?: InputMaybe<IdFilterInput>;
+    /** Filter by intraComponentDependencySpecificationsWithType */
+    intraComponentDependencySpecificationsWithType?: InputMaybe<IssueListFilterInput>;
+    /** Filter by name */
+    name?: InputMaybe<StringFilterInput>;
+    /** Negates the subformula */
+    not?: InputMaybe<IntraComponentDependencySpecificationTypeFilterInput>;
+    /** Connects all subformulas via or */
+    or?: InputMaybe<Array<IntraComponentDependencySpecificationTypeFilterInput>>;
+    /** Filter by partOf */
+    partOf?: InputMaybe<ComponentTemplateListFilterInput>;
+};
+
+/** Input to create an IntraComponentDependencySpecificationType */
+export type IntraComponentDependencySpecificationTypeInput = {
+    /** The description of the NamedNode */
+    description: Scalars["String"]["input"];
+    /** The name of the NamedNode, must not be blank */
+    name: Scalars["String"]["input"];
+};
+
+/** Used to filter by a connection-based property. Fields are joined by AND */
+export type IntraComponentDependencySpecificationTypeListFilterInput = {
+    /** Filters for nodes where all of the related nodes match this filter */
+    all?: InputMaybe<IntraComponentDependencySpecificationTypeFilterInput>;
+    /** Filters for nodes where any of the related nodes match this filter */
+    any?: InputMaybe<IntraComponentDependencySpecificationTypeFilterInput>;
+    /** Filters for nodes where none of the related nodes match this filter */
+    none?: InputMaybe<IntraComponentDependencySpecificationTypeFilterInput>;
+};
+
+/** Defines the order of a IntraComponentDependencySpecificationType list */
+export type IntraComponentDependencySpecificationTypeOrder = {
+    /** The direction to order by, defaults to ASC */
+    direction?: InputMaybe<OrderDirection>;
+    /** The field to order by, defaults to ID */
+    field?: InputMaybe<IntraComponentDependencySpecificationTypeOrderField>;
+};
+
+/** Fields a list of IntraComponentDependencySpecificationType can be sorted by */
+export enum IntraComponentDependencySpecificationTypeOrderField {
     /** Order by id */
     Id = "ID",
     /** Order by name */
@@ -8198,10 +8376,6 @@ export type Issue = AuditedNode &
         createdAt: Scalars["DateTime"]["output"];
         /** The User who created this entity. */
         createdBy: User;
-        /** DateTime when working on this Issue should be finished. */
-        dueDate?: Maybe<Scalars["DateTime"]["output"]>;
-        /** Estimated amount of time necessary for this Issue. */
-        estimatedTime?: Maybe<Scalars["Duration"]["output"]>;
         /** Checks if the current user has a specific permission on this Node */
         hasPermission: Scalars["Boolean"]["output"];
         /** The unique id of this node */
@@ -8231,10 +8405,6 @@ export type Issue = AuditedNode &
         pinnedOn: TrackableConnection;
         /** The priority of the Issue, e.g. HIGH. Allowed IssuePriorities are defined by the template. */
         priority?: Maybe<IssuePriority>;
-        /** Time spent working on this Issue. */
-        spentTime?: Maybe<Scalars["Duration"]["output"]>;
-        /** DateTime when working on this Issue started / will start. */
-        startDate?: Maybe<Scalars["DateTime"]["output"]>;
         /**
          * The state of the Issue, e.g. OPEN. Allowed IssueStates are defined by the template.
          *         The state also defines if this Issue is considered open or closed.
@@ -8819,10 +8989,6 @@ export type IssueFilterInput = {
     createdAt?: InputMaybe<DateTimeFilterInput>;
     /** Filters for nodes where the related node match this filter */
     createdBy?: InputMaybe<UserFilterInput>;
-    /** Filter by dueDate */
-    dueDate?: InputMaybe<NullableDateTimeFilterInput>;
-    /** Filter by estimatedTime */
-    estimatedTime?: InputMaybe<NullableDurationFilterInputFilterInput>;
     /** Filter by id */
     id?: InputMaybe<IdFilterInput>;
     /** Filter by imsIssues */
@@ -8851,10 +9017,6 @@ export type IssueFilterInput = {
     pinnedOn?: InputMaybe<TrackableListFilterInput>;
     /** Filters for nodes where the related node match this filter */
     priority?: InputMaybe<IssuePriorityFilterInput>;
-    /** Filter by spentTime */
-    spentTime?: InputMaybe<NullableDurationFilterInputFilterInput>;
-    /** Filter by startDate */
-    startDate?: InputMaybe<NullableDateTimeFilterInput>;
     /** Filters for nodes where the related node match this filter */
     state?: InputMaybe<IssueStateFilterInput>;
     /** Filters for nodes where the related node match this filter */
@@ -8893,10 +9055,6 @@ export type IssueOrder = {
 export enum IssueOrderField {
     /** Order by createdAt */
     CreatedAt = "CREATED_AT",
-    /** Order by dueDate */
-    DueDate = "DUE_DATE",
-    /** Order by estimatedTime */
-    EstimatedTime = "ESTIMATED_TIME",
     /** Order by id */
     Id = "ID",
     /** Order by lastModifiedAt */
@@ -8909,10 +9067,6 @@ export enum IssueOrderField {
     PriorityName = "PRIORITY_NAME",
     /** Order by priority_value */
     PriorityValue = "PRIORITY_VALUE",
-    /** Order by spentTime */
-    SpentTime = "SPENT_TIME",
-    /** Order by startDate */
-    StartDate = "START_DATE",
     /** Order by state_id */
     StateId = "STATE_ID",
     /** Order by state_isOpen */
@@ -11275,42 +11429,6 @@ export type NodePermissionFilterInput = {
     users?: InputMaybe<GropiusUserListFilterInput>;
 };
 
-/** Filter which can be used to filter for Nodes with a specific DateTime field */
-export type NullableDateTimeFilterInput = {
-    /** Matches values which are equal to the provided value */
-    eq?: InputMaybe<Scalars["DateTime"]["input"]>;
-    /** Matches values which are greater than the provided value */
-    gt?: InputMaybe<Scalars["DateTime"]["input"]>;
-    /** Matches values which are greater than or equal to the provided value */
-    gte?: InputMaybe<Scalars["DateTime"]["input"]>;
-    /** Matches values which are equal to any of the provided values */
-    in?: InputMaybe<Array<Scalars["DateTime"]["input"]>>;
-    /** If true, matches only null values, if false, matches only non-null values */
-    isNull?: InputMaybe<Scalars["Boolean"]["input"]>;
-    /** Matches values which are lesser than the provided value */
-    lt?: InputMaybe<Scalars["DateTime"]["input"]>;
-    /** Matches values which are lesser than or equal to the provided value */
-    lte?: InputMaybe<Scalars["DateTime"]["input"]>;
-};
-
-/** Filter which can be used to filter for Nodes with a specific Duration field */
-export type NullableDurationFilterInputFilterInput = {
-    /** Matches values which are equal to the provided value */
-    eq?: InputMaybe<Scalars["Duration"]["input"]>;
-    /** Matches values which are greater than the provided value */
-    gt?: InputMaybe<Scalars["Duration"]["input"]>;
-    /** Matches values which are greater than or equal to the provided value */
-    gte?: InputMaybe<Scalars["Duration"]["input"]>;
-    /** Matches values which are equal to any of the provided values */
-    in?: InputMaybe<Array<Scalars["Duration"]["input"]>>;
-    /** If true, matches only null values, if false, matches only non-null values */
-    isNull?: InputMaybe<Scalars["Boolean"]["input"]>;
-    /** Matches values which are lesser than the provided value */
-    lt?: InputMaybe<Scalars["Duration"]["input"]>;
-    /** Matches values which are lesser than or equal to the provided value */
-    lte?: InputMaybe<Scalars["Duration"]["input"]>;
-};
-
 /** Filter which can be used to filter for Nodes with a specific Int field */
 export type NullableIntFilterInput = {
     /** Matches values which are equal to the provided value */
@@ -12130,7 +12248,7 @@ export enum ProjectPermissionEntry {
      *   - change the Template
      *   - add / remove Labels
      *   - add / remove Artefacts
-     *   - change any field on the Issue (title, startDate, dueDate, ...)
+     *   - change any field on the Issue (title, ...)
      *   - change templated fields
      * In contrast to `MODERATOR`, this does not allow editing / removing Comments of other users
      */
@@ -12366,6 +12484,8 @@ export type Query = {
     searchInterfaceSpecificationVersions: Array<InterfaceSpecificationVersion>;
     /** Search for nodes of type InterfaceSpecification */
     searchInterfaceSpecifications: Array<InterfaceSpecification>;
+    /** Search for nodes of type IntraComponentDependencySpecificationType */
+    searchIntraComponentDependencySpecificationTypes: Array<IntraComponentDependencySpecificationType>;
     /** Search for nodes of type IssuePriority */
     searchIssuePriorities: Array<IssuePriority>;
     /** Search for nodes of type IssueRelationType */
@@ -12604,6 +12724,13 @@ export type QuerySearchInterfaceSpecificationVersionsArgs = {
 
 export type QuerySearchInterfaceSpecificationsArgs = {
     filter?: InputMaybe<InterfaceSpecificationFilterInput>;
+    first: Scalars["Int"]["input"];
+    query: Scalars["String"]["input"];
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type QuerySearchIntraComponentDependencySpecificationTypesArgs = {
+    filter?: InputMaybe<IntraComponentDependencySpecificationTypeFilterInput>;
     first: Scalars["Int"]["input"];
     query: Scalars["String"]["input"];
     skip?: InputMaybe<Scalars["Int"]["input"]>;
@@ -15988,6 +16115,8 @@ export type UpdateComponentInput = {
     description?: InputMaybe<Scalars["String"]["input"]>;
     /** The id of the node to update */
     id: Scalars["ID"]["input"];
+    /** Mapping to map existing IntraComponentDependencySpecificationTypes to new ones */
+    intraComponentDependencySpecificationTypeMapping?: InputMaybe<Array<TypeMappingInput>>;
     /** The new name of the NamedNode, must not be empty */
     name?: InputMaybe<Scalars["String"]["input"]>;
     /**
@@ -16267,6 +16396,8 @@ export type UpdateIntraComponentDependencySpecificationInput = {
     removedIncomingParticipants?: InputMaybe<Array<Scalars["ID"]["input"]>>;
     /** Ids of outgoingParticipants to remove / delete */
     removedOutgoingParticipants?: InputMaybe<Array<Scalars["ID"]["input"]>>;
+    /** If provided, the new type of the IntraComponentDependencySpecification */
+    type?: InputMaybe<Scalars["ID"]["input"]>;
 };
 
 export type UpdateIntraComponentDependencySpecificationPayload = {
@@ -17190,6 +17321,7 @@ export type FirstAssignmentTypesQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -17330,6 +17462,7 @@ export type GetNamedNodeQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate"; name: string; id: string }
         | { __typename?: "IntraComponentDependencyParticipant"; id: string }
         | { __typename?: "IntraComponentDependencySpecification"; name: string; id: string }
+        | { __typename?: "IntraComponentDependencySpecificationType"; name: string; id: string }
         | { __typename?: "Issue"; id: string }
         | { __typename?: "IssueComment"; id: string }
         | { __typename?: "IssuePriority"; name: string; id: string }
@@ -17417,6 +17550,7 @@ export type GetVersionedNodeQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate"; id: string }
         | { __typename?: "IntraComponentDependencyParticipant"; id: string }
         | { __typename?: "IntraComponentDependencySpecification"; id: string }
+        | { __typename?: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename?: "Issue"; id: string }
         | { __typename?: "IssueComment"; id: string }
         | { __typename?: "IssuePriority"; id: string }
@@ -17552,6 +17686,7 @@ export type GetComponentQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate"; id: string }
         | { __typename?: "IntraComponentDependencyParticipant"; id: string }
         | { __typename?: "IntraComponentDependencySpecification"; id: string }
+        | { __typename?: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename?: "Issue"; id: string }
         | { __typename?: "IssueComment"; id: string }
         | { __typename?: "IssuePriority"; id: string }
@@ -17778,6 +17913,7 @@ export type GetComponentDetailsQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate"; id: string }
         | { __typename?: "IntraComponentDependencyParticipant"; id: string }
         | { __typename?: "IntraComponentDependencySpecification"; id: string }
+        | { __typename?: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename?: "Issue"; id: string }
         | { __typename?: "IssueComment"; id: string }
         | { __typename?: "IssuePriority"; id: string }
@@ -17865,6 +18001,7 @@ export type GetComponentTemplateDetailsQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate"; id: string }
         | { __typename?: "IntraComponentDependencyParticipant"; id: string }
         | { __typename?: "IntraComponentDependencySpecification"; id: string }
+        | { __typename?: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename?: "Issue"; id: string }
         | { __typename?: "IssueComment"; id: string }
         | { __typename?: "IssuePriority"; id: string }
@@ -17964,6 +18101,7 @@ export type GetComponentGeneralDetailsQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate"; id: string }
         | { __typename?: "IntraComponentDependencyParticipant"; id: string }
         | { __typename?: "IntraComponentDependencySpecification"; id: string }
+        | { __typename?: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename?: "Issue"; id: string }
         | { __typename?: "IssueComment"; id: string }
         | { __typename?: "IssuePriority"; id: string }
@@ -18127,6 +18265,7 @@ export type GetComponentPermissionListQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -18277,6 +18416,7 @@ export type FirstComponentPermissionsQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -18468,6 +18608,7 @@ export type GetComponentTemplateQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -18571,6 +18712,7 @@ export type GetComponentVersionTemplateQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -18658,6 +18800,7 @@ export type GetProjectComponentTemplatesQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -18770,6 +18913,7 @@ export type FirstComponentVersionsQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate"; id: string }
         | { __typename?: "IntraComponentDependencyParticipant"; id: string }
         | { __typename?: "IntraComponentDependencySpecification"; id: string }
+        | { __typename?: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename?: "Issue"; id: string }
         | { __typename?: "IssueComment"; id: string }
         | { __typename?: "IssuePriority"; id: string }
@@ -18873,6 +19017,7 @@ export type GetComponentVersionListQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -19010,6 +19155,7 @@ export type GetComponentVersionGeneralDetailsQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate"; id: string }
         | { __typename?: "IntraComponentDependencyParticipant"; id: string }
         | { __typename?: "IntraComponentDependencySpecification"; id: string }
+        | { __typename?: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename?: "Issue"; id: string }
         | { __typename?: "IssueComment"; id: string }
         | { __typename?: "IssuePriority"; id: string }
@@ -19211,6 +19357,7 @@ export type GetProjectGraphQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -20009,6 +20156,7 @@ export type GetImsQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate"; id: string }
         | { __typename?: "IntraComponentDependencyParticipant"; id: string }
         | { __typename?: "IntraComponentDependencySpecification"; id: string }
+        | { __typename?: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename?: "Issue"; id: string }
         | { __typename?: "IssueComment"; id: string }
         | { __typename?: "IssuePriority"; id: string }
@@ -20107,6 +20255,7 @@ export type GetImsGeneralDetailsQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate"; id: string }
         | { __typename?: "IntraComponentDependencyParticipant"; id: string }
         | { __typename?: "IntraComponentDependencySpecification"; id: string }
+        | { __typename?: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename?: "Issue"; id: string }
         | { __typename?: "IssueComment"; id: string }
         | { __typename?: "IssuePriority"; id: string }
@@ -20260,6 +20409,7 @@ export type GetImsPermissionListQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -20410,6 +20560,7 @@ export type FirstImsPermissionsQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -20563,6 +20714,7 @@ export type GetImsProjectListFromImsQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -20668,6 +20820,7 @@ export type GetImsProjectListFromTrackableQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -20803,6 +20956,7 @@ export type GetImsProjectGeneralDetailsQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate"; id: string }
         | { __typename?: "IntraComponentDependencyParticipant"; id: string }
         | { __typename?: "IntraComponentDependencySpecification"; id: string }
+        | { __typename?: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename?: "Issue"; id: string }
         | { __typename?: "IssueComment"; id: string }
         | { __typename?: "IssuePriority"; id: string }
@@ -20973,6 +21127,7 @@ export type GetImsTemplateQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -21076,6 +21231,7 @@ export type GetImsProjectTemplateQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -21200,6 +21356,7 @@ export type GetInterfaceDefinitionListQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -21359,6 +21516,7 @@ export type GetInterfaceSpecificationListQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -21472,6 +21630,7 @@ export type GetInterfaceSpecificationGeneralDetailsQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate"; id: string }
         | { __typename?: "IntraComponentDependencyParticipant"; id: string }
         | { __typename?: "IntraComponentDependencySpecification"; id: string }
+        | { __typename?: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename?: "Issue"; id: string }
         | { __typename?: "IssueComment"; id: string }
         | { __typename?: "IssuePriority"; id: string }
@@ -21567,6 +21726,7 @@ export type GetInterfaceSpecificationVisibilityInfoQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -21689,6 +21849,7 @@ export type FirstInterfaceSpecificationsQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -21879,6 +22040,7 @@ export type GetInterfaceSpecificationTemplateQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -21982,6 +22144,7 @@ export type GetInterfaceSpecificationVersionTemplateQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -22084,6 +22247,7 @@ export type GetInterfaceSpecificationVersionListQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -22197,6 +22361,7 @@ export type GetInterfaceSpecificationVersionGeneralDetailsQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate"; id: string }
         | { __typename?: "IntraComponentDependencyParticipant"; id: string }
         | { __typename?: "IntraComponentDependencySpecification"; id: string }
+        | { __typename?: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename?: "Issue"; id: string }
         | { __typename?: "IssueComment"; id: string }
         | { __typename?: "IssuePriority"; id: string }
@@ -22324,6 +22489,7 @@ export type FirstInterfaceSpecificationVersionsQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate"; id: string }
         | { __typename?: "IntraComponentDependencyParticipant"; id: string }
         | { __typename?: "IntraComponentDependencySpecification"; id: string }
+        | { __typename?: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename?: "Issue"; id: string }
         | { __typename?: "IssueComment"; id: string }
         | { __typename?: "IssuePriority"; id: string }
@@ -22518,6 +22684,7 @@ export type GetIssueListQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -22679,6 +22846,7 @@ export type GetComponentIssueListQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -22918,6 +23086,7 @@ export type GetIssueListOnAggregatedIssueQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -23256,16 +23425,13 @@ export type GetIssueQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | {
               __typename?: "Issue";
               id: string;
               title: string;
               createdAt: any;
               lastUpdatedAt: any;
-              estimatedTime?: any | null;
-              spentTime?: any | null;
-              startDate?: any | null;
-              dueDate?: any | null;
               manageIssues: boolean;
               comment: boolean;
               moderator: boolean;
@@ -25022,6 +25188,7 @@ export type FirstIssuesQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -25156,6 +25323,7 @@ export type FirstIssuePrioritiesQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -25416,6 +25584,7 @@ export type FirstIssueRelationTypesQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -25603,6 +25772,7 @@ export type FirstIssueStatesQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -25766,6 +25936,7 @@ export type GetIssueTemplateQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -25885,6 +26056,7 @@ export type FirstIssueTypesQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -26016,6 +26188,7 @@ export type GetLabelListQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -26141,6 +26314,7 @@ export type FirstLabelsQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | {
               __typename?: "Issue";
               trackables: {
@@ -26279,6 +26453,7 @@ export type FirstTrackableLabelsQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -26503,6 +26678,7 @@ export type GetPermissionUserListQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -26681,6 +26857,7 @@ export type GetProjectQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate"; id: string }
         | { __typename?: "IntraComponentDependencyParticipant"; id: string }
         | { __typename?: "IntraComponentDependencySpecification"; id: string }
+        | { __typename?: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename?: "Issue"; id: string }
         | { __typename?: "IssueComment"; id: string }
         | { __typename?: "IssuePriority"; id: string }
@@ -26781,6 +26958,7 @@ export type GetProjectGeneralDetailsQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate"; id: string }
         | { __typename?: "IntraComponentDependencyParticipant"; id: string }
         | { __typename?: "IntraComponentDependencySpecification"; id: string }
+        | { __typename?: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename?: "Issue"; id: string }
         | { __typename?: "IssueComment"; id: string }
         | { __typename?: "IssuePriority"; id: string }
@@ -26903,6 +27081,7 @@ export type GetProjectPermissionListQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -27054,6 +27233,7 @@ export type FirstProjectPermissionsQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -27263,6 +27443,7 @@ export type GetSyncPermissionTargetQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -29371,6 +29552,7 @@ export type GetUserQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -29496,6 +29678,7 @@ export type GetViewListQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -29657,6 +29840,7 @@ export type GetViewQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -29792,6 +29976,7 @@ export type FirstViewsQuery = {
         | { __typename?: "InterfaceSpecificationVersionTemplate" }
         | { __typename?: "IntraComponentDependencyParticipant" }
         | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
         | { __typename?: "Issue" }
         | { __typename?: "IssueComment" }
         | { __typename?: "IssuePriority" }
@@ -32508,10 +32693,6 @@ export const GetIssueDocument = gql`
                 template {
                     ...DefaultIssueTemplateInfo
                 }
-                estimatedTime
-                spentTime
-                startDate
-                dueDate
                 manageIssues: hasPermission(permission: MANAGE_ISSUES)
                 comment: hasPermission(permission: COMMENT)
                 moderator: hasPermission(permission: MODERATOR)
