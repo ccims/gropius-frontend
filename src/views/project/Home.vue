@@ -154,6 +154,7 @@
     <CreateInterfaceSpecificationDialog
         v-if="interfaceSpecificationComponent != undefined"
         :component="interfaceSpecificationComponent.component"
+        :component-template="interfaceSpecificationComponent.template"
         :initial-name="initialInterfaceSpecificationName"
         force-create-version
         @created-interface-specification="(_, version) => addInterfaceSpecificationVersion(version!)"
@@ -386,7 +387,7 @@ const showAddInterfaceDialog = ref(false);
 const initialComponentName = ref("");
 const componentVersionComponent = ref("");
 const initialComponentVersionVersion = ref("");
-const interfaceSpecificationComponent = ref<{ component: string; version: string }>();
+const interfaceSpecificationComponent = ref<{ component: string; version: string; template: string }>();
 const initialInterfaceSpecificationName = ref("");
 const interfaceSpecificationVersionInterfaceSpecificaton = ref("");
 const initialInterfaceSpecificationVersionVersion = ref("");
@@ -656,7 +657,8 @@ async function createComponentVersion(version: string, component: IdObject) {
 function addInterface(componentVersion: string) {
     interfaceSpecificationComponent.value = {
         component: relationPartnerLookup.value.get(componentVersion)!.componentVersion.component.id,
-        version: componentVersion
+        version: componentVersion,
+        template: relationPartnerLookup.value.get(componentVersion)!.componentVersion.component.template.id
     };
     showAddInterfaceDialog.value = true;
 }

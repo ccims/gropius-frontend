@@ -12,10 +12,21 @@
 </template>
 <script setup lang="ts">
 import { useClient } from "@/graphql/client";
-import { DefaultInterfaceSpecificationTemplateInfoFragment } from "@/graphql/generated";
+import {
+    DefaultInterfaceSpecificationTemplateInfoFragment,
+    InterfaceSpecificationTemplateFilterInput
+} from "@/graphql/generated";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
+import { PropType } from "vue";
+
+const props = defineProps({
+    interfaceSpecificationTemplateFilter: {
+        type: Object as PropType<InterfaceSpecificationTemplateFilterInput>,
+        required: false
+    }
+});
 
 const client = useClient();
 
@@ -26,10 +37,17 @@ async function searchInterfaceSpecificationTemplates(
     return await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await client.searchInterfaceSpecificationTemplates({ query, count });
+            const res = await client.searchInterfaceSpecificationTemplates({
+                query,
+                count,
+                filter: props.interfaceSpecificationTemplateFilter
+            });
             return res.searchInterfaceSpecificationTemplates;
         } else {
-            const res = await client.firstInterfaceSpecificationTemplates({ count });
+            const res = await client.firstInterfaceSpecificationTemplates({
+                count,
+                filter: props.interfaceSpecificationTemplateFilter
+            });
             return res.interfaceSpecificationTemplates.nodes;
         }
     }, "Error searching interface specification templates");

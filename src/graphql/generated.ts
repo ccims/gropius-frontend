@@ -16,6 +16,7 @@ export type Scalars = {
     Int: { input: number; output: number };
     Float: { input: number; output: number };
     DateTime: { input: any; output: any };
+    Duration: { input: any; output: any };
     JSON: { input: any; output: any };
     URL: { input: any; output: any };
 };
@@ -8376,6 +8377,8 @@ export type Issue = AuditedNode &
         createdAt: Scalars["DateTime"]["output"];
         /** The User who created this entity. */
         createdBy: User;
+        dueDate?: Maybe<Scalars["DateTime"]["output"]>;
+        estimatedTime?: Maybe<Scalars["Duration"]["output"]>;
         /** Checks if the current user has a specific permission on this Node */
         hasPermission: Scalars["Boolean"]["output"];
         /** The unique id of this node */
@@ -8405,6 +8408,8 @@ export type Issue = AuditedNode &
         pinnedOn: TrackableConnection;
         /** The priority of the Issue, e.g. HIGH. Allowed IssuePriorities are defined by the template. */
         priority?: Maybe<IssuePriority>;
+        spentTime?: Maybe<Scalars["Duration"]["output"]>;
+        startDate?: Maybe<Scalars["DateTime"]["output"]>;
         /**
          * The state of the Issue, e.g. OPEN. Allowed IssueStates are defined by the template.
          *         The state also defines if this Issue is considered open or closed.
@@ -21947,6 +21952,7 @@ export type DefaultInterfaceSpecificationVersionTemplateInfoFragment = {
 export type SearchInterfaceSpecificationTemplatesQueryVariables = Exact<{
     query: Scalars["String"]["input"];
     count: Scalars["Int"]["input"];
+    filter?: InputMaybe<InterfaceSpecificationTemplateFilterInput>;
 }>;
 
 export type SearchInterfaceSpecificationTemplatesQuery = {
@@ -21962,6 +21968,7 @@ export type SearchInterfaceSpecificationTemplatesQuery = {
 
 export type FirstInterfaceSpecificationTemplatesQueryVariables = Exact<{
     count: Scalars["Int"]["input"];
+    filter?: InputMaybe<InterfaceSpecificationTemplateFilterInput>;
 }>;
 
 export type FirstInterfaceSpecificationTemplatesQuery = {
@@ -32359,20 +32366,20 @@ export const DeleteInterfaceSpecificationDocument = gql`
     }
 `;
 export const SearchInterfaceSpecificationTemplatesDocument = gql`
-    query searchInterfaceSpecificationTemplates($query: String!, $count: Int!) {
-        searchInterfaceSpecificationTemplates(query: $query, first: $count, filter: { isDeprecated: { eq: false } }) {
+    query searchInterfaceSpecificationTemplates(
+        $query: String!
+        $count: Int!
+        $filter: InterfaceSpecificationTemplateFilterInput
+    ) {
+        searchInterfaceSpecificationTemplates(query: $query, first: $count, filter: $filter) {
             ...DefaultInterfaceSpecificationTemplateInfo
         }
     }
     ${DefaultInterfaceSpecificationTemplateInfoFragmentDoc}
 `;
 export const FirstInterfaceSpecificationTemplatesDocument = gql`
-    query firstInterfaceSpecificationTemplates($count: Int!) {
-        interfaceSpecificationTemplates(
-            first: $count
-            orderBy: [{ field: NAME }]
-            filter: { isDeprecated: { eq: false } }
-        ) {
+    query firstInterfaceSpecificationTemplates($count: Int!, $filter: InterfaceSpecificationTemplateFilterInput) {
+        interfaceSpecificationTemplates(first: $count, orderBy: [{ field: NAME }], filter: $filter) {
             nodes {
                 ...DefaultInterfaceSpecificationTemplateInfo
             }
