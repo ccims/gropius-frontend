@@ -166,10 +166,10 @@ export class LayoutEngine {
         if (graph.children == undefined) {
             return false;
         }
-        let minX = Number.MAX_VALUE;
-        let maxX = Number.MIN_VALUE;
-        let minY = Number.MAX_VALUE;
-        let maxY = Number.MIN_VALUE;
+        let minX = Number.POSITIVE_INFINITY;
+        let maxX = Number.NEGATIVE_INFINITY;
+        let minY = Number.POSITIVE_INFINITY;
+        let maxY = Number.NEGATIVE_INFINITY;
         for (const node of graph.children) {
             minX = Math.min(minX, node.x ?? 0);
             maxX = Math.max(maxX, node.x ?? 0);

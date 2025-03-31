@@ -223,10 +223,10 @@ export abstract class GraphModelSource extends LocalModelSource {
         if (components.length === 0) {
             return { x: 0, y: 0, width: 0, height: 0 };
         }
-        let minX = Number.MAX_VALUE;
-        let minY = Number.MAX_VALUE;
-        let maxX = Number.MIN_VALUE;
-        let maxY = Number.MIN_VALUE;
+        let minX = Number.POSITIVE_INFINITY;
+        let minY = Number.POSITIVE_INFINITY;
+        let maxX = Number.NEGATIVE_INFINITY;
+        let maxY = Number.NEGATIVE_INFINITY;
         for (const component of components) {
             minX = Math.min(minX, component.x);
             minY = Math.min(minY, component.y);
