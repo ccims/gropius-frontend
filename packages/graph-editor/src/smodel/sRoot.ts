@@ -67,8 +67,7 @@ export class SRoot extends ViewportRootElementImpl {
         return `
             .sprotty .label {
                 display: inline-block;
-                min-width: 50px;
-                max-width: 200px;
+                width: 200px;
                 word-wrap: break-word;
                 text-align: center;
                 user-select: none;
