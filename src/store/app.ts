@@ -8,7 +8,7 @@ import { Mutex } from "async-mutex";
 import { shallowRef } from "vue";
 import { TokenScope } from "@/util/oauth";
 
-interface GlobalUserPermissions {
+export interface GlobalUserPermissions {
     canCreateProjects: boolean;
     canCreateComponents: boolean;
     canCreateIMSs: boolean;
