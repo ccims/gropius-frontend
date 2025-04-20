@@ -276,14 +276,20 @@ async function layoutGraph(graphLayout: GraphLayoutSource) {
     if (graphLayout.relationLayouts.nodes.length > 0 || graphLayout.relationPartnerLayouts.nodes.length > 0) {
         const resultingLayout: GraphLayout = {};
         for (const relationLayout of graphLayout.relationLayouts.nodes) {
-            resultingLayout[relationLayout.relation.id] = {
-                points: relationLayout.points
-            };
+            const id = relationLayout.relation?.id;
+            if (id != undefined) {
+                resultingLayout[id] = {
+                    points: relationLayout.points
+                };
+            }
         }
         for (const relationPartnerLayout of graphLayout.relationPartnerLayouts.nodes) {
-            resultingLayout[relationPartnerLayout.relationPartner.id] = {
-                pos: relationPartnerLayout.pos
-            };
+            const id = relationPartnerLayout.relationPartner?.id;
+            if (id != undefined) {
+                resultingLayout[relationPartnerLayout.relationPartner.id] = {
+                    pos: relationPartnerLayout.pos
+                };
+            }
         }
         layout.value = resultingLayout;
     } else {

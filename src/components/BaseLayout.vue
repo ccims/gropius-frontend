@@ -73,8 +73,8 @@
 </template>
 <script setup lang="ts">
 import { useLocalStorage } from "@vueuse/core";
-import { PropType, ref } from "vue";
-import { RouteLocationRaw, useRouter } from "vue-router";
+import { PropType } from "vue";
+import { RouteLocationRaw } from "vue-router";
 import { useTheme } from "vuetify/lib/framework.mjs";
 import SideBar, { SideBarItem } from "./SideBar.vue";
 import ErrorSnackbar from "./ErrorSnackbar.vue";
@@ -118,7 +118,6 @@ const props = defineProps({
 const theme = useTheme();
 const lightMode = useLocalStorage("lightMode", true);
 const store = useAppStore();
-const router = useRouter();
 
 function toggleDarkMode() {
     lightMode.value = !lightMode.value;
