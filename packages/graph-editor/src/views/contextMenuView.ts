@@ -9,21 +9,26 @@ export class ContextMenuView implements IView {
         const pos = model.pos;
 
         return svg(
-            "foreignObject",
+            "g",
             {
-                attrs: {
-                    width: "100vw",
-                    height: "100vh"
-                },
                 style: {
-                    transform: ` translate(${pos.x}px, ${pos.y}px) scale(calc(1 / var(--diagram-zoom)))`
+                    transform: `translate(${pos.x}px, ${pos.y}px) scale(calc(1 / var(--diagram-zoom)))`
                 }
             },
-            html("div", {
-                class: {
-                    "context-menu": true
-                }
-            })
+            svg(
+                "foreignObject",
+                {
+                    attrs: {
+                        width: "100vw",
+                        height: "100vh"
+                    }
+                },
+                html("div", {
+                    class: {
+                        "context-menu": true
+                    }
+                })
+            )
         );
     }
 }

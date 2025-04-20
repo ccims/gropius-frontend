@@ -80,16 +80,13 @@ export class SRoot extends ViewportRootElementImpl {
                 border-radius: 0.3em;
             }
 
-            .sprotty svg {
-                background:
-                  radial-gradient(circle, var(--diagram-grid) 1.2px, transparent 1.2px)
-                    calc(var(--diagram-scroll-x) * -1 * var(--diagram-zoom))
-                    calc(var(--diagram-scroll-y) * -1 * var(--diagram-zoom)) /
-                    calc(50px * var(--diagram-zoom-normalized)) calc(50px * var(--diagram-zoom-normalized));
+            .sprotty .background-pattern {
+                fill: var(--diagram-grid);
             }
 
             .sprotty foreignObject {
                 pointer-events: none;
+                overflow: visible;
             }
 
             .sprotty .chip {
