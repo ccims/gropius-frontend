@@ -2,6 +2,7 @@ import { inject, injectable } from "inversify";
 import { IView, IViewArgs, RenderingContext, svg, TYPES, ViewerOptions } from "sprotty";
 import { SRoot } from "../smodel/sRoot.js";
 import { VNode } from "snabbdom";
+import { SContextMenu } from "../smodel/sContextMenu.js";
 
 @injectable()
 export class RootView implements IView {
@@ -14,6 +15,8 @@ export class RootView implements IView {
 
     render(model: Readonly<SRoot>, context: RenderingContext, _args?: IViewArgs | undefined): VNode {
         const transform = `scale(${model.zoom}) translate(${-model.scroll.x},${-model.scroll.y})`;
+        const contextMenus = model.children.filter(child => child instanceof SContextMenu) as SContextMenu[];
+        const otherChildren = model.children.filter(child => !(child instanceof SContextMenu));
         return svg(
             "svg",
             {
@@ -37,8 +40,9 @@ export class RootView implements IView {
                         "sprotty-root": true
                     }
                 },
-                ...context.renderChildren(model, undefined)
-            )
+                ...otherChildren.map(child => context.renderElement(child)),
+            ),
+            ...contextMenus.map(menu => context.renderElement(menu)),
         );
     }
 

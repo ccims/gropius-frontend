@@ -7,8 +7,8 @@ export function wrapForeignElement(element: VNode | undefined, offset: Point): V
         "foreignObject",
         {
             attrs: {
-                width: "100vw",
-                height: "100vh",
+                width: "99999",
+                height: "99999",
                 ...offset
             }
         },
