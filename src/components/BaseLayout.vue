@@ -11,7 +11,7 @@
             <slot name="header-title">
                 <div v-for="(segment, index) in titleSegments" :key="index" class="d-flex align-center">
                     <span v-if="index != 0" class="text-h6">/</span>
-                    <router-link :to="segment.path"  class="header-title-link">
+                    <router-link :to="segment.path" class="header-title-link">
                         <DefaultButton variant="text" class="px-1" min-width="0" rounded="lger">
                             <span v-if="'name' in segment" class="text-h6">{{ segment.name }}</span>
                             <v-icon v-else :icon="segment.icon" size="large" />

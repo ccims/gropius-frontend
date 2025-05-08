@@ -202,7 +202,11 @@
                             @selected-item="addLabel"
                             @create-new="createLabel"
                         />
-                        <CreateLabelDialog :trackable="trackable!.id" :initial-name="initialLabelName" @created-label="addLabel" />
+                        <CreateLabelDialog
+                            :trackable="trackable!.id"
+                            :initial-name="initialLabelName"
+                            @created-label="addLabel"
+                        />
                     </template>
                 </EditableCompartment>
                 <v-divider class="mx-2" />

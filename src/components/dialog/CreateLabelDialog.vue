@@ -37,7 +37,7 @@ const props = defineProps({
     initialName: {
         type: String,
         required: false
-    },
+    }
 });
 
 const initialValue = ref({
