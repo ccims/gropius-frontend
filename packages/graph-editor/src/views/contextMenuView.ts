@@ -17,7 +17,7 @@ export class ContextMenuView implements IView {
                     "context-menu": true
                 }
             }),
-            Math2D.scale(Math2D.sub(pos, root.scroll), root.zoom),
+            Math2D.scale(Math2D.sub(pos, root.scroll), root.zoom)
         );
     }
 }

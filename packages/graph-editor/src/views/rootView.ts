@@ -6,7 +6,6 @@ import { SContextMenu } from "../smodel/sContextMenu.js";
 
 @injectable()
 export class RootView implements IView {
-
     @inject(TYPES.ViewerOptions) protected options!: ViewerOptions;
 
     get backgroundPatternId(): string {
@@ -15,8 +14,8 @@ export class RootView implements IView {
 
     render(model: Readonly<SRoot>, context: RenderingContext, _args?: IViewArgs | undefined): VNode {
         const transform = `scale(${model.zoom}) translate(${-model.scroll.x},${-model.scroll.y})`;
-        const contextMenus = model.children.filter(child => child instanceof SContextMenu) as SContextMenu[];
-        const otherChildren = model.children.filter(child => !(child instanceof SContextMenu));
+        const contextMenus = model.children.filter((child) => child instanceof SContextMenu) as SContextMenu[];
+        const otherChildren = model.children.filter((child) => !(child instanceof SContextMenu));
         return svg(
             "svg",
             {
@@ -40,9 +39,9 @@ export class RootView implements IView {
                         "sprotty-root": true
                     }
                 },
-                ...otherChildren.map(child => context.renderElement(child)),
+                ...otherChildren.map((child) => context.renderElement(child))
             ),
-            ...contextMenus.map(menu => context.renderElement(menu)),
+            ...contextMenus.map((menu) => context.renderElement(menu))
         );
     }
 
