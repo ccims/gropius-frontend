@@ -16,10 +16,9 @@
 <script lang="ts" setup>
 import { onEvent } from "@/util/eventBus";
 import { useClient } from "@/graphql/client";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
 import LabelDialogContent, { Label } from "./LabelDialogContent.vue";
-import { IdObject } from "@/util/types";
 import { DefaultLabelInfoFragment } from "@/graphql/generated";
 
 const createLabelDialog = ref(false);
@@ -34,7 +33,11 @@ const props = defineProps({
     trackable: {
         type: String,
         required: true
-    }
+    },
+    initialName: {
+        type: String,
+        required: false
+    },
 });
 
 const initialValue = ref({
@@ -42,6 +45,15 @@ const initialValue = ref({
     description: "",
     color: "#0c94d8"
 });
+
+watch(
+    () => props.initialName,
+    (newValue) => {
+        if (newValue != undefined) {
+            initialValue.value.name = newValue;
+        }
+    }
+);
 
 onEvent("create-label", () => {
     createLabelDialog.value = true;

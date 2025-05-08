@@ -4,7 +4,7 @@
         v-model:menu="menu"
         v-model="<any>proxiedModel"
         :items="items"
-        :multiple="contextMode"
+        :multiple="multipleMode"
         :chips="contextMode"
         item-value="id"
         :filter-keys="['id']"
@@ -103,6 +103,7 @@ const context = ref(props.initialContext ? transformToContextItem(props.initialC
     C | undefined
 >;
 const contextMode = computed(() => props.mode == "add-context");
+const multipleMode = computed(() => props.mode == "add" || props.mode == "add-context");
 const contextSearchMode = computed(() => {
     return contextMode.value && context.value == undefined;
 });
@@ -125,16 +126,6 @@ const initialContextModel = computed(() => {
     } else {
         return [];
     }
-});
-const initialItems = computed(() => {
-    const items = [];
-    items.push(...createNewItem.value);
-    if (contextMode.value) {
-        items.push(...initialContextModel.value);
-    } else {
-        items.push(...props.initialItems);
-    }
-    return [...props.initialItems, ...createNewItem.value];
 });
 const items = ref(contextMode.value ? initialContextModel.value : props.initialItems) as Ref<(T | C | NewItem)[]>;
 const search = ref<undefined | string>("");

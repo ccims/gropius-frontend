@@ -200,9 +200,9 @@
                             auto-select-first
                             create-new
                             @selected-item="addLabel"
-                            @create-new="eventBus?.emit('create-label')"
+                            @create-new="createLabel"
                         />
-                        <CreateLabelDialog :trackable="trackable!.id" @created-label="addLabel" />
+                        <CreateLabelDialog :trackable="trackable!.id" :initial-name="initialLabelName" @created-label="addLabel" />
                     </template>
                 </EditableCompartment>
                 <v-divider class="mx-2" />
@@ -522,6 +522,8 @@ const outgoingRelations = computed(() => issue.value!.outgoingRelations.nodes);
 const assignments = computed(() => issue.value!.assignments.nodes);
 const affectedEntities = computed(() => issue.value!.affects.nodes);
 
+const initialLabelName = ref("");
+
 function addComment(comment: TimelineItemType<"IssueComment">) {
     timeline.value.push(comment);
     answers.value = null;
@@ -638,6 +640,11 @@ async function removeLabel(labelId: string) {
     if (index != -1) {
         labels.value.splice(index, 1);
     }
+}
+
+function createLabel(name: string) {
+    initialLabelName.value = name;
+    eventBus?.emit("create-label");
 }
 
 const editedAssignmentTypes = ref<Record<string, boolean>>({});
