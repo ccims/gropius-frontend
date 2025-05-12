@@ -16,7 +16,6 @@ export type Scalars = {
     Int: { input: number; output: number };
     Float: { input: number; output: number };
     DateTime: { input: any; output: any };
-    Duration: { input: any; output: any };
     JSON: { input: any; output: any };
     URL: { input: any; output: any };
 };
@@ -8377,8 +8376,6 @@ export type Issue = AuditedNode &
         createdAt: Scalars["DateTime"]["output"];
         /** The User who created this entity. */
         createdBy: User;
-        dueDate?: Maybe<Scalars["DateTime"]["output"]>;
-        estimatedTime?: Maybe<Scalars["Duration"]["output"]>;
         /** Checks if the current user has a specific permission on this Node */
         hasPermission: Scalars["Boolean"]["output"];
         /** The unique id of this node */
@@ -8408,8 +8405,6 @@ export type Issue = AuditedNode &
         pinnedOn: TrackableConnection;
         /** The priority of the Issue, e.g. HIGH. Allowed IssuePriorities are defined by the template. */
         priority?: Maybe<IssuePriority>;
-        spentTime?: Maybe<Scalars["Duration"]["output"]>;
-        startDate?: Maybe<Scalars["DateTime"]["output"]>;
         /**
          * The state of the Issue, e.g. OPEN. Allowed IssueStates are defined by the template.
          *         The state also defines if this Issue is considered open or closed.
@@ -13340,7 +13335,7 @@ export type RelationLayout = BaseNode &
         /** The project this layout is for, mutually exclusive with view. */
         project?: Maybe<Project>;
         /** The Relation this layout is for. */
-        relation: Relation;
+        relation?: Maybe<Relation>;
         /** The view this layout is for, mutually exclusive with project. */
         view?: Maybe<View>;
     };
@@ -13558,7 +13553,7 @@ export type RelationPartnerLayout = BaseNode &
         /** The project this layout is for, mutually exclusive with view. */
         project?: Maybe<Project>;
         /** The RelationPartner this layout is for. */
-        relationPartner: RelationPartner;
+        relationPartner?: Maybe<RelationPartner>;
         /** The view this layout is for, mutually exclusive with project. */
         view?: Maybe<View>;
     };
@@ -19381,7 +19376,7 @@ export type GetProjectGraphQuery = {
                   __typename?: "RelationLayoutConnection";
                   nodes: Array<{
                       __typename?: "RelationLayout";
-                      relation: { __typename?: "Relation"; id: string };
+                      relation?: { __typename?: "Relation"; id: string } | null;
                       points: Array<{ __typename?: "Point"; x: number; y: number }>;
                   }>;
               };
@@ -19389,9 +19384,10 @@ export type GetProjectGraphQuery = {
                   __typename?: "RelationPartnerLayoutConnection";
                   nodes: Array<{
                       __typename?: "RelationPartnerLayout";
-                      relationPartner:
+                      relationPartner?:
                           | { __typename?: "ComponentVersion"; id: string }
-                          | { __typename?: "Interface"; id: string };
+                          | { __typename?: "Interface"; id: string }
+                          | null;
                       pos: { __typename?: "Point"; x: number; y: number };
                   }>;
               };
@@ -29780,7 +29776,7 @@ export type ViewGraphInfoFragment = {
         __typename?: "RelationLayoutConnection";
         nodes: Array<{
             __typename?: "RelationLayout";
-            relation: { __typename?: "Relation"; id: string };
+            relation?: { __typename?: "Relation"; id: string } | null;
             points: Array<{ __typename?: "Point"; x: number; y: number }>;
         }>;
     };
@@ -29788,7 +29784,10 @@ export type ViewGraphInfoFragment = {
         __typename?: "RelationPartnerLayoutConnection";
         nodes: Array<{
             __typename?: "RelationPartnerLayout";
-            relationPartner: { __typename?: "ComponentVersion"; id: string } | { __typename?: "Interface"; id: string };
+            relationPartner?:
+                | { __typename?: "ComponentVersion"; id: string }
+                | { __typename?: "Interface"; id: string }
+                | null;
             pos: { __typename?: "Point"; x: number; y: number };
         }>;
     };
@@ -29891,7 +29890,7 @@ export type GetViewQuery = {
                   __typename?: "RelationLayoutConnection";
                   nodes: Array<{
                       __typename?: "RelationLayout";
-                      relation: { __typename?: "Relation"; id: string };
+                      relation?: { __typename?: "Relation"; id: string } | null;
                       points: Array<{ __typename?: "Point"; x: number; y: number }>;
                   }>;
               };
@@ -29899,9 +29898,10 @@ export type GetViewQuery = {
                   __typename?: "RelationPartnerLayoutConnection";
                   nodes: Array<{
                       __typename?: "RelationPartnerLayout";
-                      relationPartner:
+                      relationPartner?:
                           | { __typename?: "ComponentVersion"; id: string }
-                          | { __typename?: "Interface"; id: string };
+                          | { __typename?: "Interface"; id: string }
+                          | null;
                       pos: { __typename?: "Point"; x: number; y: number };
                   }>;
               };

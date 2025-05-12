@@ -286,7 +286,7 @@ async function layoutGraph(graphLayout: GraphLayoutSource) {
         for (const relationPartnerLayout of graphLayout.relationPartnerLayouts.nodes) {
             const id = relationPartnerLayout.relationPartner?.id;
             if (id != undefined) {
-                resultingLayout[relationPartnerLayout.relationPartner.id] = {
+                resultingLayout[id] = {
                     pos: relationPartnerLayout.pos
                 };
             }
@@ -780,13 +780,14 @@ function computeLayoutDiff(target: GraphLayoutSource): LayoutUpdate {
     };
     const newLayout = layout.value;
     const currentRelationLayout = new Map(
-        target.relationLayouts.nodes.map((relationLayout) => [relationLayout.relation.id, relationLayout.points])
+        target.relationLayouts.nodes
+            .filter((relationLayout) => relationLayout.relation != undefined)
+            .map((relationLayout) => [relationLayout.relation!.id, relationLayout.points])
     );
     const currentRelationPartnerLayout = new Map(
-        target.relationPartnerLayouts.nodes.map((relationPartnerLayout) => [
-            relationPartnerLayout.relationPartner.id,
-            relationPartnerLayout.pos
-        ])
+        target.relationPartnerLayouts.nodes
+            .filter((relationPartnerLayout) => relationPartnerLayout.relationPartner != undefined)
+            .map((relationPartnerLayout) => [relationPartnerLayout.relationPartner!.id, relationPartnerLayout.pos])
     );
     for (const [id, layout] of Object.entries(newLayout!)) {
         if (layout == undefined) {
