@@ -13,7 +13,7 @@
         </template>
         <template #search-append>
             <IssueStateSegmentedButton v-model="issueStateIndices" class="ml-2" />
-            <IssueDropdown v-model:selected="issueLabel" :load-options="loadAllLabels" />
+            <FilterDropdown v-model:selected="issueLabel" :load-options="loadAllLabels" />
         </template>
         <IssueDialogs />
     </PaginatedList>
@@ -36,7 +36,7 @@ import IssueStateSegmentedButton from "@/components/input/IssueStateSegmentedBut
 import { IdObject } from "@/util/types";
 import IssueDialogs from "@/components/IssueDialogs.vue";
 import { issueSortFields } from "@/util/issueSortFields";
-import IssueDropdown from "@/components/IssueDropdown.vue";
+import FilterDropdown from "@/components/FilterDropdown.vue";
 
 type Trackable = NodeReturnType<"getIssueList", "Component">;
 type TrackableLabel = NodeReturnType<"getLabelList", "Component">;
