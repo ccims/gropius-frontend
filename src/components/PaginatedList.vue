@@ -63,15 +63,7 @@ import { computed } from "vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
 import { WritableComputedRef } from "vue";
 import { OrderDirection } from "@/graphql/generated";
-
-export interface ItemManager<I, J> {
-    fetchItems(
-        filter: string | undefined,
-        orderBy: { field: J; direction: OrderDirection }[],
-        count: number,
-        page: number
-    ): Promise<[I[], number]>;
-}
+import { ItemManager } from "@/util/itemManager";
 
 const props = defineProps({
     sortFields: {
@@ -178,7 +170,7 @@ async function updateItems(resetPage: boolean) {
     const sortFields = Array.isArray(sortField) ? sortField : [sortField];
     const sortFieldsWithId = sortFields.includes("ID") ? sortFields : ([...sortFields, "ID"] as const);
 
-    const [items, count] = await props.itemManager.fetchItems(
+    const [items, count] = await props.itemManager.fetchItemsCaching(
         transformedSearchQuery.value,
         sortFieldsWithId.map((field) => ({
             field,
