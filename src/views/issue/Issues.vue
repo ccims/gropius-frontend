@@ -5,7 +5,7 @@
         :sort-fields="issueSortFields"
         :to="(issue: Issue) => issueRoute(issue)"
         :sort-ascending-initially="false"
-        :dependencies="[stateFilterInput, issueLabel]"
+        :dependencies="[stateFilterInput]"
         query-param-prefix=""
     >
         <template #item="{ item }">
@@ -13,7 +13,6 @@
         </template>
         <template #search-append>
             <IssueStateSegmentedButton v-model="issueStateIndices" class="ml-2" />
-            <FilterDropdown v-model:selected="issueLabel" :load-options="loadAllLabels" />
         </template>
         <IssueDialogs />
     </PaginatedList>
@@ -46,17 +45,6 @@ const client = useClient();
 const router = useRouter();
 const route = useRoute();
 
-const loadAllLabels = async () => {
-    const res = await client.getLabelList({
-        count: 100,
-        orderBy: { field: LabelOrderField.Name, direction: OrderDirection.Asc },
-        skip: 0,
-        trackable: trackableId.value
-        // TODO: whats trackable? and what values should be used here for count and skip?
-    });
-    return (res.node as TrackableLabel).labels.nodes.map((label) => label.name);
-};
-
 const issueStateIndices = computed({
     get: () => {
         const state = (route.query.state as string) ?? "open";
@@ -73,14 +61,6 @@ const issueStateIndices = computed({
         router.replace({ query: { ...route.query, state } });
     }
 });
-const issueLabel = computed({
-    get: () => {
-        return route.query.labels as string | undefined;
-    },
-    set: (value: string | undefined) => {
-        router.replace({ query: { ...route.query, labels: value } });
-    }
-});
 
 const stateFilterInput = computed(() => {
     if (issueStateIndices.value.length != 1) {
@@ -88,12 +68,6 @@ const stateFilterInput = computed(() => {
     }
     const state = issueStateIndices.value[0] == 0;
     return { isOpen: { eq: state } };
-});
-const labelFilterInput = computed(() => {
-    if (!issueLabel.value) {
-        return undefined;
-    }
-    return { any: { name: { eq: issueLabel.value } } } as LabelListFilterInput;
 });
 
 const trackableId = computed(() => route.params.trackable as string);
@@ -111,7 +85,7 @@ const itemManager: ItemManager<Issue, IssueOrderField> = {
                 count,
                 skip: page * count,
                 trackable: trackableId.value,
-                filter: { state: stateFilterInput.value, labels: labelFilterInput.value }
+                filter: { state: stateFilterInput.value }
             });
             const issues = (res.node as Trackable).issues;
             return [issues.nodes, issues.totalCount];
@@ -121,8 +95,7 @@ const itemManager: ItemManager<Issue, IssueOrderField> = {
                 count,
                 filter: {
                     trackables: { any: { id: { eq: trackableId.value } } },
-                    state: stateFilterInput.value,
-                    labels: labelFilterInput.value
+                    state: stateFilterInput.value
                 }
             });
             return [res.searchIssues, res.searchIssues.length];
