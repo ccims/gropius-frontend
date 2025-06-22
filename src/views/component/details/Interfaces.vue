@@ -24,7 +24,7 @@
     </PaginatedList>
 </template>
 <script lang="ts" setup>
-import PaginatedList, { ItemManager } from "@/components/PaginatedList.vue";
+import PaginatedList from "@/components/PaginatedList.vue";
 import { NodeReturnType, useClient } from "@/graphql/client";
 import { InterfaceSpecificationOrder, InterfaceSpecificationOrderField } from "@/graphql/generated";
 import { RouteLocationRaw, useRoute, useRouter } from "vue-router";
@@ -34,6 +34,7 @@ import { IdObject } from "@/util/types";
 import { computed } from "vue";
 import { computedAsync } from "@vueuse/core";
 import { withErrorMessage } from "@/util/withErrorMessage";
+import { ItemManager } from "@/util/itemManager";
 
 type InterfaceSpecification = NodeReturnType<
     "getInterfaceSpecificationList",
@@ -62,8 +63,8 @@ const sortFields = {
     "[Default]": InterfaceSpecificationOrderField.Id
 };
 
-const itemManager: ItemManager<InterfaceSpecification, InterfaceSpecificationOrderField> = {
-    fetchItems: async function (
+class InterfaceItemManager extends ItemManager<InterfaceSpecification, InterfaceSpecificationOrderField> {
+    protected async fetchItems(
         filter: string,
         orderBy: InterfaceSpecificationOrder[],
         count: number,
@@ -88,7 +89,9 @@ const itemManager: ItemManager<InterfaceSpecification, InterfaceSpecificationOrd
             return [res.searchInterfaceSpecifications, res.searchInterfaceSpecifications.length];
         }
     }
-};
+}
+
+const itemManager: ItemManager<InterfaceSpecification, InterfaceSpecificationOrderField> = new InterfaceItemManager();
 
 function selectInterfaceSpecification(interfaceSpecification: IdObject) {
     router.push(interfaceSpecificationRoute(interfaceSpecification));

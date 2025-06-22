@@ -74,7 +74,7 @@ const stateFilterInput = computed(() => {
 const trackableId = computed(() => route.params.trackable as string);
 
 class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
-    async fetchItems(
+    protected async fetchItems(
         filter: string | undefined,
         orderBy: IssueOrder[],
         count: number,
@@ -103,7 +103,7 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
         }
     }
 }
-const itemManager = new IssueItemManager() as ItemManager<Issue, IssueOrderField>;
+const itemManager: ItemManager<Issue, IssueOrderField> = new IssueItemManager();
 
 function issueRoute(issue: IdObject): RouteLocationRaw {
     return {

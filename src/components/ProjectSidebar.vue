@@ -94,7 +94,7 @@
 </template>
 <script setup lang="ts">
 import { PropType, computed, ref, watch } from "vue";
-import PaginatedList, { ItemManager } from "@/components/PaginatedList.vue";
+import PaginatedList from "@/components/PaginatedList.vue";
 import {
     GraphAggregatedIssueInfoFragment,
     GraphComponentVersionInfoFragment,
@@ -111,6 +111,7 @@ import IssueListItem from "@/components/IssueListItem.vue";
 import IssueTypeIcon from "@/components/IssueTypeIcon.vue";
 import { IdObject } from "@/util/types";
 import { RouteLocationRaw } from "vue-router";
+import { ItemManager } from "@/util/itemManager";
 
 type ProjectGraph = NodeReturnType<"getProjectGraph", "Project">;
 type Issue = IssueListItemInfoFragment;
@@ -218,8 +219,8 @@ const sortFields = {
     Updated: IssueOrderField.LastUpdatedAt
 };
 
-const itemManager: ItemManager<Issue, IssueOrderField> = {
-    fetchItems: async function (
+class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
+    protected async fetchItems(
         filter: string | undefined,
         orderBy: IssueOrder[],
         count: number,
@@ -292,7 +293,8 @@ const itemManager: ItemManager<Issue, IssueOrderField> = {
             return [res.searchIssues, res.searchIssues.length];
         }
     }
-};
+}
+const itemManager: ItemManager<Issue, IssueOrderField> = new IssueItemManager();
 
 function issueRoute(issue: IdObject): RouteLocationRaw {
     return {
