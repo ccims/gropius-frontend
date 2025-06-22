@@ -19,17 +19,27 @@
 </template>
 <script lang="ts" setup>
 import { NodeReturnType, useClient } from "@/graphql/client";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { RouteLocationRaw, useRoute, useRouter } from "vue-router";
-import PaginatedList, { ItemManager } from "@/components/PaginatedList.vue";
-import { IssueListItemInfoFragment, IssueOrder, IssueOrderField } from "@/graphql/generated";
+import PaginatedList from "@/components/PaginatedList.vue";
+import {
+    IssueListItemInfoFragment,
+    IssueOrder,
+    IssueOrderField,
+    LabelListFilterInput,
+    LabelOrderField,
+    OrderDirection
+} from "@/graphql/generated";
 import IssueListItem from "@/components/IssueListItem.vue";
 import IssueStateSegmentedButton from "@/components/input/IssueStateSegmentedButton.vue";
 import { IdObject } from "@/util/types";
 import IssueDialogs from "@/components/IssueDialogs.vue";
 import { issueSortFields } from "@/util/issueSortFields";
+import FilterDropdown from "@/components/FilterDropdown.vue";
+import { ItemManager } from "@/util/itemManager";
 
 type Trackable = NodeReturnType<"getIssueList", "Component">;
+type TrackableLabel = NodeReturnType<"getLabelList", "Component">;
 type Issue = IssueListItemInfoFragment;
 
 const client = useClient();
@@ -63,8 +73,8 @@ const stateFilterInput = computed(() => {
 
 const trackableId = computed(() => route.params.trackable as string);
 
-const itemManager: ItemManager<Issue, IssueOrderField> = {
-    fetchItems: async function (
+class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
+    protected async fetchItems(
         filter: string | undefined,
         orderBy: IssueOrder[],
         count: number,
@@ -84,12 +94,16 @@ const itemManager: ItemManager<Issue, IssueOrderField> = {
             const res = await client.getFilteredIssueList({
                 query: filter,
                 count,
-                filter: { trackables: { any: { id: { eq: trackableId.value } } }, state: stateFilterInput.value }
+                filter: {
+                    trackables: { any: { id: { eq: trackableId.value } } },
+                    state: stateFilterInput.value
+                }
             });
             return [res.searchIssues, res.searchIssues.length];
         }
     }
-};
+}
+const itemManager: ItemManager<Issue, IssueOrderField> = new IssueItemManager();
 
 function issueRoute(issue: IdObject): RouteLocationRaw {
     return {

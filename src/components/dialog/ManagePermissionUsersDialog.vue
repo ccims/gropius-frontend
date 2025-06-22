@@ -55,7 +55,7 @@
 <script setup lang="ts" generic="T">
 import { NodeReturnType, useClient } from "@/graphql/client";
 import { PropType, computed, ref, watch } from "vue";
-import PaginatedList, { ItemManager } from "../PaginatedList.vue";
+import PaginatedList from "../PaginatedList.vue";
 import { DefaultUserInfoFragment, GropiusUserOrder, GropiusUserOrderField } from "@/graphql/generated";
 import User from "../info/User.vue";
 import ConfirmationDialog from "./ConfirmationDialog.vue";
@@ -63,6 +63,7 @@ import GropiusUserAutocomplete from "../input/GropiusUserAutocomplete.vue";
 import { IdObject } from "@/util/types";
 import { UpdatePermissionFunction } from "../PermissionList.vue";
 import { withErrorMessage } from "@/util/withErrorMessage";
+import { ItemManager } from "@/util/itemManager";
 
 const props = defineProps({
     updatePermission: {
@@ -144,8 +145,8 @@ const sortFields = {
     "[Default]": GropiusUserOrderField.Id
 };
 
-const itemManager: ItemManager<DefaultUserInfoFragment, GropiusUserOrderField> = {
-    fetchItems: async function (
+class UserItemManager extends ItemManager<DefaultUserInfoFragment, GropiusUserOrderField> {
+    protected async fetchItems(
         filter: string | undefined,
         orderBy: GropiusUserOrder[],
         count: number,
@@ -169,7 +170,8 @@ const itemManager: ItemManager<DefaultUserInfoFragment, GropiusUserOrderField> =
             return [res.searchGropiusUsers, res.searchGropiusUsers.length];
         }
     }
-};
+}
+const itemManager: ItemManager<DefaultUserInfoFragment, GropiusUserOrderField> = new UserItemManager();
 </script>
 <style scoped lang="scss">
 @use "@/styles/settings.scss";

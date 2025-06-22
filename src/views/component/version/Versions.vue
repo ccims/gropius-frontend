@@ -41,7 +41,7 @@
     </PaginatedList>
 </template>
 <script lang="ts" setup>
-import PaginatedList, { ItemManager } from "@/components/PaginatedList.vue";
+import PaginatedList from "@/components/PaginatedList.vue";
 import { NodeReturnType, useClient } from "@/graphql/client";
 import { ComponentVersionOrder, ComponentVersionOrderField } from "@/graphql/generated";
 import { RouteLocationRaw, useRoute, useRouter } from "vue-router";
@@ -49,6 +49,7 @@ import ListItem from "@/components/ListItem.vue";
 import { computed } from "vue";
 import CreateComponentVersionDialog from "@/components/dialog/CreateComponentVersionDialog.vue";
 import { IdObject } from "@/util/types";
+import { ItemManager } from "@/util/itemManager";
 
 type ComponentVersion = NodeReturnType<"getComponentVersionList", "Component">["versions"]["nodes"][0];
 
@@ -62,8 +63,8 @@ const sortFields = {
     "[Default]": ComponentVersionOrderField.Id
 };
 
-const itemManager: ItemManager<ComponentVersion, ComponentVersionOrderField> = {
-    fetchItems: async function (
+class ComponentVersionItemManager extends ItemManager<ComponentVersion, ComponentVersionOrderField> {
+    protected async fetchItems(
         filter: string | undefined,
         orderBy: ComponentVersionOrder[],
         count: number,
@@ -88,7 +89,8 @@ const itemManager: ItemManager<ComponentVersion, ComponentVersionOrderField> = {
             return [res.searchComponentVersions, res.searchComponentVersions.length];
         }
     }
-};
+}
+const itemManager: ItemManager<ComponentVersion, ComponentVersionOrderField> = new ComponentVersionItemManager();
 
 function selectComponentVersion(componentVersion: IdObject) {
     router.push(componentVersionRoute(componentVersion));

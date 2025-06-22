@@ -21,13 +21,14 @@
 import { NodeReturnType, useClient } from "@/graphql/client";
 import { computed } from "vue";
 import { RouteLocationRaw, useRoute, useRouter } from "vue-router";
-import PaginatedList, { ItemManager } from "@/components/PaginatedList.vue";
+import PaginatedList from "@/components/PaginatedList.vue";
 import { IssueOrder, IssueOrderField, ProjectComponentIssueListItemInfoFragment } from "@/graphql/generated";
 import IssueListItem from "@/components/IssueListItem.vue";
 import IssueStateSegmentedButton from "@/components/input/IssueStateSegmentedButton.vue";
 import { IdObject } from "@/util/types";
 import IssueDialogs from "@/components/IssueDialogs.vue";
 import { issueSortFields } from "@/util/issueSortFields";
+import { ItemManager } from "@/util/itemManager";
 
 type Project = NodeReturnType<"getComponentIssueList", "Project">;
 type Issue = ProjectComponentIssueListItemInfoFragment;
@@ -63,8 +64,8 @@ const stateFilterInput = computed(() => {
 
 const trackableId = computed(() => route.params.trackable as string);
 
-const itemManager: ItemManager<Issue, IssueOrderField> = {
-    fetchItems: async function (
+class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
+    protected async fetchItems(
         filter: string | undefined,
         orderBy: IssueOrder[],
         count: number,
@@ -90,7 +91,8 @@ const itemManager: ItemManager<Issue, IssueOrderField> = {
             return [res.searchIssues, res.searchIssues.length];
         }
     }
-};
+}
+const itemManager: ItemManager<Issue, IssueOrderField> = new IssueItemManager();
 
 function issueRoute(issue: Issue): RouteLocationRaw {
     const trackable = issue.trackables.nodes[0];

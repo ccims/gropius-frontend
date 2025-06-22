@@ -24,13 +24,14 @@
     </PaginatedList>
 </template>
 <script lang="ts" setup>
-import PaginatedList, { ItemManager } from "@/components/PaginatedList.vue";
+import PaginatedList from "@/components/PaginatedList.vue";
 import { ClientReturnType, useClient } from "@/graphql/client";
 import { ProjectOrderField, ProjectOrder } from "@/graphql/generated";
 import { RouteLocationRaw, useRouter } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
 import CreateProjectDialog from "@/components/dialog/CreateProjectDialog.vue";
 import { IdObject } from "@/util/types";
+import { ItemManager } from "@/util/itemManager";
 
 type Project = ClientReturnType<"getProjectList">["projects"]["nodes"][0];
 
@@ -42,8 +43,8 @@ const sortFields = {
     "[Default]": ProjectOrderField.Id
 };
 
-const itemManager: ItemManager<Project, ProjectOrderField> = {
-    fetchItems: async function (
+class ProjectItemManager extends ItemManager<Project, ProjectOrderField> {
+    protected async fetchItems(
         filter: string | undefined,
         orderBy: ProjectOrder[],
         count: number,
@@ -64,7 +65,8 @@ const itemManager: ItemManager<Project, ProjectOrderField> = {
             return [res.searchProjects, res.searchProjects.length];
         }
     }
-};
+}
+const itemManager: ItemManager<Project, ProjectOrderField> = new ProjectItemManager();
 
 function selectProject(project: IdObject) {
     router.push(projectRoute(project));

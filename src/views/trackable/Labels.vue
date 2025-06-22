@@ -49,13 +49,14 @@
 </template>
 <script lang="ts" setup>
 import ListItem from "@/components/ListItem.vue";
-import PaginatedList, { ItemManager } from "@/components/PaginatedList.vue";
+import PaginatedList from "@/components/PaginatedList.vue";
 import ConfirmationDialog from "@/components/dialog/ConfirmationDialog.vue";
 import CreateLabelDialog from "@/components/dialog/CreateLabelDialog.vue";
 import ImportLabelDialog from "@/components/dialog/ImportLabelDialog.vue";
 import UpdateLabelDialog from "@/components/dialog/UpdateLabelDialog.vue";
 import { NodeReturnType, useClient } from "@/graphql/client";
 import { LabelOrder, LabelOrderField } from "@/graphql/generated";
+import { ItemManager } from "@/util/itemManager";
 import { trackableKey } from "@/util/keys";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import { inject } from "vue";
@@ -86,8 +87,8 @@ const sortFields = {
     Color: LabelOrderField.Color
 };
 
-const itemManager: ItemManager<Label, LabelOrderField> = {
-    fetchItems: async function (
+class LabelItemManager extends ItemManager<Label, LabelOrderField> {
+    protected async fetchItems(
         filter: string | undefined,
         orderBy: LabelOrder[],
         count: number,
@@ -111,7 +112,8 @@ const itemManager: ItemManager<Label, LabelOrderField> = {
             return [res.searchLabels, res.searchLabels.length];
         }
     }
-};
+}
+const itemManager: ItemManager<Label, LabelOrderField> = new LabelItemManager();
 
 async function removeLabel(labelId: string) {
     await withErrorMessage(async () => {
