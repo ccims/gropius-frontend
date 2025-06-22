@@ -13,7 +13,6 @@
     </PermissionList>
 </template>
 <script lang="ts" setup>
-import { ItemManager } from "@/components/PaginatedList.vue";
 import PermissionList, {
     CreatePermissionFunctionInput,
     UpdatePermissionFunctionInput
@@ -29,6 +28,7 @@ import {
 import { IdObject } from "@/util/types";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
+import { ItemManager } from "@/util/itemManager";
 
 const client = useClient();
 const route = useRoute();
@@ -37,8 +37,11 @@ const projectId = computed(() => route.params.trackable as string);
 
 const permissionEntries = Object.values(ProjectPermissionEntry);
 
-const itemManager: ItemManager<DefaultProjectPermissionInfoFragment, ProjectPermissionOrderField> = {
-    fetchItems: async function (
+class ProjectPermissionItemManager extends ItemManager<
+    DefaultProjectPermissionInfoFragment,
+    ProjectPermissionOrderField
+> {
+    protected async fetchItems(
         filter: string | undefined,
         orderBy: ProjectPermissionOrder[],
         count: number,
@@ -62,7 +65,9 @@ const itemManager: ItemManager<DefaultProjectPermissionInfoFragment, ProjectPerm
             return [res.searchProjectPermissions, res.searchProjectPermissions.length];
         }
     }
-};
+}
+const itemManager: ItemManager<DefaultProjectPermissionInfoFragment, ProjectPermissionOrderField> =
+    new ProjectPermissionItemManager();
 
 async function removePermission(id: string): Promise<void> {
     await client.removeProjectPermissionFromProject({ project: projectId.value, projectPermission: id });

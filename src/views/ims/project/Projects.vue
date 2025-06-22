@@ -24,7 +24,7 @@
     </PaginatedList>
 </template>
 <script lang="ts" setup>
-import PaginatedList, { ItemManager } from "@/components/PaginatedList.vue";
+import PaginatedList from "@/components/PaginatedList.vue";
 import { NodeReturnType, useClient } from "@/graphql/client";
 import { RouteLocationRaw, useRoute, useRouter } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
@@ -33,6 +33,7 @@ import { DefaultImsProjectInfoFragment, ImsProjectOrder, ImsProjectOrderField } 
 import SyncSelfAllowedSwitch from "@/components/input/SyncSelfAllowedSwitch.vue";
 import { computed } from "vue";
 import CreateIMSProjectDialog from "@/components/dialog/CreateIMSProjectDialog.vue";
+import { ItemManager } from "@/util/itemManager";
 
 type IMSProject = DefaultImsProjectInfoFragment;
 
@@ -47,8 +48,8 @@ const sortFields = {
     "[Default]": ImsProjectOrderField.Id
 };
 
-const itemManager: ItemManager<IMSProject, ImsProjectOrderField> = {
-    fetchItems: async function (
+class IMSProjectItemManager extends ItemManager<IMSProject, ImsProjectOrderField> {
+    protected async fetchItems(
         filter: string | undefined,
         orderBy: ImsProjectOrder[],
         count: number,
@@ -73,7 +74,11 @@ const itemManager: ItemManager<IMSProject, ImsProjectOrderField> = {
             return [res.searchIMSProjects, res.searchIMSProjects.length];
         }
     }
-};
+}
+const itemManager: ItemManager<IMSProject, ImsProjectOrderField> = new IMSProjectItemManager() as ItemManager<
+    IMSProject,
+    ImsProjectOrderField
+>;
 
 function selectIMSProject(imsProject: IdObject) {
     router.push(imsProjectRoute(imsProject));

@@ -24,13 +24,14 @@
     </PaginatedList>
 </template>
 <script lang="ts" setup>
-import PaginatedList, { ItemManager } from "@/components/PaginatedList.vue";
+import PaginatedList from "@/components/PaginatedList.vue";
 import { ClientReturnType, useClient } from "@/graphql/client";
 import { ComponentOrder, ComponentOrderField } from "@/graphql/generated";
 import { RouteLocationRaw, useRouter } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
 import CreateComponentDialog from "@/components/dialog/CreateComponentDialog.vue";
 import { IdObject } from "@/util/types";
+import { ItemManager } from "@/util/itemManager";
 
 type Component = ClientReturnType<"getComponentList">["components"]["nodes"][0];
 
@@ -43,8 +44,8 @@ const sortFields = {
     "[Default]": ComponentOrderField.Id
 };
 
-const itemManager: ItemManager<Component, ComponentOrderField> = {
-    fetchItems: async function (
+class ComponentItemManager extends ItemManager<Component, ComponentOrderField> {
+    protected async fetchItems(
         filter: string,
         orderBy: ComponentOrder[],
         count: number,
@@ -65,7 +66,8 @@ const itemManager: ItemManager<Component, ComponentOrderField> = {
             return [res.searchComponents, res.searchComponents.length];
         }
     }
-};
+}
+const itemManager: ItemManager<Component, ComponentOrderField> = new ComponentItemManager();
 
 function selectComponent(component: IdObject) {
     router.push(componentRoute(component));
