@@ -13335,7 +13335,7 @@ export type RelationLayout = BaseNode &
         /** The project this layout is for, mutually exclusive with view. */
         project?: Maybe<Project>;
         /** The Relation this layout is for. */
-        relation?: Maybe<Relation>;
+        relation: Relation;
         /** The view this layout is for, mutually exclusive with project. */
         view?: Maybe<View>;
     };
@@ -13553,7 +13553,7 @@ export type RelationPartnerLayout = BaseNode &
         /** The project this layout is for, mutually exclusive with view. */
         project?: Maybe<Project>;
         /** The RelationPartner this layout is for. */
-        relationPartner?: Maybe<RelationPartner>;
+        relationPartner: RelationPartner;
         /** The view this layout is for, mutually exclusive with project. */
         view?: Maybe<View>;
     };
@@ -17811,6 +17811,7 @@ export type GetComponentDetailsQuery = {
                           description: string;
                           value: number;
                       } | null;
+                      template: { __typename?: "IssueTemplate"; id: string; name: string };
                       incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                       outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                       state: { __typename?: "IssueState"; isOpen: boolean };
@@ -17878,6 +17879,7 @@ export type GetComponentDetailsQuery = {
                           description: string;
                           value: number;
                       } | null;
+                      template: { __typename?: "IssueTemplate"; id: string; name: string };
                       incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                       outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                       state: { __typename?: "IssueState"; isOpen: boolean };
@@ -19376,7 +19378,7 @@ export type GetProjectGraphQuery = {
                   __typename?: "RelationLayoutConnection";
                   nodes: Array<{
                       __typename?: "RelationLayout";
-                      relation?: { __typename?: "Relation"; id: string } | null;
+                      relation: { __typename?: "Relation"; id: string };
                       points: Array<{ __typename?: "Point"; x: number; y: number }>;
                   }>;
               };
@@ -19384,10 +19386,9 @@ export type GetProjectGraphQuery = {
                   __typename?: "RelationPartnerLayoutConnection";
                   nodes: Array<{
                       __typename?: "RelationPartnerLayout";
-                      relationPartner?:
+                      relationPartner:
                           | { __typename?: "ComponentVersion"; id: string }
-                          | { __typename?: "Interface"; id: string }
-                          | null;
+                          | { __typename?: "Interface"; id: string };
                       pos: { __typename?: "Point"; x: number; y: number };
                   }>;
               };
@@ -22652,6 +22653,7 @@ export type GetIssueListQuery = {
                           description: string;
                           value: number;
                       } | null;
+                      template: { __typename?: "IssueTemplate"; id: string; name: string };
                       incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                       outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                       state: { __typename?: "IssueState"; isOpen: boolean };
@@ -22763,6 +22765,7 @@ export type GetIssueListQuery = {
                           description: string;
                           value: number;
                       } | null;
+                      template: { __typename?: "IssueTemplate"; id: string; name: string };
                       incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                       outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                       state: { __typename?: "IssueState"; isOpen: boolean };
@@ -22933,6 +22936,7 @@ export type GetComponentIssueListQuery = {
                           description: string;
                           value: number;
                       } | null;
+                      template: { __typename?: "IssueTemplate"; id: string; name: string };
                       incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                       outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                       state: { __typename?: "IssueState"; isOpen: boolean };
@@ -23046,6 +23050,7 @@ export type GetIssueListOnAggregatedIssueQuery = {
                           description: string;
                           value: number;
                       } | null;
+                      template: { __typename?: "IssueTemplate"; id: string; name: string };
                       incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                       outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                       state: { __typename?: "IssueState"; isOpen: boolean };
@@ -23171,6 +23176,7 @@ export type GetFilteredIssueListQuery = {
             description: string;
             value: number;
         } | null;
+        template: { __typename?: "IssueTemplate"; id: string; name: string };
         incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
         outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
         state: { __typename?: "IssueState"; isOpen: boolean };
@@ -23230,6 +23236,7 @@ export type GetComponentFilteredIssueListQuery = {
             description: string;
             value: number;
         } | null;
+        template: { __typename?: "IssueTemplate"; id: string; name: string };
         incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
         outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
         state: { __typename?: "IssueState"; isOpen: boolean };
@@ -23312,6 +23319,7 @@ export type GetParticipatingIssueListQuery = {
                     description: string;
                     value: number;
                 } | null;
+                template: { __typename?: "IssueTemplate"; id: string; name: string };
                 incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                 outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                 state: { __typename?: "IssueState"; isOpen: boolean };
@@ -23372,6 +23380,7 @@ export type GetParticipatingFilteredIssueListQuery = {
             description: string;
             value: number;
         } | null;
+        template: { __typename?: "IssueTemplate"; id: string; name: string };
         incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
         outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
         state: { __typename?: "IssueState"; isOpen: boolean };
@@ -25006,6 +25015,7 @@ export type IssueListItemInfoFragment = {
         }>;
     };
     priority?: { __typename?: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+    template: { __typename?: "IssueTemplate"; id: string; name: string };
     incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
     outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
     state: { __typename?: "IssueState"; isOpen: boolean };
@@ -25043,6 +25053,7 @@ export type ParticipatingIssueListItemInfoFragment = {
         }>;
     };
     priority?: { __typename?: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+    template: { __typename?: "IssueTemplate"; id: string; name: string };
     incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
     outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
     state: { __typename?: "IssueState"; isOpen: boolean };
@@ -25080,6 +25091,7 @@ export type ProjectComponentIssueListItemInfoFragment = {
         }>;
     };
     priority?: { __typename?: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+    template: { __typename?: "IssueTemplate"; id: string; name: string };
     incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
     outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
     state: { __typename?: "IssueState"; isOpen: boolean };
@@ -29776,7 +29788,7 @@ export type ViewGraphInfoFragment = {
         __typename?: "RelationLayoutConnection";
         nodes: Array<{
             __typename?: "RelationLayout";
-            relation?: { __typename?: "Relation"; id: string } | null;
+            relation: { __typename?: "Relation"; id: string };
             points: Array<{ __typename?: "Point"; x: number; y: number }>;
         }>;
     };
@@ -29784,10 +29796,7 @@ export type ViewGraphInfoFragment = {
         __typename?: "RelationPartnerLayoutConnection";
         nodes: Array<{
             __typename?: "RelationPartnerLayout";
-            relationPartner?:
-                | { __typename?: "ComponentVersion"; id: string }
-                | { __typename?: "Interface"; id: string }
-                | null;
+            relationPartner: { __typename?: "ComponentVersion"; id: string } | { __typename?: "Interface"; id: string };
             pos: { __typename?: "Point"; x: number; y: number };
         }>;
     };
@@ -29890,7 +29899,7 @@ export type GetViewQuery = {
                   __typename?: "RelationLayoutConnection";
                   nodes: Array<{
                       __typename?: "RelationLayout";
-                      relation?: { __typename?: "Relation"; id: string } | null;
+                      relation: { __typename?: "Relation"; id: string };
                       points: Array<{ __typename?: "Point"; x: number; y: number }>;
                   }>;
               };
@@ -29898,10 +29907,9 @@ export type GetViewQuery = {
                   __typename?: "RelationPartnerLayoutConnection";
                   nodes: Array<{
                       __typename?: "RelationPartnerLayout";
-                      relationPartner?:
+                      relationPartner:
                           | { __typename?: "ComponentVersion"; id: string }
-                          | { __typename?: "Interface"; id: string }
-                          | null;
+                          | { __typename?: "Interface"; id: string };
                       pos: { __typename?: "Point"; x: number; y: number };
                   }>;
               };
@@ -30436,6 +30444,10 @@ export const IssueListItemInfoFragmentDoc = gql`
         }
         priority {
             ...DefaultIssuePriorityInfo
+        }
+        template {
+            id
+            name
         }
     }
     ${DefaultUserInfoFragmentDoc}

@@ -13,6 +13,18 @@
         </template>
         <template #search-append>
             <IssueStateSegmentedButton v-model="issueStateIndices" class="ml-2" />
+            <FilterDropdown
+                v-model="selectedTemplateId"
+                label="Template"
+                :item-manager="itemManager"
+                :mapper="(item) => item.template"
+                :sorter="(a, b) => a.name.localeCompare(b.name)"
+            >
+                <template #item="{ item, props }">
+                    <v-list-item :title="item.raw.name" :subtitle="item.raw.id" v-bind="props" />
+                </template>
+            </FilterDropdown>
+            <div>{{ selectedTemplateId }}</div>
         </template>
         <IssueDialogs />
     </PaginatedList>
@@ -26,17 +38,14 @@ import {
     IssueListItemInfoFragment,
     IssueOrder,
     IssueOrderField,
-    LabelListFilterInput,
-    LabelOrderField,
-    OrderDirection
 } from "@/graphql/generated";
 import IssueListItem from "@/components/IssueListItem.vue";
 import IssueStateSegmentedButton from "@/components/input/IssueStateSegmentedButton.vue";
 import { IdObject } from "@/util/types";
 import IssueDialogs from "@/components/IssueDialogs.vue";
 import { issueSortFields } from "@/util/issueSortFields";
-import FilterDropdown from "@/components/FilterDropdown.vue";
 import { ItemManager } from "@/util/itemManager";
+import FilterDropdown from "@/components/input/FilterDropdown.vue";
 
 type Trackable = NodeReturnType<"getIssueList", "Component">;
 type TrackableLabel = NodeReturnType<"getLabelList", "Component">;
@@ -45,6 +54,8 @@ type Issue = IssueListItemInfoFragment;
 const client = useClient();
 const router = useRouter();
 const route = useRoute();
+
+const selectedTemplateId = ref<string | undefined>(undefined);
 
 const issueStateIndices = computed({
     get: () => {
@@ -103,6 +114,7 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
         }
     }
 }
+
 const itemManager: ItemManager<Issue, IssueOrderField> = new IssueItemManager();
 
 function issueRoute(issue: IdObject): RouteLocationRaw {

@@ -59,7 +59,10 @@ query getComponentFilteredIssueList($query: String!, $count: Int!, $project: ID!
     searchIssues(
         query: $query
         first: $count
-        filter: { and: [$filter], trackables: { any: { isComponentAnd: { versions: { any: { partOfProject: $project } } } } } }
+        filter: {
+            and: [$filter]
+            trackables: { any: { isComponentAnd: { versions: { any: { partOfProject: $project } } } } }
+        }
     ) {
         ...ProjectComponentIssueListItemInfo
     }
@@ -252,6 +255,10 @@ fragment IssueListItemInfo on Issue {
     }
     priority {
         ...DefaultIssuePriorityInfo
+    }
+    template {
+        id
+        name
     }
 }
 

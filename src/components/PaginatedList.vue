@@ -28,7 +28,7 @@
                 </v-btn>
             </div>
         </div>
-        <div class="mb-1 w-25 d-flex ga-4 align-center">
+        <div class="mb-1 w-50 d-flex ga-4 align-center">
             <slot name="search-append" />
         </div>
         <div class="mx-3 mb-1">
