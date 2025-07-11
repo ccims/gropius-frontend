@@ -24,7 +24,8 @@ export const useAppStore = defineStore("app", {
         refreshToken: useLocalStorage<string>("refreshToken", ""),
         accessTokenValidUntil: useLocalStorage<number>("accessTokenValidUntil", 0),
         codeVerifier: useLocalStorage<string>("codeVerifier", ""),
-        errors: [] as string[]
+        errors: [] as string[],
+        visibleTimelineItems: useLocalStorage<number[]>("visibleTimelineItems", [] as number[])
     }),
     getters: {
         tokenValidityDuration(): number {
