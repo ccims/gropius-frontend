@@ -8,8 +8,8 @@ import { onMounted, ref } from "vue";
 import { GraphiQL, GraphiQLProps } from "graphiql";
 import { explorerPlugin } from "@graphiql/plugin-explorer";
 import { createGraphiQLFetcher } from "@graphiql/toolkit";
-import "graphiql/graphiql.min.css";
-import "@graphiql/plugin-explorer/dist/style.css";
+import "graphiql/style.css";
+import "@graphiql/plugin-explorer/style.css";
 import { useAppStore } from "@/store/app";
 
 const reactContainer = ref();
@@ -31,8 +31,6 @@ const gqlFetcher = createGraphiQLFetcher({
  * A GraphiQL component with the Explorer plugin.
  */
 function GraphiQLWithExplorer() {
-    const [query, setQuery] = React.useState("");
-    const [variables, setVariables] = React.useState("");
     // @ts-ignore-next-line taken from official example, however types seem to be incorrect
     const plugin = explorerPlugin();
     const props: GraphiQLProps = {
@@ -40,10 +38,6 @@ function GraphiQLWithExplorer() {
         isHeadersEditorEnabled: false,
         shouldPersistHeaders: true,
         plugins: [plugin],
-        query: query,
-        onEditQuery: setQuery,
-        variables: variables,
-        onEditVariables: setVariables
     };
     // @ts-ignore-next-line taken from official example, however some types seem to conflict
     return React.createElement(GraphiQL, props);
