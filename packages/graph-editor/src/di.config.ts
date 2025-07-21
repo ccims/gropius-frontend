@@ -89,7 +89,7 @@ const diagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
  */
 export function createContainer(widgetId: string): Container {
     const container = new Container();
-    loadDefaultModules(container, {
+    loadDefaultModules(container as any, {
         exclude: [sprottyUpdateModule, sprottyMoveModule, sprottyZOrderModule, decorationModule, undoRedoModule]
     });
 
@@ -105,7 +105,7 @@ export function createContainer(widgetId: string): Container {
 
     container.load(diagramModule);
 
-    overrideViewerOptions(container, {
+    overrideViewerOptions(container as any, {
         needsClientLayout: true,
         needsServerLayout: false,
         baseDiv: widgetId

@@ -75,7 +75,7 @@
 import { useLocalStorage } from "@vueuse/core";
 import { PropType } from "vue";
 import { RouteLocationRaw } from "vue-router";
-import { useTheme } from "vuetify/lib/framework.mjs";
+import { useTheme } from "vuetify";
 import SideBar, { SideBarItem } from "./SideBar.vue";
 import ErrorSnackbar from "./ErrorSnackbar.vue";
 import { useAppStore } from "@/store/app";
@@ -125,7 +125,7 @@ function toggleDarkMode() {
 }
 
 function updateColorMode() {
-    theme.global.name.value = lightMode.value ? "light" : "dark";
+    theme.change(lightMode.value ? "light" : "dark");
 }
 
 updateColorMode();
