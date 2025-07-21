@@ -55,7 +55,7 @@
                     color="primary"
                     class="markdown-field"
                 >
-                    <Markdown v-model="body" v-bind="bodyProps" edit-mode editable class="w-100 ma-2" />
+                    <Markdown v-model="body" v-bind="bodyProps" edit-mode editable class="w-100 ma-2 markdown" />
                 </SimpleField>
             </template>
             <template #templatedFields>
@@ -226,6 +226,10 @@ function onSelectedState(state: { isOpen: boolean }) {
 
 .icon-container {
     color: rgba(var(--v-theme-on-surface), 0.38);
+}
+
+.markdown {
+    min-width: 0;
 }
 
 :deep(.markdown-field .v-field-label) {
