@@ -26,7 +26,12 @@
                         last updated <RelativeTimeWrapper :time="issue.lastUpdatedAt" />
                     </div>
                 </div>
-                <v-btn-toggle class="segmented-button mr-3 ml-10" multiple mandatory v-model="store.visibleTimelineItems">
+                <v-btn-toggle
+                    class="segmented-button mr-3 ml-10"
+                    multiple
+                    mandatory
+                    v-model="store.visibleTimelineItems"
+                >
                     <v-btn :prepend-icon="store.visibleTimelineItems.includes(0) ? 'mdi-check' : 'mdi-comment-outline'">
                         Comments
                     </v-btn>

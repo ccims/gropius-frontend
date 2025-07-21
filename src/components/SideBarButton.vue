@@ -1,6 +1,11 @@
 <template>
     <router-link v-slot="{ isActive, href, navigate, isExactActive }" :to="to" custom>
-        <button class="sidebar-button d-flex align-center flex-column" :class="{ active: isActive }" :disabled="disabled" @click="navigate">
+        <button
+            class="sidebar-button d-flex align-center flex-column"
+            :class="{ active: isActive }"
+            :disabled="disabled"
+            @click="navigate"
+        >
             <div class="icon-container d-flex align-center justify-center">
                 <v-expand-x-transition>
                     <div

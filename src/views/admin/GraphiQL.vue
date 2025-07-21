@@ -37,7 +37,7 @@ function GraphiQLWithExplorer() {
         fetcher: gqlFetcher,
         isHeadersEditorEnabled: false,
         shouldPersistHeaders: true,
-        plugins: [plugin],
+        plugins: [plugin]
     };
     // @ts-ignore-next-line taken from official example, however some types seem to conflict
     return React.createElement(GraphiQL, props);

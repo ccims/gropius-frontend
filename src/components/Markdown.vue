@@ -17,17 +17,7 @@
                     preview-theme="github"
                     :data-code-theme="theme.current.value.dark ? 'dark' : 'light'"
                     :code-foldable="false"
-                    :toolbars-exclude="[
-                        'save',
-                        'github',
-                        'htmlPreview',
-                        'fullscreen',
-                        'pageFullscreen',
-                        'sub',
-                        'sup',
-                        'revoke',
-                        'next'
-                    ]"
+                    :toolbars="toolbars"
                     @update:model-value="handleModelUpdate"
                     @onUploadImg="onUploadImg"
                 />
@@ -45,10 +35,12 @@
     </div>
 </template>
 <script setup lang="ts">
-import { MdEditor, MdPreview } from "md-editor-v3";
-import { computed, nextTick, ref } from "vue";
+import { MdEditor, MdPreview, ToolbarNames } from "md-editor-v3";
+import { computed, nextTick, ref, watch } from "vue";
 import "@github/task-lists-element";
 import { useTheme } from "vuetify";
+import { useAppStore } from "@/store/app";
+import { useResizeObserver } from "@vueuse/core";
 
 type ListItemPos = [number, number];
 
@@ -58,6 +50,7 @@ interface SourceRange {
 }
 
 const theme = useTheme();
+const store = useAppStore();
 
 const model = defineModel({
     type: String,
@@ -79,6 +72,56 @@ const mdEditorContainer = ref<HTMLElement>();
 const mdEditorRef = ref<any>();
 const lastRerender = ref(Date.now());
 const lastUpdateTime = ref(Date.now());
+const containerWidth = ref(0);
+
+useResizeObserver(mdEditorContainer, (entries) => {
+    const entry = entries[0];
+    if (entry) {
+        containerWidth.value = entry.contentRect.width;
+    }
+});
+
+watch(containerWidth, (newWidth, oldWidth) => {
+    if (newWidth < 500 && oldWidth >= 500) {
+        if (mdEditorRef.value) {
+            mdEditorRef.value.togglePreview(false);
+        }
+    } else if (newWidth >= 500 && oldWidth < 500) {
+        if (mdEditorRef.value) {
+            mdEditorRef.value.togglePreview(true);
+            mdEditorRef.value.togglePreviewOnly(false);
+        }
+    }
+});
+
+const toolbars = computed<ToolbarNames[]>(() => {
+    const items: ToolbarNames[] = [];
+
+    items.push(
+        "bold",
+        "underline",
+        "italic",
+        "strikeThrough",
+        "-",
+        "title",
+        "quote",
+        "unorderedList",
+        "orderedList",
+        "task"
+    );
+
+    if (containerWidth.value >= 710) {
+        items.push("-", "codeRow", "code", "link", "image", "table", "mermaid", "katex");
+    }
+
+    if (containerWidth.value >= 500) {
+        items.push("=", "prettier", "preview", "previewOnly", "catalog");
+    } else {
+        items.unshift("previewOnly", "=");
+    }
+
+    return items;
+});
 
 async function handleModelUpdate() {
     const now = Date.now();
@@ -87,7 +130,7 @@ async function handleModelUpdate() {
     lastUpdateTime.value = now;
 
     if (timeSinceLastUpdate >= 500) {
-        if (mdEditorRef.value && typeof mdEditorRef.value.rerender === "function") {
+        if (mdEditorRef.value) {
             await nextTick();
             mdEditorRef.value.rerender();
             lastRerender.value = now;
@@ -130,7 +173,7 @@ function handleTaskListsMove({ src, dst }: { src: [number, number]; dst: [number
         const newValue = moveItem(src, dst, lines.value);
         model.value = newValue;
     } catch (e) {
-        //store.pushError("Failed to move item");
+        store.pushError("Failed to move item");
         console.error(e);
     }
 }
@@ -344,14 +387,19 @@ function getSourceRange(listItemPos: ListItemPos, source: string[]): SourceRange
     --md-bk-color: transparent;
     --md-border-color: rgb(var(--v-theme-outline-variant));
     --md-scrollbar-bg-color: transparent;
+    --md-bk-color-outstand: rgb(var(--v-theme-primary-container));
     border: none;
+}
+
+.md-editor div.github-theme {
+    --md-theme-code-before-bg-color: rgb(var(--v-theme-surface-elevated-2));
 }
 
 .md-editor.editor {
     height: max(300px, 30vh);
 }
 
-.md-editor:not(.md-editor-previewOnly) .md-editor-preview-wrapper {
+.md-editor .md-editor-resize-operate {
     border-left: 1px solid var(--md-border-color);
 }
 

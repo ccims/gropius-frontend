@@ -40,23 +40,23 @@ export default {
             editorExtensions: {
                 prettier: {
                     prettierInstance: prettier,
-                    parserMarkdownInstance: parserMarkdown,
+                    parserMarkdownInstance: parserMarkdown
                 },
                 highlight: {
-                    instance: highlight,
+                    instance: highlight
                 },
                 screenfull: {
-                    instance: screenfull,
+                    instance: screenfull
                 },
                 katex: {
-                    instance: katex,
+                    instance: katex
                 },
                 cropper: {
-                    instance: Cropper,
+                    instance: Cropper
                 },
                 mermaid: {
-                    instance: mermaid,
-                },
+                    instance: mermaid
+                }
             },
             markdownItConfig(md) {
                 initLineEndNumber(md);
@@ -67,10 +67,10 @@ export default {
                     {
                         type: "xss",
                         plugin: XSSPlugin,
-                        options: {},
-                    },
+                        options: {}
+                    }
                 ];
-            },
+            }
         });
-    },
+    }
 };
