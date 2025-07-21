@@ -10,6 +10,7 @@
                 <MdEditor
                     v-if="editMode"
                     ref="mdEditorRef"
+                    class="editor"
                     v-model="model"
                     language="en-US"
                     :theme="theme.current.value.dark ? 'dark' : 'light'"
@@ -344,6 +345,9 @@ function getSourceRange(listItemPos: ListItemPos, source: string[]): SourceRange
     --md-border-color: rgb(var(--v-theme-outline-variant));
     --md-scrollbar-bg-color: transparent;
     border: none;
+}
+
+.md-editor.editor {
     height: max(300px, 30vh);
 }
 
