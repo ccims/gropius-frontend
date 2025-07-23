@@ -389,6 +389,10 @@ function getSourceRange(listItemPos: ListItemPos, source: string[]): SourceRange
     --md-scrollbar-bg-color: transparent;
     --md-bk-color-outstand: rgb(var(--v-theme-primary-container));
     border: none;
+
+    .md-editor-dropdown-overlay {
+        background: rgb(var(--v-theme-surface-container-low));
+    }
 }
 
 .md-editor div.github-theme {
