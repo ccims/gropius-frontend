@@ -13,6 +13,9 @@
                 <template #prepend>
                     <IssueIcon :issue="item.raw" class="issue-icon mr-2" />
                 </template>
+                <v-tooltip activator="parent" :open-delay="500">
+                    {{ item.raw.title }}
+                </v-tooltip>
             </v-list-item>
         </template>
         <template #context-item="{ props, item }">

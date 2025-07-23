@@ -53,3 +53,8 @@ onMounted(() => {
     padding: 4px;
 }
 </style>
+<style>
+.graphiql-container * {
+    outline: none !important;
+}
+</style>

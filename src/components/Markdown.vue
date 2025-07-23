@@ -115,7 +115,7 @@ const toolbars = computed<ToolbarNames[]>(() => {
     }
 
     if (containerWidth.value >= 500) {
-        items.push("=", "prettier", "preview", "previewOnly", "catalog");
+        items.push("=", "prettier", "preview", "previewOnly");
     } else {
         items.unshift("previewOnly", "=");
     }
