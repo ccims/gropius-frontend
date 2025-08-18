@@ -1,20 +1,51 @@
 <template>
-    <FetchingAutocomplete
-        mode="model"
-        :fetch="async () => allFetched"
-        :dependency="allFetched"
-        :label="props.label"
-        item-title="name"
-        v-model="model"
-    >
-        <template #item="{ props, item }">
-            <slot name="item" :props="props" :item="item" />
+    <v-menu location="bottom" v-model="menuOpen" :close-on-content-click="false">
+        <template v-slot:activator="{ props: templateProps }">
+            <v-chip append-icon="mdi-menu-down" v-bind="templateProps" :color="chipColor" :variant="chipVariant">
+                <template #append>
+                    <v-icon
+                        small
+                        class="ml-1"
+                        @click.stop="model = []"
+                        aria-label="remove"
+                        :icon="model.length ? 'mdi-close-circle' : 'mdi-menu-down'"
+                    />
+                </template>
+                {{ chipLabel }}
+            </v-chip>
         </template>
-    </FetchingAutocomplete>
+        <v-list max-height="300px" min-width="300px">
+            <div class="pa-2">
+                <v-text-field
+                    v-model="searchText"
+                    label="Search items..."
+                    density="compact"
+                    hide-details
+                    clearable
+                    prepend-inner-icon="mdi-magnify"
+                    variant="outlined"
+                    autofocus
+                ></v-text-field>
+            </div>
+            <v-divider></v-divider>
+            <template v-if="filteredItems.length > 0">
+                <v-list-item v-for="item in filteredItems" :key="item.id">
+                    <v-checkbox v-model="model" :value="item.id" density="compact" hide-details>
+                        <template #label>
+                            <slot :item="item">
+                                {{ item.name }}
+                            </slot>
+                        </template>
+                    </v-checkbox>
+                    <v-tooltip v-if="item.description" :text="item.description" activator="parent" />
+                </v-list-item>
+            </template>
+            <div v-else-if="filteredItems.length === 0" class="pa-4 text-center text-grey">No items found.</div>
+        </v-list>
+    </v-menu>
 </template>
-<script setup lang="ts" generic="T, S extends string, I extends IdObject">
-import FetchingAutocomplete from "@/components/input/FetchingAutocomplete.vue";
-import { computed, PropType } from "vue";
+<script setup lang="ts" generic="T, S extends string, I extends IdObject & { name: string; description?: string }">
+import { computed, PropType, ref, watch } from "vue";
 import { ItemManager } from "@/util/itemManager";
 import { IdObject } from "@/util/types";
 
@@ -29,33 +60,106 @@ const props = defineProps({
         required: true
     },
     mapper: {
-        type: Function as PropType<(item: T) => I>,
+        type: Function as PropType<(item: T) => I | I[] | undefined | null>,
         required: true
     },
     sorter: {
         type: Function as PropType<(a: I, b: I) => number>,
-        required: true
+        required: false,
+        default: (a: I, b: I) => a.name.localeCompare(b.name)
+    },
+    additionalInitialValues: {
+        type: Function as PropType<() => Promise<I[]>>,
+        required: false,
+        default: () => Promise.resolve([])
+    },
+    fetchOnSearch: {
+        type: Function as PropType<(search: string) => Promise<I[]>>,
+        required: false,
+        default: () => Promise.resolve([])
     }
-})
+});
 
-const model = defineModel<string | undefined>();
+const chipLabel = computed(() => {
+    if (model.value.length === 0) return props.label;
+    if (model.value.length === 1) {
+        const item = allItems.value.find((i) => i.id === model.value[0]);
+        return item ? item.name : "Unknown Item";
+    }
+    return `${model.value.length} selected`;
+});
+const chipColor = computed(() => {
+    return model.value.length > 0 ? "primary" : "grey lighten-1";
+});
+const chipVariant = computed(() => {
+    return model.value.length > 0 ? "tonal" : "outlined";
+});
 
-const allFetched = computed(() => {
+const menuOpen = ref(false);
+
+const model = defineModel<string[]>({ default: () => [] });
+
+const filteredItems = computed(() => {
+    return allItems.value.filter((item) => {
+        const currentSeach = searchText.value;
+        if (!currentSeach) return true;
+        return item.name.toLowerCase().includes(currentSeach.toLowerCase());
+    });
+});
+
+const fromItemManager = computed(() => {
+    return (
+        props.itemManager.cachedItems.value?.[0]?.flatMap((item) => {
+            const result = props.mapper(item);
+            if (result === undefined || result === null) return [];
+            return Array.isArray(result) ? result : [result];
+        }) ?? []
+    );
+});
+
+const fromFunction = ref([] as I[]);
+props.additionalInitialValues().then((items) => {
+    fromFunction.value = items;
+});
+
+const fromSearchFetch = ref([] as I[]);
+const searchText = ref<string | null>("");
+watch(searchText, async (newValue) => {
+    if (!newValue) return;
+    if (newValue.trim() === "") {
+        fromSearchFetch.value = [];
+        return;
+    }
+    fromSearchFetch.value = await props.fetchOnSearch(newValue);
+});
+
+const allItems = computed((previous?: I[]) => {
     const result: I[] = [];
-    const idSet = new Set<string>();
-    for (const item of props.itemManager.cachedItems.value?.[0] ?? []) {
-        const mappedItem = props.mapper(item);
-        const id = mappedItem.id;
-        if (idSet.has(id)) continue;
-        idSet.add(id);
-        result.push(mappedItem);
+    if (previous) {
+        result.push(...previous);
     }
+    const idSet = new Set<string>();
+    for (const oldItem of result) {
+        idSet.add(oldItem.id);
+    }
+    function handleItems(array: I[]) {
+        for (const mappedItem of array) {
+            const id = mappedItem.id;
+            if (idSet.has(id)) continue;
+            idSet.add(id);
+            result.push(mappedItem);
+        }
+    }
+    handleItems(fromItemManager.value);
+    handleItems(fromFunction.value as I[]);
+    handleItems(fromSearchFetch.value as I[]);
     result.sort(props.sorter);
     return result;
 });
-
 </script>
 
 <style scoped lang="scss">
-
+.visibility-hidden {
+    visibility: hidden;
+}
 </style>

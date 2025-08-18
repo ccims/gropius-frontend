@@ -9,6 +9,7 @@
                 clearable
             >
             </v-text-field>
+            <slot name="search-append" />
             <div
                 class="sort-container d-flex mr-3"
                 :class="{ hidden: transformedSearchQuery != undefined, 'sort-container-small': !multipleSortFields }"
@@ -27,9 +28,6 @@
                     <v-tooltip activator="parent" location="bottom"> Toggle sort sort </v-tooltip>
                 </v-btn>
             </div>
-        </div>
-        <div class="mb-1 w-50 d-flex ga-4 align-center">
-            <slot name="search-append" />
         </div>
         <div class="mx-3 mb-1">
             <slot name="additional-filter" />
