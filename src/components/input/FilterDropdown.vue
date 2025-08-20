@@ -124,15 +124,15 @@ props.additionalInitialValues().then((items) => {
 
 const fromSearchFetch = ref([] as I[]);
 const searchText = ref<string | null>("");
+
 watch(searchText, async (newValue) => {
-    if (!newValue) return;
-    if (newValue.trim() === "") {
+    const val = (newValue ?? "").trim();
+    if (val === "") {
         fromSearchFetch.value = [];
         return;
     }
-    fromSearchFetch.value = await props.fetchOnSearch(newValue);
+    fromSearchFetch.value = await props.fetchOnSearch(val);
 });
-
 const allItems = computed((previous?: I[]) => {
     const result: I[] = [];
     if (previous) {
