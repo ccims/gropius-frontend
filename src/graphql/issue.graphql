@@ -405,6 +405,13 @@ query getUsedLabels($trackable: ID!, $filter: String!) {
             usedLabels(filter: { name: {contains: $filter} }) {
                 nodes {
                     ...DefaultLabelInfo
+                    trackables {
+                        nodes {
+                            id
+                            name
+                            description
+                        }
+                    }
                 }
             }
         }
