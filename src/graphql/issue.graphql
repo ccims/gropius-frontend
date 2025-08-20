@@ -252,6 +252,7 @@ fragment IssueListItemInfo on Issue {
                 nodes {
                     id
                     name
+                    description
                 }
             }
         }

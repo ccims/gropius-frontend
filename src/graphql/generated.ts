@@ -18151,8 +18151,8 @@ export type GetComponentDetailsQuery = {
                               trackables: {
                                   __typename?: "TrackableConnection";
                                   nodes: Array<
-                                      | { __typename?: "Component"; id: string; name: string }
-                                      | { __typename?: "Project"; id: string; name: string }
+                                      | { __typename?: "Component"; id: string; name: string; description: string }
+                                      | { __typename?: "Project"; id: string; name: string; description: string }
                                   >;
                               };
                           }>;
@@ -18226,8 +18226,8 @@ export type GetComponentDetailsQuery = {
                               trackables: {
                                   __typename?: "TrackableConnection";
                                   nodes: Array<
-                                      | { __typename?: "Component"; id: string; name: string }
-                                      | { __typename?: "Project"; id: string; name: string }
+                                      | { __typename?: "Component"; id: string; name: string; description: string }
+                                      | { __typename?: "Project"; id: string; name: string; description: string }
                                   >;
                               };
                           }>;
@@ -23008,8 +23008,8 @@ export type GetIssueListQuery = {
                               trackables: {
                                   __typename?: "TrackableConnection";
                                   nodes: Array<
-                                      | { __typename?: "Component"; id: string; name: string }
-                                      | { __typename?: "Project"; id: string; name: string }
+                                      | { __typename?: "Component"; id: string; name: string; description: string }
+                                      | { __typename?: "Project"; id: string; name: string; description: string }
                                   >;
                               };
                           }>;
@@ -23127,8 +23127,8 @@ export type GetIssueListQuery = {
                               trackables: {
                                   __typename?: "TrackableConnection";
                                   nodes: Array<
-                                      | { __typename?: "Component"; id: string; name: string }
-                                      | { __typename?: "Project"; id: string; name: string }
+                                      | { __typename?: "Component"; id: string; name: string; description: string }
+                                      | { __typename?: "Project"; id: string; name: string; description: string }
                                   >;
                               };
                           }>;
@@ -23305,8 +23305,8 @@ export type GetComponentIssueListQuery = {
                               trackables: {
                                   __typename?: "TrackableConnection";
                                   nodes: Array<
-                                      | { __typename?: "Component"; id: string; name: string }
-                                      | { __typename?: "Project"; id: string; name: string }
+                                      | { __typename?: "Component"; id: string; name: string; description: string }
+                                      | { __typename?: "Project"; id: string; name: string; description: string }
                                   >;
                               };
                           }>;
@@ -23426,8 +23426,8 @@ export type GetIssueListOnAggregatedIssueQuery = {
                               trackables: {
                                   __typename?: "TrackableConnection";
                                   nodes: Array<
-                                      | { __typename?: "Component"; id: string; name: string }
-                                      | { __typename?: "Project"; id: string; name: string }
+                                      | { __typename?: "Component"; id: string; name: string; description: string }
+                                      | { __typename?: "Project"; id: string; name: string; description: string }
                                   >;
                               };
                           }>;
@@ -23571,8 +23571,8 @@ export type GetFilteredIssueListQuery = {
                 trackables: {
                     __typename?: "TrackableConnection";
                     nodes: Array<
-                        | { __typename?: "Component"; id: string; name: string }
-                        | { __typename?: "Project"; id: string; name: string }
+                        | { __typename?: "Component"; id: string; name: string; description: string }
+                        | { __typename?: "Project"; id: string; name: string; description: string }
                     >;
                 };
             }>;
@@ -23644,8 +23644,8 @@ export type GetComponentFilteredIssueListQuery = {
                 trackables: {
                     __typename?: "TrackableConnection";
                     nodes: Array<
-                        | { __typename?: "Component"; id: string; name: string }
-                        | { __typename?: "Project"; id: string; name: string }
+                        | { __typename?: "Component"; id: string; name: string; description: string }
+                        | { __typename?: "Project"; id: string; name: string; description: string }
                     >;
                 };
             }>;
@@ -23728,8 +23728,8 @@ export type GetParticipatingIssueListQuery = {
                         trackables: {
                             __typename?: "TrackableConnection";
                             nodes: Array<
-                                | { __typename?: "Component"; id: string; name: string }
-                                | { __typename?: "Project"; id: string; name: string }
+                                | { __typename?: "Component"; id: string; name: string; description: string }
+                                | { __typename?: "Project"; id: string; name: string; description: string }
                             >;
                         };
                     }>;
@@ -23808,8 +23808,8 @@ export type GetParticipatingFilteredIssueListQuery = {
                 trackables: {
                     __typename?: "TrackableConnection";
                     nodes: Array<
-                        | { __typename?: "Component"; id: string; name: string }
-                        | { __typename?: "Project"; id: string; name: string }
+                        | { __typename?: "Component"; id: string; name: string; description: string }
+                        | { __typename?: "Project"; id: string; name: string; description: string }
                     >;
                 };
             }>;
@@ -25468,8 +25468,8 @@ export type IssueListItemInfoFragment = {
             trackables: {
                 __typename?: "TrackableConnection";
                 nodes: Array<
-                    | { __typename?: "Component"; id: string; name: string }
-                    | { __typename?: "Project"; id: string; name: string }
+                    | { __typename?: "Component"; id: string; name: string; description: string }
+                    | { __typename?: "Project"; id: string; name: string; description: string }
                 >;
             };
         }>;
@@ -25519,8 +25519,8 @@ export type ParticipatingIssueListItemInfoFragment = {
             trackables: {
                 __typename?: "TrackableConnection";
                 nodes: Array<
-                    | { __typename?: "Component"; id: string; name: string }
-                    | { __typename?: "Project"; id: string; name: string }
+                    | { __typename?: "Component"; id: string; name: string; description: string }
+                    | { __typename?: "Project"; id: string; name: string; description: string }
                 >;
             };
         }>;
@@ -25570,8 +25570,8 @@ export type ProjectComponentIssueListItemInfoFragment = {
             trackables: {
                 __typename?: "TrackableConnection";
                 nodes: Array<
-                    | { __typename?: "Component"; id: string; name: string }
-                    | { __typename?: "Project"; id: string; name: string }
+                    | { __typename?: "Component"; id: string; name: string; description: string }
+                    | { __typename?: "Project"; id: string; name: string; description: string }
                 >;
             };
         }>;
@@ -27611,7 +27611,20 @@ export type FirstTrackableLabelsQuery = {
               __typename?: "Component";
               labels: {
                   __typename?: "LabelConnection";
-                  nodes: Array<{ __typename?: "Label"; id: string; name: string; description: string; color: string }>;
+                  nodes: Array<{
+                      __typename?: "Label";
+                      id: string;
+                      name: string;
+                      description: string;
+                      color: string;
+                      trackables: {
+                          __typename?: "TrackableConnection";
+                          nodes: Array<
+                              | { __typename?: "Component"; id: string; name: string; description: string }
+                              | { __typename?: "Project"; id: string; name: string; description: string }
+                          >;
+                      };
+                  }>;
               };
           }
         | { __typename?: "ComponentPermission" }
@@ -27658,7 +27671,20 @@ export type FirstTrackableLabelsQuery = {
               __typename?: "Project";
               labels: {
                   __typename?: "LabelConnection";
-                  nodes: Array<{ __typename?: "Label"; id: string; name: string; description: string; color: string }>;
+                  nodes: Array<{
+                      __typename?: "Label";
+                      id: string;
+                      name: string;
+                      description: string;
+                      color: string;
+                      trackables: {
+                          __typename?: "TrackableConnection";
+                          nodes: Array<
+                              | { __typename?: "Component"; id: string; name: string; description: string }
+                              | { __typename?: "Project"; id: string; name: string; description: string }
+                          >;
+                      };
+                  }>;
               };
           }
         | { __typename?: "ProjectPermission" }
@@ -31619,6 +31645,7 @@ export const IssueListItemInfoFragmentDoc = gql`
                     nodes {
                         id
                         name
+                        description
                     }
                 }
             }
@@ -34346,6 +34373,13 @@ export const FirstTrackableLabelsDocument = gql`
                 labels(first: $count, orderBy: [{ field: NAME }]) {
                     nodes {
                         ...DefaultLabelInfo
+                        trackables {
+                            nodes {
+                                id
+                                name
+                                description
+                            }
+                        }
                     }
                 }
             }

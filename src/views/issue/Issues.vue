@@ -56,9 +56,20 @@
                     "
                 >
                     <template #default="{ item }">
+                        <!-- TODO improve typing -->
                         <div class="d-flex align-center">
-                            <v-icon :color="(item as any)['color']" class="opacity-100 mr-1" icon="mdi-circle" />
-                            {{ item.name }}
+                            <v-icon :color="(item as any).color" class="opacity-100 mr-1" icon="mdi-circle" />
+                            <span>{{ item.name }}</span>
+                            <v-chip color="primary" size="small" class="ml-2 flex-shrink-0" v-if="(item as any).trackables.nodes[0].id !== trackableId">
+                                {{ (item as any).trackables.nodes[0].name }}
+                                <v-tooltip
+                                    v-if="(item as any).trackables.nodes[0].description"
+                                    activator="parent"
+                                    location="bottom"
+                                >
+                                    {{ (item as any).trackables.nodes[0].description }}
+                                </v-tooltip>
+                            </v-chip>
                         </div>
                     </template>
                 </FilterDropdown>
