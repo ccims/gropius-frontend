@@ -1,7 +1,7 @@
 <template>
     <v-menu location="bottom" v-model="menuOpen" :close-on-content-click="false">
         <template v-slot:activator="{ props: templateProps }">
-            <v-chip append-icon="mdi-menu-down" v-bind="templateProps" :color="chipColor" :variant="chipVariant">
+            <v-chip v-bind="templateProps" :color="chipColor" :variant="chipVariant">
                 <template #append>
                     <v-icon
                         small
