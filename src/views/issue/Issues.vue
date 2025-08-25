@@ -15,7 +15,12 @@
             <IssueStateSegmentedButton v-model="issueStateIndices" class="ml-2" />
         </template>
         <template #additional-filter>
-            <IssueFilterDropdowns :trackable-id="trackableId" :item-manager="itemManager" :state-indices="issueStateIndices" ref="filterDropdowns" />
+            <IssueFilterDropdowns
+                :trackable-id="trackableId"
+                :item-manager="itemManager"
+                :state-indices="issueStateIndices"
+                ref="filterDropdowns"
+            />
         </template>
         <IssueDialogs />
     </PaginatedList>

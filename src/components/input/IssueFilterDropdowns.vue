@@ -239,15 +239,18 @@ const stateInput = computed(() => {
     };
 });
 
-const stateFilter = (item: { isOpen: boolean}) => {
+const stateFilter = (item: { isOpen: boolean }) => {
     if (props.stateIndices.length == 2) return true;
     return item.isOpen == (props.stateIndices[0] == 0);
-}
+};
 
-watch(() => props.stateIndices, (newVal, oldVal) => {
-    if(newVal.length == oldVal.length && newVal[0] === oldVal[0]) return;
-    stateIds.value = [];
-})
+watch(
+    () => props.stateIndices,
+    (newVal, oldVal) => {
+        if (newVal.length == oldVal.length && newVal[0] === oldVal[0]) return;
+        stateIds.value = [];
+    }
+);
 
 const dependencyArray = computed(() => {
     return [templateInput, labelInput, priorityInput, typeInput, assignedToInput, stateInput];

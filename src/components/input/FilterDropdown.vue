@@ -10,12 +10,7 @@
                         aria-label="remove"
                         icon="mdi-close-circle"
                     />
-                    <v-icon
-                        v-else
-                        class="ml-1"
-                        icon="mdi-menu-down"
-                        aria-hidden="true"
-                    />
+                    <v-icon v-else class="ml-1" icon="mdi-menu-down" aria-hidden="true" />
                 </template>
                 {{ chipLabel }}
             </v-chip>
