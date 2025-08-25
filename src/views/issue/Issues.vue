@@ -5,7 +5,7 @@
         :sort-fields="issueSortFields"
         :to="(issue: Issue) => issueRoute(issue)"
         :sort-ascending-initially="false"
-        :dependencies="[stateFilterInput, ...(filterFromDropdown?.dependencyArray ?? [])]"
+        :dependencies="filterFromDropdown?.dependencyArray ?? []"
         query-param-prefix=""
     >
         <template #item="{ item }">
@@ -15,7 +15,7 @@
             <IssueStateSegmentedButton v-model="issueStateIndices" class="ml-2" />
         </template>
         <template #additional-filter>
-            <IssueFilterDropdowns :trackable-id="trackableId" :item-manager="itemManager" ref="filterDropdowns" />
+            <IssueFilterDropdowns :trackable-id="trackableId" :item-manager="itemManager" :state-indices="issueStateIndices" ref="filterDropdowns" />
         </template>
         <IssueDialogs />
     </PaginatedList>
@@ -60,19 +60,6 @@ const issueStateIndices = computed({
     }
 });
 
-const stateFilterInput = computed(() => {
-    const isSingleIssueState = issueStateIndices.value.length == 1;
-    const customStateSelected = !!filterFromDropdown.value?.stateIds?.length;
-    if (!isSingleIssueState && !customStateSelected) {
-        return undefined;
-    }
-    const state = issueStateIndices.value[0] == 0;
-    return {
-        isOpen: isSingleIssueState ? { eq: state } : undefined,
-        id: customStateSelected ? { in: filterFromDropdown.value?.stateIds } : undefined
-    };
-});
-
 const trackableId = computed(() => route.params.trackable as string);
 
 class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
@@ -90,7 +77,7 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
                   assignments: currentFilter.assignedToInput,
                   priority: currentFilter.priorityInput,
                   type: currentFilter.typeInput,
-                  state: stateFilterInput.value
+                  state: currentFilter.stateInput
               }
             : {};
         if (filter == undefined) {

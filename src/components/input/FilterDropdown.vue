@@ -77,6 +77,11 @@ const props = defineProps({
         type: Function as PropType<(search: string) => Promise<I[]>>,
         required: false,
         default: () => Promise.resolve([])
+    },
+    filter: {
+        type: Function as PropType<(item: I) => boolean>,
+        required: false,
+        default: () => true
     }
 });
 
@@ -102,6 +107,7 @@ const model = defineModel<string[]>({ default: () => [] });
 const filteredItems = computed(() => {
     return allItems.value.filter((item) => {
         const currentSeach = searchText.value;
+        if (!props.filter(item)) return false;
         if (!currentSeach) return true;
         return item.name.toLowerCase().includes(currentSeach.toLowerCase());
     });

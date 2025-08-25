@@ -35,7 +35,6 @@
             "
         >
             <template #default="{ item }">
-                <!-- TODO improve typing -->
                 <div class="d-flex align-center">
                     <v-icon :color="item.color" class="opacity-100 mr-1" icon="mdi-circle" />
                     <span>{{ item.name }}</span>
@@ -130,6 +129,7 @@
         <FilterDropdown
             v-model="stateIds"
             label="State"
+            :filter="stateFilter"
             :mapper="(item) => item.state"
             :item-manager="itemManager"
             :fetch-on-search="
@@ -161,20 +161,24 @@ import { NodeReturnType, useClient } from "@/graphql/client";
 import FilterDropdown from "@/components/input/FilterDropdown.vue";
 import IssueTypeIcon from "@/components/IssueTypeIcon.vue";
 import User from "@/components/info/User.vue";
-import { computed, PropType } from "vue";
+import { computed, PropType, watch } from "vue";
 import { ItemManager } from "@/util/itemManager";
 import { IssueListItemInfoFragment, IssueOrderField } from "@/graphql/generated";
 import { useFilterOption } from "@/util/useFilterOption";
 import { IdObject } from "@/util/types";
 import { useAppStore } from "@/store/app";
 
-defineProps({
+const props = defineProps({
     itemManager: {
         type: Object as PropType<ItemManager<T, S>>,
         required: true
     },
     trackableId: {
         type: String,
+        required: true
+    },
+    stateIndices: {
+        type: Array as PropType<number[]>,
         required: true
     }
 });
@@ -222,8 +226,31 @@ const assignedToSorter = (a: IdObject & { name: string }, b: IdObject & { name: 
 
 const stateIds = useFilterOption("concretestate");
 
+const stateInput = computed(() => {
+    const isSingleIssueState = props.stateIndices.length == 1;
+    const customStateSelected = !!stateIds.value.length;
+    if (!isSingleIssueState && !customStateSelected) {
+        return undefined;
+    }
+    const state = props.stateIndices[0] == 0;
+    return {
+        isOpen: isSingleIssueState ? { eq: state } : undefined,
+        id: customStateSelected ? { in: stateIds.value } : undefined
+    };
+});
+
+const stateFilter = (item: { isOpen: boolean}) => {
+    if (props.stateIndices.length == 2) return true;
+    return item.isOpen == (props.stateIndices[0] == 0);
+}
+
+watch(() => props.stateIndices, (newVal, oldVal) => {
+    if(newVal.length == oldVal.length && newVal[0] === oldVal[0]) return;
+    stateIds.value = [];
+})
+
 const dependencyArray = computed(() => {
-    return [templateIds, labelIds, priorityIds, typeIds, assignedToIds, stateIds];
+    return [templateInput, labelInput, priorityInput, typeInput, assignedToInput, stateInput];
 });
 
 defineExpose({
@@ -232,7 +259,7 @@ defineExpose({
     priorityInput,
     typeInput,
     assignedToInput,
-    stateIds,
+    stateInput,
     dependencyArray
 });
 </script>
