@@ -4,11 +4,17 @@
             <v-chip v-bind="templateProps" :color="chipColor" :variant="chipVariant">
                 <template #append>
                     <v-icon
-                        small
+                        v-if="model.length"
                         class="ml-1"
                         @click.stop="model = []"
                         aria-label="remove"
-                        :icon="model.length ? 'mdi-close-circle' : 'mdi-menu-down'"
+                        icon="mdi-close-circle"
+                    />
+                    <v-icon
+                        v-else
+                        class="ml-1"
+                        icon="mdi-menu-down"
+                        aria-hidden="true"
                     />
                 </template>
                 {{ chipLabel }}
