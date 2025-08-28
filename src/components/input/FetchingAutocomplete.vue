@@ -5,23 +5,24 @@
         v-model="<any>proxiedModel"
         :items="items"
         :multiple="multipleMode"
-        :chips="contextMode"
+        :chips="chipsMode"
         item-value="id"
         :filter-keys="['id']"
         :custom-filter="(_value, _query, item) => item?.value != context?.id"
         :menu-props="{ maxWidth: 0 }"
+        :closable-chips="mode == 'model-multiple'"
         @update:focused="resetFromFocus"
     >
         <template #item="{ props, item }">
             <v-list-item v-if="item.value == 'new'" v-bind="props" title="Create new" append-icon="mdi-plus" />
+            <div v-else-if="(item.raw as { hidden?: boolean }).hidden" class="placeholder-item" />
             <slot
                 v-else-if="!contextSearchMode && item.value != context?.id"
                 name="item"
                 :props="props"
                 :item="<ListItem<T>>item"
             ></slot>
-            <slot v-else-if="contextSearchMode" name="context-item" :props="props" :item="<ListItem<C>>item"></slot>
-            <div v-else class="placeholder-item" />
+            <slot v-else name="context-item" :props="props" :item="<ListItem<C>>item"></slot>
         </template>
         <template v-if="$slots.chip" #chip="{ props, item }">
             <slot name="chip" v-bind="props" :item="<ListItem<T | C>>item" />
@@ -44,7 +45,7 @@ interface NewItem {
 
 const props = defineProps({
     mode: {
-        type: String as PropType<"model" | "add" | "add-context">,
+        type: String as PropType<"model" | "model-multiple" | "add" | "add-context">,
         required: true
     },
     menuMode: {
@@ -89,7 +90,7 @@ const props = defineProps({
 });
 
 const model = defineModel({
-    type: String as PropType<string | undefined>,
+    type: [String, Array] as PropType<string | string[] | undefined>,
     required: false
 });
 
@@ -103,10 +104,13 @@ const context = ref(props.initialContext ? transformToContextItem(props.initialC
     C | undefined
 >;
 const contextMode = computed(() => props.mode == "add-context");
-const multipleMode = computed(() => props.mode == "add" || props.mode == "add-context");
+const multipleMode = computed(
+    () => props.mode == "add" || props.mode == "add-context" || props.mode == "model-multiple"
+);
 const contextSearchMode = computed(() => {
     return contextMode.value && context.value == undefined;
 });
+const chipsMode = computed(() => contextMode.value || props.mode == "model-multiple");
 const createNewItem = computed<[NewItem] | []>(() => {
     if (props.mode == "model") {
         return [];
@@ -154,7 +158,10 @@ watch(
 );
 
 const hasSelection = computed(() => {
-    return props.mode == "model" && proxiedModel.value != undefined;
+    return (
+        (props.mode == "model" && proxiedModel.value != undefined) ||
+        (props.mode == "model-multiple" && (proxiedModel.value as string[]).length > 0)
+    );
 });
 
 watch(search, async (search) => {
@@ -185,11 +192,20 @@ async function updateSearch(search: string) {
         if (!newItems.some((item) => item.id == proxiedModel.value)) {
             const currentModelItem = items.value.find((item) => item.id == proxiedModel.value);
             if (currentModelItem != undefined) {
-                newItems.push(currentModelItem as T);
+                newItems.push({ ...currentModelItem, hidden: true } as T);
             }
         }
     }
-
+    if (props.mode == "model-multiple") {
+        for (const id of proxiedModel.value as string[]) {
+            if (!newItems.some((item) => item.id == id)) {
+                const currentModelItem = items.value.find((item) => item.id == id);
+                if (currentModelItem != undefined) {
+                    newItems.push({ ...currentModelItem, hidden: true } as T);
+                }
+            }
+        }
+    }
     if (contextMode.value && !contextSearchMode.value) {
         items.value = [...createNewItem.value, context.value as C, ...newItems];
     } else {
@@ -212,7 +228,8 @@ function selectedElement(value: any) {
     let id: string | undefined;
     const reopenMenu =
         props.menuMode == "repeating" ||
-        (props.menuMode == "initial" && props.mode == "add-context" && value.length == 1);
+        (props.menuMode == "initial" && props.mode == "add-context" && value.length == 1) ||
+        props.mode == "model-multiple";
     if (typeof value === "string") {
         id = value;
     } else if (Array.isArray(value)) {
@@ -227,6 +244,11 @@ function selectedElement(value: any) {
             emit("selected-item", item as T);
         }
         resetSearch();
+    } else if (props.mode == "model-multiple") {
+        model.value = value;
+        search.value = "";
+        resetSearch();
+        menu.value = false;
     } else if (props.mode == "add") {
         if (item != undefined) {
             if (item.id == "new") {
@@ -273,7 +295,8 @@ function selectedElement(value: any) {
 function transformToContextItem(item: C): C {
     return {
         ...item,
-        id: `context-${item.id}`
+        id: `context-${item.id}`,
+        hidden: true
     };
 }
 
