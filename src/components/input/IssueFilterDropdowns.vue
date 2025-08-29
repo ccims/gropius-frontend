@@ -5,16 +5,7 @@
             label="Template"
             :item-manager="itemManager"
             :mapper="(item) => item.template"
-            :fetch-on-search="
-                async (search: string) =>
-                    client
-                        .getUsedIssueTemplates({ trackable: trackableId, filter: search })
-                        .then(
-                            (res) =>
-                                (res.node as NodeReturnType<'getUsedIssueTemplates', 'Component'>).usedIssueTemplates
-                                    .nodes
-                        )
-            "
+            :fetch-on-search="templateFetch"
         />
         <FilterDropdown
             v-model="labelIds"
@@ -27,12 +18,7 @@
                         .firstTrackableLabels({ trackable: trackableId, count: 100 })
                         .then((res) => (res.node as NodeReturnType<'firstTrackableLabels', 'Component'>).labels.nodes)
             "
-            :fetch-on-search="
-                async (search: string) =>
-                    client
-                        .getUsedLabels({ trackable: trackableId, filter: search })
-                        .then((res) => (res.node as NodeReturnType<'getUsedLabels', 'Component'>).usedLabels.nodes)
-            "
+            :fetch-on-search="labelFetch"
         >
             <template #default="{ item }">
                 <div class="d-flex align-center">
@@ -58,30 +44,14 @@
             :item-manager="itemManager"
             :mapper="(item) => item.priority"
             :sorter="(a, b) => a.value - b.value"
-            :fetch-on-search="
-                async (search: string) =>
-                    client
-                        .getUsedIssuePriorities({ trackable: trackableId, filter: search })
-                        .then(
-                            (res) =>
-                                (res.node as NodeReturnType<'getUsedIssuePriorities', 'Component'>).usedIssuePriorities
-                                    .nodes
-                        )
-            "
+            :fetch-on-search="priorityFetch"
         />
         <FilterDropdown
             v-model="typeIds"
             label="Type"
             :item-manager="itemManager"
             :mapper="(item) => item.type"
-            :fetch-on-search="
-                async (search: string) =>
-                    client
-                        .getUsedIssueTypes({ trackable: trackableId, filter: search })
-                        .then(
-                            (res) => (res.node as NodeReturnType<'getUsedIssueTypes', 'Component'>).usedIssueTypes.nodes
-                        )
-            "
+            :fetch-on-search="typeFetch"
         >
             <template #default="{ item }">
                 <div class="d-flex align-center">
@@ -94,33 +64,9 @@
             v-model="assignedToIds"
             label="Assigned to"
             :item-manager="itemManager"
-            :mapper="
-                (item) =>
-                    item.assignments.nodes.map((node) => {
-                        const name = node.user.id == store.user?.id ? 'Me' : node.user.displayName;
-                        return {
-                            ...node.user,
-                            displayName: name,
-                            name
-                        };
-                    })
-            "
+            :mapper="assignedToMapper"
             :sorter="assignedToSorter"
-            :fetch-on-search="
-                async (search: string) =>
-                    client.getAssignedUsers({ trackable: trackableId, filter: search }).then((res) =>
-                        (res.node as NodeReturnType<'getAssignedUsers', 'Component'>).assignedUsers.nodes.map(
-                            (node) => {
-                                const name = node.id == store.user?.id ? 'Me' : node.displayName;
-                                return {
-                                    ...node,
-                                    displayName: name,
-                                    name
-                                };
-                            }
-                        )
-                    )
-            "
+            :fetch-on-search="assignedToFetch"
         >
             <template #default="{ item }">
                 <User :user="item" />
@@ -132,15 +78,7 @@
             :filter="stateFilter"
             :mapper="(item) => item.state"
             :item-manager="itemManager"
-            :fetch-on-search="
-                async (search: string) =>
-                    client
-                        .getUsedIssueStates({ trackable: trackableId, filter: search })
-                        .then(
-                            (res) =>
-                                (res.node as NodeReturnType<'getUsedIssueStates', 'Component'>).usedIssueStates.nodes
-                        )
-            "
+            :fetch-on-search="stateFetch"
         >
             <template #default="{ item }">
                 <span class="d-flex align-center">
@@ -190,18 +128,38 @@ const templateIds = useFilterOption("template");
 const templateInput = computed(() => {
     return templateIds.value.length > 0 ? { id: { in: templateIds.value } } : undefined;
 });
+const templateFetch = async (search: string) =>
+    client
+        .getUsedIssueTemplates({ trackable: props.trackableId, filter: search })
+        .then((res) => (res.node as NodeReturnType<"getUsedIssueTemplates", "Component">).usedIssueTemplates.nodes);
+
 const labelIds = useFilterOption("label");
 const labelInput = computed(() => {
     return labelIds.value.length > 0 ? { any: { id: { in: labelIds.value } } } : undefined;
 });
+const labelFetch = async (search: string) =>
+    client
+        .getUsedLabels({ trackable: props.trackableId, filter: search })
+        .then((res) => (res.node as NodeReturnType<"getUsedLabels", "Component">).usedLabels.nodes);
+
 const priorityIds = useFilterOption("priority");
 const priorityInput = computed(() => {
     return priorityIds.value.length > 0 ? { id: { in: priorityIds.value } } : undefined;
 });
+const priorityFetch = async (search: string) =>
+    client
+        .getUsedIssuePriorities({ trackable: props.trackableId, filter: search })
+        .then((res) => (res.node as NodeReturnType<"getUsedIssuePriorities", "Component">).usedIssuePriorities.nodes);
+
 const typeIds = useFilterOption("type");
 const typeInput = computed(() => {
     return typeIds.value.length > 0 ? { id: { in: typeIds.value } } : undefined;
 });
+const typeFetch = async (search: string) =>
+    client
+        .getUsedIssueTypes({ trackable: props.trackableId, filter: search })
+        .then((res) => (res.node as NodeReturnType<"getUsedIssueTypes", "Component">).usedIssueTypes.nodes);
+
 const assignedToIds = useFilterOption("assignedTo");
 const assignedToInput = computed(() => {
     return assignedToIds.value.length > 0
@@ -223,9 +181,28 @@ const assignedToSorter = (a: IdObject & { name: string }, b: IdObject & { name: 
     if (!isAssignedToMeA && isAssignedToMeB) return 1;
     return a.name.localeCompare(b.name);
 };
+const assignedToMapper = (item: T) =>
+    item.assignments.nodes.map((node) => {
+        const name = node.user.id == store.user?.id ? "Me" : node.user.displayName;
+        return {
+            ...node.user,
+            displayName: name,
+            name
+        };
+    });
+const assignedToFetch = async (search: string) =>
+    client.getAssignedUsers({ trackable: props.trackableId, filter: search }).then((res) =>
+        (res.node as NodeReturnType<"getAssignedUsers", "Component">).assignedUsers.nodes.map((node) => {
+            const name = node.id == store.user?.id ? "Me" : node.displayName;
+            return {
+                ...node,
+                displayName: name,
+                name
+            };
+        })
+    );
 
 const stateIds = useFilterOption("concretestate");
-
 const stateInput = computed(() => {
     const isSingleIssueState = props.stateIndices.length == 1;
     const customStateSelected = !!stateIds.value.length;
@@ -238,7 +215,10 @@ const stateInput = computed(() => {
         id: customStateSelected ? { in: stateIds.value } : undefined
     };
 });
-
+const stateFetch = async (search: string) =>
+    client
+        .getUsedIssueStates({ trackable: props.trackableId, filter: search })
+        .then((res) => (res.node as NodeReturnType<"getUsedIssueStates", "Component">).usedIssueStates.nodes);
 const stateFilter = (item: { isOpen: boolean }) => {
     if (props.stateIndices.length == 2) return true;
     return item.isOpen == (props.stateIndices[0] == 0);
