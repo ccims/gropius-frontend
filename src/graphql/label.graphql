@@ -62,6 +62,13 @@ query firstTrackableLabels($trackable: ID!, $count: Int!) {
             labels(first: $count, orderBy: [{ field: NAME }]) {
                 nodes {
                     ...DefaultLabelInfo
+                    trackables {
+                        nodes {
+                            id
+                            name
+                            description
+                        }
+                    }
                 }
             }
         }

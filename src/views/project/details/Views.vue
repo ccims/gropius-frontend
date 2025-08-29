@@ -57,7 +57,7 @@
     </PaginatedList>
 </template>
 <script lang="ts" setup>
-import PaginatedList, { ItemManager } from "@/components/PaginatedList.vue";
+import PaginatedList from "@/components/PaginatedList.vue";
 import { NodeReturnType, useClient } from "@/graphql/client";
 import { ViewOrder, ViewOrderField } from "@/graphql/generated";
 import { useRoute } from "vue-router";
@@ -69,6 +69,7 @@ import { withErrorMessage } from "@/util/withErrorMessage";
 import { computedAsync } from "@vueuse/core";
 import ConfirmationDialog from "@/components/dialog/ConfirmationDialog.vue";
 import UpdateViewDialog from "@/components/dialog/UpdateViewDialog.vue";
+import { ItemManager } from "@/util/itemManager";
 
 type View = NodeReturnType<"getViewList", "Project">["views"]["nodes"][0];
 
@@ -92,8 +93,8 @@ const sortFields = {
     "[Default]": ViewOrderField.Id
 };
 
-const itemManager: ItemManager<View, ViewOrderField> = {
-    fetchItems: async function (
+class ViewItemManager extends ItemManager<View, ViewOrderField> {
+    protected async fetchItems(
         filter: string | undefined,
         orderBy: ViewOrder[],
         count: number,
@@ -118,7 +119,8 @@ const itemManager: ItemManager<View, ViewOrderField> = {
             return [res.searchViews, res.searchViews.length];
         }
     }
-};
+}
+const itemManager: ItemManager<View, ViewOrderField> = new ViewItemManager();
 
 const templates = computedAsync(async () => {
     return withErrorMessage(async () => {

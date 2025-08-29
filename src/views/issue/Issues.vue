@@ -5,7 +5,7 @@
         :sort-fields="issueSortFields"
         :to="(issue: Issue) => issueRoute(issue)"
         :sort-ascending-initially="false"
-        :dependencies="[stateFilterInput]"
+        :dependencies="filterFromDropdown?.dependencyArray ?? []"
         query-param-prefix=""
     >
         <template #item="{ item }">
@@ -14,20 +14,30 @@
         <template #search-append>
             <IssueStateSegmentedButton v-model="issueStateIndices" class="ml-2" />
         </template>
+        <template #additional-filter>
+            <IssueFilterDropdowns
+                :trackable-id="trackableId"
+                :item-manager="itemManager"
+                :state-indices="issueStateIndices"
+                ref="filterDropdowns"
+            />
+        </template>
         <IssueDialogs />
     </PaginatedList>
 </template>
 <script lang="ts" setup>
 import { NodeReturnType, useClient } from "@/graphql/client";
-import { computed } from "vue";
+import { computed, useTemplateRef } from "vue";
 import { RouteLocationRaw, useRoute, useRouter } from "vue-router";
-import PaginatedList, { ItemManager } from "@/components/PaginatedList.vue";
-import { IssueListItemInfoFragment, IssueOrder, IssueOrderField } from "@/graphql/generated";
+import PaginatedList from "@/components/PaginatedList.vue";
+import { IssueFilterInput, IssueListItemInfoFragment, IssueOrder, IssueOrderField } from "@/graphql/generated";
 import IssueListItem from "@/components/IssueListItem.vue";
 import IssueStateSegmentedButton from "@/components/input/IssueStateSegmentedButton.vue";
 import { IdObject } from "@/util/types";
 import IssueDialogs from "@/components/IssueDialogs.vue";
 import { issueSortFields } from "@/util/issueSortFields";
+import { ItemManager } from "@/util/itemManager";
+import IssueFilterDropdowns from "@/components/input/IssueFilterDropdowns.vue";
 
 type Trackable = NodeReturnType<"getIssueList", "Component">;
 type Issue = IssueListItemInfoFragment;
@@ -35,6 +45,8 @@ type Issue = IssueListItemInfoFragment;
 const client = useClient();
 const router = useRouter();
 const route = useRoute();
+// @ts-ignore no idea why this is needed
+const filterFromDropdown = useTemplateRef<InstanceType<typeof IssueFilterDropdowns>>("filterDropdowns");
 
 const issueStateIndices = computed({
     get: () => {
@@ -53,30 +65,33 @@ const issueStateIndices = computed({
     }
 });
 
-const stateFilterInput = computed(() => {
-    if (issueStateIndices.value.length != 1) {
-        return undefined;
-    }
-    const state = issueStateIndices.value[0] == 0;
-    return { isOpen: { eq: state } };
-});
-
 const trackableId = computed(() => route.params.trackable as string);
 
-const itemManager: ItemManager<Issue, IssueOrderField> = {
-    fetchItems: async function (
+class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
+    protected async fetchItems(
         filter: string | undefined,
         orderBy: IssueOrder[],
         count: number,
         page: number
     ): Promise<[Issue[], number]> {
+        const currentFilter = filterFromDropdown.value;
+        const generalFilters: Partial<IssueFilterInput> = currentFilter
+            ? {
+                  labels: currentFilter.labelInput,
+                  template: currentFilter.templateInput,
+                  assignments: currentFilter.assignedToInput,
+                  priority: currentFilter.priorityInput,
+                  type: currentFilter.typeInput,
+                  state: currentFilter.stateInput
+              }
+            : {};
         if (filter == undefined) {
             const res = await client.getIssueList({
                 orderBy,
                 count,
                 skip: page * count,
                 trackable: trackableId.value,
-                filter: { state: stateFilterInput.value }
+                filter: generalFilters
             });
             const issues = (res.node as Trackable).issues;
             return [issues.nodes, issues.totalCount];
@@ -84,12 +99,17 @@ const itemManager: ItemManager<Issue, IssueOrderField> = {
             const res = await client.getFilteredIssueList({
                 query: filter,
                 count,
-                filter: { trackables: { any: { id: { eq: trackableId.value } } }, state: stateFilterInput.value }
+                filter: {
+                    ...generalFilters,
+                    trackables: { any: { id: { eq: trackableId.value } } }
+                }
             });
             return [res.searchIssues, res.searchIssues.length];
         }
     }
-};
+}
+
+const itemManager: ItemManager<Issue, IssueOrderField> = new IssueItemManager();
 
 function issueRoute(issue: IdObject): RouteLocationRaw {
     return {
