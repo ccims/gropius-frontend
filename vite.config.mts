@@ -2,6 +2,8 @@
 import vue from "@vitejs/plugin-vue";
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 import Fonts from "unplugin-fonts/vite";
+import $monacoEditorPlugin from "vite-plugin-monaco-editor";
+const monacoEditorPlugin = ($monacoEditorPlugin as any).default ?? $monacoEditorPlugin;
 
 // Utilities
 import { defineConfig } from "vite";
@@ -34,6 +36,15 @@ export default defineConfig({
                     }
                 ]
             }
+        }),
+        monacoEditorPlugin({
+            languageWorkers: ["editorWorkerService", "json"],
+            customWorkers: [
+                {
+                    label: "graphql",
+                    entry: "monaco-graphql/esm/graphql.worker.js"
+                }
+            ]
         })
     ],
     define: { "process.env": {} },

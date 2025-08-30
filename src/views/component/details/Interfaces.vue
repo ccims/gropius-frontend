@@ -15,6 +15,8 @@
         </template>
         <CreateInterfaceSpecificationDialog
             :component="trackableId"
+            :component-template="componentTemplateInfo?.template?.id"
+            allow-invisible
             @created-interface-specification="
                 (interfaceSpecification: IdObject) => selectInterfaceSpecification(interfaceSpecification)
             "
@@ -30,6 +32,8 @@ import ListItem from "@/components/ListItem.vue";
 import CreateInterfaceSpecificationDialog from "@/components/dialog/CreateInterfaceSpecificationDialog.vue";
 import { IdObject } from "@/util/types";
 import { computed } from "vue";
+import { computedAsync } from "@vueuse/core";
+import { withErrorMessage } from "@/util/withErrorMessage";
 
 type InterfaceSpecification = NodeReturnType<
     "getInterfaceSpecificationList",
@@ -40,6 +44,17 @@ const client = useClient();
 const router = useRouter();
 const route = useRoute();
 const trackableId = computed(() => route.params.trackable as string);
+
+const componentTemplateInfo = computedAsync(
+    async () => {
+        const templateRes = await withErrorMessage(async () => {
+            return client.getComponentTemplateDetails({ id: trackableId.value });
+        }, "Error loading component template info");
+        return templateRes.node as NodeReturnType<"getComponentTemplateDetails", "Component">;
+    },
+    null,
+    { shallow: false }
+);
 
 const sortFields = {
     Name: InterfaceSpecificationOrderField.Name,

@@ -24,6 +24,7 @@
                     <InterfaceSpecificationTemplateAutocomplete
                         v-model="template"
                         v-bind="templateProps"
+                        :interface-specification-template-filter="templateFilter"
                         class="wrap-input mx-2 mb-1 flex-1-1-0"
                     />
                 </div>
@@ -67,7 +68,7 @@
     </v-dialog>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { onEvent } from "@/util/eventBus";
 import * as yup from "yup";
 import { useForm } from "vee-validate";
@@ -82,7 +83,7 @@ import { generateDefaultData } from "../input/schema/generateDefaultData";
 import { watch } from "vue";
 import { IdObject } from "@/util/types";
 import VersionedTemplatedNodeDialogContent from "./VersionedTemplatedNodeDialogContent.vue";
-import { InterfaceSpecificationVersionInput } from "@/graphql/generated";
+import { InterfaceSpecificationTemplateFilterInput, InterfaceSpecificationVersionInput } from "@/graphql/generated";
 
 const createInterfaceSpecificationDialog = ref(false);
 const client = useClient();
@@ -93,11 +94,20 @@ const props = defineProps({
         type: String,
         required: true
     },
+    componentTemplate: {
+        type: String,
+        required: false
+    },
     initialName: {
         type: String,
         required: false
     },
     forceCreateVersion: {
+        type: Boolean,
+        required: false,
+        default: false
+    },
+    allowInvisible: {
         type: Boolean,
         required: false,
         default: false
@@ -132,6 +142,34 @@ watch(
         }
     }
 );
+
+const templateFilter = computed<InterfaceSpecificationTemplateFilterInput>(() => {
+    const filter: InterfaceSpecificationTemplateFilterInput = {
+        isDeprecated: {
+            eq: false
+        }
+    };
+    const componentFilter = {
+        any: {
+            id: {
+                eq: props.componentTemplate
+            }
+        }
+    };
+    if (props.allowInvisible) {
+        filter.or = [
+            {
+                canBeVisibleOnComponents: componentFilter
+            },
+            {
+                canBeInvisibleOnComponents: componentFilter
+            }
+        ];
+    } else {
+        filter.canBeVisibleOnComponents = componentFilter;
+    }
+    return filter;
+});
 
 const [name, nameProps] = defineField("name", fieldConfig);
 const [template, templateProps] = defineField("template", fieldConfig);

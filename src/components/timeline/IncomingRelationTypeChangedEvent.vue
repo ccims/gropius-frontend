@@ -13,6 +13,7 @@ import { PropType } from "vue";
 import { TimelineItemType } from "./TimelineItemBase.vue";
 import DefaultIconTimelineItem from "./DefaultIconTimelineItem.vue";
 import Issue from "../info/Issue.vue";
+import InverseType from "../info/InverseType.vue";
 
 defineProps({
     item: {

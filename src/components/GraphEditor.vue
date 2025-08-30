@@ -4,7 +4,7 @@
         <Teleport
             v-if="selected?.contextMenu != undefined"
             :key="selected.id"
-            :to="`#${selected.contextMenu.containerId}>.context-menu`"
+            :to="`#${selected.contextMenu.containerId} .context-menu`"
         >
             <div class="context-menu ml-2" @mousedown.stop.prevent>
                 <template
@@ -198,7 +198,7 @@ watch(
     border-style: none;
     border-width: 0px;
     outline: none;
-    --diagram-grid: rgba(var(--v-theme-on-surface), 0.35);
+    --diagram-grid: rgba(var(--v-theme-on-surface), 0.45);
     --background-overlay-color: rgba(var(--v-theme-surface), 0.6);
     --shape-stroke-color: rgb(var(--v-theme-on-surface));
     --version-chip-background: rgb(var(--v-theme-primary-container));

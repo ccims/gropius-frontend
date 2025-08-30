@@ -32,7 +32,7 @@ export class InterfaceView implements IView {
             null,
             ...model.generateShape(),
             wrapForeignElement(context.renderElement(nameLabel!), {
-                x: model.pos.x - nameLabel!.size.width / 2,
+                x: model.pos.x - 100,
                 y: model.pos.y + model.shape.bounds.height / 2 + 3
             })
         );

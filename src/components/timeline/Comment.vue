@@ -139,10 +139,10 @@
                             v-model="itemBody"
                             :edit-mode="editMode"
                             :editable="canCurrentlyModify"
-                            class="mt-2 ml-1"
+                            class="mt-2"
                             @update:model-value="updatedItemBody($event)"
                         />
-                        <div v-else class="mt-2 ml-1 text-medium-emphasis font-italic">
+                        <div v-else class="mt-2 text-medium-emphasis font-italic">
                             {{ isDeleted ? deletedText : noDescriptionText }}
                         </div>
                         <div v-if="editMode" class="mx-n3">

@@ -1,6 +1,11 @@
 <template>
     <router-link v-slot="{ isActive, href, navigate, isExactActive }" :to="to" custom>
-        <button class="sidebar-button" :class="{ active: isActive }" @click="navigate">
+        <button
+            class="sidebar-button d-flex align-center flex-column"
+            :class="{ active: isActive }"
+            :disabled="disabled"
+            @click="navigate"
+        >
             <div class="icon-container d-flex align-center justify-center">
                 <v-expand-x-transition>
                     <div
@@ -45,6 +50,11 @@ const props = defineProps({
         type: Boolean,
         required: false,
         default: true
+    },
+    disabled: {
+        type: Boolean,
+        required: false,
+        default: false
     }
 });
 
@@ -66,7 +76,9 @@ function chooseActive(isActive: boolean, isExactActive: boolean): boolean {
     }
 }
 </script>
-<style scoped>
+<style scoped lang="scss">
+@use "vuetify/settings" as *;
+
 .icon-container {
     display: flex;
     align-items: center;
@@ -99,7 +111,13 @@ function chooseActive(isActive: boolean, isExactActive: boolean): boolean {
 .button-label {
     color: rgb(var(--v-theme-on-surface-variant));
 }
+
 .sidebar-button.active .button-label {
     color: rgb(var(--v-theme-on-surface));
+}
+
+.sidebar-button:disabled {
+    pointer-events: none;
+    opacity: $button-disabled-opacity;
 }
 </style>

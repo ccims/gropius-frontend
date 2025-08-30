@@ -9,6 +9,16 @@ export class HiddenBoundsUpdater extends SprottyHiddenBoundsUpdater {
             return super.getBounds(elm, element);
         }
         if (this.isHtmlElement(elm)) {
+            if (elm.classList.contains("label")) {
+                const spanBounds = (elm.firstChild as HTMLElement).getBoundingClientRect();
+                const divBounds = elm.getBoundingClientRect();
+                return {
+                    x: spanBounds.x,
+                    y: divBounds.y,
+                    width: spanBounds.width,
+                    height: divBounds.height
+                };
+            }
             return elm.getBoundingClientRect();
         } else {
             this.logger.error(this, `Cannot get bounds for element`, elm);

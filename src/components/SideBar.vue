@@ -11,6 +11,7 @@
                     :text="item.name"
                     :color="item.color"
                     :to="item.to"
+                    :disabled="item.disabled"
                 ></SideBarButton>
                 <FAB
                     v-else
@@ -36,12 +37,12 @@ import { RouteLocationRaw } from "vue-router";
 export interface BaseSideBarItem {
     color?: string;
     icon: string;
+    disabled?: boolean;
 }
 
 export interface FABSideBarItem extends BaseSideBarItem {
     description?: string;
     onClick: () => void;
-    disabled?: boolean;
 }
 
 export interface IconSideBarItem extends BaseSideBarItem {

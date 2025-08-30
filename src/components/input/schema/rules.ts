@@ -10,7 +10,7 @@ export const requiredRule: Rule = (value: any) => {
 
 export function ifPresent(rule: (value: string) => true | string): Rule {
     return (value: string | undefined) => {
-        if (value != undefined) {
+        if (value != undefined && value !== "") {
             return rule(value);
         } else {
             return true;

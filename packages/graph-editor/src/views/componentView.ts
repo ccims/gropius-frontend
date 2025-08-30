@@ -27,7 +27,7 @@ export class ComponentView implements IView {
             null,
             ...model.generateShape(),
             wrapForeignElement(context.renderElement(nameLabel!), {
-                x: model.x - nameLabel!.size.width / 2,
+                x: model.x - 100,
                 y: model.y - nameLabel!.size.height / 2
             })
         );

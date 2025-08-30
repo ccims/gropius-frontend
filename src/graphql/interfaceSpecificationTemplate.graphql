@@ -18,17 +18,17 @@ fragment DefaultInterfaceSpecificationVersionTemplateInfo on InterfaceSpecificat
     }
 }
 
-query searchInterfaceSpecificationTemplates($query: String!, $count: Int!) {
-    searchInterfaceSpecificationTemplates(query: $query, first: $count, filter: { isDeprecated: { eq: false } }) {
+query searchInterfaceSpecificationTemplates($query: String!, $count: Int!, $filter: InterfaceSpecificationTemplateFilterInput) {
+    searchInterfaceSpecificationTemplates(query: $query, first: $count, filter: $filter) {
         ...DefaultInterfaceSpecificationTemplateInfo
     }
 }
 
-query firstInterfaceSpecificationTemplates($count: Int!) {
+query firstInterfaceSpecificationTemplates($count: Int!, $filter: InterfaceSpecificationTemplateFilterInput) {
     interfaceSpecificationTemplates(
         first: $count
         orderBy: [{ field: NAME }]
-        filter: { isDeprecated: { eq: false } }
+        filter: $filter
     ) {
         nodes {
             ...DefaultInterfaceSpecificationTemplateInfo

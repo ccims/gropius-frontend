@@ -67,7 +67,7 @@ watch(cachedValue, (value) => {
     let parsedValue: null | undefined | string | number | boolean = undefined;
     if (isNumber.value) {
         const parsedFloat = Number.parseFloat(value as string);
-        if (value === null) {
+        if (value === null || value === "") {
             parsedValue = null;
         } else if (!Number.isNaN(parsedFloat) || (value as string).trim() == "NaN") {
             parsedValue = parsedFloat;

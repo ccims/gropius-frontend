@@ -8,7 +8,7 @@ import { Mutex } from "async-mutex";
 import { shallowRef } from "vue";
 import { TokenScope } from "@/util/oauth";
 
-interface GlobalUserPermissions {
+export interface GlobalUserPermissions {
     canCreateProjects: boolean;
     canCreateComponents: boolean;
     canCreateIMSs: boolean;
@@ -24,7 +24,8 @@ export const useAppStore = defineStore("app", {
         refreshToken: useLocalStorage<string>("refreshToken", ""),
         accessTokenValidUntil: useLocalStorage<number>("accessTokenValidUntil", 0),
         codeVerifier: useLocalStorage<string>("codeVerifier", ""),
-        errors: [] as string[]
+        errors: [] as string[],
+        visibleTimelineItems: useLocalStorage<number[]>("visibleTimelineItems", [0, 1] as number[])
     }),
     getters: {
         tokenValidityDuration(): number {

@@ -1,63 +1,66 @@
 <template>
-    <div
-        class="markdown-editor-viewer"
-        :class="{
-            dark: theme.current.value.dark,
-            light: !theme.current.value.dark
-        }"
-    >
+    <div>
         <task-lists
             sortable
             :disabled="!editable"
-            @task-lists-check="handleTaskListsCheck($event.detail)"
             @task-lists-move="handleTaskListsMove($event.detail)"
+            @task-lists-check="handleTaskListsCheck($event.detail)"
         >
-            <Viewer v-if="!editMode" :value="valueWrapper" :plugins="plugins"></Viewer>
-            <Editor
-                v-else
-                :key="theme.current.value.dark"
-                :value="valueWrapper"
-                :plugins="plugins"
-                :editor-config="editorConfig"
-                @change="handleChange"
-            ></Editor>
+            <div ref="mdEditorContainer">
+                <MdEditor
+                    v-if="editMode"
+                    ref="mdEditorRef"
+                    class="editor"
+                    v-model="model"
+                    language="en-US"
+                    :theme="theme.current.value.dark ? 'dark' : 'light'"
+                    preview-theme="github"
+                    :data-code-theme="theme.current.value.dark ? 'dark' : 'light'"
+                    :code-foldable="false"
+                    :toolbars="toolbars"
+                    @update:model-value="handleModelUpdate"
+                    @onUploadImg="onUploadImg"
+                />
+                <MdPreview
+                    v-else
+                    v-model="model"
+                    language="en-US"
+                    :theme="theme.current.value.dark ? 'dark' : 'light'"
+                    preview-theme="github"
+                    :data-code-theme="theme.current.value.dark ? 'dark' : 'light'"
+                    :code-foldable="false"
+                />
+            </div>
         </task-lists>
     </div>
 </template>
 <script setup lang="ts">
-import gfm from "@bytemd/plugin-gfm";
-import { Editor, Viewer } from "@bytemd/vue-next";
-import { ref, watch } from "vue";
-import "codemirror/theme/midnight.css";
-import { useTheme } from "vuetify/lib/framework.mjs";
-import { computed } from "vue";
-import "bytemd/dist/index.css";
+import { MdEditor, MdPreview, ToolbarNames } from "md-editor-v3";
+import { computed, nextTick, ref, watch } from "vue";
 import "@github/task-lists-element";
-import { BytemdPlugin } from "bytemd";
-import type { Position, Point } from "unist";
-import { Plugin } from "unified";
-import type { Root } from "mdast";
-import { SKIP, visit } from "unist-util-visit";
-import { shallowRef } from "vue";
+import { useTheme } from "vuetify";
 import { useAppStore } from "@/store/app";
-import "github-markdown-css/github-markdown.css";
-
-interface RequiredPosition {
-    start: Required<Point>;
-    end: Required<Point>;
-}
-
-interface ListItemInformation {
-    pos: RequiredPosition | undefined;
-    checked: boolean | null | undefined;
-}
+import { useResizeObserver } from "@vueuse/core";
 
 type ListItemPos = [number, number];
 
-const props = defineProps({
+interface SourceRange {
+    start: number;
+    end: number;
+}
+
+const theme = useTheme();
+const store = useAppStore();
+
+const model = defineModel({
+    type: String,
+    default: ""
+});
+
+defineProps({
     editMode: {
         type: Boolean,
-        default: false
+        required: true
     },
     editable: {
         type: Boolean,
@@ -65,196 +68,235 @@ const props = defineProps({
     }
 });
 
-const model = defineModel({
-    type: String,
-    required: false,
-    default: ""
+const mdEditorContainer = ref<HTMLElement>();
+const mdEditorRef = ref<any>();
+const lastRerender = ref(Date.now());
+const lastUpdateTime = ref(Date.now());
+const containerWidth = ref(0);
+
+useResizeObserver(mdEditorContainer, (entries) => {
+    const entry = entries[0];
+    if (entry) {
+        containerWidth.value = entry.contentRect.width;
+    }
 });
 
-const theme = useTheme();
-const valueWrapper = ref(model.value);
-const store = useAppStore();
-
-const editorConfig = computed(() => {
-    return {
-        theme: theme.current.value.dark ? "midnight" : "default"
-    };
+watch(containerWidth, (newWidth, oldWidth) => {
+    if (newWidth < 500 && oldWidth >= 500) {
+        if (mdEditorRef.value) {
+            mdEditorRef.value.togglePreview(false);
+        }
+    } else if (newWidth >= 500 && oldWidth < 500) {
+        if (mdEditorRef.value) {
+            mdEditorRef.value.togglePreview(true);
+            mdEditorRef.value.togglePreviewOnly(false);
+        }
+    }
 });
 
-const listInformation = shallowRef<ListItemInformation[][]>([]);
+const toolbars = computed<ToolbarNames[]>(() => {
+    const items: ToolbarNames[] = [];
 
-function handleChange(text: string) {
-    valueWrapper.value = text;
-    model.value = text;
-}
+    items.push(
+        "bold",
+        "underline",
+        "italic",
+        "strikeThrough",
+        "-",
+        "title",
+        "quote",
+        "unorderedList",
+        "orderedList",
+        "task"
+    );
 
-function handleTaskListsCheck({ position, checked }: { position: [number, number]; checked: boolean }) {
-    try {
-        const newValue = checkItem(position, checked, valueWrapper.value);
-        handleChange(newValue);
-    } catch (e) {
-        store.pushError("Failed to check item");
-        console.error(e);
+    if (containerWidth.value >= 710) {
+        items.push("-", "codeRow", "code", "link", "image", "table", "mermaid", "katex");
+    }
+
+    if (containerWidth.value >= 500) {
+        items.push("=", "prettier", "preview", "previewOnly");
+    } else {
+        items.unshift("previewOnly", "=");
+    }
+
+    return items;
+});
+
+async function handleModelUpdate() {
+    const now = Date.now();
+    const timeSinceLastUpdate = now - lastUpdateTime.value;
+
+    lastUpdateTime.value = now;
+
+    if (timeSinceLastUpdate >= 500) {
+        if (mdEditorRef.value) {
+            await nextTick();
+            mdEditorRef.value.rerender();
+            lastRerender.value = now;
+        }
     }
 }
 
+async function onUploadImg(files: File[], callback: (urls: string[]) => void) {
+    try {
+        const dataUrls = await Promise.all(
+            files.map((file) => {
+                return new Promise<string>((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        if (e.target?.result) {
+                            resolve(e.target.result as string);
+                        } else {
+                            reject(new Error("Failed to read file"));
+                        }
+                    };
+                    reader.onerror = () => reject(new Error("FileReader error"));
+                    reader.readAsDataURL(file);
+                });
+            })
+        );
+
+        callback(dataUrls);
+    } catch (error) {
+        console.error("Failed to upload images:", error);
+        callback([]);
+    }
+}
+
+const lines = computed(() => {
+    return model.value.split("\n");
+});
+
 function handleTaskListsMove({ src, dst }: { src: [number, number]; dst: [number, number] }) {
     try {
-        const newValue = moveItem(src, dst, valueWrapper.value);
-        handleChange(newValue);
+        const newValue = moveItem(src, dst, lines.value);
+        model.value = newValue;
     } catch (e) {
         store.pushError("Failed to move item");
         console.error(e);
     }
 }
 
-watch(model, (value) => {
-    valueWrapper.value = value;
-});
-
-const listInformationPlugin: Plugin<void[], Root> = () => {
-    return (tree: Root) => {
-        const newListInformation: ListItemInformation[][] = [];
-        visit(tree, "list", (node) => {
-            newListInformation.push(
-                node.children.map((child) => {
-                    return {
-                        pos: validatePosition(child.position),
-                        checked: child.checked
-                    };
-                })
-            );
-        });
-        listInformation.value = newListInformation;
-    };
-};
-
-const plugins: BytemdPlugin[] = [
-    gfm(),
-    {
-        viewerEffect(context) {
-            const element = context.markdownBody;
-            element.querySelectorAll("ul.contains-task-list > li > input").forEach((input) => {
-                input.classList.add("task-list-item-checkbox");
-                input.removeAttribute("disabled");
-            });
-        },
-        remark: (processor) => processor.use(listInformationPlugin)
+function handleTaskListsCheck({ position, checked }: { position: [number, number]; checked: boolean }) {
+    try {
+        const newValue = toggleTaskListItem(position, checked, lines.value);
+        model.value = newValue;
+    } catch (e) {
+        console.error("Failed to toggle task list item:", e);
     }
-];
-
-function validatePosition(pos: Position | undefined): RequiredPosition | undefined {
-    if (pos?.start?.offset == undefined || pos?.end?.offset == undefined) {
-        return undefined;
-    }
-    return pos as RequiredPosition;
 }
 
-function checkItem(position: ListItemPos, checked: boolean, source: string): string {
-    const [list, index] = position;
-    const itemInformation = listInformation.value[list]?.[index];
-    const start = itemInformation?.pos?.start?.offset;
-    if (start == undefined) {
-        throw new Error("Item not found");
+function toggleTaskListItem(position: ListItemPos, checked: boolean, source: string[]): string {
+    const range = getSourceRange(position, source);
+    const lineIndex = range.start;
+    const line = source[lineIndex];
+
+    const taskListPattern = /^(\s*)([-*+])\s+\[([ x])\]\s+(.*)$/;
+    const match = line.match(taskListPattern);
+
+    if (!match) {
+        throw new Error("Line is not a valid task list item");
     }
-    const bracketsPos = source.indexOf("[", start);
-    if (bracketsPos === -1) {
-        throw new Error("Square brackets not found");
-    }
-    const newContent = checked ? "x" : " ";
-    return source.slice(0, bracketsPos + 1) + newContent + source.slice(bracketsPos + 2);
+
+    const [, indentation, marker, , content] = match;
+    const newCheckState = checked ? "x" : " ";
+    const newLine = `${indentation}${marker} [${newCheckState}] ${content}`;
+
+    const newSource = [...source];
+    newSource[lineIndex] = newLine;
+
+    return newSource.join("\n");
 }
 
-function moveItem(src: ListItemPos, dest: ListItemPos, source: string): string {
-    const srcInfo = listInformation.value[src[0]]?.[src[1]];
-    const destList = listInformation.value[dest[0]];
-    if (srcInfo?.pos == undefined || destList == undefined) {
-        throw new Error("Src or target not found");
-    }
-    const destFirstPos = destList[0]?.pos;
-    if (destFirstPos == undefined) {
-        throw new Error("Target list is empty or position is not available");
-    }
-    const srcIndentation = calculateIndentation(srcInfo.pos, source);
-    let destIndentation = calculateIndentation(destFirstPos, source);
-    const [srcText, srcPos] = extractListItem(srcInfo.pos, source);
+function moveItem(src: ListItemPos, dest: ListItemPos, source: string[]): string {
+    const { src: srcRange, dest: destRange } = extractListItem(src, dest, source);
+    const srcIndentation = calculateIndentation(source[srcRange.start]);
+    const destIndentation = calculateIndentation(source[destRange.start]);
+    const srcText = source.slice(srcRange.start, srcRange.end).join("\n");
     const indentedSrcText = changeIndentation(srcText, destIndentation - srcIndentation);
-    let destLinePos = calculateDestLinePos(dest, destList, source);
-    const transformedText = transformText(source, indentedSrcText, srcPos, srcText.length, destLinePos);
-    if (transformedText.endsWith("\n") && !source.endsWith("\n")) {
-        return transformedText.slice(0, -1);
+    const destLine = calculateDestLine(src, dest, source);
+    const transformedText = transformText(source, indentedSrcText, srcRange, destLine);
+    return transformedText;
+}
+
+function calculateDestLine(src: ListItemPos, dest: ListItemPos, source: string[]): number {
+    const [ulIndex, liIndex] = dest;
+    if (liIndex === 0) {
+        const liAfter = getSourceRange([ulIndex, 1], source);
+        return liAfter.start;
     } else {
-        return transformedText;
+        let afterLiIndex = liIndex - 1;
+        if (src[0] === ulIndex && src[1] < liIndex) {
+            afterLiIndex--;
+        }
+        const liBefore = getSourceRange([ulIndex, afterLiIndex], source);
+        return liBefore.end;
     }
 }
 
-function calculateDestLinePos(dest: ListItemPos, destList: ListItemInformation[], source: string) {
-    let destLinePos = -1;
-    let destListIndex = dest[1];
-    if (destListIndex < destList.length) {
-        const destInfo = destList[destListIndex].pos;
-        if (destInfo == undefined) {
-            throw new Error("Target position not found");
-        }
-        destLinePos = destInfo.start.offset;
-    } else {
-        const destInfo = destList[destList.length - 1].pos;
-        if (destInfo == undefined) {
-            throw new Error("Target position not found");
-        }
-        const insertPos = source.indexOf("\n", destInfo.end.offset);
-        if (insertPos > -1) {
-            destLinePos = insertPos;
-        }
+function transformText(source: string[], text: string, srcRange: SourceRange, destLine: number): string {
+    const beforeSrc = source.slice(0, srcRange.start);
+    const afterSrc = source.slice(srcRange.end);
+
+    const sourceAfterRemoval = [...beforeSrc, ...afterSrc];
+
+    let adjustedDestLine = destLine;
+    if (destLine > srcRange.start) {
+        adjustedDestLine = destLine - (srcRange.end - srcRange.start);
     }
-    return destLinePos;
+
+    const result = [
+        ...sourceAfterRemoval.slice(0, adjustedDestLine),
+        text,
+        ...sourceAfterRemoval.slice(adjustedDestLine)
+    ];
+
+    return result.join("\n");
 }
 
-function transformText(source: string, text: string, srcPos: number, srcLength: number, destLinePos: number) {
-    const srcRemovedText = source.slice(0, srcPos) + source.slice(srcPos + srcLength);
-    if (destLinePos == -1) {
-        return srcRemovedText + "\n" + text;
-    } else {
-        const lineStartPos = source.lastIndexOf("\n", destLinePos);
-        const transformedLineStartPos = destLinePos > srcPos ? lineStartPos - srcLength : lineStartPos;
-        let transformedText = text;
-        return (
-            srcRemovedText.slice(0, transformedLineStartPos + 1) +
-            transformedText +
-            srcRemovedText.slice(transformedLineStartPos + 1)
-        );
-    }
-}
-
-function calculateIndentation(itemStartPos: RequiredPosition, source: string): number {
-    const length = itemStartPos.start.column - 1;
-    const lineStart = itemStartPos.start.offset - length;
+function calculateIndentation(source: string): number {
     let indentation = 0;
     for (let i = 0; i < length; i++) {
-        const char = source[lineStart + i];
+        const char = source[i];
         if (char === "\t") {
             indentation += 4;
         } else if (char === " ") {
             indentation++;
+        } else if (/^[^\s]$/.test(char)) {
+            break;
         }
     }
     return indentation;
 }
 
-function extractListItem(pos: RequiredPosition, source: string): [string, number] {
-    const start = pos.start.offset - pos.start.column + 1;
-    const end = pos.end.offset;
-    const endLineEndPos = source.indexOf("\n", end);
-    let text: string;
-    if (endLineEndPos == -1) {
-        text = source.slice(start);
+function extractListItem(
+    src: ListItemPos,
+    dest: ListItemPos,
+    source: string[]
+): {
+    src: SourceRange;
+    dest: SourceRange;
+} {
+    let [ulIndex, liIndex] = dest;
+    if (src[0] === ulIndex && src[1] < liIndex) {
+        liIndex--;
+    }
+    const srcPos = getSourceRange([ulIndex, liIndex], source);
+    let destPos: SourceRange;
+    if (liIndex === 0) {
+        destPos = getSourceRange([ulIndex, 1], source);
     } else {
-        text = source.slice(start, endLineEndPos + 1);
+        let afterLiIndex = liIndex - 1;
+        if (src[0] === ulIndex && src[1] < liIndex) {
+            afterLiIndex--;
+        }
+        destPos = getSourceRange([ulIndex, afterLiIndex], source);
     }
-    if (!text.endsWith("\n")) {
-        text += "\n";
-    }
-    return [text, start];
+    return {
+        src: srcPos,
+        dest: destPos
+    };
 }
 
 function changeIndentation(text: string, indentationDiff: number): string {
@@ -298,10 +340,88 @@ function removeIndentation(lines: string[], diff: number): string {
         })
         .join("\n");
 }
+
+function getListItem(listItemPos: ListItemPos): HTMLLIElement {
+    const [ulIndex, liIndex] = listItemPos;
+    const rootElement = mdEditorContainer.value!;
+    const allUls = rootElement.querySelectorAll("ul");
+
+    if (ulIndex < 0 || ulIndex >= allUls.length) {
+        throw new Error("Invalid UL index");
+    }
+
+    const targetUl = allUls[ulIndex];
+    const allLis = targetUl.querySelectorAll(":scope > li");
+
+    if (liIndex < 0 || liIndex >= allLis.length) {
+        throw new Error("Invalid LI index");
+    }
+
+    return allLis[liIndex] as HTMLLIElement;
+}
+
+function getSourceRange(listItemPos: ListItemPos, source: string[]): SourceRange {
+    const li = getListItem(listItemPos);
+    let end = Number(li.dataset.lineEnd);
+    while (source[end - 1].trim() === "") {
+        end--;
+    }
+    return {
+        start: Number(li.dataset.line),
+        end: end
+    };
+}
 </script>
 <style lang="scss">
-.markdown-body {
-    background: none !important;
+@use "sass:meta";
+
+*[data-code-theme="dark"] {
+    @include meta.load-css("highlight.js/styles/github-dark.css");
+}
+*[data-code-theme="light"] {
+    @include meta.load-css("highlight.js/styles/github.css");
+}
+
+.md-editor {
+    --md-color: rgb(var(--v-theme-on-surface));
+    --md-bk-color: transparent;
+    --md-border-color: rgb(var(--v-theme-outline-variant));
+    --md-scrollbar-bg-color: transparent;
+    --md-bk-color-outstand: rgb(var(--v-theme-primary-container));
+    border: none;
+
+    .md-editor-dropdown-overlay {
+        background: rgb(var(--v-theme-surface-container-low));
+    }
+}
+
+.md-editor div.github-theme {
+    --md-theme-code-before-bg-color: rgb(var(--v-theme-surface-elevated-2));
+}
+
+.md-editor.editor {
+    height: max(300px, 30vh);
+}
+
+.md-editor .md-editor-resize-operate {
+    border-left: 1px solid var(--md-border-color);
+}
+
+.md-editor-code-flag {
+    visibility: hidden;
+}
+
+.md-editor-preview .md-editor-code pre code {
+    border-radius: var(--md-theme-code-block-radius) !important;
+}
+
+.md-editor-code-head {
+    position: absolute !important;
+    right: 0;
+    width: unset !important;
+}
+
+.md-editor-preview {
     font-family: "Roboto", sans-serif !important;
 
     h1 {
@@ -317,6 +437,14 @@ function removeIndentation(lines: string[], diff: number): string {
         font-weight: 500 !important;
     }
 
+    & > *:first-child {
+        margin-top: 0 !important;
+    }
+
+    & > *:last-child {
+        margin-bottom: 0 !important;
+    }
+
     .contains-task-list {
         padding: 0 !important;
 
@@ -324,6 +452,10 @@ function removeIndentation(lines: string[], diff: number): string {
             padding: 2px 15px 2px 42px;
             margin-right: -15px;
             margin-left: -15px;
+
+            .handle {
+                display: none;
+            }
 
             &.hovered .handle {
                 display: block;
@@ -333,7 +465,7 @@ function removeIndentation(lines: string[], diff: number): string {
                 margin-left: -43px;
 
                 .drag-handle {
-                    fill: rgb(var(--v-theme-on-surface-container));
+                    fill: var(--md-theme-color);
                 }
             }
         }
@@ -342,36 +474,4 @@ function removeIndentation(lines: string[], diff: number): string {
         }
     }
 }
-
-.bytemd {
-    height: max(300px, 30vh);
-    border: none;
-    background-color: unset;
-    color: rgb(var(--v-theme-on-surface-container));
-
-    .CodeMirror {
-        background: none !important;
-    }
-
-    .bytemd-toolbar {
-        background: none !important;
-    }
-
-    .bytemd-toolbar-right [bytemd-tippy-path="4"] {
-        display: none;
-    }
-
-    .bytemd-toolbar-right [bytemd-tippy-path="5"] {
-        display: none;
-    }
-
-    & > * {
-        border-color: rgba(var(--v-border-color), var(--v-border-opacity)) !important;
-    }
-}
-
-.bytemd-body > * {
-    border-color: rgba(var(--v-border-color), var(--v-border-opacity)) !important;
-}
 </style>
-<style></style>

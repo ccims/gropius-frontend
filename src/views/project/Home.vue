@@ -154,6 +154,7 @@
     <CreateInterfaceSpecificationDialog
         v-if="interfaceSpecificationComponent != undefined"
         :component="interfaceSpecificationComponent.component"
+        :component-template="interfaceSpecificationComponent.template"
         :initial-name="initialInterfaceSpecificationName"
         force-create-version
         @created-interface-specification="(_, version) => addInterfaceSpecificationVersion(version!)"
@@ -275,14 +276,20 @@ async function layoutGraph(graphLayout: GraphLayoutSource) {
     if (graphLayout.relationLayouts.nodes.length > 0 || graphLayout.relationPartnerLayouts.nodes.length > 0) {
         const resultingLayout: GraphLayout = {};
         for (const relationLayout of graphLayout.relationLayouts.nodes) {
-            resultingLayout[relationLayout.relation.id] = {
-                points: relationLayout.points
-            };
+            const id = relationLayout.relation?.id;
+            if (id != undefined) {
+                resultingLayout[id] = {
+                    points: relationLayout.points
+                };
+            }
         }
         for (const relationPartnerLayout of graphLayout.relationPartnerLayouts.nodes) {
-            resultingLayout[relationPartnerLayout.relationPartner.id] = {
-                pos: relationPartnerLayout.pos
-            };
+            const id = relationPartnerLayout.relationPartner?.id;
+            if (id != undefined) {
+                resultingLayout[id] = {
+                    pos: relationPartnerLayout.pos
+                };
+            }
         }
         layout.value = resultingLayout;
     } else {
@@ -386,7 +393,7 @@ const showAddInterfaceDialog = ref(false);
 const initialComponentName = ref("");
 const componentVersionComponent = ref("");
 const initialComponentVersionVersion = ref("");
-const interfaceSpecificationComponent = ref<{ component: string; version: string }>();
+const interfaceSpecificationComponent = ref<{ component: string; version: string; template: string }>();
 const initialInterfaceSpecificationName = ref("");
 const interfaceSpecificationVersionInterfaceSpecificaton = ref("");
 const initialInterfaceSpecificationVersionVersion = ref("");
@@ -656,7 +663,8 @@ async function createComponentVersion(version: string, component: IdObject) {
 function addInterface(componentVersion: string) {
     interfaceSpecificationComponent.value = {
         component: relationPartnerLookup.value.get(componentVersion)!.componentVersion.component.id,
-        version: componentVersion
+        version: componentVersion,
+        template: relationPartnerLookup.value.get(componentVersion)!.componentVersion.component.template.id
     };
     showAddInterfaceDialog.value = true;
 }
@@ -772,13 +780,14 @@ function computeLayoutDiff(target: GraphLayoutSource): LayoutUpdate {
     };
     const newLayout = layout.value;
     const currentRelationLayout = new Map(
-        target.relationLayouts.nodes.map((relationLayout) => [relationLayout.relation.id, relationLayout.points])
+        target.relationLayouts.nodes
+            .filter((relationLayout) => relationLayout.relation != undefined)
+            .map((relationLayout) => [relationLayout.relation!.id, relationLayout.points])
     );
     const currentRelationPartnerLayout = new Map(
-        target.relationPartnerLayouts.nodes.map((relationPartnerLayout) => [
-            relationPartnerLayout.relationPartner.id,
-            relationPartnerLayout.pos
-        ])
+        target.relationPartnerLayouts.nodes
+            .filter((relationPartnerLayout) => relationPartnerLayout.relationPartner != undefined)
+            .map((relationPartnerLayout) => [relationPartnerLayout.relationPartner!.id, relationPartnerLayout.pos])
     );
     for (const [id, layout] of Object.entries(newLayout!)) {
         if (layout == undefined) {

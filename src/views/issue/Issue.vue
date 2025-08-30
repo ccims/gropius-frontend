@@ -4,7 +4,7 @@
         <div class="mb-5">
             <div class="d-flex">
                 <IssueIcon :issue="issue" height="50px" class="mr-3"></IssueIcon>
-                <div>
+                <div class="flex-1-1-0">
                     <div class="d-flex align-center">
                         <v-text-field v-if="editTitle" v-model="editTitleText" hide-details autofocus class="mr-3" />
                         <div v-else class="text-h4 mr-3">{{ issue.title }}</div>
@@ -26,12 +26,25 @@
                         last updated <RelativeTimeWrapper :time="issue.lastUpdatedAt" />
                     </div>
                 </div>
+                <v-btn-toggle
+                    class="segmented-button mr-3 ml-10"
+                    multiple
+                    mandatory
+                    v-model="store.visibleTimelineItems"
+                >
+                    <v-btn :prepend-icon="store.visibleTimelineItems.includes(0) ? 'mdi-check' : 'mdi-comment-outline'">
+                        Comments
+                    </v-btn>
+                    <v-btn :prepend-icon="store.visibleTimelineItems.includes(1) ? 'mdi-check' : 'mdi-history'">
+                        History
+                    </v-btn>
+                </v-btn-toggle>
             </div>
         </div>
         <div class="overflow-auto position-relative d-flex flex-fill">
             <div class="timeline">
                 <TimelineItem
-                    v-for="item in timeline"
+                    v-for="item in filteredTimeline"
                     :key="item.id"
                     :ref="(el: any) => registerItemElement(item.id, el)"
                     :item="item"
@@ -200,9 +213,13 @@
                             auto-select-first
                             create-new
                             @selected-item="addLabel"
-                            @create-new="eventBus?.emit('create-label')"
+                            @create-new="createLabel"
                         />
-                        <CreateLabelDialog :trackable="trackable!.id" @created-label="addLabel" />
+                        <CreateLabelDialog
+                            :trackable="trackable!.id"
+                            :initial-name="initialLabelName"
+                            @created-label="addLabel"
+                        />
                     </template>
                 </EditableCompartment>
                 <v-divider class="mx-2" />
@@ -522,6 +539,22 @@ const outgoingRelations = computed(() => issue.value!.outgoingRelations.nodes);
 const assignments = computed(() => issue.value!.assignments.nodes);
 const affectedEntities = computed(() => issue.value!.affects.nodes);
 
+const initialLabelName = ref("");
+
+const filteredTimeline = computed(() => {
+    const includeComments = store.visibleTimelineItems.includes(0);
+    const includeHistory = store.visibleTimelineItems.includes(1);
+    return timeline.value.filter((item) => {
+        if (item.__typename === "Body") {
+            return true;
+        } else if (item.__typename === "IssueComment") {
+            return includeComments;
+        } else {
+            return includeHistory;
+        }
+    });
+});
+
 function addComment(comment: TimelineItemType<"IssueComment">) {
     timeline.value.push(comment);
     answers.value = null;
@@ -638,6 +671,11 @@ async function removeLabel(labelId: string) {
     if (index != -1) {
         labels.value.splice(index, 1);
     }
+}
+
+function createLabel(name: string) {
+    initialLabelName.value = name;
+    eventBus?.emit("create-label");
 }
 
 const editedAssignmentTypes = ref<Record<string, boolean>>({});

@@ -28,22 +28,22 @@ html,
 }
 
 ::-webkit-scrollbar-track {
-    background: transparent;
+    background: transparent !important;
 }
 
 ::-webkit-scrollbar-thumb {
-    border: 3px solid transparent;
-    border-radius: 10px;
-    background: rgba(var(--v-theme-on-surface), 0.25);
-    background-clip: padding-box;
+    border: 3px solid transparent !important;
+    border-radius: 10px !important;
+    background: rgba(var(--v-theme-on-surface), 0.25) !important;
+    background-clip: padding-box !important;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    border: 0;
+    border: 0 !important;
 }
 
 ::-webkit-scrollbar-corner {
-    visibility: hidden;
+    visibility: hidden !important;
 }
 
 .v-tooltip.rich-tooltip > .v-overlay__content {

@@ -11,7 +11,7 @@
             <slot name="header-title">
                 <div v-for="(segment, index) in titleSegments" :key="index" class="d-flex align-center">
                     <span v-if="index != 0" class="text-h6">/</span>
-                    <router-link :to="segment.path">
+                    <router-link :to="segment.path" class="header-title-link">
                         <DefaultButton variant="text" class="px-1" min-width="0" rounded="lger">
                             <span v-if="'name' in segment" class="text-h6">{{ segment.name }}</span>
                             <v-icon v-else :icon="segment.icon" size="large" />
@@ -73,9 +73,9 @@
 </template>
 <script setup lang="ts">
 import { useLocalStorage } from "@vueuse/core";
-import { PropType, ref } from "vue";
-import { RouteLocationRaw, useRouter } from "vue-router";
-import { useTheme } from "vuetify/lib/framework.mjs";
+import { PropType } from "vue";
+import { RouteLocationRaw } from "vue-router";
+import { useTheme } from "vuetify";
 import SideBar, { SideBarItem } from "./SideBar.vue";
 import ErrorSnackbar from "./ErrorSnackbar.vue";
 import { useAppStore } from "@/store/app";
@@ -118,7 +118,6 @@ const props = defineProps({
 const theme = useTheme();
 const lightMode = useLocalStorage("lightMode", true);
 const store = useAppStore();
-const router = useRouter();
 
 function toggleDarkMode() {
     lightMode.value = !lightMode.value;
@@ -126,7 +125,7 @@ function toggleDarkMode() {
 }
 
 function updateColorMode() {
-    theme.global.name.value = lightMode.value ? "light" : "dark";
+    theme.change(lightMode.value ? "light" : "dark");
 }
 
 updateColorMode();
@@ -151,11 +150,15 @@ updateColorMode();
 
 .avatar-button :deep(.v-btn__content),
 .avatar {
-    width: 100%;
-    height: 100%;
+    width: calc(var(--v-btn-height) + 12px);
+    height: calc(var(--v-btn-height) + 12px);
 }
 
 .text-ellipsis {
     max-width: 100%;
+}
+
+.header-title-link {
+    text-decoration-line: none;
 }
 </style>
