@@ -30,7 +30,8 @@ const tabs = computed(() => {
         { name: "Home", path: "/" },
         { name: "Components", path: "/components" },
         { name: "Projects", path: "/projects" },
-        { name: "IMSs", path: "/imss" }
+        { name: "IMSs", path: "/imss" },
+        { name: "Templates", path: "/templates"}
     ];
     if (store.user?.isAdmin) {
         tabs.push({ name: "Admin", path: "/admin" });
@@ -63,6 +64,36 @@ const rightSidebarItems = computed(() => {
                 name = "IMS";
                 eventName = "create-ims";
                 disabled = !(store.user?.canCreateIMSs ?? false);
+                break;
+            }
+            case "templates-issue": {
+                name = "issue template";
+                eventName = "create-issue-template";
+                disabled = !(store.user?.canCreateTemplates ?? false);
+                break;
+            }
+            case "templates-artefact": {
+                name = "artefact template";
+                eventName = "create-artefact-template";
+                disabled = !(store.user?.canCreateTemplates ?? false);
+                break;
+            }
+            case "templates-component": {
+                name = "component template";
+                eventName = "create-component-template";
+                disabled = !(store.user?.canCreateTemplates ?? false);
+                break;
+            }
+            case "templates-interface-specification": {
+                name = "interface specification template";
+                eventName = "create-interface-specification-template";
+                disabled = !(store.user?.canCreateTemplates ?? false);
+                break;
+            }
+            case "templates-relation": {
+                name = "relation template";
+                eventName = "create-relation-template";
+                disabled = !(store.user?.canCreateTemplates ?? false);
                 break;
             }
             case "admin-permissions": {
@@ -104,6 +135,45 @@ const rightSidebarItems = computed(() => {
 });
 
 const leftSidebarItems = computed(() => {
+
+    if (route.name?.toString().startsWith("templates")) {
+        return [
+        [
+                {
+                    icon: "$issue",
+                    name: "Issue",
+                    color: "secondary",
+                    to: { name: "templates-issue" }
+                },
+                {
+                    icon: "mdi-file-document",
+                    name: "Artefact",
+                    color: "secondary",
+                    to: { name: "templates-artefact" }
+                },
+                {
+                    icon: "$component",
+                    name: "Component",
+                    color: "secondary",
+                    to: { name: "templates-component" }
+                },
+                {
+                    icon: "$interface",
+                    name: "Interface",
+                    color: "secondary",
+                    to: { name: "templates-interface-specification" }
+                },
+                {
+                    icon: "mdi-link-variant",
+                    name: "Relation",
+                    color: "secondary",
+                    to: { name: "templates-relation" }
+                }
+            ]
+        ];
+
+    }
+
     if (route.name?.toString().startsWith("admin")) {
         return [
             [
