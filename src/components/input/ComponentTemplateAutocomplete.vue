@@ -1,5 +1,10 @@
 <template>
-    <FetchingAutocomplete mode="model" :fetch="searchComponentTemplates" label="Template" item-title="name">
+    <FetchingAutocomplete
+        :mode="multiple ? 'model-multiple' : 'model'"
+        :fetch="searchComponentTemplates"
+        label="Template"
+        item-title="name"
+    >
         <template #item="{ props, item }">
             <v-list-item :title="item.raw.name" :subtitle="item.raw.description" v-bind="props"> </v-list-item>
         </template>
@@ -11,6 +16,14 @@ import { DefaultComponentTemplateInfoFragment } from "@/graphql/generated";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
+
+defineProps({
+    multiple: {
+        type: Boolean,
+        required: false,
+        default: false
+    }
+});
 
 const client = useClient();
 
