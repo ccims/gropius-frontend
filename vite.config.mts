@@ -2,8 +2,6 @@
 import vue from "@vitejs/plugin-vue";
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 import Fonts from "unplugin-fonts/vite";
-import $monacoEditorPlugin from "vite-plugin-monaco-editor";
-const monacoEditorPlugin = ($monacoEditorPlugin as any).default ?? $monacoEditorPlugin;
 
 // Utilities
 import { defineConfig } from "vite";
@@ -36,15 +34,6 @@ export default defineConfig({
                     }
                 ]
             }
-        }),
-        monacoEditorPlugin({
-            languageWorkers: ["editorWorkerService", "json"],
-            customWorkers: [
-                {
-                    label: "graphql",
-                    entry: "monaco-graphql/esm/graphql.worker.js"
-                }
-            ]
         })
     ],
     define: { "process.env": {} },
@@ -55,6 +44,24 @@ export default defineConfig({
         extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx", ".vue"]
     },
     server: {
+        port: 4200,
+        proxy: {
+            "/api/graphql": {
+                target: "http://localhost:8080/graphql",
+                changeOrigin: true,
+                secure: false,
+                ws: true,
+                ignorePath: true
+            },
+            "/auth": {
+                target: "http://localhost:3000",
+                changeOrigin: true,
+                secure: false,
+                ws: true
+            }
+        }
+    },
+    preview: {
         port: 4200,
         proxy: {
             "/api/graphql": {

@@ -11,6 +11,7 @@ export async function onLoginEnter(
     const oauthCode = to.query["code"] ?? "";
     const state = JSON.parse((to.query["state"] as string | undefined) ?? "{}");
     const store = useAppStore();
+
     if (oauthCode !== undefined && oauthCode.length > 0) {
         try {
             const tokenResponse: OAuthRespose = await withErrorMessage(
@@ -25,36 +26,21 @@ export async function onLoginEnter(
                     ).data,
                 "Could not login."
             );
-            if (state.register) {
-                withErrorMessage(async () => {
-                    await axios.post(
-                        "/auth/api/login/registration/self-link",
-                        {
-                            register_token: tokenResponse.access_token
-                        },
-                        {
-                            headers: {
-                                Authorization: `Bearer ${await store.getAccessToken()}`
-                            }
-                        }
-                    );
-                }, "Could not link account.");
-            } else {
-                await handleOAuthResponse(tokenResponse, store);
-            }
+            await store.setNewTokenPair(tokenResponse.access_token, tokenResponse.refresh_token);
             return {
                 path: state.from,
                 replace: true
             };
+
         } catch (err) {
             return {
                 name: "home",
                 replace: true
             };
         }
-    } else {
-        return authorizeIfRequired(to);
     }
+    
+    return authorizeIfRequired(to);
 }
 
 export async function onAnyEnter(
@@ -71,13 +57,8 @@ async function authorizeIfRequired(to: RouteLocationNormalized) {
     const store = useAppStore();
     if (!(await store.isLoggedIn())) {
         window.location.href = await buildOAuthUrl([TokenScope.LOGIN_SERVICE, TokenScope.BACKEND], to.fullPath);
-        true;
     } else {
-        store.validateUser();
+        await store.validateUser();
     }
     return true;
-}
-
-async function handleOAuthResponse(tokenResponse: OAuthRespose, store: ReturnType<typeof useAppStore>) {
-    store.setNewTokenPair(tokenResponse.access_token, tokenResponse.refresh_token);
 }
