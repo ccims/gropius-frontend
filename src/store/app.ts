@@ -20,12 +20,12 @@ export const useAppStore = defineStore("app", {
         tokenRefreshLock: shallowRef(new Mutex()),
         accessTokenLock: shallowRef(new Mutex()),
         user: undefined as undefined | (ClientReturnType<"getCurrentUser">["currentUser"] & GlobalUserPermissions),
-        accessToken: useLocalStorage<string>("accessToken", ""),
-        refreshToken: useLocalStorage<string>("refreshToken", ""),
-        accessTokenValidUntil: useLocalStorage<number>("accessTokenValidUntil", 0),
-        codeVerifier: useLocalStorage<string>("codeVerifier", ""),
+        accessToken: "",
+        refreshToken: "",
+        accessTokenValidUntil: 0,
+        codeVerifier: useLocalStorage<string>("gropiusFrontend__codeVerifier", ""),
         errors: [] as string[],
-        visibleTimelineItems: useLocalStorage<number[]>("visibleTimelineItems", [0, 1] as number[])
+        visibleTimelineItems: useLocalStorage<number[]>("gropiusFrontend__visibleTimelineItems", [0, 1] as number[])
     }),
     getters: {
         tokenValidityDuration(): number {
