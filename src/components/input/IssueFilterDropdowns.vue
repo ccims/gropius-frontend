@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex ga-4 align-center h-100">
+    <div class="d-flex ga-2 align-center h-100">
         <FilterDropdown
             v-model="templateIds"
             label="Template"

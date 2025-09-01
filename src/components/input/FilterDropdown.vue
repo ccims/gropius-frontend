@@ -41,7 +41,7 @@
                     <v-tooltip v-if="item.description" :text="item.description" activator="parent" />
                 </v-list-item>
             </template>
-            <div v-else-if="filteredItems.length === 0" class="pa-4 text-center text-grey">No items found.</div>
+            <div v-else-if="filteredItems.length === 0" class="pa-4 text-center text-medium-emphasis">No items found.</div>
         </v-list>
     </v-menu>
 </template>
@@ -95,7 +95,7 @@ const chipLabel = computed(() => {
     return `${model.value.length} selected`;
 });
 const chipColor = computed(() => {
-    return model.value.length > 0 ? "primary" : "grey lighten-1";
+    return model.value.length > 0 ? "primary" : "outline";
 });
 const chipVariant = computed(() => {
     return model.value.length > 0 ? "tonal" : "outlined";
