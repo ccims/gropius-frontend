@@ -25,7 +25,13 @@ export const useAppStore = defineStore("app", {
         accessTokenValidUntil: 0,
         codeVerifier: useLocalStorage<string>("gropiusFrontend__codeVerifier", ""),
         errors: [] as string[],
-        visibleTimelineItems: useLocalStorage<number[]>("gropiusFrontend__visibleTimelineItems", [0, 1] as number[])
+        visibleTimelineItems: useLocalStorage<number[]>("gropiusFrontend__visibleTimelineItems", [0, 1] as number[]),
+
+        // Whether the user has manually logged out. This is used to prevent automatic logins.
+        manuallyLoggedOut: useLocalStorage<boolean>("gropiusFrontend__manuallyLoggedOut", false),
+
+        // The path the user should be redirected to after a successful login
+        redirectTo: useLocalStorage<string>("gropiusFrontend__redirectTo", "")
     }),
     getters: {
         tokenValidityDuration(): number {
@@ -45,7 +51,14 @@ export const useAppStore = defineStore("app", {
         async setNewTokenPair(accessToken: string, refreshToken: string): Promise<void> {
             this.accessToken = accessToken;
             this.refreshToken = refreshToken;
+            this.manuallyLoggedOut = false;
             await this.validateUser();
+        },
+        async logout(): Promise<void> {
+            this.accessToken = "";
+            this.refreshToken = "";
+            this.manuallyLoggedOut = true;
+            this.redirectTo = undefined;
         },
         async validateUser(): Promise<void> {
             if (!(await this.isLoggedIn())) {

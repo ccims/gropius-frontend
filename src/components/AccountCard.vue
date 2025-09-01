@@ -17,9 +17,7 @@
                 Manage Account
             </DefaultButton>
 
-            <DefaultButton variant="tonal" class="mt-3 w-100" @click="logout">
-                Logout
-            </DefaultButton>
+            <DefaultButton variant="tonal" class="mt-3 w-100" @click="logout"> Logout </DefaultButton>
         </div>
     </v-card>
 </template>
@@ -40,14 +38,13 @@ const store = useAppStore();
 const route = useRoute();
 const router = useRouter();
 
-function logout() {
-    store.setNewTokenPair("", "");
-    router.push({
+async function logout() {
+    await store.logout();
+    await router.push({
         name: "home",
         force: true
     });
 }
-
 </script>
 <style scoped>
 .large-avatar {

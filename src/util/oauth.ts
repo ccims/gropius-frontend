@@ -18,7 +18,7 @@ function base64URLEncode(str: string): string {
     return btoa(str).replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
 }
 
-export async function buildOAuthUrl(scope: TokenScope[], redirectTo: string): Promise<string> {
+export async function buildOAuthUrl(scope: TokenScope[], redirectTo?: string): Promise<string> {
     const codeVerifierArray = new Uint8Array(32);
     crypto.getRandomValues(codeVerifierArray);
     const codeVerifier = base64URLEncode(String.fromCharCode.apply(null, Array.from(codeVerifierArray)));
