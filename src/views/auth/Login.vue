@@ -22,11 +22,9 @@ import { buildOAuthUrl, TokenScope } from "@/util/oauth";
 import { onMounted } from "vue";
 import { useAppStore } from "@/store/app";
 import { ref } from "vue";
-import { useRoute } from "vue-router";
 
 const store = useAppStore();
 const loginURL = ref("");
-const route = useRoute();
 
 onMounted(async () => {
     loginURL.value = await buildOAuthUrl([TokenScope.LOGIN_SERVICE, TokenScope.BACKEND]);
