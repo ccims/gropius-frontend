@@ -1,16 +1,17 @@
 import { useAppStore } from "@/store/app";
-import { buildOAuthUrl, OAuthRespose, TokenScope } from "@/util/oauth";
+import { OAuthRespose } from "@/util/oauth";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import axios from "axios";
 import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import router from "@/router/index";
 
 export async function onLoginEnter(
     to: RouteLocationNormalized,
     from: RouteLocationNormalized
 ): Promise<RouteLocationRaw | boolean> {
     const oauthCode = to.query["code"] ?? "";
-    const state = JSON.parse((to.query["state"] as string | undefined) ?? "{}");
     const store = useAppStore();
+
     if (oauthCode !== undefined && oauthCode.length > 0) {
         try {
             const tokenResponse: OAuthRespose = await withErrorMessage(
@@ -25,36 +26,24 @@ export async function onLoginEnter(
                     ).data,
                 "Could not login."
             );
-            if (state.register) {
-                withErrorMessage(async () => {
-                    await axios.post(
-                        "/auth/api/login/registration/self-link",
-                        {
-                            register_token: tokenResponse.access_token
-                        },
-                        {
-                            headers: {
-                                Authorization: `Bearer ${await store.getAccessToken()}`
-                            }
-                        }
-                    );
-                }, "Could not link account.");
-            } else {
-                await handleOAuthResponse(tokenResponse, store);
-            }
+            await store.setNewTokenPair(tokenResponse.access_token, tokenResponse.refresh_token);
+
+            const next = store.redirectTo;
+            store.redirectTo = "";
             return {
-                path: state.from,
+                ...router.resolve(next),
                 replace: true
             };
         } catch (err) {
+            console.log(err);
             return {
                 name: "home",
                 replace: true
             };
         }
-    } else {
-        return authorizeIfRequired(to);
     }
+
+    return true;
 }
 
 export async function onAnyEnter(
@@ -70,14 +59,12 @@ export async function onAnyEnter(
 async function authorizeIfRequired(to: RouteLocationNormalized) {
     const store = useAppStore();
     if (!(await store.isLoggedIn())) {
-        window.location.href = await buildOAuthUrl([TokenScope.LOGIN_SERVICE, TokenScope.BACKEND], to.fullPath);
-        true;
+        store.redirectTo = to.fullPath;
+        return {
+            name: "login"
+        };
     } else {
-        store.validateUser();
+        await store.validateUser();
     }
     return true;
-}
-
-async function handleOAuthResponse(tokenResponse: OAuthRespose, store: ReturnType<typeof useAppStore>) {
-    store.setNewTokenPair(tokenResponse.access_token, tokenResponse.refresh_token);
 }
