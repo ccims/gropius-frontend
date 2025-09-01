@@ -41,7 +41,9 @@
                     <v-tooltip v-if="item.description" :text="item.description" activator="parent" />
                 </v-list-item>
             </template>
-            <div v-else-if="filteredItems.length === 0" class="pa-4 text-center text-medium-emphasis">No items found.</div>
+            <div v-else-if="filteredItems.length === 0" class="pa-4 text-center text-medium-emphasis">
+                No items found.
+            </div>
         </v-list>
     </v-menu>
 </template>
@@ -87,7 +89,9 @@ const props = defineProps({
 });
 
 const chipLabel = computed(() => {
-    if (model.value.length === 0) return props.label;
+    if (model.value.length === 0) {
+        return props.label;
+    }
     if (model.value.length === 1) {
         const item = allItems.value.find((i) => i.id === model.value[0]);
         return item ? item.name : "Unknown Item";
@@ -108,8 +112,12 @@ const model = defineModel<string[]>({ default: () => [] });
 const filteredItems = computed(() => {
     return allItems.value.filter((item) => {
         const currentSeach = searchText.value;
-        if (!props.filter(item)) return false;
-        if (!currentSeach) return true;
+        if (!props.filter(item)) {
+            return false;
+        }
+        if (!currentSeach) {
+            return true;
+        }
         return item.name.toLowerCase().includes(currentSeach.toLowerCase());
     });
 });
@@ -118,7 +126,9 @@ const fromItemManager = computed(() => {
     return (
         props.itemManager.cachedItems.value?.[0]?.flatMap((item) => {
             const result = props.mapper(item);
-            if (result === undefined || result === null) return [];
+            if (result === undefined || result === null) {
+                return [];
+            }
             return Array.isArray(result) ? result : [result];
         }) ?? []
     );
@@ -152,7 +162,9 @@ const allItems = computed((previous?: I[]) => {
     function handleItems(array: I[]) {
         for (const mappedItem of array) {
             const id = mappedItem.id;
-            if (idSet.has(id)) continue;
+            if (idSet.has(id)) {
+                continue;
+            }
             idSet.add(id);
             result.push(mappedItem);
         }

@@ -177,8 +177,12 @@ const assignedToInput = computed(() => {
 const assignedToSorter = (a: IdObject & { name: string }, b: IdObject & { name: string }) => {
     const isAssignedToMeA = store.user?.id == a.id;
     const isAssignedToMeB = store.user?.id == b.id;
-    if (isAssignedToMeA && !isAssignedToMeB) return -1;
-    if (!isAssignedToMeA && isAssignedToMeB) return 1;
+    if (isAssignedToMeA && !isAssignedToMeB) {
+        return -1;
+    }
+    if (!isAssignedToMeA && isAssignedToMeB) {
+        return 1;
+    }
     return a.name.localeCompare(b.name);
 };
 const assignedToMapper = (item: T) =>
@@ -220,14 +224,18 @@ const stateFetch = async (search: string) =>
         .getUsedIssueStates({ trackable: props.trackableId, filter: search })
         .then((res) => (res.node as NodeReturnType<"getUsedIssueStates", "Component">).usedIssueStates.nodes);
 const stateFilter = (item: { isOpen: boolean }) => {
-    if (props.stateIndices.length == 2) return true;
+    if (props.stateIndices.length == 2) {
+        return true;
+    }
     return item.isOpen == (props.stateIndices[0] == 0);
 };
 
 watch(
     () => props.stateIndices,
     (newVal, oldVal) => {
-        if (newVal.length == oldVal.length && newVal[0] === oldVal[0]) return;
+        if (newVal.length == oldVal.length && newVal[0] === oldVal[0]) {
+            return;
+        }
         stateIds.value = [];
     }
 );
