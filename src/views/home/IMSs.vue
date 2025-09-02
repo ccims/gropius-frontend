@@ -21,7 +21,7 @@
     </PaginatedList>
 </template>
 <script lang="ts" setup>
-import PaginatedList, { ItemManager } from "@/components/PaginatedList.vue";
+import PaginatedList from "@/components/PaginatedList.vue";
 import { ClientReturnType, useClient } from "@/graphql/client";
 import { RouteLocationRaw, useRouter } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
@@ -30,6 +30,7 @@ import { IdObject } from "@/util/types";
 import { ImsOrder } from "@/graphql/generated";
 import { ImsOrderField } from "@/graphql/generated";
 import SyncSelfAllowedSwitch from "@/components/input/SyncSelfAllowedSwitch.vue";
+import { ItemManager } from "@/util/itemManager";
 
 type IMS = ClientReturnType<"getIMSList">["imss"]["nodes"][0];
 
@@ -42,8 +43,8 @@ const sortFields = {
     "[Default]": ImsOrderField.Id
 };
 
-const itemManager: ItemManager<IMS, ImsOrderField> = {
-    fetchItems: async function (
+class IMSItemManager extends ItemManager<IMS, ImsOrderField> {
+    protected async fetchItems(
         filter: string | undefined,
         orderBy: ImsOrder[],
         count: number,
@@ -64,7 +65,9 @@ const itemManager: ItemManager<IMS, ImsOrderField> = {
             return [res.searchIMSs, res.searchIMSs.length];
         }
     }
-};
+}
+
+const itemManager: ItemManager<IMS, ImsOrderField> = new IMSItemManager();
 
 function selectIMS(ims: IdObject) {
     router.push(imsRoute(ims));

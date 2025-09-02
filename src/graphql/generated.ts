@@ -2530,6 +2530,8 @@ export type Component = AffectedByIssue &
         affectingIssues: IssueConnection;
         /** Artefacts of this trackable, typically some kind of file. */
         artefacts: ArtefactConnection;
+        /** The set of Users assigned to any issue */
+        assignedUsers: UserConnection;
         /** The description of this entity. */
         description: Scalars["String"]["output"];
         /** Checks if the current user has a specific permission on this Node */
@@ -2571,6 +2573,16 @@ export type Component = AffectedByIssue &
          *
          */
         templatedFields: Array<JsonField>;
+        /** The set of IssuePriorities used by any issue */
+        usedIssuePriorities: IssuePriorityConnection;
+        /** The set of IssueStates used by any issue */
+        usedIssueStates: IssueStateConnection;
+        /** The set of IssueTemplates used by any issue */
+        usedIssueTemplates: IssueTemplateConnection;
+        /** The set of IssueTypes used by any issue */
+        usedIssueTypes: IssueTypeConnection;
+        /** The set of Labels used by any issue (including Labels not on this Trackable) */
+        usedLabels: LabelConnection;
         /** Versions of this components. */
         versions: ComponentVersionConnection;
     };
@@ -2612,6 +2624,26 @@ export type ComponentArtefactsArgs = {
     first?: InputMaybe<Scalars["Int"]["input"]>;
     last?: InputMaybe<Scalars["Int"]["input"]>;
     orderBy?: InputMaybe<Array<ArtefactOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/**
+ * Entity which represents a software component, e.g. a library, a microservice, or a deployment platform, ....
+ *     The type of software component is defined by the template.
+ *     Can have issues, labels and artefacts as this is a Trackable.
+ *     Defines InterfaceSpecifications, but visible/invisible InterfaceSpecificationVersions depend on the ComponentVersion.
+ *     Can be affected by Issues.
+ *     READ is granted via an associated ComponentPermission or if READ is granted on any Project including any
+ *     ComponentVersion in `versions` of this Component.
+ *
+ */
+export type ComponentAssignedUsersArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<UserFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<UserOrder>>;
     skip?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -2776,6 +2808,106 @@ export type ComponentTemplatedFieldArgs = {
 export type ComponentTemplatedFieldsArgs = {
     names?: InputMaybe<Array<Scalars["String"]["input"]>>;
     prefixMatching?: InputMaybe<Scalars["Boolean"]["input"]>;
+};
+
+/**
+ * Entity which represents a software component, e.g. a library, a microservice, or a deployment platform, ....
+ *     The type of software component is defined by the template.
+ *     Can have issues, labels and artefacts as this is a Trackable.
+ *     Defines InterfaceSpecifications, but visible/invisible InterfaceSpecificationVersions depend on the ComponentVersion.
+ *     Can be affected by Issues.
+ *     READ is granted via an associated ComponentPermission or if READ is granted on any Project including any
+ *     ComponentVersion in `versions` of this Component.
+ *
+ */
+export type ComponentUsedIssuePrioritiesArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<IssuePriorityFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<IssuePriorityOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/**
+ * Entity which represents a software component, e.g. a library, a microservice, or a deployment platform, ....
+ *     The type of software component is defined by the template.
+ *     Can have issues, labels and artefacts as this is a Trackable.
+ *     Defines InterfaceSpecifications, but visible/invisible InterfaceSpecificationVersions depend on the ComponentVersion.
+ *     Can be affected by Issues.
+ *     READ is granted via an associated ComponentPermission or if READ is granted on any Project including any
+ *     ComponentVersion in `versions` of this Component.
+ *
+ */
+export type ComponentUsedIssueStatesArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<IssueStateFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<IssueStateOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/**
+ * Entity which represents a software component, e.g. a library, a microservice, or a deployment platform, ....
+ *     The type of software component is defined by the template.
+ *     Can have issues, labels and artefacts as this is a Trackable.
+ *     Defines InterfaceSpecifications, but visible/invisible InterfaceSpecificationVersions depend on the ComponentVersion.
+ *     Can be affected by Issues.
+ *     READ is granted via an associated ComponentPermission or if READ is granted on any Project including any
+ *     ComponentVersion in `versions` of this Component.
+ *
+ */
+export type ComponentUsedIssueTemplatesArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<IssueTemplateFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<IssueTemplateOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/**
+ * Entity which represents a software component, e.g. a library, a microservice, or a deployment platform, ....
+ *     The type of software component is defined by the template.
+ *     Can have issues, labels and artefacts as this is a Trackable.
+ *     Defines InterfaceSpecifications, but visible/invisible InterfaceSpecificationVersions depend on the ComponentVersion.
+ *     Can be affected by Issues.
+ *     READ is granted via an associated ComponentPermission or if READ is granted on any Project including any
+ *     ComponentVersion in `versions` of this Component.
+ *
+ */
+export type ComponentUsedIssueTypesArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<IssueTypeFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<IssueTypeOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/**
+ * Entity which represents a software component, e.g. a library, a microservice, or a deployment platform, ....
+ *     The type of software component is defined by the template.
+ *     Can have issues, labels and artefacts as this is a Trackable.
+ *     Defines InterfaceSpecifications, but visible/invisible InterfaceSpecificationVersions depend on the ComponentVersion.
+ *     Can be affected by Issues.
+ *     READ is granted via an associated ComponentPermission or if READ is granted on any Project including any
+ *     ComponentVersion in `versions` of this Component.
+ *
+ */
+export type ComponentUsedLabelsArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<LabelFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<LabelOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 /**
@@ -11771,6 +11903,8 @@ export type Project = AffectedByIssue &
         affectingIssues: IssueConnection;
         /** Artefacts of this trackable, typically some kind of file. */
         artefacts: ArtefactConnection;
+        /** The set of Users assigned to any issue */
+        assignedUsers: UserConnection;
         /** The set of Issues which are part of any of the Components of this Project. */
         componentIssues: IssueConnection;
         /** The ComponentVersions this consists of. */
@@ -11805,6 +11939,16 @@ export type Project = AffectedByIssue &
         repositoryURL?: Maybe<Scalars["URL"]["output"]>;
         /** IMSProjects this Trackable is synced to and from. */
         syncsTo: ImsProjectConnection;
+        /** The set of IssuePriorities used by any issue */
+        usedIssuePriorities: IssuePriorityConnection;
+        /** The set of IssueStates used by any issue */
+        usedIssueStates: IssueStateConnection;
+        /** The set of IssueTemplates used by any issue */
+        usedIssueTemplates: IssueTemplateConnection;
+        /** The set of IssueTypes used by any issue */
+        usedIssueTypes: IssueTypeConnection;
+        /** The set of Labels used by any issue (including Labels not on this Trackable) */
+        usedLabels: LabelConnection;
         /** Views on the architecture graph of this project. */
         views: ViewConnection;
     };
@@ -11842,6 +11986,24 @@ export type ProjectArtefactsArgs = {
     first?: InputMaybe<Scalars["Int"]["input"]>;
     last?: InputMaybe<Scalars["Int"]["input"]>;
     orderBy?: InputMaybe<Array<ArtefactOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/**
+ * A project of the Gropius system.
+ *     Consists of a set of ComponentVersions, which form a graph with the Relations between them.
+ *     Can be affected by issues.
+ *     Can have issues, labels and artefacts as this is a Trackable.
+ *     READ is granted via an associated ProjectPermission.
+ *
+ */
+export type ProjectAssignedUsersArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<UserFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<UserOrder>>;
     skip?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -12016,6 +12178,96 @@ export type ProjectSyncsToArgs = {
     first?: InputMaybe<Scalars["Int"]["input"]>;
     last?: InputMaybe<Scalars["Int"]["input"]>;
     orderBy?: InputMaybe<Array<ImsProjectOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/**
+ * A project of the Gropius system.
+ *     Consists of a set of ComponentVersions, which form a graph with the Relations between them.
+ *     Can be affected by issues.
+ *     Can have issues, labels and artefacts as this is a Trackable.
+ *     READ is granted via an associated ProjectPermission.
+ *
+ */
+export type ProjectUsedIssuePrioritiesArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<IssuePriorityFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<IssuePriorityOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/**
+ * A project of the Gropius system.
+ *     Consists of a set of ComponentVersions, which form a graph with the Relations between them.
+ *     Can be affected by issues.
+ *     Can have issues, labels and artefacts as this is a Trackable.
+ *     READ is granted via an associated ProjectPermission.
+ *
+ */
+export type ProjectUsedIssueStatesArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<IssueStateFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<IssueStateOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/**
+ * A project of the Gropius system.
+ *     Consists of a set of ComponentVersions, which form a graph with the Relations between them.
+ *     Can be affected by issues.
+ *     Can have issues, labels and artefacts as this is a Trackable.
+ *     READ is granted via an associated ProjectPermission.
+ *
+ */
+export type ProjectUsedIssueTemplatesArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<IssueTemplateFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<IssueTemplateOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/**
+ * A project of the Gropius system.
+ *     Consists of a set of ComponentVersions, which form a graph with the Relations between them.
+ *     Can be affected by issues.
+ *     Can have issues, labels and artefacts as this is a Trackable.
+ *     READ is granted via an associated ProjectPermission.
+ *
+ */
+export type ProjectUsedIssueTypesArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<IssueTypeFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<IssueTypeOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/**
+ * A project of the Gropius system.
+ *     Consists of a set of ComponentVersions, which form a graph with the Relations between them.
+ *     Can be affected by issues.
+ *     Can have issues, labels and artefacts as this is a Trackable.
+ *     READ is granted via an associated ProjectPermission.
+ *
+ */
+export type ProjectUsedLabelsArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<LabelFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<LabelOrder>>;
     skip?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -15731,6 +15983,8 @@ export type Trackable = {
     affectingIssues: IssueConnection;
     /** Artefacts of this trackable, typically some kind of file. */
     artefacts: ArtefactConnection;
+    /** The set of Users assigned to any issue */
+    assignedUsers: UserConnection;
     /** The description of this entity. */
     description: Scalars["String"]["output"];
     /** Checks if the current user has a specific permission on this Node */
@@ -15753,6 +16007,16 @@ export type Trackable = {
     repositoryURL?: Maybe<Scalars["URL"]["output"]>;
     /** IMSProjects this Trackable is synced to and from. */
     syncsTo: ImsProjectConnection;
+    /** The set of IssuePriorities used by any issue */
+    usedIssuePriorities: IssuePriorityConnection;
+    /** The set of IssueStates used by any issue */
+    usedIssueStates: IssueStateConnection;
+    /** The set of IssueTemplates used by any issue */
+    usedIssueTemplates: IssueTemplateConnection;
+    /** The set of IssueTypes used by any issue */
+    usedIssueTypes: IssueTypeConnection;
+    /** The set of Labels used by any issue (including Labels not on this Trackable) */
+    usedLabels: LabelConnection;
 };
 
 /**
@@ -15786,6 +16050,23 @@ export type TrackableArtefactsArgs = {
     first?: InputMaybe<Scalars["Int"]["input"]>;
     last?: InputMaybe<Scalars["Int"]["input"]>;
     orderBy?: InputMaybe<Array<ArtefactOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/**
+ * An entity which can have Issues, Labels and Artefacts.
+ *     Has pinned issues.
+ *     Can be synced to an IMS by creating an IMSProject.
+ *     Can be affected by Issues.
+ *
+ */
+export type TrackableAssignedUsersArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<UserFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<UserOrder>>;
     skip?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -15865,6 +16146,91 @@ export type TrackableSyncsToArgs = {
     first?: InputMaybe<Scalars["Int"]["input"]>;
     last?: InputMaybe<Scalars["Int"]["input"]>;
     orderBy?: InputMaybe<Array<ImsProjectOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/**
+ * An entity which can have Issues, Labels and Artefacts.
+ *     Has pinned issues.
+ *     Can be synced to an IMS by creating an IMSProject.
+ *     Can be affected by Issues.
+ *
+ */
+export type TrackableUsedIssuePrioritiesArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<IssuePriorityFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<IssuePriorityOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/**
+ * An entity which can have Issues, Labels and Artefacts.
+ *     Has pinned issues.
+ *     Can be synced to an IMS by creating an IMSProject.
+ *     Can be affected by Issues.
+ *
+ */
+export type TrackableUsedIssueStatesArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<IssueStateFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<IssueStateOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/**
+ * An entity which can have Issues, Labels and Artefacts.
+ *     Has pinned issues.
+ *     Can be synced to an IMS by creating an IMSProject.
+ *     Can be affected by Issues.
+ *
+ */
+export type TrackableUsedIssueTemplatesArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<IssueTemplateFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<IssueTemplateOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/**
+ * An entity which can have Issues, Labels and Artefacts.
+ *     Has pinned issues.
+ *     Can be synced to an IMS by creating an IMSProject.
+ *     Can be affected by Issues.
+ *
+ */
+export type TrackableUsedIssueTypesArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<IssueTypeFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<IssueTypeOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+/**
+ * An entity which can have Issues, Labels and Artefacts.
+ *     Has pinned issues.
+ *     Can be synced to an IMS by creating an IMSProject.
+ *     Can be affected by Issues.
+ *
+ */
+export type TrackableUsedLabelsArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<LabelFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<LabelOrder>>;
     skip?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -17772,6 +18138,7 @@ export type GetComponentDetailsQuery = {
                                 displayName: string;
                                 avatar: any;
                             };
+                      state: { __typename?: "IssueState"; id: string; name: string; isOpen: boolean };
                       issueComments: { __typename?: "IssueCommentConnection"; totalCount: number };
                       labels: {
                           __typename?: "LabelConnection";
@@ -17781,6 +18148,13 @@ export type GetComponentDetailsQuery = {
                               name: string;
                               description: string;
                               color: string;
+                              trackables: {
+                                  __typename?: "TrackableConnection";
+                                  nodes: Array<
+                                      | { __typename?: "Component"; id: string; name: string; description: string }
+                                      | { __typename?: "Project"; id: string; name: string; description: string }
+                                  >;
+                              };
                           }>;
                       };
                       assignments: {
@@ -17811,10 +18185,10 @@ export type GetComponentDetailsQuery = {
                           description: string;
                           value: number;
                       } | null;
+                      template: { __typename?: "IssueTemplate"; id: string; name: string; description: string };
+                      type: { __typename?: "IssueType"; id: string; name: string; iconPath: string };
                       incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                       outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
-                      state: { __typename?: "IssueState"; isOpen: boolean };
-                      type: { __typename?: "IssueType"; iconPath: string };
                   }>;
               };
               pinnedIssues: {
@@ -17839,6 +18213,7 @@ export type GetComponentDetailsQuery = {
                                 displayName: string;
                                 avatar: any;
                             };
+                      state: { __typename?: "IssueState"; id: string; name: string; isOpen: boolean };
                       issueComments: { __typename?: "IssueCommentConnection"; totalCount: number };
                       labels: {
                           __typename?: "LabelConnection";
@@ -17848,6 +18223,13 @@ export type GetComponentDetailsQuery = {
                               name: string;
                               description: string;
                               color: string;
+                              trackables: {
+                                  __typename?: "TrackableConnection";
+                                  nodes: Array<
+                                      | { __typename?: "Component"; id: string; name: string; description: string }
+                                      | { __typename?: "Project"; id: string; name: string; description: string }
+                                  >;
+                              };
                           }>;
                       };
                       assignments: {
@@ -17878,10 +18260,10 @@ export type GetComponentDetailsQuery = {
                           description: string;
                           value: number;
                       } | null;
+                      template: { __typename?: "IssueTemplate"; id: string; name: string; description: string };
+                      type: { __typename?: "IssueType"; id: string; name: string; iconPath: string };
                       incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                       outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
-                      state: { __typename?: "IssueState"; isOpen: boolean };
-                      type: { __typename?: "IssueType"; iconPath: string };
                   }>;
               };
           }
@@ -22613,6 +22995,7 @@ export type GetIssueListQuery = {
                                 displayName: string;
                                 avatar: any;
                             };
+                      state: { __typename?: "IssueState"; id: string; name: string; isOpen: boolean };
                       issueComments: { __typename?: "IssueCommentConnection"; totalCount: number };
                       labels: {
                           __typename?: "LabelConnection";
@@ -22622,6 +23005,13 @@ export type GetIssueListQuery = {
                               name: string;
                               description: string;
                               color: string;
+                              trackables: {
+                                  __typename?: "TrackableConnection";
+                                  nodes: Array<
+                                      | { __typename?: "Component"; id: string; name: string; description: string }
+                                      | { __typename?: "Project"; id: string; name: string; description: string }
+                                  >;
+                              };
                           }>;
                       };
                       assignments: {
@@ -22652,10 +23042,10 @@ export type GetIssueListQuery = {
                           description: string;
                           value: number;
                       } | null;
+                      template: { __typename?: "IssueTemplate"; id: string; name: string; description: string };
+                      type: { __typename?: "IssueType"; id: string; name: string; iconPath: string };
                       incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                       outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
-                      state: { __typename?: "IssueState"; isOpen: boolean };
-                      type: { __typename?: "IssueType"; iconPath: string };
                   }>;
               };
           }
@@ -22724,6 +23114,7 @@ export type GetIssueListQuery = {
                                 displayName: string;
                                 avatar: any;
                             };
+                      state: { __typename?: "IssueState"; id: string; name: string; isOpen: boolean };
                       issueComments: { __typename?: "IssueCommentConnection"; totalCount: number };
                       labels: {
                           __typename?: "LabelConnection";
@@ -22733,6 +23124,13 @@ export type GetIssueListQuery = {
                               name: string;
                               description: string;
                               color: string;
+                              trackables: {
+                                  __typename?: "TrackableConnection";
+                                  nodes: Array<
+                                      | { __typename?: "Component"; id: string; name: string; description: string }
+                                      | { __typename?: "Project"; id: string; name: string; description: string }
+                                  >;
+                              };
                           }>;
                       };
                       assignments: {
@@ -22763,10 +23161,10 @@ export type GetIssueListQuery = {
                           description: string;
                           value: number;
                       } | null;
+                      template: { __typename?: "IssueTemplate"; id: string; name: string; description: string };
+                      type: { __typename?: "IssueType"; id: string; name: string; iconPath: string };
                       incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                       outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
-                      state: { __typename?: "IssueState"; isOpen: boolean };
-                      type: { __typename?: "IssueType"; iconPath: string };
                   }>;
               };
           }
@@ -22894,6 +23292,7 @@ export type GetComponentIssueListQuery = {
                                 displayName: string;
                                 avatar: any;
                             };
+                      state: { __typename?: "IssueState"; id: string; name: string; isOpen: boolean };
                       issueComments: { __typename?: "IssueCommentConnection"; totalCount: number };
                       labels: {
                           __typename?: "LabelConnection";
@@ -22903,6 +23302,13 @@ export type GetComponentIssueListQuery = {
                               name: string;
                               description: string;
                               color: string;
+                              trackables: {
+                                  __typename?: "TrackableConnection";
+                                  nodes: Array<
+                                      | { __typename?: "Component"; id: string; name: string; description: string }
+                                      | { __typename?: "Project"; id: string; name: string; description: string }
+                                  >;
+                              };
                           }>;
                       };
                       assignments: {
@@ -22933,10 +23339,10 @@ export type GetComponentIssueListQuery = {
                           description: string;
                           value: number;
                       } | null;
+                      template: { __typename?: "IssueTemplate"; id: string; name: string; description: string };
+                      type: { __typename?: "IssueType"; id: string; name: string; iconPath: string };
                       incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                       outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
-                      state: { __typename?: "IssueState"; isOpen: boolean };
-                      type: { __typename?: "IssueType"; iconPath: string };
                   }>;
               };
           }
@@ -23007,6 +23413,7 @@ export type GetIssueListOnAggregatedIssueQuery = {
                                 displayName: string;
                                 avatar: any;
                             };
+                      state: { __typename?: "IssueState"; id: string; name: string; isOpen: boolean };
                       issueComments: { __typename?: "IssueCommentConnection"; totalCount: number };
                       labels: {
                           __typename?: "LabelConnection";
@@ -23016,6 +23423,13 @@ export type GetIssueListOnAggregatedIssueQuery = {
                               name: string;
                               description: string;
                               color: string;
+                              trackables: {
+                                  __typename?: "TrackableConnection";
+                                  nodes: Array<
+                                      | { __typename?: "Component"; id: string; name: string; description: string }
+                                      | { __typename?: "Project"; id: string; name: string; description: string }
+                                  >;
+                              };
                           }>;
                       };
                       assignments: {
@@ -23046,10 +23460,10 @@ export type GetIssueListOnAggregatedIssueQuery = {
                           description: string;
                           value: number;
                       } | null;
+                      template: { __typename?: "IssueTemplate"; id: string; name: string; description: string };
+                      type: { __typename?: "IssueType"; id: string; name: string; iconPath: string };
                       incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                       outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
-                      state: { __typename?: "IssueState"; isOpen: boolean };
-                      type: { __typename?: "IssueType"; iconPath: string };
                   }>;
               };
           }
@@ -23144,10 +23558,24 @@ export type GetFilteredIssueListQuery = {
         createdBy:
             | { __typename?: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
             | { __typename?: "IMSUser"; id: string; username?: string | null; displayName: string; avatar: any };
+        state: { __typename?: "IssueState"; id: string; name: string; isOpen: boolean };
         issueComments: { __typename?: "IssueCommentConnection"; totalCount: number };
         labels: {
             __typename?: "LabelConnection";
-            nodes: Array<{ __typename?: "Label"; id: string; name: string; description: string; color: string }>;
+            nodes: Array<{
+                __typename?: "Label";
+                id: string;
+                name: string;
+                description: string;
+                color: string;
+                trackables: {
+                    __typename?: "TrackableConnection";
+                    nodes: Array<
+                        | { __typename?: "Component"; id: string; name: string; description: string }
+                        | { __typename?: "Project"; id: string; name: string; description: string }
+                    >;
+                };
+            }>;
         };
         assignments: {
             __typename?: "AssignmentConnection";
@@ -23171,10 +23599,10 @@ export type GetFilteredIssueListQuery = {
             description: string;
             value: number;
         } | null;
+        template: { __typename?: "IssueTemplate"; id: string; name: string; description: string };
+        type: { __typename?: "IssueType"; id: string; name: string; iconPath: string };
         incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
         outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
-        state: { __typename?: "IssueState"; isOpen: boolean };
-        type: { __typename?: "IssueType"; iconPath: string };
     }>;
 };
 
@@ -23203,10 +23631,24 @@ export type GetComponentFilteredIssueListQuery = {
         createdBy:
             | { __typename?: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
             | { __typename?: "IMSUser"; id: string; username?: string | null; displayName: string; avatar: any };
+        state: { __typename?: "IssueState"; id: string; name: string; isOpen: boolean };
         issueComments: { __typename?: "IssueCommentConnection"; totalCount: number };
         labels: {
             __typename?: "LabelConnection";
-            nodes: Array<{ __typename?: "Label"; id: string; name: string; description: string; color: string }>;
+            nodes: Array<{
+                __typename?: "Label";
+                id: string;
+                name: string;
+                description: string;
+                color: string;
+                trackables: {
+                    __typename?: "TrackableConnection";
+                    nodes: Array<
+                        | { __typename?: "Component"; id: string; name: string; description: string }
+                        | { __typename?: "Project"; id: string; name: string; description: string }
+                    >;
+                };
+            }>;
         };
         assignments: {
             __typename?: "AssignmentConnection";
@@ -23230,10 +23672,10 @@ export type GetComponentFilteredIssueListQuery = {
             description: string;
             value: number;
         } | null;
+        template: { __typename?: "IssueTemplate"; id: string; name: string; description: string };
+        type: { __typename?: "IssueType"; id: string; name: string; iconPath: string };
         incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
         outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
-        state: { __typename?: "IssueState"; isOpen: boolean };
-        type: { __typename?: "IssueType"; iconPath: string };
     }>;
 };
 
@@ -23273,6 +23715,7 @@ export type GetParticipatingIssueListQuery = {
                           displayName: string;
                           avatar: any;
                       };
+                state: { __typename?: "IssueState"; id: string; name: string; isOpen: boolean };
                 issueComments: { __typename?: "IssueCommentConnection"; totalCount: number };
                 labels: {
                     __typename?: "LabelConnection";
@@ -23282,6 +23725,13 @@ export type GetParticipatingIssueListQuery = {
                         name: string;
                         description: string;
                         color: string;
+                        trackables: {
+                            __typename?: "TrackableConnection";
+                            nodes: Array<
+                                | { __typename?: "Component"; id: string; name: string; description: string }
+                                | { __typename?: "Project"; id: string; name: string; description: string }
+                            >;
+                        };
                     }>;
                 };
                 assignments: {
@@ -23312,10 +23762,10 @@ export type GetParticipatingIssueListQuery = {
                     description: string;
                     value: number;
                 } | null;
+                template: { __typename?: "IssueTemplate"; id: string; name: string; description: string };
+                type: { __typename?: "IssueType"; id: string; name: string; iconPath: string };
                 incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                 outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
-                state: { __typename?: "IssueState"; isOpen: boolean };
-                type: { __typename?: "IssueType"; iconPath: string };
             }>;
         };
     } | null;
@@ -23345,10 +23795,24 @@ export type GetParticipatingFilteredIssueListQuery = {
         createdBy:
             | { __typename?: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
             | { __typename?: "IMSUser"; id: string; username?: string | null; displayName: string; avatar: any };
+        state: { __typename?: "IssueState"; id: string; name: string; isOpen: boolean };
         issueComments: { __typename?: "IssueCommentConnection"; totalCount: number };
         labels: {
             __typename?: "LabelConnection";
-            nodes: Array<{ __typename?: "Label"; id: string; name: string; description: string; color: string }>;
+            nodes: Array<{
+                __typename?: "Label";
+                id: string;
+                name: string;
+                description: string;
+                color: string;
+                trackables: {
+                    __typename?: "TrackableConnection";
+                    nodes: Array<
+                        | { __typename?: "Component"; id: string; name: string; description: string }
+                        | { __typename?: "Project"; id: string; name: string; description: string }
+                    >;
+                };
+            }>;
         };
         assignments: {
             __typename?: "AssignmentConnection";
@@ -23372,10 +23836,10 @@ export type GetParticipatingFilteredIssueListQuery = {
             description: string;
             value: number;
         } | null;
+        template: { __typename?: "IssueTemplate"; id: string; name: string; description: string };
+        type: { __typename?: "IssueType"; id: string; name: string; iconPath: string };
         incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
         outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
-        state: { __typename?: "IssueState"; isOpen: boolean };
-        type: { __typename?: "IssueType"; iconPath: string };
     }>;
 };
 
@@ -24991,10 +25455,24 @@ export type IssueListItemInfoFragment = {
     createdBy:
         | { __typename?: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
         | { __typename?: "IMSUser"; id: string; username?: string | null; displayName: string; avatar: any };
+    state: { __typename?: "IssueState"; id: string; name: string; isOpen: boolean };
     issueComments: { __typename?: "IssueCommentConnection"; totalCount: number };
     labels: {
         __typename?: "LabelConnection";
-        nodes: Array<{ __typename?: "Label"; id: string; name: string; description: string; color: string }>;
+        nodes: Array<{
+            __typename?: "Label";
+            id: string;
+            name: string;
+            description: string;
+            color: string;
+            trackables: {
+                __typename?: "TrackableConnection";
+                nodes: Array<
+                    | { __typename?: "Component"; id: string; name: string; description: string }
+                    | { __typename?: "Project"; id: string; name: string; description: string }
+                >;
+            };
+        }>;
     };
     assignments: {
         __typename?: "AssignmentConnection";
@@ -25006,10 +25484,10 @@ export type IssueListItemInfoFragment = {
         }>;
     };
     priority?: { __typename?: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+    template: { __typename?: "IssueTemplate"; id: string; name: string; description: string };
+    type: { __typename?: "IssueType"; id: string; name: string; iconPath: string };
     incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
     outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
-    state: { __typename?: "IssueState"; isOpen: boolean };
-    type: { __typename?: "IssueType"; iconPath: string };
 };
 
 export type ParticipatingIssueListItemInfoFragment = {
@@ -25028,10 +25506,24 @@ export type ParticipatingIssueListItemInfoFragment = {
     createdBy:
         | { __typename?: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
         | { __typename?: "IMSUser"; id: string; username?: string | null; displayName: string; avatar: any };
+    state: { __typename?: "IssueState"; id: string; name: string; isOpen: boolean };
     issueComments: { __typename?: "IssueCommentConnection"; totalCount: number };
     labels: {
         __typename?: "LabelConnection";
-        nodes: Array<{ __typename?: "Label"; id: string; name: string; description: string; color: string }>;
+        nodes: Array<{
+            __typename?: "Label";
+            id: string;
+            name: string;
+            description: string;
+            color: string;
+            trackables: {
+                __typename?: "TrackableConnection";
+                nodes: Array<
+                    | { __typename?: "Component"; id: string; name: string; description: string }
+                    | { __typename?: "Project"; id: string; name: string; description: string }
+                >;
+            };
+        }>;
     };
     assignments: {
         __typename?: "AssignmentConnection";
@@ -25043,10 +25535,10 @@ export type ParticipatingIssueListItemInfoFragment = {
         }>;
     };
     priority?: { __typename?: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+    template: { __typename?: "IssueTemplate"; id: string; name: string; description: string };
+    type: { __typename?: "IssueType"; id: string; name: string; iconPath: string };
     incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
     outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
-    state: { __typename?: "IssueState"; isOpen: boolean };
-    type: { __typename?: "IssueType"; iconPath: string };
 };
 
 export type ProjectComponentIssueListItemInfoFragment = {
@@ -25065,10 +25557,24 @@ export type ProjectComponentIssueListItemInfoFragment = {
     createdBy:
         | { __typename?: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
         | { __typename?: "IMSUser"; id: string; username?: string | null; displayName: string; avatar: any };
+    state: { __typename?: "IssueState"; id: string; name: string; isOpen: boolean };
     issueComments: { __typename?: "IssueCommentConnection"; totalCount: number };
     labels: {
         __typename?: "LabelConnection";
-        nodes: Array<{ __typename?: "Label"; id: string; name: string; description: string; color: string }>;
+        nodes: Array<{
+            __typename?: "Label";
+            id: string;
+            name: string;
+            description: string;
+            color: string;
+            trackables: {
+                __typename?: "TrackableConnection";
+                nodes: Array<
+                    | { __typename?: "Component"; id: string; name: string; description: string }
+                    | { __typename?: "Project"; id: string; name: string; description: string }
+                >;
+            };
+        }>;
     };
     assignments: {
         __typename?: "AssignmentConnection";
@@ -25080,10 +25586,10 @@ export type ProjectComponentIssueListItemInfoFragment = {
         }>;
     };
     priority?: { __typename?: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+    template: { __typename?: "IssueTemplate"; id: string; name: string; description: string };
+    type: { __typename?: "IssueType"; id: string; name: string; iconPath: string };
     incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
     outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
-    state: { __typename?: "IssueState"; isOpen: boolean };
-    type: { __typename?: "IssueType"; iconPath: string };
 };
 
 export type DefaultIssueIconInfoFragment = {
@@ -25222,6 +25728,712 @@ export type FirstIssuesQuery = {
                       outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                       state: { __typename?: "IssueState"; isOpen: boolean };
                       type: { __typename?: "IssueType"; iconPath: string };
+                  }>;
+              };
+          }
+        | { __typename?: "ProjectPermission" }
+        | { __typename?: "RelatedByIssueEvent" }
+        | { __typename?: "Relation" }
+        | { __typename?: "RelationCondition" }
+        | { __typename?: "RelationLayout" }
+        | { __typename?: "RelationPartnerLayout" }
+        | { __typename?: "RelationTemplate" }
+        | { __typename?: "RemovedAffectedEntityEvent" }
+        | { __typename?: "RemovedArtefactEvent" }
+        | { __typename?: "RemovedAssignmentEvent" }
+        | { __typename?: "RemovedFromPinnedIssuesEvent" }
+        | { __typename?: "RemovedFromTrackableEvent" }
+        | { __typename?: "RemovedIncomingRelationEvent" }
+        | { __typename?: "RemovedLabelEvent" }
+        | { __typename?: "RemovedOutgoingRelationEvent" }
+        | { __typename?: "RemovedTemplatedFieldEvent" }
+        | { __typename?: "StateChangedEvent" }
+        | { __typename?: "StrokeStyle" }
+        | { __typename?: "TemplateChangedEvent" }
+        | { __typename?: "TemplatedFieldChangedEvent" }
+        | { __typename?: "TitleChangedEvent" }
+        | { __typename?: "TypeChangedEvent" }
+        | { __typename?: "View" }
+        | null;
+};
+
+export type GetAssignedUsersQueryVariables = Exact<{
+    trackable: Scalars["ID"]["input"];
+    filter: Scalars["String"]["input"];
+}>;
+
+export type GetAssignedUsersQuery = {
+    __typename?: "Query";
+    node?:
+        | { __typename?: "AddedAffectedEntityEvent" }
+        | { __typename?: "AddedArtefactEvent" }
+        | { __typename?: "AddedLabelEvent" }
+        | { __typename?: "AddedToPinnedIssuesEvent" }
+        | { __typename?: "AddedToTrackableEvent" }
+        | { __typename?: "AggregatedIssue" }
+        | { __typename?: "AggregatedIssueRelation" }
+        | { __typename?: "Artefact" }
+        | { __typename?: "ArtefactTemplate" }
+        | { __typename?: "Assignment" }
+        | { __typename?: "AssignmentType" }
+        | { __typename?: "AssignmentTypeChangedEvent" }
+        | { __typename?: "Body" }
+        | {
+              __typename?: "Component";
+              assignedUsers: {
+                  __typename?: "UserConnection";
+                  nodes: Array<
+                      | { __typename?: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
+                      | {
+                            __typename?: "IMSUser";
+                            id: string;
+                            username?: string | null;
+                            displayName: string;
+                            avatar: any;
+                        }
+                  >;
+              };
+          }
+        | { __typename?: "ComponentPermission" }
+        | { __typename?: "ComponentTemplate" }
+        | { __typename?: "ComponentVersion" }
+        | { __typename?: "ComponentVersionTemplate" }
+        | { __typename?: "FillStyle" }
+        | { __typename?: "GlobalPermission" }
+        | { __typename?: "GropiusUser" }
+        | { __typename?: "IMS" }
+        | { __typename?: "IMSIssue" }
+        | { __typename?: "IMSIssueTemplate" }
+        | { __typename?: "IMSPermission" }
+        | { __typename?: "IMSProject" }
+        | { __typename?: "IMSProjectTemplate" }
+        | { __typename?: "IMSTemplate" }
+        | { __typename?: "IMSUser" }
+        | { __typename?: "IMSUserTemplate" }
+        | { __typename?: "IncomingRelationTypeChangedEvent" }
+        | { __typename?: "Interface" }
+        | { __typename?: "InterfaceDefinition" }
+        | { __typename?: "InterfacePart" }
+        | { __typename?: "InterfacePartTemplate" }
+        | { __typename?: "InterfaceSpecification" }
+        | { __typename?: "InterfaceSpecificationDerivationCondition" }
+        | { __typename?: "InterfaceSpecificationTemplate" }
+        | { __typename?: "InterfaceSpecificationVersion" }
+        | { __typename?: "InterfaceSpecificationVersionTemplate" }
+        | { __typename?: "IntraComponentDependencyParticipant" }
+        | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
+        | { __typename?: "Issue" }
+        | { __typename?: "IssueComment" }
+        | { __typename?: "IssuePriority" }
+        | { __typename?: "IssueRelation" }
+        | { __typename?: "IssueRelationType" }
+        | { __typename?: "IssueState" }
+        | { __typename?: "IssueTemplate" }
+        | { __typename?: "IssueType" }
+        | { __typename?: "Label" }
+        | { __typename?: "OutgoingRelationTypeChangedEvent" }
+        | { __typename?: "PriorityChangedEvent" }
+        | {
+              __typename?: "Project";
+              assignedUsers: {
+                  __typename?: "UserConnection";
+                  nodes: Array<
+                      | { __typename?: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
+                      | {
+                            __typename?: "IMSUser";
+                            id: string;
+                            username?: string | null;
+                            displayName: string;
+                            avatar: any;
+                        }
+                  >;
+              };
+          }
+        | { __typename?: "ProjectPermission" }
+        | { __typename?: "RelatedByIssueEvent" }
+        | { __typename?: "Relation" }
+        | { __typename?: "RelationCondition" }
+        | { __typename?: "RelationLayout" }
+        | { __typename?: "RelationPartnerLayout" }
+        | { __typename?: "RelationTemplate" }
+        | { __typename?: "RemovedAffectedEntityEvent" }
+        | { __typename?: "RemovedArtefactEvent" }
+        | { __typename?: "RemovedAssignmentEvent" }
+        | { __typename?: "RemovedFromPinnedIssuesEvent" }
+        | { __typename?: "RemovedFromTrackableEvent" }
+        | { __typename?: "RemovedIncomingRelationEvent" }
+        | { __typename?: "RemovedLabelEvent" }
+        | { __typename?: "RemovedOutgoingRelationEvent" }
+        | { __typename?: "RemovedTemplatedFieldEvent" }
+        | { __typename?: "StateChangedEvent" }
+        | { __typename?: "StrokeStyle" }
+        | { __typename?: "TemplateChangedEvent" }
+        | { __typename?: "TemplatedFieldChangedEvent" }
+        | { __typename?: "TitleChangedEvent" }
+        | { __typename?: "TypeChangedEvent" }
+        | { __typename?: "View" }
+        | null;
+};
+
+export type GetUsedIssueTemplatesQueryVariables = Exact<{
+    trackable: Scalars["ID"]["input"];
+    filter: Scalars["String"]["input"];
+}>;
+
+export type GetUsedIssueTemplatesQuery = {
+    __typename?: "Query";
+    node?:
+        | { __typename?: "AddedAffectedEntityEvent" }
+        | { __typename?: "AddedArtefactEvent" }
+        | { __typename?: "AddedLabelEvent" }
+        | { __typename?: "AddedToPinnedIssuesEvent" }
+        | { __typename?: "AddedToTrackableEvent" }
+        | { __typename?: "AggregatedIssue" }
+        | { __typename?: "AggregatedIssueRelation" }
+        | { __typename?: "Artefact" }
+        | { __typename?: "ArtefactTemplate" }
+        | { __typename?: "Assignment" }
+        | { __typename?: "AssignmentType" }
+        | { __typename?: "AssignmentTypeChangedEvent" }
+        | { __typename?: "Body" }
+        | {
+              __typename?: "Component";
+              usedIssueTemplates: {
+                  __typename?: "IssueTemplateConnection";
+                  nodes: Array<{
+                      __typename?: "IssueTemplate";
+                      id: string;
+                      name: string;
+                      description: string;
+                      templateFieldSpecifications: Array<{
+                          __typename?: "JSONField";
+                          name: string;
+                          value?: any | null;
+                      }>;
+                  }>;
+              };
+          }
+        | { __typename?: "ComponentPermission" }
+        | { __typename?: "ComponentTemplate" }
+        | { __typename?: "ComponentVersion" }
+        | { __typename?: "ComponentVersionTemplate" }
+        | { __typename?: "FillStyle" }
+        | { __typename?: "GlobalPermission" }
+        | { __typename?: "GropiusUser" }
+        | { __typename?: "IMS" }
+        | { __typename?: "IMSIssue" }
+        | { __typename?: "IMSIssueTemplate" }
+        | { __typename?: "IMSPermission" }
+        | { __typename?: "IMSProject" }
+        | { __typename?: "IMSProjectTemplate" }
+        | { __typename?: "IMSTemplate" }
+        | { __typename?: "IMSUser" }
+        | { __typename?: "IMSUserTemplate" }
+        | { __typename?: "IncomingRelationTypeChangedEvent" }
+        | { __typename?: "Interface" }
+        | { __typename?: "InterfaceDefinition" }
+        | { __typename?: "InterfacePart" }
+        | { __typename?: "InterfacePartTemplate" }
+        | { __typename?: "InterfaceSpecification" }
+        | { __typename?: "InterfaceSpecificationDerivationCondition" }
+        | { __typename?: "InterfaceSpecificationTemplate" }
+        | { __typename?: "InterfaceSpecificationVersion" }
+        | { __typename?: "InterfaceSpecificationVersionTemplate" }
+        | { __typename?: "IntraComponentDependencyParticipant" }
+        | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
+        | { __typename?: "Issue" }
+        | { __typename?: "IssueComment" }
+        | { __typename?: "IssuePriority" }
+        | { __typename?: "IssueRelation" }
+        | { __typename?: "IssueRelationType" }
+        | { __typename?: "IssueState" }
+        | { __typename?: "IssueTemplate" }
+        | { __typename?: "IssueType" }
+        | { __typename?: "Label" }
+        | { __typename?: "OutgoingRelationTypeChangedEvent" }
+        | { __typename?: "PriorityChangedEvent" }
+        | {
+              __typename?: "Project";
+              usedIssueTemplates: {
+                  __typename?: "IssueTemplateConnection";
+                  nodes: Array<{
+                      __typename?: "IssueTemplate";
+                      id: string;
+                      name: string;
+                      description: string;
+                      templateFieldSpecifications: Array<{
+                          __typename?: "JSONField";
+                          name: string;
+                          value?: any | null;
+                      }>;
+                  }>;
+              };
+          }
+        | { __typename?: "ProjectPermission" }
+        | { __typename?: "RelatedByIssueEvent" }
+        | { __typename?: "Relation" }
+        | { __typename?: "RelationCondition" }
+        | { __typename?: "RelationLayout" }
+        | { __typename?: "RelationPartnerLayout" }
+        | { __typename?: "RelationTemplate" }
+        | { __typename?: "RemovedAffectedEntityEvent" }
+        | { __typename?: "RemovedArtefactEvent" }
+        | { __typename?: "RemovedAssignmentEvent" }
+        | { __typename?: "RemovedFromPinnedIssuesEvent" }
+        | { __typename?: "RemovedFromTrackableEvent" }
+        | { __typename?: "RemovedIncomingRelationEvent" }
+        | { __typename?: "RemovedLabelEvent" }
+        | { __typename?: "RemovedOutgoingRelationEvent" }
+        | { __typename?: "RemovedTemplatedFieldEvent" }
+        | { __typename?: "StateChangedEvent" }
+        | { __typename?: "StrokeStyle" }
+        | { __typename?: "TemplateChangedEvent" }
+        | { __typename?: "TemplatedFieldChangedEvent" }
+        | { __typename?: "TitleChangedEvent" }
+        | { __typename?: "TypeChangedEvent" }
+        | { __typename?: "View" }
+        | null;
+};
+
+export type GetUsedIssueTypesQueryVariables = Exact<{
+    trackable: Scalars["ID"]["input"];
+    filter: Scalars["String"]["input"];
+}>;
+
+export type GetUsedIssueTypesQuery = {
+    __typename?: "Query";
+    node?:
+        | { __typename?: "AddedAffectedEntityEvent" }
+        | { __typename?: "AddedArtefactEvent" }
+        | { __typename?: "AddedLabelEvent" }
+        | { __typename?: "AddedToPinnedIssuesEvent" }
+        | { __typename?: "AddedToTrackableEvent" }
+        | { __typename?: "AggregatedIssue" }
+        | { __typename?: "AggregatedIssueRelation" }
+        | { __typename?: "Artefact" }
+        | { __typename?: "ArtefactTemplate" }
+        | { __typename?: "Assignment" }
+        | { __typename?: "AssignmentType" }
+        | { __typename?: "AssignmentTypeChangedEvent" }
+        | { __typename?: "Body" }
+        | {
+              __typename?: "Component";
+              usedIssueTypes: {
+                  __typename?: "IssueTypeConnection";
+                  nodes: Array<{
+                      __typename?: "IssueType";
+                      id: string;
+                      name: string;
+                      description: string;
+                      iconPath: string;
+                  }>;
+              };
+          }
+        | { __typename?: "ComponentPermission" }
+        | { __typename?: "ComponentTemplate" }
+        | { __typename?: "ComponentVersion" }
+        | { __typename?: "ComponentVersionTemplate" }
+        | { __typename?: "FillStyle" }
+        | { __typename?: "GlobalPermission" }
+        | { __typename?: "GropiusUser" }
+        | { __typename?: "IMS" }
+        | { __typename?: "IMSIssue" }
+        | { __typename?: "IMSIssueTemplate" }
+        | { __typename?: "IMSPermission" }
+        | { __typename?: "IMSProject" }
+        | { __typename?: "IMSProjectTemplate" }
+        | { __typename?: "IMSTemplate" }
+        | { __typename?: "IMSUser" }
+        | { __typename?: "IMSUserTemplate" }
+        | { __typename?: "IncomingRelationTypeChangedEvent" }
+        | { __typename?: "Interface" }
+        | { __typename?: "InterfaceDefinition" }
+        | { __typename?: "InterfacePart" }
+        | { __typename?: "InterfacePartTemplate" }
+        | { __typename?: "InterfaceSpecification" }
+        | { __typename?: "InterfaceSpecificationDerivationCondition" }
+        | { __typename?: "InterfaceSpecificationTemplate" }
+        | { __typename?: "InterfaceSpecificationVersion" }
+        | { __typename?: "InterfaceSpecificationVersionTemplate" }
+        | { __typename?: "IntraComponentDependencyParticipant" }
+        | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
+        | { __typename?: "Issue" }
+        | { __typename?: "IssueComment" }
+        | { __typename?: "IssuePriority" }
+        | { __typename?: "IssueRelation" }
+        | { __typename?: "IssueRelationType" }
+        | { __typename?: "IssueState" }
+        | { __typename?: "IssueTemplate" }
+        | { __typename?: "IssueType" }
+        | { __typename?: "Label" }
+        | { __typename?: "OutgoingRelationTypeChangedEvent" }
+        | { __typename?: "PriorityChangedEvent" }
+        | {
+              __typename?: "Project";
+              usedIssueTypes: {
+                  __typename?: "IssueTypeConnection";
+                  nodes: Array<{
+                      __typename?: "IssueType";
+                      id: string;
+                      name: string;
+                      description: string;
+                      iconPath: string;
+                  }>;
+              };
+          }
+        | { __typename?: "ProjectPermission" }
+        | { __typename?: "RelatedByIssueEvent" }
+        | { __typename?: "Relation" }
+        | { __typename?: "RelationCondition" }
+        | { __typename?: "RelationLayout" }
+        | { __typename?: "RelationPartnerLayout" }
+        | { __typename?: "RelationTemplate" }
+        | { __typename?: "RemovedAffectedEntityEvent" }
+        | { __typename?: "RemovedArtefactEvent" }
+        | { __typename?: "RemovedAssignmentEvent" }
+        | { __typename?: "RemovedFromPinnedIssuesEvent" }
+        | { __typename?: "RemovedFromTrackableEvent" }
+        | { __typename?: "RemovedIncomingRelationEvent" }
+        | { __typename?: "RemovedLabelEvent" }
+        | { __typename?: "RemovedOutgoingRelationEvent" }
+        | { __typename?: "RemovedTemplatedFieldEvent" }
+        | { __typename?: "StateChangedEvent" }
+        | { __typename?: "StrokeStyle" }
+        | { __typename?: "TemplateChangedEvent" }
+        | { __typename?: "TemplatedFieldChangedEvent" }
+        | { __typename?: "TitleChangedEvent" }
+        | { __typename?: "TypeChangedEvent" }
+        | { __typename?: "View" }
+        | null;
+};
+
+export type GetUsedIssueStatesQueryVariables = Exact<{
+    trackable: Scalars["ID"]["input"];
+    filter: Scalars["String"]["input"];
+}>;
+
+export type GetUsedIssueStatesQuery = {
+    __typename?: "Query";
+    node?:
+        | { __typename?: "AddedAffectedEntityEvent" }
+        | { __typename?: "AddedArtefactEvent" }
+        | { __typename?: "AddedLabelEvent" }
+        | { __typename?: "AddedToPinnedIssuesEvent" }
+        | { __typename?: "AddedToTrackableEvent" }
+        | { __typename?: "AggregatedIssue" }
+        | { __typename?: "AggregatedIssueRelation" }
+        | { __typename?: "Artefact" }
+        | { __typename?: "ArtefactTemplate" }
+        | { __typename?: "Assignment" }
+        | { __typename?: "AssignmentType" }
+        | { __typename?: "AssignmentTypeChangedEvent" }
+        | { __typename?: "Body" }
+        | {
+              __typename?: "Component";
+              usedIssueStates: {
+                  __typename?: "IssueStateConnection";
+                  nodes: Array<{
+                      __typename?: "IssueState";
+                      id: string;
+                      name: string;
+                      description: string;
+                      isOpen: boolean;
+                  }>;
+              };
+          }
+        | { __typename?: "ComponentPermission" }
+        | { __typename?: "ComponentTemplate" }
+        | { __typename?: "ComponentVersion" }
+        | { __typename?: "ComponentVersionTemplate" }
+        | { __typename?: "FillStyle" }
+        | { __typename?: "GlobalPermission" }
+        | { __typename?: "GropiusUser" }
+        | { __typename?: "IMS" }
+        | { __typename?: "IMSIssue" }
+        | { __typename?: "IMSIssueTemplate" }
+        | { __typename?: "IMSPermission" }
+        | { __typename?: "IMSProject" }
+        | { __typename?: "IMSProjectTemplate" }
+        | { __typename?: "IMSTemplate" }
+        | { __typename?: "IMSUser" }
+        | { __typename?: "IMSUserTemplate" }
+        | { __typename?: "IncomingRelationTypeChangedEvent" }
+        | { __typename?: "Interface" }
+        | { __typename?: "InterfaceDefinition" }
+        | { __typename?: "InterfacePart" }
+        | { __typename?: "InterfacePartTemplate" }
+        | { __typename?: "InterfaceSpecification" }
+        | { __typename?: "InterfaceSpecificationDerivationCondition" }
+        | { __typename?: "InterfaceSpecificationTemplate" }
+        | { __typename?: "InterfaceSpecificationVersion" }
+        | { __typename?: "InterfaceSpecificationVersionTemplate" }
+        | { __typename?: "IntraComponentDependencyParticipant" }
+        | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
+        | { __typename?: "Issue" }
+        | { __typename?: "IssueComment" }
+        | { __typename?: "IssuePriority" }
+        | { __typename?: "IssueRelation" }
+        | { __typename?: "IssueRelationType" }
+        | { __typename?: "IssueState" }
+        | { __typename?: "IssueTemplate" }
+        | { __typename?: "IssueType" }
+        | { __typename?: "Label" }
+        | { __typename?: "OutgoingRelationTypeChangedEvent" }
+        | { __typename?: "PriorityChangedEvent" }
+        | {
+              __typename?: "Project";
+              usedIssueStates: {
+                  __typename?: "IssueStateConnection";
+                  nodes: Array<{
+                      __typename?: "IssueState";
+                      id: string;
+                      name: string;
+                      description: string;
+                      isOpen: boolean;
+                  }>;
+              };
+          }
+        | { __typename?: "ProjectPermission" }
+        | { __typename?: "RelatedByIssueEvent" }
+        | { __typename?: "Relation" }
+        | { __typename?: "RelationCondition" }
+        | { __typename?: "RelationLayout" }
+        | { __typename?: "RelationPartnerLayout" }
+        | { __typename?: "RelationTemplate" }
+        | { __typename?: "RemovedAffectedEntityEvent" }
+        | { __typename?: "RemovedArtefactEvent" }
+        | { __typename?: "RemovedAssignmentEvent" }
+        | { __typename?: "RemovedFromPinnedIssuesEvent" }
+        | { __typename?: "RemovedFromTrackableEvent" }
+        | { __typename?: "RemovedIncomingRelationEvent" }
+        | { __typename?: "RemovedLabelEvent" }
+        | { __typename?: "RemovedOutgoingRelationEvent" }
+        | { __typename?: "RemovedTemplatedFieldEvent" }
+        | { __typename?: "StateChangedEvent" }
+        | { __typename?: "StrokeStyle" }
+        | { __typename?: "TemplateChangedEvent" }
+        | { __typename?: "TemplatedFieldChangedEvent" }
+        | { __typename?: "TitleChangedEvent" }
+        | { __typename?: "TypeChangedEvent" }
+        | { __typename?: "View" }
+        | null;
+};
+
+export type GetUsedIssuePrioritiesQueryVariables = Exact<{
+    trackable: Scalars["ID"]["input"];
+    filter: Scalars["String"]["input"];
+}>;
+
+export type GetUsedIssuePrioritiesQuery = {
+    __typename?: "Query";
+    node?:
+        | { __typename?: "AddedAffectedEntityEvent" }
+        | { __typename?: "AddedArtefactEvent" }
+        | { __typename?: "AddedLabelEvent" }
+        | { __typename?: "AddedToPinnedIssuesEvent" }
+        | { __typename?: "AddedToTrackableEvent" }
+        | { __typename?: "AggregatedIssue" }
+        | { __typename?: "AggregatedIssueRelation" }
+        | { __typename?: "Artefact" }
+        | { __typename?: "ArtefactTemplate" }
+        | { __typename?: "Assignment" }
+        | { __typename?: "AssignmentType" }
+        | { __typename?: "AssignmentTypeChangedEvent" }
+        | { __typename?: "Body" }
+        | {
+              __typename?: "Component";
+              usedIssuePriorities: {
+                  __typename?: "IssuePriorityConnection";
+                  nodes: Array<{
+                      __typename?: "IssuePriority";
+                      id: string;
+                      name: string;
+                      description: string;
+                      value: number;
+                  }>;
+              };
+          }
+        | { __typename?: "ComponentPermission" }
+        | { __typename?: "ComponentTemplate" }
+        | { __typename?: "ComponentVersion" }
+        | { __typename?: "ComponentVersionTemplate" }
+        | { __typename?: "FillStyle" }
+        | { __typename?: "GlobalPermission" }
+        | { __typename?: "GropiusUser" }
+        | { __typename?: "IMS" }
+        | { __typename?: "IMSIssue" }
+        | { __typename?: "IMSIssueTemplate" }
+        | { __typename?: "IMSPermission" }
+        | { __typename?: "IMSProject" }
+        | { __typename?: "IMSProjectTemplate" }
+        | { __typename?: "IMSTemplate" }
+        | { __typename?: "IMSUser" }
+        | { __typename?: "IMSUserTemplate" }
+        | { __typename?: "IncomingRelationTypeChangedEvent" }
+        | { __typename?: "Interface" }
+        | { __typename?: "InterfaceDefinition" }
+        | { __typename?: "InterfacePart" }
+        | { __typename?: "InterfacePartTemplate" }
+        | { __typename?: "InterfaceSpecification" }
+        | { __typename?: "InterfaceSpecificationDerivationCondition" }
+        | { __typename?: "InterfaceSpecificationTemplate" }
+        | { __typename?: "InterfaceSpecificationVersion" }
+        | { __typename?: "InterfaceSpecificationVersionTemplate" }
+        | { __typename?: "IntraComponentDependencyParticipant" }
+        | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
+        | { __typename?: "Issue" }
+        | { __typename?: "IssueComment" }
+        | { __typename?: "IssuePriority" }
+        | { __typename?: "IssueRelation" }
+        | { __typename?: "IssueRelationType" }
+        | { __typename?: "IssueState" }
+        | { __typename?: "IssueTemplate" }
+        | { __typename?: "IssueType" }
+        | { __typename?: "Label" }
+        | { __typename?: "OutgoingRelationTypeChangedEvent" }
+        | { __typename?: "PriorityChangedEvent" }
+        | {
+              __typename?: "Project";
+              usedIssuePriorities: {
+                  __typename?: "IssuePriorityConnection";
+                  nodes: Array<{
+                      __typename?: "IssuePriority";
+                      id: string;
+                      name: string;
+                      description: string;
+                      value: number;
+                  }>;
+              };
+          }
+        | { __typename?: "ProjectPermission" }
+        | { __typename?: "RelatedByIssueEvent" }
+        | { __typename?: "Relation" }
+        | { __typename?: "RelationCondition" }
+        | { __typename?: "RelationLayout" }
+        | { __typename?: "RelationPartnerLayout" }
+        | { __typename?: "RelationTemplate" }
+        | { __typename?: "RemovedAffectedEntityEvent" }
+        | { __typename?: "RemovedArtefactEvent" }
+        | { __typename?: "RemovedAssignmentEvent" }
+        | { __typename?: "RemovedFromPinnedIssuesEvent" }
+        | { __typename?: "RemovedFromTrackableEvent" }
+        | { __typename?: "RemovedIncomingRelationEvent" }
+        | { __typename?: "RemovedLabelEvent" }
+        | { __typename?: "RemovedOutgoingRelationEvent" }
+        | { __typename?: "RemovedTemplatedFieldEvent" }
+        | { __typename?: "StateChangedEvent" }
+        | { __typename?: "StrokeStyle" }
+        | { __typename?: "TemplateChangedEvent" }
+        | { __typename?: "TemplatedFieldChangedEvent" }
+        | { __typename?: "TitleChangedEvent" }
+        | { __typename?: "TypeChangedEvent" }
+        | { __typename?: "View" }
+        | null;
+};
+
+export type GetUsedLabelsQueryVariables = Exact<{
+    trackable: Scalars["ID"]["input"];
+    filter: Scalars["String"]["input"];
+}>;
+
+export type GetUsedLabelsQuery = {
+    __typename?: "Query";
+    node?:
+        | { __typename?: "AddedAffectedEntityEvent" }
+        | { __typename?: "AddedArtefactEvent" }
+        | { __typename?: "AddedLabelEvent" }
+        | { __typename?: "AddedToPinnedIssuesEvent" }
+        | { __typename?: "AddedToTrackableEvent" }
+        | { __typename?: "AggregatedIssue" }
+        | { __typename?: "AggregatedIssueRelation" }
+        | { __typename?: "Artefact" }
+        | { __typename?: "ArtefactTemplate" }
+        | { __typename?: "Assignment" }
+        | { __typename?: "AssignmentType" }
+        | { __typename?: "AssignmentTypeChangedEvent" }
+        | { __typename?: "Body" }
+        | {
+              __typename?: "Component";
+              usedLabels: {
+                  __typename?: "LabelConnection";
+                  nodes: Array<{
+                      __typename?: "Label";
+                      id: string;
+                      name: string;
+                      description: string;
+                      color: string;
+                      trackables: {
+                          __typename?: "TrackableConnection";
+                          nodes: Array<
+                              | { __typename?: "Component"; id: string; name: string; description: string }
+                              | { __typename?: "Project"; id: string; name: string; description: string }
+                          >;
+                      };
+                  }>;
+              };
+          }
+        | { __typename?: "ComponentPermission" }
+        | { __typename?: "ComponentTemplate" }
+        | { __typename?: "ComponentVersion" }
+        | { __typename?: "ComponentVersionTemplate" }
+        | { __typename?: "FillStyle" }
+        | { __typename?: "GlobalPermission" }
+        | { __typename?: "GropiusUser" }
+        | { __typename?: "IMS" }
+        | { __typename?: "IMSIssue" }
+        | { __typename?: "IMSIssueTemplate" }
+        | { __typename?: "IMSPermission" }
+        | { __typename?: "IMSProject" }
+        | { __typename?: "IMSProjectTemplate" }
+        | { __typename?: "IMSTemplate" }
+        | { __typename?: "IMSUser" }
+        | { __typename?: "IMSUserTemplate" }
+        | { __typename?: "IncomingRelationTypeChangedEvent" }
+        | { __typename?: "Interface" }
+        | { __typename?: "InterfaceDefinition" }
+        | { __typename?: "InterfacePart" }
+        | { __typename?: "InterfacePartTemplate" }
+        | { __typename?: "InterfaceSpecification" }
+        | { __typename?: "InterfaceSpecificationDerivationCondition" }
+        | { __typename?: "InterfaceSpecificationTemplate" }
+        | { __typename?: "InterfaceSpecificationVersion" }
+        | { __typename?: "InterfaceSpecificationVersionTemplate" }
+        | { __typename?: "IntraComponentDependencyParticipant" }
+        | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
+        | { __typename?: "Issue" }
+        | { __typename?: "IssueComment" }
+        | { __typename?: "IssuePriority" }
+        | { __typename?: "IssueRelation" }
+        | { __typename?: "IssueRelationType" }
+        | { __typename?: "IssueState" }
+        | { __typename?: "IssueTemplate" }
+        | { __typename?: "IssueType" }
+        | { __typename?: "Label" }
+        | { __typename?: "OutgoingRelationTypeChangedEvent" }
+        | { __typename?: "PriorityChangedEvent" }
+        | {
+              __typename?: "Project";
+              usedLabels: {
+                  __typename?: "LabelConnection";
+                  nodes: Array<{
+                      __typename?: "Label";
+                      id: string;
+                      name: string;
+                      description: string;
+                      color: string;
+                      trackables: {
+                          __typename?: "TrackableConnection";
+                          nodes: Array<
+                              | { __typename?: "Component"; id: string; name: string; description: string }
+                              | { __typename?: "Project"; id: string; name: string; description: string }
+                          >;
+                      };
                   }>;
               };
           }
@@ -26425,7 +27637,20 @@ export type FirstTrackableLabelsQuery = {
               __typename?: "Component";
               labels: {
                   __typename?: "LabelConnection";
-                  nodes: Array<{ __typename?: "Label"; id: string; name: string; description: string; color: string }>;
+                  nodes: Array<{
+                      __typename?: "Label";
+                      id: string;
+                      name: string;
+                      description: string;
+                      color: string;
+                      trackables: {
+                          __typename?: "TrackableConnection";
+                          nodes: Array<
+                              | { __typename?: "Component"; id: string; name: string; description: string }
+                              | { __typename?: "Project"; id: string; name: string; description: string }
+                          >;
+                      };
+                  }>;
               };
           }
         | { __typename?: "ComponentPermission" }
@@ -26472,7 +27697,20 @@ export type FirstTrackableLabelsQuery = {
               __typename?: "Project";
               labels: {
                   __typename?: "LabelConnection";
-                  nodes: Array<{ __typename?: "Label"; id: string; name: string; description: string; color: string }>;
+                  nodes: Array<{
+                      __typename?: "Label";
+                      id: string;
+                      name: string;
+                      description: string;
+                      color: string;
+                      trackables: {
+                          __typename?: "TrackableConnection";
+                          nodes: Array<
+                              | { __typename?: "Component"; id: string; name: string; description: string }
+                              | { __typename?: "Project"; id: string; name: string; description: string }
+                          >;
+                      };
+                  }>;
               };
           }
         | { __typename?: "ProjectPermission" }
@@ -30418,6 +31656,10 @@ export const IssueListItemInfoFragmentDoc = gql`
         createdBy {
             ...DefaultUserInfo
         }
+        state {
+            id
+            name
+        }
         ...DefaultIssueIconInfo
         issueComments {
             totalCount
@@ -30425,6 +31667,13 @@ export const IssueListItemInfoFragmentDoc = gql`
         labels {
             nodes {
                 ...DefaultLabelInfo
+                trackables {
+                    nodes {
+                        id
+                        name
+                        description
+                    }
+                }
             }
         }
         assignments {
@@ -30436,6 +31685,16 @@ export const IssueListItemInfoFragmentDoc = gql`
         }
         priority {
             ...DefaultIssuePriorityInfo
+        }
+        template {
+            id
+            name
+            description
+        }
+        type {
+            id
+            name
+            iconPath
         }
     }
     ${DefaultUserInfoFragmentDoc}
@@ -32812,6 +34071,97 @@ export const FirstIssuesDocument = gql`
     }
     ${DefaultIssueInfoFragmentDoc}
 `;
+export const GetAssignedUsersDocument = gql`
+    query getAssignedUsers($trackable: ID!, $filter: String!) {
+        node(id: $trackable) {
+            ... on Trackable {
+                assignedUsers(filter: { username: { contains: $filter } }) {
+                    nodes {
+                        ...DefaultUserInfo
+                    }
+                }
+            }
+        }
+    }
+    ${DefaultUserInfoFragmentDoc}
+`;
+export const GetUsedIssueTemplatesDocument = gql`
+    query getUsedIssueTemplates($trackable: ID!, $filter: String!) {
+        node(id: $trackable) {
+            ... on Trackable {
+                usedIssueTemplates(filter: { name: { contains: $filter } }) {
+                    nodes {
+                        ...DefaultIssueTemplateInfo
+                    }
+                }
+            }
+        }
+    }
+    ${DefaultIssueTemplateInfoFragmentDoc}
+`;
+export const GetUsedIssueTypesDocument = gql`
+    query getUsedIssueTypes($trackable: ID!, $filter: String!) {
+        node(id: $trackable) {
+            ... on Trackable {
+                usedIssueTypes(filter: { name: { contains: $filter } }) {
+                    nodes {
+                        ...DefaultIssueTypeInfo
+                    }
+                }
+            }
+        }
+    }
+    ${DefaultIssueTypeInfoFragmentDoc}
+`;
+export const GetUsedIssueStatesDocument = gql`
+    query getUsedIssueStates($trackable: ID!, $filter: String!) {
+        node(id: $trackable) {
+            ... on Trackable {
+                usedIssueStates(filter: { name: { contains: $filter } }) {
+                    nodes {
+                        ...DefaultIssueStateInfo
+                    }
+                }
+            }
+        }
+    }
+    ${DefaultIssueStateInfoFragmentDoc}
+`;
+export const GetUsedIssuePrioritiesDocument = gql`
+    query getUsedIssuePriorities($trackable: ID!, $filter: String!) {
+        node(id: $trackable) {
+            ... on Trackable {
+                usedIssuePriorities(filter: { name: { contains: $filter } }) {
+                    nodes {
+                        ...DefaultIssuePriorityInfo
+                    }
+                }
+            }
+        }
+    }
+    ${DefaultIssuePriorityInfoFragmentDoc}
+`;
+export const GetUsedLabelsDocument = gql`
+    query getUsedLabels($trackable: ID!, $filter: String!) {
+        node(id: $trackable) {
+            ... on Trackable {
+                usedLabels(filter: { name: { contains: $filter } }) {
+                    nodes {
+                        ...DefaultLabelInfo
+                        trackables {
+                            nodes {
+                                id
+                                name
+                                description
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${DefaultLabelInfoFragmentDoc}
+`;
 export const SearchIssuePrioritiesDocument = gql`
     query searchIssuePriorities($template: ID!, $query: String!, $count: Int!) {
         searchIssuePriorities(query: $query, first: $count, filter: { partOf: { any: { id: { eq: $template } } } }) {
@@ -33056,6 +34406,13 @@ export const FirstTrackableLabelsDocument = gql`
                 labels(first: $count, orderBy: [{ field: NAME }]) {
                     nodes {
                         ...DefaultLabelInfo
+                        trackables {
+                            nodes {
+                                id
+                                name
+                                description
+                            }
+                        }
                     }
                 }
             }
@@ -33532,13 +34889,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     return {
         searchAffectedByIssues(
             variables: SearchAffectedByIssuesQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<SearchAffectedByIssuesQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<SearchAffectedByIssuesQuery>(SearchAffectedByIssuesDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<SearchAffectedByIssuesQuery>({
+                        document: SearchAffectedByIssuesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "searchAffectedByIssues",
                 "query",
@@ -33547,13 +34907,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         addAffectedEntityToIssue(
             variables: AddAffectedEntityToIssueMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<AddAffectedEntityToIssueMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<AddAffectedEntityToIssueMutation>(AddAffectedEntityToIssueDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<AddAffectedEntityToIssueMutation>({
+                        document: AddAffectedEntityToIssueDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "addAffectedEntityToIssue",
                 "mutation",
@@ -33562,15 +34925,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         removeAffectedEntityFromIssue(
             variables: RemoveAffectedEntityFromIssueMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<RemoveAffectedEntityFromIssueMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<RemoveAffectedEntityFromIssueMutation>(
-                        RemoveAffectedEntityFromIssueDocument,
+                    client.request<RemoveAffectedEntityFromIssueMutation>({
+                        document: RemoveAffectedEntityFromIssueDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "removeAffectedEntityFromIssue",
                 "mutation",
                 variables
@@ -33578,13 +34943,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         removeAssignment(
             variables: RemoveAssignmentMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<RemoveAssignmentMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<RemoveAssignmentMutation>(RemoveAssignmentDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<RemoveAssignmentMutation>({
+                        document: RemoveAssignmentDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "removeAssignment",
                 "mutation",
@@ -33593,13 +34961,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         createAssignment(
             variables: CreateAssignmentMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<CreateAssignmentMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<CreateAssignmentMutation>(CreateAssignmentDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<CreateAssignmentMutation>({
+                        document: CreateAssignmentDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "createAssignment",
                 "mutation",
@@ -33608,13 +34979,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         searchAssignmentTypes(
             variables: SearchAssignmentTypesQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<SearchAssignmentTypesQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<SearchAssignmentTypesQuery>(SearchAssignmentTypesDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<SearchAssignmentTypesQuery>({
+                        document: SearchAssignmentTypesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "searchAssignmentTypes",
                 "query",
@@ -33623,13 +34997,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         firstAssignmentTypes(
             variables: FirstAssignmentTypesQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<FirstAssignmentTypesQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<FirstAssignmentTypesQuery>(FirstAssignmentTypesDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<FirstAssignmentTypesQuery>({
+                        document: FirstAssignmentTypesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "firstAssignmentTypes",
                 "query",
@@ -33638,13 +35015,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         changeAssignmentType(
             variables: ChangeAssignmentTypeMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<ChangeAssignmentTypeMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<ChangeAssignmentTypeMutation>(ChangeAssignmentTypeDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<ChangeAssignmentTypeMutation>({
+                        document: ChangeAssignmentTypeDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "changeAssignmentType",
                 "mutation",
@@ -33653,13 +35033,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getNamedNode(
             variables: GetNamedNodeQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetNamedNodeQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetNamedNodeQuery>(GetNamedNodeDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetNamedNodeQuery>({
+                        document: GetNamedNodeDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getNamedNode",
                 "query",
@@ -33668,13 +35051,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getVersionedNode(
             variables: GetVersionedNodeQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetVersionedNodeQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetVersionedNodeQuery>(GetVersionedNodeDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetVersionedNodeQuery>({
+                        document: GetVersionedNodeDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getVersionedNode",
                 "query",
@@ -33683,13 +35069,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getComponentList(
             variables: GetComponentListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetComponentListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetComponentListQuery>(GetComponentListDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetComponentListQuery>({
+                        document: GetComponentListDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getComponentList",
                 "query",
@@ -33698,13 +35087,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getFilteredComponentList(
             variables: GetFilteredComponentListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetFilteredComponentListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetFilteredComponentListQuery>(GetFilteredComponentListDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetFilteredComponentListQuery>({
+                        document: GetFilteredComponentListDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getFilteredComponentList",
                 "query",
@@ -33713,13 +35105,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getComponent(
             variables: GetComponentQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetComponentQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetComponentQuery>(GetComponentDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetComponentQuery>({
+                        document: GetComponentDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getComponent",
                 "query",
@@ -33728,13 +35123,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getComponentDetails(
             variables: GetComponentDetailsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetComponentDetailsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetComponentDetailsQuery>(GetComponentDetailsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetComponentDetailsQuery>({
+                        document: GetComponentDetailsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getComponentDetails",
                 "query",
@@ -33743,13 +35141,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getComponentTemplateDetails(
             variables: GetComponentTemplateDetailsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetComponentTemplateDetailsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetComponentTemplateDetailsQuery>(GetComponentTemplateDetailsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetComponentTemplateDetailsQuery>({
+                        document: GetComponentTemplateDetailsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getComponentTemplateDetails",
                 "query",
@@ -33758,13 +35159,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getComponentGeneralDetails(
             variables: GetComponentGeneralDetailsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetComponentGeneralDetailsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetComponentGeneralDetailsQuery>(GetComponentGeneralDetailsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetComponentGeneralDetailsQuery>({
+                        document: GetComponentGeneralDetailsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getComponentGeneralDetails",
                 "query",
@@ -33773,13 +35177,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         searchComponents(
             variables: SearchComponentsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<SearchComponentsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<SearchComponentsQuery>(SearchComponentsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<SearchComponentsQuery>({
+                        document: SearchComponentsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "searchComponents",
                 "query",
@@ -33788,13 +35195,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         firstComponents(
             variables: FirstComponentsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<FirstComponentsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<FirstComponentsQuery>(FirstComponentsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<FirstComponentsQuery>({
+                        document: FirstComponentsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "firstComponents",
                 "query",
@@ -33803,13 +35213,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         createComponent(
             variables: CreateComponentMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<CreateComponentMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<CreateComponentMutation>(CreateComponentDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<CreateComponentMutation>({
+                        document: CreateComponentDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "createComponent",
                 "mutation",
@@ -33818,13 +35231,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         updateComponent(
             variables: UpdateComponentMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<UpdateComponentMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<UpdateComponentMutation>(UpdateComponentDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<UpdateComponentMutation>({
+                        document: UpdateComponentDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "updateComponent",
                 "mutation",
@@ -33833,13 +35249,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         deleteComponent(
             variables: DeleteComponentMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<DeleteComponentMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<DeleteComponentMutation>(DeleteComponentDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<DeleteComponentMutation>({
+                        document: DeleteComponentDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "deleteComponent",
                 "mutation",
@@ -33848,13 +35267,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getComponentPermissionList(
             variables: GetComponentPermissionListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetComponentPermissionListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetComponentPermissionListQuery>(GetComponentPermissionListDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetComponentPermissionListQuery>({
+                        document: GetComponentPermissionListDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getComponentPermissionList",
                 "query",
@@ -33863,15 +35285,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getFilteredComponentPermissionList(
             variables: GetFilteredComponentPermissionListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetFilteredComponentPermissionListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetFilteredComponentPermissionListQuery>(
-                        GetFilteredComponentPermissionListDocument,
+                    client.request<GetFilteredComponentPermissionListQuery>({
+                        document: GetFilteredComponentPermissionListDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "getFilteredComponentPermissionList",
                 "query",
                 variables
@@ -33879,13 +35303,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         searchComponentPermissions(
             variables: SearchComponentPermissionsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<SearchComponentPermissionsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<SearchComponentPermissionsQuery>(SearchComponentPermissionsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<SearchComponentPermissionsQuery>({
+                        document: SearchComponentPermissionsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "searchComponentPermissions",
                 "query",
@@ -33894,13 +35321,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         firstComponentPermissions(
             variables: FirstComponentPermissionsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<FirstComponentPermissionsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<FirstComponentPermissionsQuery>(FirstComponentPermissionsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<FirstComponentPermissionsQuery>({
+                        document: FirstComponentPermissionsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "firstComponentPermissions",
                 "query",
@@ -33909,15 +35339,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         addComponentPermissionToComponent(
             variables: AddComponentPermissionToComponentMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<AddComponentPermissionToComponentMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<AddComponentPermissionToComponentMutation>(
-                        AddComponentPermissionToComponentDocument,
+                    client.request<AddComponentPermissionToComponentMutation>({
+                        document: AddComponentPermissionToComponentDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "addComponentPermissionToComponent",
                 "mutation",
                 variables
@@ -33925,15 +35357,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         removeComponentPermissionFromComponent(
             variables: RemoveComponentPermissionFromComponentMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<RemoveComponentPermissionFromComponentMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<RemoveComponentPermissionFromComponentMutation>(
-                        RemoveComponentPermissionFromComponentDocument,
+                    client.request<RemoveComponentPermissionFromComponentMutation>({
+                        document: RemoveComponentPermissionFromComponentDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "removeComponentPermissionFromComponent",
                 "mutation",
                 variables
@@ -33941,13 +35375,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         updateComponentPermission(
             variables: UpdateComponentPermissionMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<UpdateComponentPermissionMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<UpdateComponentPermissionMutation>(UpdateComponentPermissionDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<UpdateComponentPermissionMutation>({
+                        document: UpdateComponentPermissionDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "updateComponentPermission",
                 "mutation",
@@ -33956,13 +35393,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         createComponentPermission(
             variables: CreateComponentPermissionMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<CreateComponentPermissionMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<CreateComponentPermissionMutation>(CreateComponentPermissionDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<CreateComponentPermissionMutation>({
+                        document: CreateComponentPermissionDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "createComponentPermission",
                 "mutation",
@@ -33971,13 +35411,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         searchComponentTemplates(
             variables: SearchComponentTemplatesQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<SearchComponentTemplatesQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<SearchComponentTemplatesQuery>(SearchComponentTemplatesDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<SearchComponentTemplatesQuery>({
+                        document: SearchComponentTemplatesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "searchComponentTemplates",
                 "query",
@@ -33986,13 +35429,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         firstComponentTemplates(
             variables: FirstComponentTemplatesQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<FirstComponentTemplatesQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<FirstComponentTemplatesQuery>(FirstComponentTemplatesDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<FirstComponentTemplatesQuery>({
+                        document: FirstComponentTemplatesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "firstComponentTemplates",
                 "query",
@@ -34001,13 +35447,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getComponentTemplate(
             variables: GetComponentTemplateQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetComponentTemplateQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetComponentTemplateQuery>(GetComponentTemplateDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetComponentTemplateQuery>({
+                        document: GetComponentTemplateDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getComponentTemplate",
                 "query",
@@ -34016,13 +35465,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getComponentVersionTemplate(
             variables: GetComponentVersionTemplateQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetComponentVersionTemplateQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetComponentVersionTemplateQuery>(GetComponentVersionTemplateDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetComponentVersionTemplateQuery>({
+                        document: GetComponentVersionTemplateDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getComponentVersionTemplate",
                 "query",
@@ -34031,13 +35483,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getProjectComponentTemplates(
             variables: GetProjectComponentTemplatesQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetProjectComponentTemplatesQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetProjectComponentTemplatesQuery>(GetProjectComponentTemplatesDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetProjectComponentTemplatesQuery>({
+                        document: GetProjectComponentTemplatesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getProjectComponentTemplates",
                 "query",
@@ -34046,13 +35501,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         firstComponentVersions(
             variables: FirstComponentVersionsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<FirstComponentVersionsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<FirstComponentVersionsQuery>(FirstComponentVersionsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<FirstComponentVersionsQuery>({
+                        document: FirstComponentVersionsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "firstComponentVersions",
                 "query",
@@ -34061,13 +35519,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getComponentVersionList(
             variables: GetComponentVersionListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetComponentVersionListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetComponentVersionListQuery>(GetComponentVersionListDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetComponentVersionListQuery>({
+                        document: GetComponentVersionListDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getComponentVersionList",
                 "query",
@@ -34076,15 +35537,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getFilteredComponentVersionList(
             variables: GetFilteredComponentVersionListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetFilteredComponentVersionListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetFilteredComponentVersionListQuery>(
-                        GetFilteredComponentVersionListDocument,
+                    client.request<GetFilteredComponentVersionListQuery>({
+                        document: GetFilteredComponentVersionListDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "getFilteredComponentVersionList",
                 "query",
                 variables
@@ -34092,13 +35555,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         searchComponentVersions(
             variables: SearchComponentVersionsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<SearchComponentVersionsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<SearchComponentVersionsQuery>(SearchComponentVersionsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<SearchComponentVersionsQuery>({
+                        document: SearchComponentVersionsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "searchComponentVersions",
                 "query",
@@ -34107,15 +35573,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getComponentVersionGeneralDetails(
             variables: GetComponentVersionGeneralDetailsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetComponentVersionGeneralDetailsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetComponentVersionGeneralDetailsQuery>(
-                        GetComponentVersionGeneralDetailsDocument,
+                    client.request<GetComponentVersionGeneralDetailsQuery>({
+                        document: GetComponentVersionGeneralDetailsDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "getComponentVersionGeneralDetails",
                 "query",
                 variables
@@ -34123,13 +35591,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         createComponentVersion(
             variables: CreateComponentVersionMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<CreateComponentVersionMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<CreateComponentVersionMutation>(CreateComponentVersionDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<CreateComponentVersionMutation>({
+                        document: CreateComponentVersionDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "createComponentVersion",
                 "mutation",
@@ -34138,13 +35609,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         updateComponentVersion(
             variables: UpdateComponentVersionMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<UpdateComponentVersionMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<UpdateComponentVersionMutation>(UpdateComponentVersionDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<UpdateComponentVersionMutation>({
+                        document: UpdateComponentVersionDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "updateComponentVersion",
                 "mutation",
@@ -34153,13 +35627,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         deleteComponentVersion(
             variables: DeleteComponentVersionMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<DeleteComponentVersionMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<DeleteComponentVersionMutation>(DeleteComponentVersionDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<DeleteComponentVersionMutation>({
+                        document: DeleteComponentVersionDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "deleteComponentVersion",
                 "mutation",
@@ -34168,13 +35645,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getGlobalPermissionList(
             variables: GetGlobalPermissionListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetGlobalPermissionListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetGlobalPermissionListQuery>(GetGlobalPermissionListDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetGlobalPermissionListQuery>({
+                        document: GetGlobalPermissionListDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getGlobalPermissionList",
                 "query",
@@ -34183,15 +35663,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getFilteredGlobalPermissionList(
             variables: GetFilteredGlobalPermissionListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetFilteredGlobalPermissionListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetFilteredGlobalPermissionListQuery>(
-                        GetFilteredGlobalPermissionListDocument,
+                    client.request<GetFilteredGlobalPermissionListQuery>({
+                        document: GetFilteredGlobalPermissionListDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "getFilteredGlobalPermissionList",
                 "query",
                 variables
@@ -34199,13 +35681,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         deleteGlobalPermission(
             variables: DeleteGlobalPermissionMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<DeleteGlobalPermissionMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<DeleteGlobalPermissionMutation>(DeleteGlobalPermissionDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<DeleteGlobalPermissionMutation>({
+                        document: DeleteGlobalPermissionDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "deleteGlobalPermission",
                 "mutation",
@@ -34214,13 +35699,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         updateGlobalPermission(
             variables: UpdateGlobalPermissionMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<UpdateGlobalPermissionMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<UpdateGlobalPermissionMutation>(UpdateGlobalPermissionDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<UpdateGlobalPermissionMutation>({
+                        document: UpdateGlobalPermissionDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "updateGlobalPermission",
                 "mutation",
@@ -34229,13 +35717,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         createGlobalPermission(
             variables: CreateGlobalPermissionMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<CreateGlobalPermissionMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<CreateGlobalPermissionMutation>(CreateGlobalPermissionDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<CreateGlobalPermissionMutation>({
+                        document: CreateGlobalPermissionDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "createGlobalPermission",
                 "mutation",
@@ -34244,13 +35735,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getProjectGraph(
             variables: GetProjectGraphQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetProjectGraphQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetProjectGraphQuery>(GetProjectGraphDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetProjectGraphQuery>({
+                        document: GetProjectGraphDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getProjectGraph",
                 "query",
@@ -34259,15 +35753,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         addComponentVersionToProject(
             variables: AddComponentVersionToProjectMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<AddComponentVersionToProjectMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<AddComponentVersionToProjectMutation>(
-                        AddComponentVersionToProjectDocument,
+                    client.request<AddComponentVersionToProjectMutation>({
+                        document: AddComponentVersionToProjectDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "addComponentVersionToProject",
                 "mutation",
                 variables
@@ -34275,15 +35771,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         removeComponentVersionFromProject(
             variables: RemoveComponentVersionFromProjectMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<RemoveComponentVersionFromProjectMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<RemoveComponentVersionFromProjectMutation>(
-                        RemoveComponentVersionFromProjectDocument,
+                    client.request<RemoveComponentVersionFromProjectMutation>({
+                        document: RemoveComponentVersionFromProjectDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "removeComponentVersionFromProject",
                 "mutation",
                 variables
@@ -34291,13 +35789,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         createRelation(
             variables: CreateRelationMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<CreateRelationMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<CreateRelationMutation>(CreateRelationDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<CreateRelationMutation>({
+                        document: CreateRelationDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "createRelation",
                 "mutation",
@@ -34306,13 +35807,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         deleteRelation(
             variables: DeleteRelationMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<DeleteRelationMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<DeleteRelationMutation>(DeleteRelationDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<DeleteRelationMutation>({
+                        document: DeleteRelationDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "deleteRelation",
                 "mutation",
@@ -34321,13 +35825,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getIMSList(
             variables: GetImsListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetImsListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetImsListQuery>(GetImsListDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetImsListQuery>({
+                        document: GetImsListDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getIMSList",
                 "query",
@@ -34336,25 +35843,34 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getFilteredIMSList(
             variables: GetFilteredImsListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetFilteredImsListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetFilteredImsListQuery>(GetFilteredImsListDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetFilteredImsListQuery>({
+                        document: GetFilteredImsListDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getFilteredIMSList",
                 "query",
                 variables
             );
         },
-        getIMS(variables: GetImsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetImsQuery> {
+        getIMS(
+            variables: GetImsQueryVariables,
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
+        ): Promise<GetImsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetImsQuery>(GetImsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetImsQuery>({
+                        document: GetImsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getIMS",
                 "query",
@@ -34363,13 +35879,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getIMSGeneralDetails(
             variables: GetImsGeneralDetailsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetImsGeneralDetailsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetImsGeneralDetailsQuery>(GetImsGeneralDetailsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetImsGeneralDetailsQuery>({
+                        document: GetImsGeneralDetailsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getIMSGeneralDetails",
                 "query",
@@ -34378,13 +35897,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         searchIMSs(
             variables: SearchImSsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<SearchImSsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<SearchImSsQuery>(SearchImSsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<SearchImSsQuery>({
+                        document: SearchImSsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "searchIMSs",
                 "query",
@@ -34393,13 +35915,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         firstIMSs(
             variables: FirstImSsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<FirstImSsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<FirstImSsQuery>(FirstImSsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<FirstImSsQuery>({
+                        document: FirstImSsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "firstIMSs",
                 "query",
@@ -34408,13 +35933,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         createIMS(
             variables: CreateImsMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<CreateImsMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<CreateImsMutation>(CreateImsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<CreateImsMutation>({
+                        document: CreateImsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "createIMS",
                 "mutation",
@@ -34423,13 +35951,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         updateIMS(
             variables: UpdateImsMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<UpdateImsMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<UpdateImsMutation>(UpdateImsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<UpdateImsMutation>({
+                        document: UpdateImsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "updateIMS",
                 "mutation",
@@ -34438,13 +35969,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         deleteIMS(
             variables: DeleteImsMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<DeleteImsMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<DeleteImsMutation>(DeleteImsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<DeleteImsMutation>({
+                        document: DeleteImsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "deleteIMS",
                 "mutation",
@@ -34453,13 +35987,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getIMSPermissionList(
             variables: GetImsPermissionListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetImsPermissionListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetImsPermissionListQuery>(GetImsPermissionListDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetImsPermissionListQuery>({
+                        document: GetImsPermissionListDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getIMSPermissionList",
                 "query",
@@ -34468,13 +36005,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getFilteredIMSPermissionList(
             variables: GetFilteredImsPermissionListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetFilteredImsPermissionListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetFilteredImsPermissionListQuery>(GetFilteredImsPermissionListDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetFilteredImsPermissionListQuery>({
+                        document: GetFilteredImsPermissionListDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getFilteredIMSPermissionList",
                 "query",
@@ -34483,13 +36023,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         searchIMSPermissions(
             variables: SearchImsPermissionsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<SearchImsPermissionsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<SearchImsPermissionsQuery>(SearchImsPermissionsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<SearchImsPermissionsQuery>({
+                        document: SearchImsPermissionsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "searchIMSPermissions",
                 "query",
@@ -34498,13 +36041,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         firstIMSPermissions(
             variables: FirstImsPermissionsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<FirstImsPermissionsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<FirstImsPermissionsQuery>(FirstImsPermissionsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<FirstImsPermissionsQuery>({
+                        document: FirstImsPermissionsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "firstIMSPermissions",
                 "query",
@@ -34513,13 +36059,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         addIMSPermissionToIMS(
             variables: AddImsPermissionToImsMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<AddImsPermissionToImsMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<AddImsPermissionToImsMutation>(AddImsPermissionToImsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<AddImsPermissionToImsMutation>({
+                        document: AddImsPermissionToImsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "addIMSPermissionToIMS",
                 "mutation",
@@ -34528,13 +36077,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         removeIMSPermissionFromIMS(
             variables: RemoveImsPermissionFromImsMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<RemoveImsPermissionFromImsMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<RemoveImsPermissionFromImsMutation>(RemoveImsPermissionFromImsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<RemoveImsPermissionFromImsMutation>({
+                        document: RemoveImsPermissionFromImsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "removeIMSPermissionFromIMS",
                 "mutation",
@@ -34543,13 +36095,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         updateIMSPermission(
             variables: UpdateImsPermissionMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<UpdateImsPermissionMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<UpdateImsPermissionMutation>(UpdateImsPermissionDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<UpdateImsPermissionMutation>({
+                        document: UpdateImsPermissionDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "updateIMSPermission",
                 "mutation",
@@ -34558,13 +36113,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         createIMSPermission(
             variables: CreateImsPermissionMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<CreateImsPermissionMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<CreateImsPermissionMutation>(CreateImsPermissionDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<CreateImsPermissionMutation>({
+                        document: CreateImsPermissionDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "createIMSPermission",
                 "mutation",
@@ -34573,13 +36131,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getIMSProjectListFromIMS(
             variables: GetImsProjectListFromImsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetImsProjectListFromImsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetImsProjectListFromImsQuery>(GetImsProjectListFromImsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetImsProjectListFromImsQuery>({
+                        document: GetImsProjectListFromImsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getIMSProjectListFromIMS",
                 "query",
@@ -34588,15 +36149,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getIMSProjectListFromTrackable(
             variables: GetImsProjectListFromTrackableQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetImsProjectListFromTrackableQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetImsProjectListFromTrackableQuery>(
-                        GetImsProjectListFromTrackableDocument,
+                    client.request<GetImsProjectListFromTrackableQuery>({
+                        document: GetImsProjectListFromTrackableDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "getIMSProjectListFromTrackable",
                 "query",
                 variables
@@ -34604,13 +36167,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getFilteredIMSProjectList(
             variables: GetFilteredImsProjectListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetFilteredImsProjectListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetFilteredImsProjectListQuery>(GetFilteredImsProjectListDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetFilteredImsProjectListQuery>({
+                        document: GetFilteredImsProjectListDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getFilteredIMSProjectList",
                 "query",
@@ -34619,13 +36185,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getIMSProjectGeneralDetails(
             variables: GetImsProjectGeneralDetailsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetImsProjectGeneralDetailsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetImsProjectGeneralDetailsQuery>(GetImsProjectGeneralDetailsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetImsProjectGeneralDetailsQuery>({
+                        document: GetImsProjectGeneralDetailsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getIMSProjectGeneralDetails",
                 "query",
@@ -34634,13 +36203,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         createIMSProject(
             variables: CreateImsProjectMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<CreateImsProjectMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<CreateImsProjectMutation>(CreateImsProjectDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<CreateImsProjectMutation>({
+                        document: CreateImsProjectDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "createIMSProject",
                 "mutation",
@@ -34649,13 +36221,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         updateIMSProject(
             variables: UpdateImsProjectMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<UpdateImsProjectMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<UpdateImsProjectMutation>(UpdateImsProjectDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<UpdateImsProjectMutation>({
+                        document: UpdateImsProjectDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "updateIMSProject",
                 "mutation",
@@ -34664,13 +36239,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         deleteIMSProject(
             variables: DeleteImsProjectMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<DeleteImsProjectMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<DeleteImsProjectMutation>(DeleteImsProjectDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<DeleteImsProjectMutation>({
+                        document: DeleteImsProjectDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "deleteIMSProject",
                 "mutation",
@@ -34679,13 +36257,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         searchIMSTemplates(
             variables: SearchImsTemplatesQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<SearchImsTemplatesQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<SearchImsTemplatesQuery>(SearchImsTemplatesDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<SearchImsTemplatesQuery>({
+                        document: SearchImsTemplatesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "searchIMSTemplates",
                 "query",
@@ -34694,13 +36275,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         firstIMSTemplates(
             variables: FirstImsTemplatesQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<FirstImsTemplatesQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<FirstImsTemplatesQuery>(FirstImsTemplatesDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<FirstImsTemplatesQuery>({
+                        document: FirstImsTemplatesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "firstIMSTemplates",
                 "query",
@@ -34709,13 +36293,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getIMSTemplate(
             variables: GetImsTemplateQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetImsTemplateQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetImsTemplateQuery>(GetImsTemplateDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetImsTemplateQuery>({
+                        document: GetImsTemplateDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getIMSTemplate",
                 "query",
@@ -34724,13 +36311,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getIMSProjectTemplate(
             variables: GetImsProjectTemplateQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetImsProjectTemplateQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetImsProjectTemplateQuery>(GetImsProjectTemplateDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetImsProjectTemplateQuery>({
+                        document: GetImsProjectTemplateDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getIMSProjectTemplate",
                 "query",
@@ -34739,13 +36329,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getInterfaceDefinitionList(
             variables: GetInterfaceDefinitionListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetInterfaceDefinitionListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetInterfaceDefinitionListQuery>(GetInterfaceDefinitionListDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetInterfaceDefinitionListQuery>({
+                        document: GetInterfaceDefinitionListDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getInterfaceDefinitionList",
                 "query",
@@ -34754,15 +36347,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getFilteredInterfaceDefinitionList(
             variables: GetFilteredInterfaceDefinitionListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetFilteredInterfaceDefinitionListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetFilteredInterfaceDefinitionListQuery>(
-                        GetFilteredInterfaceDefinitionListDocument,
+                    client.request<GetFilteredInterfaceDefinitionListQuery>({
+                        document: GetFilteredInterfaceDefinitionListDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "getFilteredInterfaceDefinitionList",
                 "query",
                 variables
@@ -34770,15 +36365,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         addInterfaceSpecificationVersionToComponentVersion(
             variables: AddInterfaceSpecificationVersionToComponentVersionMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<AddInterfaceSpecificationVersionToComponentVersionMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<AddInterfaceSpecificationVersionToComponentVersionMutation>(
-                        AddInterfaceSpecificationVersionToComponentVersionDocument,
+                    client.request<AddInterfaceSpecificationVersionToComponentVersionMutation>({
+                        document: AddInterfaceSpecificationVersionToComponentVersionDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "addInterfaceSpecificationVersionToComponentVersion",
                 "mutation",
                 variables
@@ -34786,15 +36383,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         removeInterfaceSpecificationVersionFromComponentVersion(
             variables: RemoveInterfaceSpecificationVersionFromComponentVersionMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<RemoveInterfaceSpecificationVersionFromComponentVersionMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<RemoveInterfaceSpecificationVersionFromComponentVersionMutation>(
-                        RemoveInterfaceSpecificationVersionFromComponentVersionDocument,
+                    client.request<RemoveInterfaceSpecificationVersionFromComponentVersionMutation>({
+                        document: RemoveInterfaceSpecificationVersionFromComponentVersionDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "removeInterfaceSpecificationVersionFromComponentVersion",
                 "mutation",
                 variables
@@ -34802,15 +36401,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getInterfaceSpecificationList(
             variables: GetInterfaceSpecificationListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetInterfaceSpecificationListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetInterfaceSpecificationListQuery>(
-                        GetInterfaceSpecificationListDocument,
+                    client.request<GetInterfaceSpecificationListQuery>({
+                        document: GetInterfaceSpecificationListDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "getInterfaceSpecificationList",
                 "query",
                 variables
@@ -34818,15 +36419,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getFilteredInterfaceSpecificationList(
             variables: GetFilteredInterfaceSpecificationListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetFilteredInterfaceSpecificationListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetFilteredInterfaceSpecificationListQuery>(
-                        GetFilteredInterfaceSpecificationListDocument,
+                    client.request<GetFilteredInterfaceSpecificationListQuery>({
+                        document: GetFilteredInterfaceSpecificationListDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "getFilteredInterfaceSpecificationList",
                 "query",
                 variables
@@ -34834,15 +36437,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getInterfaceSpecificationGeneralDetails(
             variables: GetInterfaceSpecificationGeneralDetailsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetInterfaceSpecificationGeneralDetailsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetInterfaceSpecificationGeneralDetailsQuery>(
-                        GetInterfaceSpecificationGeneralDetailsDocument,
+                    client.request<GetInterfaceSpecificationGeneralDetailsQuery>({
+                        document: GetInterfaceSpecificationGeneralDetailsDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "getInterfaceSpecificationGeneralDetails",
                 "query",
                 variables
@@ -34850,15 +36455,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getInterfaceSpecificationVisibilityInfo(
             variables: GetInterfaceSpecificationVisibilityInfoQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetInterfaceSpecificationVisibilityInfoQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetInterfaceSpecificationVisibilityInfoQuery>(
-                        GetInterfaceSpecificationVisibilityInfoDocument,
+                    client.request<GetInterfaceSpecificationVisibilityInfoQuery>({
+                        document: GetInterfaceSpecificationVisibilityInfoDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "getInterfaceSpecificationVisibilityInfo",
                 "query",
                 variables
@@ -34866,15 +36473,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         searchInterfaceSpecifications(
             variables: SearchInterfaceSpecificationsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<SearchInterfaceSpecificationsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<SearchInterfaceSpecificationsQuery>(
-                        SearchInterfaceSpecificationsDocument,
+                    client.request<SearchInterfaceSpecificationsQuery>({
+                        document: SearchInterfaceSpecificationsDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "searchInterfaceSpecifications",
                 "query",
                 variables
@@ -34882,13 +36491,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         firstInterfaceSpecifications(
             variables: FirstInterfaceSpecificationsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<FirstInterfaceSpecificationsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<FirstInterfaceSpecificationsQuery>(FirstInterfaceSpecificationsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<FirstInterfaceSpecificationsQuery>({
+                        document: FirstInterfaceSpecificationsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "firstInterfaceSpecifications",
                 "query",
@@ -34897,15 +36509,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         createInterfaceSpecification(
             variables: CreateInterfaceSpecificationMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<CreateInterfaceSpecificationMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<CreateInterfaceSpecificationMutation>(
-                        CreateInterfaceSpecificationDocument,
+                    client.request<CreateInterfaceSpecificationMutation>({
+                        document: CreateInterfaceSpecificationDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "createInterfaceSpecification",
                 "mutation",
                 variables
@@ -34913,15 +36527,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         updateInterfaceSpecification(
             variables: UpdateInterfaceSpecificationMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<UpdateInterfaceSpecificationMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<UpdateInterfaceSpecificationMutation>(
-                        UpdateInterfaceSpecificationDocument,
+                    client.request<UpdateInterfaceSpecificationMutation>({
+                        document: UpdateInterfaceSpecificationDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "updateInterfaceSpecification",
                 "mutation",
                 variables
@@ -34929,15 +36545,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         deleteInterfaceSpecification(
             variables: DeleteInterfaceSpecificationMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<DeleteInterfaceSpecificationMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<DeleteInterfaceSpecificationMutation>(
-                        DeleteInterfaceSpecificationDocument,
+                    client.request<DeleteInterfaceSpecificationMutation>({
+                        document: DeleteInterfaceSpecificationDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "deleteInterfaceSpecification",
                 "mutation",
                 variables
@@ -34945,15 +36563,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         searchInterfaceSpecificationTemplates(
             variables: SearchInterfaceSpecificationTemplatesQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<SearchInterfaceSpecificationTemplatesQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<SearchInterfaceSpecificationTemplatesQuery>(
-                        SearchInterfaceSpecificationTemplatesDocument,
+                    client.request<SearchInterfaceSpecificationTemplatesQuery>({
+                        document: SearchInterfaceSpecificationTemplatesDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "searchInterfaceSpecificationTemplates",
                 "query",
                 variables
@@ -34961,15 +36581,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         firstInterfaceSpecificationTemplates(
             variables: FirstInterfaceSpecificationTemplatesQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<FirstInterfaceSpecificationTemplatesQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<FirstInterfaceSpecificationTemplatesQuery>(
-                        FirstInterfaceSpecificationTemplatesDocument,
+                    client.request<FirstInterfaceSpecificationTemplatesQuery>({
+                        document: FirstInterfaceSpecificationTemplatesDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "firstInterfaceSpecificationTemplates",
                 "query",
                 variables
@@ -34977,15 +36599,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getInterfaceSpecificationTemplate(
             variables: GetInterfaceSpecificationTemplateQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetInterfaceSpecificationTemplateQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetInterfaceSpecificationTemplateQuery>(
-                        GetInterfaceSpecificationTemplateDocument,
+                    client.request<GetInterfaceSpecificationTemplateQuery>({
+                        document: GetInterfaceSpecificationTemplateDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "getInterfaceSpecificationTemplate",
                 "query",
                 variables
@@ -34993,15 +36617,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getInterfaceSpecificationVersionTemplate(
             variables: GetInterfaceSpecificationVersionTemplateQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetInterfaceSpecificationVersionTemplateQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetInterfaceSpecificationVersionTemplateQuery>(
-                        GetInterfaceSpecificationVersionTemplateDocument,
+                    client.request<GetInterfaceSpecificationVersionTemplateQuery>({
+                        document: GetInterfaceSpecificationVersionTemplateDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "getInterfaceSpecificationVersionTemplate",
                 "query",
                 variables
@@ -35009,15 +36635,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getInterfaceSpecificationVersionList(
             variables: GetInterfaceSpecificationVersionListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetInterfaceSpecificationVersionListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetInterfaceSpecificationVersionListQuery>(
-                        GetInterfaceSpecificationVersionListDocument,
+                    client.request<GetInterfaceSpecificationVersionListQuery>({
+                        document: GetInterfaceSpecificationVersionListDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "getInterfaceSpecificationVersionList",
                 "query",
                 variables
@@ -35025,15 +36653,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getFilteredInterfaceSpecificationVersionList(
             variables: GetFilteredInterfaceSpecificationVersionListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetFilteredInterfaceSpecificationVersionListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetFilteredInterfaceSpecificationVersionListQuery>(
-                        GetFilteredInterfaceSpecificationVersionListDocument,
+                    client.request<GetFilteredInterfaceSpecificationVersionListQuery>({
+                        document: GetFilteredInterfaceSpecificationVersionListDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "getFilteredInterfaceSpecificationVersionList",
                 "query",
                 variables
@@ -35041,15 +36671,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getInterfaceSpecificationVersionGeneralDetails(
             variables: GetInterfaceSpecificationVersionGeneralDetailsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetInterfaceSpecificationVersionGeneralDetailsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetInterfaceSpecificationVersionGeneralDetailsQuery>(
-                        GetInterfaceSpecificationVersionGeneralDetailsDocument,
+                    client.request<GetInterfaceSpecificationVersionGeneralDetailsQuery>({
+                        document: GetInterfaceSpecificationVersionGeneralDetailsDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "getInterfaceSpecificationVersionGeneralDetails",
                 "query",
                 variables
@@ -35057,15 +36689,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         searchInterfaceSpecificationVersions(
             variables: SearchInterfaceSpecificationVersionsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<SearchInterfaceSpecificationVersionsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<SearchInterfaceSpecificationVersionsQuery>(
-                        SearchInterfaceSpecificationVersionsDocument,
+                    client.request<SearchInterfaceSpecificationVersionsQuery>({
+                        document: SearchInterfaceSpecificationVersionsDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "searchInterfaceSpecificationVersions",
                 "query",
                 variables
@@ -35073,15 +36707,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         firstInterfaceSpecificationVersions(
             variables: FirstInterfaceSpecificationVersionsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<FirstInterfaceSpecificationVersionsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<FirstInterfaceSpecificationVersionsQuery>(
-                        FirstInterfaceSpecificationVersionsDocument,
+                    client.request<FirstInterfaceSpecificationVersionsQuery>({
+                        document: FirstInterfaceSpecificationVersionsDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "firstInterfaceSpecificationVersions",
                 "query",
                 variables
@@ -35089,15 +36725,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         createInterfaceSpecificationVersion(
             variables: CreateInterfaceSpecificationVersionMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<CreateInterfaceSpecificationVersionMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<CreateInterfaceSpecificationVersionMutation>(
-                        CreateInterfaceSpecificationVersionDocument,
+                    client.request<CreateInterfaceSpecificationVersionMutation>({
+                        document: CreateInterfaceSpecificationVersionDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "createInterfaceSpecificationVersion",
                 "mutation",
                 variables
@@ -35105,15 +36743,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         updateInterfaceSpecificationVersion(
             variables: UpdateInterfaceSpecificationVersionMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<UpdateInterfaceSpecificationVersionMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<UpdateInterfaceSpecificationVersionMutation>(
-                        UpdateInterfaceSpecificationVersionDocument,
+                    client.request<UpdateInterfaceSpecificationVersionMutation>({
+                        document: UpdateInterfaceSpecificationVersionDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "updateInterfaceSpecificationVersion",
                 "mutation",
                 variables
@@ -35121,15 +36761,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         deleteInterfaceSpecificationVersion(
             variables: DeleteInterfaceSpecificationVersionMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<DeleteInterfaceSpecificationVersionMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<DeleteInterfaceSpecificationVersionMutation>(
-                        DeleteInterfaceSpecificationVersionDocument,
+                    client.request<DeleteInterfaceSpecificationVersionMutation>({
+                        document: DeleteInterfaceSpecificationVersionDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "deleteInterfaceSpecificationVersion",
                 "mutation",
                 variables
@@ -35137,13 +36779,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getIssueList(
             variables: GetIssueListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetIssueListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetIssueListQuery>(GetIssueListDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetIssueListQuery>({
+                        document: GetIssueListDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getIssueList",
                 "query",
@@ -35152,13 +36797,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getComponentIssueList(
             variables: GetComponentIssueListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetComponentIssueListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetComponentIssueListQuery>(GetComponentIssueListDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetComponentIssueListQuery>({
+                        document: GetComponentIssueListDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getComponentIssueList",
                 "query",
@@ -35167,15 +36815,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getIssueListOnAggregatedIssue(
             variables: GetIssueListOnAggregatedIssueQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetIssueListOnAggregatedIssueQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetIssueListOnAggregatedIssueQuery>(
-                        GetIssueListOnAggregatedIssueDocument,
+                    client.request<GetIssueListOnAggregatedIssueQuery>({
+                        document: GetIssueListOnAggregatedIssueDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "getIssueListOnAggregatedIssue",
                 "query",
                 variables
@@ -35183,13 +36833,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getFilteredIssueList(
             variables: GetFilteredIssueListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetFilteredIssueListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetFilteredIssueListQuery>(GetFilteredIssueListDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetFilteredIssueListQuery>({
+                        document: GetFilteredIssueListDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getFilteredIssueList",
                 "query",
@@ -35198,15 +36851,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getComponentFilteredIssueList(
             variables: GetComponentFilteredIssueListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetComponentFilteredIssueListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetComponentFilteredIssueListQuery>(
-                        GetComponentFilteredIssueListDocument,
+                    client.request<GetComponentFilteredIssueListQuery>({
+                        document: GetComponentFilteredIssueListDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "getComponentFilteredIssueList",
                 "query",
                 variables
@@ -35214,13 +36869,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getParticipatingIssueList(
             variables: GetParticipatingIssueListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetParticipatingIssueListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetParticipatingIssueListQuery>(GetParticipatingIssueListDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetParticipatingIssueListQuery>({
+                        document: GetParticipatingIssueListDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getParticipatingIssueList",
                 "query",
@@ -35229,15 +36887,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getParticipatingFilteredIssueList(
             variables: GetParticipatingFilteredIssueListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetParticipatingFilteredIssueListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetParticipatingFilteredIssueListQuery>(
-                        GetParticipatingFilteredIssueListDocument,
+                    client.request<GetParticipatingFilteredIssueListQuery>({
+                        document: GetParticipatingFilteredIssueListDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "getParticipatingFilteredIssueList",
                 "query",
                 variables
@@ -35245,13 +36905,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getIssue(
             variables: GetIssueQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetIssueQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetIssueQuery>(GetIssueDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetIssueQuery>({
+                        document: GetIssueDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getIssue",
                 "query",
@@ -35260,13 +36923,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         updateBody(
             variables: UpdateBodyMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<UpdateBodyMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<UpdateBodyMutation>(UpdateBodyDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<UpdateBodyMutation>({
+                        document: UpdateBodyDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "updateBody",
                 "mutation",
@@ -35275,13 +36941,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         updateIssueComment(
             variables: UpdateIssueCommentMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<UpdateIssueCommentMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<UpdateIssueCommentMutation>(UpdateIssueCommentDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<UpdateIssueCommentMutation>({
+                        document: UpdateIssueCommentDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "updateIssueComment",
                 "mutation",
@@ -35290,13 +36959,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         createIssueComment(
             variables: CreateIssueCommentMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<CreateIssueCommentMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<CreateIssueCommentMutation>(CreateIssueCommentDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<CreateIssueCommentMutation>({
+                        document: CreateIssueCommentDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "createIssueComment",
                 "mutation",
@@ -35305,13 +36977,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         deleteIssueComment(
             variables: DeleteIssueCommentMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<DeleteIssueCommentMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<DeleteIssueCommentMutation>(DeleteIssueCommentDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<DeleteIssueCommentMutation>({
+                        document: DeleteIssueCommentDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "deleteIssueComment",
                 "mutation",
@@ -35320,13 +36995,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         createIssue(
             variables: CreateIssueMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<CreateIssueMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<CreateIssueMutation>(CreateIssueDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<CreateIssueMutation>({
+                        document: CreateIssueDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "createIssue",
                 "mutation",
@@ -35335,13 +37013,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         changeIssueTitle(
             variables: ChangeIssueTitleMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<ChangeIssueTitleMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<ChangeIssueTitleMutation>(ChangeIssueTitleDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<ChangeIssueTitleMutation>({
+                        document: ChangeIssueTitleDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "changeIssueTitle",
                 "mutation",
@@ -35350,13 +37031,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         changeIssueTemplatedField(
             variables: ChangeIssueTemplatedFieldMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<ChangeIssueTemplatedFieldMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<ChangeIssueTemplatedFieldMutation>(ChangeIssueTemplatedFieldDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<ChangeIssueTemplatedFieldMutation>({
+                        document: ChangeIssueTemplatedFieldDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "changeIssueTemplatedField",
                 "mutation",
@@ -35365,13 +37049,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         searchIssues(
             variables: SearchIssuesQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<SearchIssuesQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<SearchIssuesQuery>(SearchIssuesDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<SearchIssuesQuery>({
+                        document: SearchIssuesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "searchIssues",
                 "query",
@@ -35380,28 +37067,142 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         firstIssues(
             variables: FirstIssuesQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<FirstIssuesQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<FirstIssuesQuery>(FirstIssuesDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<FirstIssuesQuery>({
+                        document: FirstIssuesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "firstIssues",
                 "query",
                 variables
             );
         },
+        getAssignedUsers(
+            variables: GetAssignedUsersQueryVariables,
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
+        ): Promise<GetAssignedUsersQuery> {
+            return withWrapper(
+                (wrappedRequestHeaders) =>
+                    client.request<GetAssignedUsersQuery>({
+                        document: GetAssignedUsersDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
+                "getAssignedUsers",
+                "query",
+                variables
+            );
+        },
+        getUsedIssueTemplates(
+            variables: GetUsedIssueTemplatesQueryVariables,
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
+        ): Promise<GetUsedIssueTemplatesQuery> {
+            return withWrapper(
+                (wrappedRequestHeaders) =>
+                    client.request<GetUsedIssueTemplatesQuery>({
+                        document: GetUsedIssueTemplatesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
+                "getUsedIssueTemplates",
+                "query",
+                variables
+            );
+        },
+        getUsedIssueTypes(
+            variables: GetUsedIssueTypesQueryVariables,
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
+        ): Promise<GetUsedIssueTypesQuery> {
+            return withWrapper(
+                (wrappedRequestHeaders) =>
+                    client.request<GetUsedIssueTypesQuery>({
+                        document: GetUsedIssueTypesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
+                "getUsedIssueTypes",
+                "query",
+                variables
+            );
+        },
+        getUsedIssueStates(
+            variables: GetUsedIssueStatesQueryVariables,
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
+        ): Promise<GetUsedIssueStatesQuery> {
+            return withWrapper(
+                (wrappedRequestHeaders) =>
+                    client.request<GetUsedIssueStatesQuery>({
+                        document: GetUsedIssueStatesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
+                "getUsedIssueStates",
+                "query",
+                variables
+            );
+        },
+        getUsedIssuePriorities(
+            variables: GetUsedIssuePrioritiesQueryVariables,
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
+        ): Promise<GetUsedIssuePrioritiesQuery> {
+            return withWrapper(
+                (wrappedRequestHeaders) =>
+                    client.request<GetUsedIssuePrioritiesQuery>({
+                        document: GetUsedIssuePrioritiesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
+                "getUsedIssuePriorities",
+                "query",
+                variables
+            );
+        },
+        getUsedLabels(
+            variables: GetUsedLabelsQueryVariables,
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
+        ): Promise<GetUsedLabelsQuery> {
+            return withWrapper(
+                (wrappedRequestHeaders) =>
+                    client.request<GetUsedLabelsQuery>({
+                        document: GetUsedLabelsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
+                "getUsedLabels",
+                "query",
+                variables
+            );
+        },
         searchIssuePriorities(
             variables: SearchIssuePrioritiesQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<SearchIssuePrioritiesQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<SearchIssuePrioritiesQuery>(SearchIssuePrioritiesDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<SearchIssuePrioritiesQuery>({
+                        document: SearchIssuePrioritiesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "searchIssuePriorities",
                 "query",
@@ -35410,13 +37211,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         firstIssuePriorities(
             variables: FirstIssuePrioritiesQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<FirstIssuePrioritiesQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<FirstIssuePrioritiesQuery>(FirstIssuePrioritiesDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<FirstIssuePrioritiesQuery>({
+                        document: FirstIssuePrioritiesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "firstIssuePriorities",
                 "query",
@@ -35425,13 +37229,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         changeIssuePriority(
             variables: ChangeIssuePriorityMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<ChangeIssuePriorityMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<ChangeIssuePriorityMutation>(ChangeIssuePriorityDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<ChangeIssuePriorityMutation>({
+                        document: ChangeIssuePriorityDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "changeIssuePriority",
                 "mutation",
@@ -35440,13 +37247,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         removeIssueRelation(
             variables: RemoveIssueRelationMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<RemoveIssueRelationMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<RemoveIssueRelationMutation>(RemoveIssueRelationDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<RemoveIssueRelationMutation>({
+                        document: RemoveIssueRelationDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "removeIssueRelation",
                 "mutation",
@@ -35455,13 +37265,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         createIssueRelation(
             variables: CreateIssueRelationMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<CreateIssueRelationMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<CreateIssueRelationMutation>(CreateIssueRelationDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<CreateIssueRelationMutation>({
+                        document: CreateIssueRelationDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "createIssueRelation",
                 "mutation",
@@ -35470,13 +37283,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         searchIssueRelationTypes(
             variables: SearchIssueRelationTypesQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<SearchIssueRelationTypesQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<SearchIssueRelationTypesQuery>(SearchIssueRelationTypesDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<SearchIssueRelationTypesQuery>({
+                        document: SearchIssueRelationTypesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "searchIssueRelationTypes",
                 "query",
@@ -35485,13 +37301,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         firstIssueRelationTypes(
             variables: FirstIssueRelationTypesQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<FirstIssueRelationTypesQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<FirstIssueRelationTypesQuery>(FirstIssueRelationTypesDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<FirstIssueRelationTypesQuery>({
+                        document: FirstIssueRelationTypesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "firstIssueRelationTypes",
                 "query",
@@ -35500,13 +37319,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         changeIssueRelationType(
             variables: ChangeIssueRelationTypeMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<ChangeIssueRelationTypeMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<ChangeIssueRelationTypeMutation>(ChangeIssueRelationTypeDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<ChangeIssueRelationTypeMutation>({
+                        document: ChangeIssueRelationTypeDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "changeIssueRelationType",
                 "mutation",
@@ -35515,13 +37337,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         searchIssueStates(
             variables: SearchIssueStatesQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<SearchIssueStatesQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<SearchIssueStatesQuery>(SearchIssueStatesDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<SearchIssueStatesQuery>({
+                        document: SearchIssueStatesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "searchIssueStates",
                 "query",
@@ -35530,13 +37355,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         firstIssueStates(
             variables: FirstIssueStatesQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<FirstIssueStatesQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<FirstIssueStatesQuery>(FirstIssueStatesDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<FirstIssueStatesQuery>({
+                        document: FirstIssueStatesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "firstIssueStates",
                 "query",
@@ -35545,13 +37373,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         changeIssueState(
             variables: ChangeIssueStateMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<ChangeIssueStateMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<ChangeIssueStateMutation>(ChangeIssueStateDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<ChangeIssueStateMutation>({
+                        document: ChangeIssueStateDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "changeIssueState",
                 "mutation",
@@ -35560,13 +37391,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         searchIssueTemplates(
             variables: SearchIssueTemplatesQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<SearchIssueTemplatesQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<SearchIssueTemplatesQuery>(SearchIssueTemplatesDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<SearchIssueTemplatesQuery>({
+                        document: SearchIssueTemplatesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "searchIssueTemplates",
                 "query",
@@ -35575,13 +37409,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         firstIssueTemplates(
             variables: FirstIssueTemplatesQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<FirstIssueTemplatesQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<FirstIssueTemplatesQuery>(FirstIssueTemplatesDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<FirstIssueTemplatesQuery>({
+                        document: FirstIssueTemplatesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "firstIssueTemplates",
                 "query",
@@ -35590,13 +37427,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getIssueTemplate(
             variables: GetIssueTemplateQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetIssueTemplateQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetIssueTemplateQuery>(GetIssueTemplateDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetIssueTemplateQuery>({
+                        document: GetIssueTemplateDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getIssueTemplate",
                 "query",
@@ -35605,13 +37445,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         searchIssueTypes(
             variables: SearchIssueTypesQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<SearchIssueTypesQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<SearchIssueTypesQuery>(SearchIssueTypesDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<SearchIssueTypesQuery>({
+                        document: SearchIssueTypesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "searchIssueTypes",
                 "query",
@@ -35620,13 +37463,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         firstIssueTypes(
             variables: FirstIssueTypesQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<FirstIssueTypesQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<FirstIssueTypesQuery>(FirstIssueTypesDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<FirstIssueTypesQuery>({
+                        document: FirstIssueTypesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "firstIssueTypes",
                 "query",
@@ -35635,13 +37481,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         changeIssueType(
             variables: ChangeIssueTypeMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<ChangeIssueTypeMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<ChangeIssueTypeMutation>(ChangeIssueTypeDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<ChangeIssueTypeMutation>({
+                        document: ChangeIssueTypeDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "changeIssueType",
                 "mutation",
@@ -35650,13 +37499,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getLabelList(
             variables: GetLabelListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetLabelListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetLabelListQuery>(GetLabelListDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetLabelListQuery>({
+                        document: GetLabelListDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getLabelList",
                 "query",
@@ -35665,13 +37517,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getFilteredLabelList(
             variables: GetFilteredLabelListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetFilteredLabelListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetFilteredLabelListQuery>(GetFilteredLabelListDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetFilteredLabelListQuery>({
+                        document: GetFilteredLabelListDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getFilteredLabelList",
                 "query",
@@ -35680,13 +37535,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         searchLabels(
             variables: SearchLabelsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<SearchLabelsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<SearchLabelsQuery>(SearchLabelsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<SearchLabelsQuery>({
+                        document: SearchLabelsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "searchLabels",
                 "query",
@@ -35695,13 +37553,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         firstLabels(
             variables: FirstLabelsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<FirstLabelsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<FirstLabelsQuery>(FirstLabelsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<FirstLabelsQuery>({
+                        document: FirstLabelsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "firstLabels",
                 "query",
@@ -35710,13 +37571,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         searchTrackableLabels(
             variables: SearchTrackableLabelsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<SearchTrackableLabelsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<SearchTrackableLabelsQuery>(SearchTrackableLabelsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<SearchTrackableLabelsQuery>({
+                        document: SearchTrackableLabelsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "searchTrackableLabels",
                 "query",
@@ -35725,13 +37589,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         firstTrackableLabels(
             variables: FirstTrackableLabelsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<FirstTrackableLabelsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<FirstTrackableLabelsQuery>(FirstTrackableLabelsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<FirstTrackableLabelsQuery>({
+                        document: FirstTrackableLabelsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "firstTrackableLabels",
                 "query",
@@ -35740,13 +37607,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         addLabelToIssue(
             variables: AddLabelToIssueMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<AddLabelToIssueMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<AddLabelToIssueMutation>(AddLabelToIssueDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<AddLabelToIssueMutation>({
+                        document: AddLabelToIssueDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "addLabelToIssue",
                 "mutation",
@@ -35755,13 +37625,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         removeLabelFromIssue(
             variables: RemoveLabelFromIssueMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<RemoveLabelFromIssueMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<RemoveLabelFromIssueMutation>(RemoveLabelFromIssueDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<RemoveLabelFromIssueMutation>({
+                        document: RemoveLabelFromIssueDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "removeLabelFromIssue",
                 "mutation",
@@ -35770,13 +37643,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         createLabel(
             variables: CreateLabelMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<CreateLabelMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<CreateLabelMutation>(CreateLabelDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<CreateLabelMutation>({
+                        document: CreateLabelDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "createLabel",
                 "mutation",
@@ -35785,13 +37661,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         updateLabel(
             variables: UpdateLabelMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<UpdateLabelMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<UpdateLabelMutation>(UpdateLabelDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<UpdateLabelMutation>({
+                        document: UpdateLabelDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "updateLabel",
                 "mutation",
@@ -35800,13 +37679,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         removeLabelFromTrackable(
             variables: RemoveLabelFromTrackableMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<RemoveLabelFromTrackableMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<RemoveLabelFromTrackableMutation>(RemoveLabelFromTrackableDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<RemoveLabelFromTrackableMutation>({
+                        document: RemoveLabelFromTrackableDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "removeLabelFromTrackable",
                 "mutation",
@@ -35815,13 +37697,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         addLabelToTrackable(
             variables: AddLabelToTrackableMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<AddLabelToTrackableMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<AddLabelToTrackableMutation>(AddLabelToTrackableDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<AddLabelToTrackableMutation>({
+                        document: AddLabelToTrackableDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "addLabelToTrackable",
                 "mutation",
@@ -35830,13 +37715,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getPermissionUserList(
             variables: GetPermissionUserListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetPermissionUserListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetPermissionUserListQuery>(GetPermissionUserListDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetPermissionUserListQuery>({
+                        document: GetPermissionUserListDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getPermissionUserList",
                 "query",
@@ -35845,15 +37733,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getFilteredPermissionUserList(
             variables: GetFilteredPermissionUserListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetFilteredPermissionUserListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetFilteredPermissionUserListQuery>(
-                        GetFilteredPermissionUserListDocument,
+                    client.request<GetFilteredPermissionUserListQuery>({
+                        document: GetFilteredPermissionUserListDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "getFilteredPermissionUserList",
                 "query",
                 variables
@@ -35861,13 +37751,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getProjectList(
             variables: GetProjectListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetProjectListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetProjectListQuery>(GetProjectListDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetProjectListQuery>({
+                        document: GetProjectListDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getProjectList",
                 "query",
@@ -35876,13 +37769,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getFilteredProjectList(
             variables: GetFilteredProjectListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetFilteredProjectListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetFilteredProjectListQuery>(GetFilteredProjectListDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetFilteredProjectListQuery>({
+                        document: GetFilteredProjectListDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getFilteredProjectList",
                 "query",
@@ -35891,13 +37787,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         searchProjects(
             variables: SearchProjectsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<SearchProjectsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<SearchProjectsQuery>(SearchProjectsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<SearchProjectsQuery>({
+                        document: SearchProjectsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "searchProjects",
                 "query",
@@ -35906,13 +37805,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         firstProjects(
             variables: FirstProjectsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<FirstProjectsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<FirstProjectsQuery>(FirstProjectsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<FirstProjectsQuery>({
+                        document: FirstProjectsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "firstProjects",
                 "query",
@@ -35921,13 +37823,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getProject(
             variables: GetProjectQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetProjectQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetProjectQuery>(GetProjectDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetProjectQuery>({
+                        document: GetProjectDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getProject",
                 "query",
@@ -35936,13 +37841,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getProjectGeneralDetails(
             variables: GetProjectGeneralDetailsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetProjectGeneralDetailsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetProjectGeneralDetailsQuery>(GetProjectGeneralDetailsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetProjectGeneralDetailsQuery>({
+                        document: GetProjectGeneralDetailsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getProjectGeneralDetails",
                 "query",
@@ -35951,13 +37859,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         createProject(
             variables: CreateProjectMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<CreateProjectMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<CreateProjectMutation>(CreateProjectDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<CreateProjectMutation>({
+                        document: CreateProjectDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "createProject",
                 "mutation",
@@ -35966,13 +37877,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         updateProject(
             variables: UpdateProjectMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<UpdateProjectMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<UpdateProjectMutation>(UpdateProjectDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<UpdateProjectMutation>({
+                        document: UpdateProjectDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "updateProject",
                 "mutation",
@@ -35981,13 +37895,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         deleteProject(
             variables: DeleteProjectMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<DeleteProjectMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<DeleteProjectMutation>(DeleteProjectDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<DeleteProjectMutation>({
+                        document: DeleteProjectDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "deleteProject",
                 "mutation",
@@ -35996,13 +37913,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getProjectPermissionList(
             variables: GetProjectPermissionListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetProjectPermissionListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetProjectPermissionListQuery>(GetProjectPermissionListDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetProjectPermissionListQuery>({
+                        document: GetProjectPermissionListDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getProjectPermissionList",
                 "query",
@@ -36011,15 +37931,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getFilteredProjectPermissionList(
             variables: GetFilteredProjectPermissionListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetFilteredProjectPermissionListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetFilteredProjectPermissionListQuery>(
-                        GetFilteredProjectPermissionListDocument,
+                    client.request<GetFilteredProjectPermissionListQuery>({
+                        document: GetFilteredProjectPermissionListDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "getFilteredProjectPermissionList",
                 "query",
                 variables
@@ -36027,13 +37949,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         searchProjectPermissions(
             variables: SearchProjectPermissionsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<SearchProjectPermissionsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<SearchProjectPermissionsQuery>(SearchProjectPermissionsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<SearchProjectPermissionsQuery>({
+                        document: SearchProjectPermissionsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "searchProjectPermissions",
                 "query",
@@ -36042,13 +37967,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         firstProjectPermissions(
             variables: FirstProjectPermissionsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<FirstProjectPermissionsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<FirstProjectPermissionsQuery>(FirstProjectPermissionsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<FirstProjectPermissionsQuery>({
+                        document: FirstProjectPermissionsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "firstProjectPermissions",
                 "query",
@@ -36057,15 +37985,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         addProjectPermissionToProject(
             variables: AddProjectPermissionToProjectMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<AddProjectPermissionToProjectMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<AddProjectPermissionToProjectMutation>(
-                        AddProjectPermissionToProjectDocument,
+                    client.request<AddProjectPermissionToProjectMutation>({
+                        document: AddProjectPermissionToProjectDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "addProjectPermissionToProject",
                 "mutation",
                 variables
@@ -36073,15 +38003,17 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         removeProjectPermissionFromProject(
             variables: RemoveProjectPermissionFromProjectMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<RemoveProjectPermissionFromProjectMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<RemoveProjectPermissionFromProjectMutation>(
-                        RemoveProjectPermissionFromProjectDocument,
+                    client.request<RemoveProjectPermissionFromProjectMutation>({
+                        document: RemoveProjectPermissionFromProjectDocument,
                         variables,
-                        { ...requestHeaders, ...wrappedRequestHeaders }
-                    ),
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
                 "removeProjectPermissionFromProject",
                 "mutation",
                 variables
@@ -36089,13 +38021,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         updateProjectPermission(
             variables: UpdateProjectPermissionMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<UpdateProjectPermissionMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<UpdateProjectPermissionMutation>(UpdateProjectPermissionDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<UpdateProjectPermissionMutation>({
+                        document: UpdateProjectPermissionDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "updateProjectPermission",
                 "mutation",
@@ -36104,13 +38039,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         createProjectPermission(
             variables: CreateProjectPermissionMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<CreateProjectPermissionMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<CreateProjectPermissionMutation>(CreateProjectPermissionDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<CreateProjectPermissionMutation>({
+                        document: CreateProjectPermissionDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "createProjectPermission",
                 "mutation",
@@ -36119,13 +38057,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getRelationTemplates(
             variables: GetRelationTemplatesQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetRelationTemplatesQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetRelationTemplatesQuery>(GetRelationTemplatesDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetRelationTemplatesQuery>({
+                        document: GetRelationTemplatesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getRelationTemplates",
                 "query",
@@ -36134,13 +38075,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         searchRelationTemplates(
             variables: SearchRelationTemplatesQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<SearchRelationTemplatesQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<SearchRelationTemplatesQuery>(SearchRelationTemplatesDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<SearchRelationTemplatesQuery>({
+                        document: SearchRelationTemplatesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "searchRelationTemplates",
                 "query",
@@ -36149,13 +38093,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getSyncPermissionTarget(
             variables: GetSyncPermissionTargetQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetSyncPermissionTargetQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetSyncPermissionTargetQuery>(GetSyncPermissionTargetDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetSyncPermissionTargetQuery>({
+                        document: GetSyncPermissionTargetDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getSyncPermissionTarget",
                 "query",
@@ -36164,13 +38111,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         updateSyncPermissions(
             variables: UpdateSyncPermissionsMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<UpdateSyncPermissionsMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<UpdateSyncPermissionsMutation>(UpdateSyncPermissionsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<UpdateSyncPermissionsMutation>({
+                        document: UpdateSyncPermissionsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "updateSyncPermissions",
                 "mutation",
@@ -36179,13 +38129,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         searchTrackables(
             variables: SearchTrackablesQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<SearchTrackablesQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<SearchTrackablesQuery>(SearchTrackablesDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<SearchTrackablesQuery>({
+                        document: SearchTrackablesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "searchTrackables",
                 "query",
@@ -36194,13 +38147,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         firstTrackables(
             variables: FirstTrackablesQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<FirstTrackablesQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<FirstTrackablesQuery>(FirstTrackablesDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<FirstTrackablesQuery>({
+                        document: FirstTrackablesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "firstTrackables",
                 "query",
@@ -36209,13 +38165,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         addIssueToTrackable(
             variables: AddIssueToTrackableMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<AddIssueToTrackableMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<AddIssueToTrackableMutation>(AddIssueToTrackableDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<AddIssueToTrackableMutation>({
+                        document: AddIssueToTrackableDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "addIssueToTrackable",
                 "mutation",
@@ -36224,13 +38183,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         removeIssueFromTrackable(
             variables: RemoveIssueFromTrackableMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<RemoveIssueFromTrackableMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<RemoveIssueFromTrackableMutation>(RemoveIssueFromTrackableDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<RemoveIssueFromTrackableMutation>({
+                        document: RemoveIssueFromTrackableDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "removeIssueFromTrackable",
                 "mutation",
@@ -36239,25 +38201,34 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getCurrentUser(
             variables?: GetCurrentUserQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetCurrentUserQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetCurrentUserQuery>(GetCurrentUserDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetCurrentUserQuery>({
+                        document: GetCurrentUserDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getCurrentUser",
                 "query",
                 variables
             );
         },
-        getUser(variables: GetUserQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetUserQuery> {
+        getUser(
+            variables: GetUserQueryVariables,
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
+        ): Promise<GetUserQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetUserQuery>(GetUserDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetUserQuery>({
+                        document: GetUserDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getUser",
                 "query",
@@ -36266,13 +38237,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         searchGropiusUsers(
             variables: SearchGropiusUsersQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<SearchGropiusUsersQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<SearchGropiusUsersQuery>(SearchGropiusUsersDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<SearchGropiusUsersQuery>({
+                        document: SearchGropiusUsersDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "searchGropiusUsers",
                 "query",
@@ -36281,13 +38255,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getViewList(
             variables: GetViewListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetViewListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetViewListQuery>(GetViewListDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetViewListQuery>({
+                        document: GetViewListDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getViewList",
                 "query",
@@ -36296,25 +38273,34 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         getFilteredViewList(
             variables: GetFilteredViewListQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<GetFilteredViewListQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetFilteredViewListQuery>(GetFilteredViewListDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetFilteredViewListQuery>({
+                        document: GetFilteredViewListDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getFilteredViewList",
                 "query",
                 variables
             );
         },
-        getView(variables: GetViewQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetViewQuery> {
+        getView(
+            variables: GetViewQueryVariables,
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
+        ): Promise<GetViewQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<GetViewQuery>(GetViewDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<GetViewQuery>({
+                        document: GetViewDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "getView",
                 "query",
@@ -36323,13 +38309,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         searchViews(
             variables: SearchViewsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<SearchViewsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<SearchViewsQuery>(SearchViewsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<SearchViewsQuery>({
+                        document: SearchViewsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "searchViews",
                 "query",
@@ -36338,13 +38327,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         firstViews(
             variables: FirstViewsQueryVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<FirstViewsQuery> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<FirstViewsQuery>(FirstViewsDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<FirstViewsQuery>({
+                        document: FirstViewsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "firstViews",
                 "query",
@@ -36353,13 +38345,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         createView(
             variables: CreateViewMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<CreateViewMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<CreateViewMutation>(CreateViewDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<CreateViewMutation>({
+                        document: CreateViewDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "createView",
                 "mutation",
@@ -36368,13 +38363,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         updateView(
             variables: UpdateViewMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<UpdateViewMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<UpdateViewMutation>(UpdateViewDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<UpdateViewMutation>({
+                        document: UpdateViewDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "updateView",
                 "mutation",
@@ -36383,13 +38381,16 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
         },
         deleteView(
             variables: DeleteViewMutationVariables,
-            requestHeaders?: GraphQLClientRequestHeaders
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
         ): Promise<DeleteViewMutation> {
             return withWrapper(
                 (wrappedRequestHeaders) =>
-                    client.request<DeleteViewMutation>(DeleteViewDocument, variables, {
-                        ...requestHeaders,
-                        ...wrappedRequestHeaders
+                    client.request<DeleteViewMutation>({
+                        document: DeleteViewDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
                     }),
                 "deleteView",
                 "mutation",
