@@ -358,7 +358,7 @@ const routes: RouteRecordRaw[] = [
     {
         path: "/login",
         name: "login",
-        component: () => import("../views/RouterOnly.vue"),
+        component: () => import("../views/auth/Login.vue"),
         beforeEnter: onLoginEnter
     }
 ];
