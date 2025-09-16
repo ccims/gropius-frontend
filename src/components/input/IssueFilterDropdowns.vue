@@ -134,10 +134,10 @@ const templateIds = useFilterOption("template");
 const templateInput = computed(() => {
     return templateIds.value.length > 0 ? { id: { in: templateIds.value } } : undefined;
 });
-const templateFetch = async (search: string) =>
+const templateFetch = async (search: string) => props.trackableId ?
     client
-        .getUsedIssueTemplates({ trackable: props.trackableId!, filter: search })
-        .then((res) => (res.node as NodeReturnType<"getUsedIssueTemplates", "Component">).usedIssueTemplates.nodes);
+        .getUsedIssueTemplates({ trackable: props.trackableId, filter: search })
+        .then((res) => (res.node as NodeReturnType<"getUsedIssueTemplates", "Component">).usedIssueTemplates.nodes) : [];
 
 const labelIds = useFilterOption("label");
 const labelInput = computed(() => {
@@ -252,7 +252,7 @@ watch(() => props.onlyAssigned, (newVal) => {
     } else {
         assignedToIds.value = [];
     }
-})
+}, { immediate: true });
 
 const dependencyArray = computed(() => {
     return [templateInput, labelInput, priorityInput, typeInput, assignedToInput, stateInput];
