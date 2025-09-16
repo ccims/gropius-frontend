@@ -13,10 +13,10 @@
             :item-manager="itemManager"
             :mapper="(item) => item.labels.nodes"
             :additional-initial-values="
-                async () =>
+                async () => trackableId ?
                     client
                         .firstTrackableLabels({ trackable: trackableId, count: 100 })
-                        .then((res) => (res.node as NodeReturnType<'firstTrackableLabels', 'Component'>).labels.nodes)
+                        .then((res) => (res.node as NodeReturnType<'firstTrackableLabels', 'Component'>).labels.nodes) : []
             "
             :fetch-on-search="labelFetch"
         >
@@ -113,7 +113,7 @@ const props = defineProps({
     },
     trackableId: {
         type: String,
-        required: true
+        required: false
     },
     stateIndices: {
         type: Array as PropType<number[]>,
@@ -123,6 +123,7 @@ const props = defineProps({
 
 const client = useClient();
 const store = useAppStore();
+const userId = computed(() => store.user?.id);
 
 const templateIds = useFilterOption("template");
 const templateInput = computed(() => {
@@ -130,35 +131,35 @@ const templateInput = computed(() => {
 });
 const templateFetch = async (search: string) =>
     client
-        .getUsedIssueTemplates({ trackable: props.trackableId, filter: search })
+        .getUsedIssueTemplates({ trackable: props.trackableId!, filter: search })
         .then((res) => (res.node as NodeReturnType<"getUsedIssueTemplates", "Component">).usedIssueTemplates.nodes);
 
 const labelIds = useFilterOption("label");
 const labelInput = computed(() => {
     return labelIds.value.length > 0 ? { any: { id: { in: labelIds.value } } } : undefined;
 });
-const labelFetch = async (search: string) =>
+const labelFetch = async (search: string) => props.trackableId ?
     client
         .getUsedLabels({ trackable: props.trackableId, filter: search })
-        .then((res) => (res.node as NodeReturnType<"getUsedLabels", "Component">).usedLabels.nodes);
+        .then((res) => (res.node as NodeReturnType<"getUsedLabels", "Component">).usedLabels.nodes) : [];
 
 const priorityIds = useFilterOption("priority");
 const priorityInput = computed(() => {
     return priorityIds.value.length > 0 ? { id: { in: priorityIds.value } } : undefined;
 });
-const priorityFetch = async (search: string) =>
+const priorityFetch = async (search: string) => props.trackableId ?
     client
         .getUsedIssuePriorities({ trackable: props.trackableId, filter: search })
-        .then((res) => (res.node as NodeReturnType<"getUsedIssuePriorities", "Component">).usedIssuePriorities.nodes);
+        .then((res) => (res.node as NodeReturnType<"getUsedIssuePriorities", "Component">).usedIssuePriorities.nodes) : [];
 
 const typeIds = useFilterOption("type");
 const typeInput = computed(() => {
     return typeIds.value.length > 0 ? { id: { in: typeIds.value } } : undefined;
 });
-const typeFetch = async (search: string) =>
+const typeFetch = async (search: string) => props.trackableId ?
     client
         .getUsedIssueTypes({ trackable: props.trackableId, filter: search })
-        .then((res) => (res.node as NodeReturnType<"getUsedIssueTypes", "Component">).usedIssueTypes.nodes);
+        .then((res) => (res.node as NodeReturnType<"getUsedIssueTypes", "Component">).usedIssueTypes.nodes) : [];
 
 const assignedToIds = useFilterOption("assignedTo");
 const assignedToInput = computed(() => {
@@ -175,8 +176,8 @@ const assignedToInput = computed(() => {
         : undefined;
 });
 const assignedToSorter = (a: IdObject & { name: string }, b: IdObject & { name: string }) => {
-    const isAssignedToMeA = store.user?.id == a.id;
-    const isAssignedToMeB = store.user?.id == b.id;
+    const isAssignedToMeA = userId.value == a.id;
+    const isAssignedToMeB = userId.value == b.id;
     if (isAssignedToMeA && !isAssignedToMeB) {
         return -1;
     }
@@ -187,24 +188,24 @@ const assignedToSorter = (a: IdObject & { name: string }, b: IdObject & { name: 
 };
 const assignedToMapper = (item: T) =>
     item.assignments.nodes.map((node) => {
-        const name = node.user.id == store.user?.id ? "Me" : node.user.displayName;
+        const name = node.user.id == userId.value ? "Me" : node.user.displayName;
         return {
             ...node.user,
             displayName: name,
             name
         };
     });
-const assignedToFetch = async (search: string) =>
+const assignedToFetch = async (search: string) => props.trackableId ?
     client.getAssignedUsers({ trackable: props.trackableId, filter: search }).then((res) =>
         (res.node as NodeReturnType<"getAssignedUsers", "Component">).assignedUsers.nodes.map((node) => {
-            const name = node.id == store.user?.id ? "Me" : node.displayName;
+            const name = node.id == userId.value ? "Me" : node.displayName;
             return {
                 ...node,
                 displayName: name,
                 name
             };
         })
-    );
+    ) : [];
 
 const stateIds = useFilterOption("concretestate");
 const stateInput = computed(() => {
@@ -219,10 +220,10 @@ const stateInput = computed(() => {
         id: customStateSelected ? { in: stateIds.value } : undefined
     };
 });
-const stateFetch = async (search: string) =>
+const stateFetch = async (search: string) => props.trackableId ?
     client
         .getUsedIssueStates({ trackable: props.trackableId, filter: search })
-        .then((res) => (res.node as NodeReturnType<"getUsedIssueStates", "Component">).usedIssueStates.nodes);
+        .then((res) => (res.node as NodeReturnType<"getUsedIssueStates", "Component">).usedIssueStates.nodes) : [];
 const stateFilter = (item: { isOpen: boolean }) => {
     if (props.stateIndices.length == 2) {
         return true;
