@@ -118,6 +118,11 @@ const props = defineProps({
     stateIndices: {
         type: Array as PropType<number[]>,
         required: true
+    },
+    onlyAssigned: {
+        type: Boolean,
+        required: false,
+        default: false
     }
 });
 
@@ -240,6 +245,14 @@ watch(
         stateIds.value = [];
     }
 );
+watch(() => props.onlyAssigned, (newVal) => {
+    const user = userId.value
+    if  (newVal && user) {
+        assignedToIds.value = [user];
+    } else {
+        assignedToIds.value = [];
+    }
+})
 
 const dependencyArray = computed(() => {
     return [templateInput, labelInput, priorityInput, typeInput, assignedToInput, stateInput];
