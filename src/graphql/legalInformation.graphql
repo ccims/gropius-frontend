@@ -17,6 +17,7 @@ fragment DefaultLegalInformationInfo on LegalInformation {
     id
     label
     priority
+    text
 }
 
 mutation createLegalInformation($input: CreateLegalInformationInput!) {

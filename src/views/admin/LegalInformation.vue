@@ -8,15 +8,9 @@
         query-param-prefix=""
     >
         <template #item="{ item }">
-            <ListItem
-                :title="item.label"
-                :subtitle="`Priority: ${item.priority}`"
-            >
+            <ListItem :title="item.label" :subtitle="`Priority: ${item.priority}`">
                 <template #append>
-                    <IconButton
-                        @click="legalInformationToUpdate = item"
-                        class="mr-2"
-                    >
+                    <IconButton @click="legalInformationToUpdate = item" class="mr-2">
                         <v-icon icon="mdi-pencil" />
                         <v-tooltip activator="parent" location="bottom">Edit legal information</v-tooltip>
                     </IconButton>
@@ -33,29 +27,30 @@
                 </template>
             </ListItem>
         </template>
-        <!-- TODO: Add dialogs when they are created -->
-        <!-- <CreateLegalInformationDialog @created-legal-information="refreshList" /> -->
-        <!-- <UpdateLegalInformationDialog -->
-        <!--     v-model="legalInformationToUpdate" -->
-        <!--     @updated-legal-information="refreshList" -->
-        <!-- /> -->
+        <CreateLegalInformationDialog @created-legal-information="modifiedLegalInformation.push($event.id)" />
+        <UpdateLegalInformationDialog
+            v-model="legalInformationToUpdate"
+            @updated-legal-information="modifiedLegalInformation.push($event.id)"
+        />
     </PaginatedList>
 </template>
 <script lang="ts" setup>
 import ListItem from "@/components/ListItem.vue";
 import PaginatedList from "@/components/PaginatedList.vue";
 import ConfirmationDialog from "@/components/dialog/ConfirmationDialog.vue";
+import CreateLegalInformationDialog from "@/components/dialog/CreateLegalInformationDialog.vue";
+import UpdateLegalInformationDialog from "@/components/dialog/UpdateLegalInformationDialog.vue";
 import { useClient } from "@/graphql/client";
-import { LegalInformationOrder, LegalInformationOrderField } from "@/graphql/generated";
+import {
+    LegalInformationOrder,
+    LegalInformationOrderField,
+    DefaultLegalInformationInfoFragment
+} from "@/graphql/generated";
 import { ItemManager } from "@/util/itemManager";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import { ref } from "vue";
 
-type LegalInformation = {
-    id: string;
-    label: string;
-    priority: number;
-};
+type LegalInformation = DefaultLegalInformationInfoFragment;
 
 const client = useClient();
 
@@ -80,13 +75,13 @@ class LegalInformationItemManager extends ItemManager<LegalInformation, LegalInf
                 skip: page * count
             });
             const legalInformation = res.legalInformation;
-            return [legalInformation.nodes, legalInformation.totalCount];
+            return [legalInformation.nodes as LegalInformation[], legalInformation.totalCount];
         } else {
             const res = await client.getFilteredLegalInformationList({
                 query: filter,
                 count
             });
-            return [res.searchLegalInformation, res.searchLegalInformation.length];
+            return [res.searchLegalInformation as LegalInformation[], res.searchLegalInformation.length];
         }
     }
 }
