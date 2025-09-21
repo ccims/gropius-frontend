@@ -2,11 +2,12 @@ import { defineStore } from "pinia";
 import axios from "axios";
 import { useLocalStorage } from "@vueuse/core";
 import { jwtDecode } from "jwt-decode";
-import { pushErrorMessage } from "@/util/withErrorMessage";
+import { pushErrorMessage, withErrorMessage } from "@/util/withErrorMessage";
 import { ClientReturnType, useClient } from "@/graphql/client";
 import { Mutex } from "async-mutex";
 import { shallowRef } from "vue";
 import { TokenScope } from "@/util/oauth";
+import { BaseLegalInformationInfoFragment } from "@/graphql/generated";
 
 export interface GlobalUserPermissions {
     canCreateProjects: boolean;
@@ -25,7 +26,8 @@ export const useAppStore = defineStore("app", {
         accessTokenValidUntil: useLocalStorage<number>("accessTokenValidUntil", 0),
         codeVerifier: useLocalStorage<string>("codeVerifier", ""),
         errors: [] as string[],
-        visibleTimelineItems: useLocalStorage<number[]>("visibleTimelineItems", [0, 1] as number[])
+        visibleTimelineItems: useLocalStorage<number[]>("visibleTimelineItems", [0, 1] as number[]),
+        legalInformation: undefined as undefined | BaseLegalInformationInfoFragment[]
     }),
     getters: {
         tokenValidityDuration(): number {
@@ -128,6 +130,18 @@ export const useAppStore = defineStore("app", {
                 return audience as TokenScope[];
             } catch {
                 return [];
+            }
+        },
+        async updateLegalInformation(): Promise<void> {
+            const client = useClient();
+            const res = await withErrorMessage(async () => {
+                return await client.legalInformation();
+            }, "Error fetching legal information");
+            this.legalInformation = res.legalInformation.nodes;
+        },
+        async validateLegalInformation(): Promise<void> {
+            if (this.legalInformation === undefined) {
+                await this.updateLegalInformation();
             }
         },
         pushError(error: string) {

@@ -28018,6 +28018,105 @@ export type AddLabelToTrackableMutation = {
     addLabelToTrackable: { __typename: "AddLabelToTrackablePayload" };
 };
 
+export type GetLegalInformationQueryVariables = Exact<{
+    id: Scalars["ID"]["input"];
+}>;
+
+export type GetLegalInformationQuery = {
+    __typename?: "Query";
+    node?:
+        | { __typename?: "AddedAffectedEntityEvent" }
+        | { __typename?: "AddedArtefactEvent" }
+        | { __typename?: "AddedLabelEvent" }
+        | { __typename?: "AddedToPinnedIssuesEvent" }
+        | { __typename?: "AddedToTrackableEvent" }
+        | { __typename?: "AggregatedIssue" }
+        | { __typename?: "AggregatedIssueRelation" }
+        | { __typename?: "Artefact" }
+        | { __typename?: "ArtefactTemplate" }
+        | { __typename?: "Assignment" }
+        | { __typename?: "AssignmentType" }
+        | { __typename?: "AssignmentTypeChangedEvent" }
+        | { __typename?: "Body" }
+        | { __typename?: "Component" }
+        | { __typename?: "ComponentPermission" }
+        | { __typename?: "ComponentTemplate" }
+        | { __typename?: "ComponentVersion" }
+        | { __typename?: "ComponentVersionTemplate" }
+        | { __typename?: "FillStyle" }
+        | { __typename?: "GlobalPermission" }
+        | { __typename?: "GropiusUser" }
+        | { __typename?: "IMS" }
+        | { __typename?: "IMSIssue" }
+        | { __typename?: "IMSIssueTemplate" }
+        | { __typename?: "IMSPermission" }
+        | { __typename?: "IMSProject" }
+        | { __typename?: "IMSProjectTemplate" }
+        | { __typename?: "IMSTemplate" }
+        | { __typename?: "IMSUser" }
+        | { __typename?: "IMSUserTemplate" }
+        | { __typename?: "IncomingRelationTypeChangedEvent" }
+        | { __typename?: "Interface" }
+        | { __typename?: "InterfaceDefinition" }
+        | { __typename?: "InterfacePart" }
+        | { __typename?: "InterfacePartTemplate" }
+        | { __typename?: "InterfaceSpecification" }
+        | { __typename?: "InterfaceSpecificationDerivationCondition" }
+        | { __typename?: "InterfaceSpecificationTemplate" }
+        | { __typename?: "InterfaceSpecificationVersion" }
+        | { __typename?: "InterfaceSpecificationVersionTemplate" }
+        | { __typename?: "IntraComponentDependencyParticipant" }
+        | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
+        | { __typename?: "Issue" }
+        | { __typename?: "IssueComment" }
+        | { __typename?: "IssuePriority" }
+        | { __typename?: "IssueRelation" }
+        | { __typename?: "IssueRelationType" }
+        | { __typename?: "IssueState" }
+        | { __typename?: "IssueTemplate" }
+        | { __typename?: "IssueType" }
+        | { __typename?: "Label" }
+        | { __typename?: "LegalInformation"; text: string; id: string; label: string; priority: number }
+        | { __typename?: "OutgoingRelationTypeChangedEvent" }
+        | { __typename?: "PriorityChangedEvent" }
+        | { __typename?: "Project" }
+        | { __typename?: "ProjectPermission" }
+        | { __typename?: "RelatedByIssueEvent" }
+        | { __typename?: "Relation" }
+        | { __typename?: "RelationCondition" }
+        | { __typename?: "RelationLayout" }
+        | { __typename?: "RelationPartnerLayout" }
+        | { __typename?: "RelationTemplate" }
+        | { __typename?: "RemovedAffectedEntityEvent" }
+        | { __typename?: "RemovedArtefactEvent" }
+        | { __typename?: "RemovedAssignmentEvent" }
+        | { __typename?: "RemovedFromPinnedIssuesEvent" }
+        | { __typename?: "RemovedFromTrackableEvent" }
+        | { __typename?: "RemovedIncomingRelationEvent" }
+        | { __typename?: "RemovedLabelEvent" }
+        | { __typename?: "RemovedOutgoingRelationEvent" }
+        | { __typename?: "RemovedTemplatedFieldEvent" }
+        | { __typename?: "StateChangedEvent" }
+        | { __typename?: "StrokeStyle" }
+        | { __typename?: "TemplateChangedEvent" }
+        | { __typename?: "TemplatedFieldChangedEvent" }
+        | { __typename?: "TitleChangedEvent" }
+        | { __typename?: "TypeChangedEvent" }
+        | { __typename?: "View" }
+        | null;
+};
+
+export type LegalInformationQueryVariables = Exact<{ [key: string]: never }>;
+
+export type LegalInformationQuery = {
+    __typename?: "Query";
+    legalInformation: {
+        __typename?: "LegalInformationConnection";
+        nodes: Array<{ __typename?: "LegalInformation"; id: string; label: string; priority: number }>;
+    };
+};
+
 export type GetLegalInformationListQueryVariables = Exact<{
     orderBy?: InputMaybe<Array<LegalInformationOrder> | LegalInformationOrder>;
     count: Scalars["Int"]["input"];
@@ -28029,7 +28128,7 @@ export type GetLegalInformationListQuery = {
     legalInformation: {
         __typename?: "LegalInformationConnection";
         totalCount: number;
-        nodes: Array<{ __typename?: "LegalInformation"; id: string; label: string; priority: number; text: string }>;
+        nodes: Array<{ __typename?: "LegalInformation"; text: string; id: string; label: string; priority: number }>;
     };
 };
 
@@ -28042,19 +28141,26 @@ export type GetFilteredLegalInformationListQuery = {
     __typename?: "Query";
     searchLegalInformation: Array<{
         __typename?: "LegalInformation";
+        text: string;
         id: string;
         label: string;
         priority: number;
-        text: string;
     }>;
 };
 
-export type DefaultLegalInformationInfoFragment = {
+export type BaseLegalInformationInfoFragment = {
     __typename?: "LegalInformation";
     id: string;
     label: string;
     priority: number;
+};
+
+export type DefaultLegalInformationInfoFragment = {
+    __typename?: "LegalInformation";
     text: string;
+    id: string;
+    label: string;
+    priority: number;
 };
 
 export type CreateLegalInformationMutationVariables = Exact<{
@@ -28067,10 +28173,10 @@ export type CreateLegalInformationMutation = {
         __typename?: "CreateLegalInformationPayload";
         legalInformation: {
             __typename?: "LegalInformation";
+            text: string;
             id: string;
             label: string;
             priority: number;
-            text: string;
         };
     };
 };
@@ -28085,10 +28191,10 @@ export type UpdateLegalInformationMutation = {
         __typename?: "UpdateLegalInformationPayload";
         legalInformation: {
             __typename?: "LegalInformation";
+            text: string;
             id: string;
             label: string;
             priority: number;
-            text: string;
         };
     };
 };
@@ -32034,13 +32140,19 @@ export const DefaultIssueTemplateInfoFragmentDoc = gql`
         }
     }
 `;
-export const DefaultLegalInformationInfoFragmentDoc = gql`
-    fragment DefaultLegalInformationInfo on LegalInformation {
+export const BaseLegalInformationInfoFragmentDoc = gql`
+    fragment BaseLegalInformationInfo on LegalInformation {
         id
         label
         priority
+    }
+`;
+export const DefaultLegalInformationInfoFragmentDoc = gql`
+    fragment DefaultLegalInformationInfo on LegalInformation {
+        ...BaseLegalInformationInfo
         text
     }
+    ${BaseLegalInformationInfoFragmentDoc}
 `;
 export const DefaultProjectPermissionInfoFragmentDoc = gql`
     fragment DefaultProjectPermissionInfo on ProjectPermission {
@@ -34764,6 +34876,26 @@ export const AddLabelToTrackableDocument = gql`
             __typename
         }
     }
+`;
+export const GetLegalInformationDocument = gql`
+    query getLegalInformation($id: ID!) {
+        node(id: $id) {
+            ... on LegalInformation {
+                ...DefaultLegalInformationInfo
+            }
+        }
+    }
+    ${DefaultLegalInformationInfoFragmentDoc}
+`;
+export const LegalInformationDocument = gql`
+    query legalInformation {
+        legalInformation(orderBy: [{ field: PRIORITY, direction: ASC }]) {
+            nodes {
+                ...BaseLegalInformationInfo
+            }
+        }
+    }
+    ${BaseLegalInformationInfoFragmentDoc}
 `;
 export const GetLegalInformationListDocument = gql`
     query getLegalInformationList($orderBy: [LegalInformationOrder!], $count: Int!, $skip: Int!) {
@@ -38048,6 +38180,42 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
                     }),
                 "addLabelToTrackable",
                 "mutation",
+                variables
+            );
+        },
+        getLegalInformation(
+            variables: GetLegalInformationQueryVariables,
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
+        ): Promise<GetLegalInformationQuery> {
+            return withWrapper(
+                (wrappedRequestHeaders) =>
+                    client.request<GetLegalInformationQuery>({
+                        document: GetLegalInformationDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
+                "getLegalInformation",
+                "query",
+                variables
+            );
+        },
+        legalInformation(
+            variables?: LegalInformationQueryVariables,
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
+        ): Promise<LegalInformationQuery> {
+            return withWrapper(
+                (wrappedRequestHeaders) =>
+                    client.request<LegalInformationQuery>({
+                        document: LegalInformationDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
+                "legalInformation",
+                "query",
                 variables
             );
         },

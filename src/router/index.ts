@@ -365,6 +365,11 @@ const routes: RouteRecordRaw[] = [
         name: "login",
         component: () => import("../views/RouterOnly.vue"),
         beforeEnter: onLoginEnter
+    },
+    {
+        path: "/legal-information/:legalInformation",
+        name: "legal-information",
+        component: () => import("../views/LegalInformation.vue")
     }
 ];
 

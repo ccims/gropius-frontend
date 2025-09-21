@@ -1,3 +1,19 @@
+query getLegalInformation($id: ID!) {
+    node(id: $id) {
+        ...on LegalInformation {
+            ...DefaultLegalInformationInfo
+        }
+    }
+}
+
+query legalInformation {
+    legalInformation(orderBy: [{ field: PRIORITY, direction: ASC }]) {
+        nodes {
+            ...BaseLegalInformationInfo
+        }
+    }
+}
+
 query getLegalInformationList($orderBy: [LegalInformationOrder!], $count: Int!, $skip: Int!) {
     legalInformation(orderBy: $orderBy, first: $count, skip: $skip) {
         nodes {
@@ -13,10 +29,14 @@ query getFilteredLegalInformationList($query: String!, $count: Int!) {
     }
 }
 
-fragment DefaultLegalInformationInfo on LegalInformation {
+fragment BaseLegalInformationInfo on LegalInformation {
     id
     label
     priority
+}
+
+fragment DefaultLegalInformationInfo on LegalInformation {
+    ...BaseLegalInformationInfo
     text
 }
 

@@ -64,6 +64,7 @@ export async function onAnyEnter(
     if (to.name == "login") {
         return true;
     }
+    useAppStore().validateLegalInformation();
     return await authorizeIfRequired(to);
 }
 

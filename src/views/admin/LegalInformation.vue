@@ -46,13 +46,15 @@ import {
     LegalInformationOrderField,
     DefaultLegalInformationInfoFragment
 } from "@/graphql/generated";
+import { useAppStore } from "@/store/app";
 import { ItemManager } from "@/util/itemManager";
 import { withErrorMessage } from "@/util/withErrorMessage";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 type LegalInformation = DefaultLegalInformationInfoFragment;
 
 const client = useClient();
+const store = useAppStore();
 
 const legalInformationToUpdate = ref<LegalInformation | undefined>();
 const modifiedLegalInformation = ref<string[]>([]);
@@ -95,4 +97,14 @@ async function deleteLegalInformation(legalInformationId: string) {
     }, "Error deleting legal information");
     modifiedLegalInformation.value.push(legalInformationId);
 }
+
+watch(
+    modifiedLegalInformation,
+    () => {
+        store.updateLegalInformation();
+    },
+    {
+        deep: true
+    }
+);
 </script>
