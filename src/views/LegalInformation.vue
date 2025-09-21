@@ -27,7 +27,6 @@ const legalInformationId = computed(() => route.params.legalInformation as strin
 const legalInformation = computedAsync(async () => {
     return await withErrorMessage(async () => {
         const res = await client.getLegalInformation({ id: legalInformationId.value });
-        console.log(res);
         return res.node as NodeReturnType<"getLegalInformation", "LegalInformation">;
     }, "Error fetching legal information");
 });
