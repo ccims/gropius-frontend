@@ -54,6 +54,11 @@ const routes: RouteRecordRaw[] = [
                         component: () => import("../views/admin/AuthClients.vue")
                     },
                     {
+                        path: "legal-information",
+                        name: "admin-legal-information",
+                        component: () => import("../views/admin/LegalInformation.vue")
+                    },
+                    {
                         path: "graphiql",
                         name: "admin-graphiql",
                         component: () => import("../views/admin/GraphiQL.vue")

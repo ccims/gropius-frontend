@@ -1,0 +1,42 @@
+query getLegalInformationList($orderBy: [LegalInformationOrder!], $count: Int!, $skip: Int!) {
+    legalInformation(orderBy: $orderBy, first: $count, skip: $skip) {
+        nodes {
+            ...DefaultLegalInformationInfo
+        }
+        totalCount
+    }
+}
+
+query getFilteredLegalInformationList($query: String!, $count: Int!) {
+    searchLegalInformation(query: $query, first: $count) {
+        ...DefaultLegalInformationInfo
+    }
+}
+
+fragment DefaultLegalInformationInfo on LegalInformation {
+    id
+    label
+    priority
+}
+
+mutation createLegalInformation($input: CreateLegalInformationInput!) {
+    createLegalInformation(input: $input) {
+        legalInformation {
+            ...DefaultLegalInformationInfo
+        }
+    }
+}
+
+mutation updateLegalInformation($input: UpdateLegalInformationInput!) {
+    updateLegalInformation(input: $input) {
+        legalInformation {
+            ...DefaultLegalInformationInfo
+        }
+    }
+}
+
+mutation deleteLegalInformation($id: ID!) {
+    deleteLegalInformation(input: { id: $id }) {
+        __typename
+    }
+}
