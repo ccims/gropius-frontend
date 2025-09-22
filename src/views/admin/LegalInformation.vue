@@ -56,7 +56,7 @@ type LegalInformation = DefaultLegalInformationInfoFragment;
 const client = useClient();
 const store = useAppStore();
 
-const legalInformationToUpdate = ref<LegalInformation | undefined>();
+const legalInformationToUpdate = ref<LegalInformation>();
 const modifiedLegalInformation = ref<string[]>([]);
 
 const sortFields = {

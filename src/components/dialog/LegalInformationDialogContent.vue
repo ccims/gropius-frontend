@@ -17,15 +17,8 @@
                         class="wrap-input mx-2 mb-1 flex-1-1-0"
                     />
                 </div>
-                <SimpleField
-                    v-model="text"
-                    v-bind="textProps"
-                    variant="outlined"
-                    label="Text"
-                    color="primary"
-                    class="markdown-field"
-                >
-                    <Markdown v-model="text" v-bind="textProps" edit-mode editable class="w-100 ma-2 markdown" />
+                <SimpleField v-model="text" v-bind="textProps" label="Text" class="markdown-field">
+                    <Markdown v-model="text" edit-mode editable class="w-100 ma-2 markdown" />
                 </SimpleField>
             </div>
             <v-card-actions>

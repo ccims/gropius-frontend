@@ -15,7 +15,7 @@
 <script lang="ts" setup>
 import { onEvent } from "@/util/eventBus";
 import { useClient } from "@/graphql/client";
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
 import LegalInformationDialogContent, { LegalInformation } from "./LegalInformationDialogContent.vue";
 import { DefaultLegalInformationInfoFragment } from "@/graphql/generated";
@@ -28,41 +28,11 @@ const emit = defineEmits<{
     (event: "created-legal-information", legalInformation: DefaultLegalInformationInfoFragment): void;
 }>();
 
-const props = defineProps({
-    initialLabel: {
-        type: String,
-        required: false
-    },
-    initialPriority: {
-        type: Number,
-        required: false,
-        default: 0
-    }
-});
-
 const initialValue = ref({
     label: "",
     priority: 0,
     text: ""
 });
-
-watch(
-    () => props.initialLabel,
-    (newValue) => {
-        if (newValue != undefined) {
-            initialValue.value.label = newValue;
-        }
-    }
-);
-
-watch(
-    () => props.initialPriority,
-    (newValue) => {
-        if (newValue != undefined) {
-            initialValue.value.priority = newValue;
-        }
-    }
-);
 
 onEvent("create-legal-information", () => {
     createLegalInformationDialog.value = true;

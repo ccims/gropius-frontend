@@ -3,7 +3,7 @@ import "vuetify/styles";
 import { createVuetify } from "vuetify";
 import { md3 } from "vuetify/blueprints";
 import { generateThemeColors } from "./theme";
-import { VBtn, VContainer, VListItemTitle } from "vuetify/lib/components/index.mjs";
+import { VBtn, VContainer, VListItemTitle } from "vuetify/components";
 import { aliases, mdi } from "vuetify/iconsets/mdi";
 import { gropiusIcons } from "./gropiusIcons";
 
@@ -38,6 +38,11 @@ export default createVuetify({
     },
     defaults: {
         VTextField: {
+            variant: "outlined",
+            density: "comfortable",
+            color: "primary"
+        },
+        VNumberInput: {
             variant: "outlined",
             density: "comfortable",
             color: "primary"
