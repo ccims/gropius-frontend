@@ -47,14 +47,7 @@
                         @selected-item="onSelectedState"
                     />
                 </div>
-                <SimpleField
-                    v-model="body"
-                    v-bind="bodyProps"
-                    variant="outlined"
-                    label="Body"
-                    color="primary"
-                    class="markdown-field"
-                >
+                <SimpleField v-model="body" v-bind="bodyProps" label="Body" class="markdown-field">
                     <Markdown v-model="body" v-bind="bodyProps" edit-mode editable class="w-100 ma-2 markdown" />
                 </SimpleField>
             </template>
