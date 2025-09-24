@@ -34,6 +34,38 @@ const routes: RouteRecordRaw[] = [
                 component: () => import("../views/home/IMSs.vue")
             },
             {
+                path: "templates",
+                name: "templates",
+                component: () => import("../views/RouterOnly.vue"),
+                children: [
+                    {
+                        path: "",
+                        name: "templates-issue",
+                        component: () => import("../views/home/Templates.vue"),
+                    },
+                    {
+                        path: "component",
+                        name: "templates-component",
+                        component: () => import("../views/home/Templates.vue"),
+                    },
+                    {
+                        path: "artefact",
+                        name: "templates-artefact",
+                        component: () => import("../views/home/Templates.vue"),
+                    },
+                    {
+                        path: "interface-specification",
+                        name: "templates-interface-specification",
+                        component: () => import("../views/home/Templates.vue"),
+                    },
+                    {
+                        path: "relation",
+                        name: "templates-relation",
+                        component: () => import("../views/home/Templates.vue"),
+                    }
+                ]
+            },
+            {
                 path: "admin",
                 name: "admin",
                 component: () => import("../views/RouterOnly.vue"),
