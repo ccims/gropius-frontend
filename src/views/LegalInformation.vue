@@ -5,7 +5,7 @@
                 :model-value="legalInformation?.text ?? 'Loading...'"
                 :edit-mode="false"
                 :editable="false"
-                class="pa-8"
+                class="pa-8 h-100 overflow-y-auto"
             />
         </template>
     </BaseLayout>
