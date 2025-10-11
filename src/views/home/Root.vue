@@ -31,7 +31,7 @@ const tabs = computed(() => {
         { name: "Components", path: "/components" },
         { name: "Projects", path: "/projects" },
         { name: "IMSs", path: "/imss" },
-        { name: "Templates", path: "/templates"}
+        { name: "Templates", path: "/templates" }
     ];
     if (store.user?.isAdmin) {
         tabs.push({ name: "Admin", path: "/admin" });
@@ -135,10 +135,9 @@ const rightSidebarItems = computed(() => {
 });
 
 const leftSidebarItems = computed(() => {
-
     if (route.name?.toString().startsWith("templates")) {
         return [
-        [
+            [
                 {
                     icon: "$issue",
                     name: "Issue",
@@ -171,7 +170,6 @@ const leftSidebarItems = computed(() => {
                 }
             ]
         ];
-
     }
 
     if (route.name?.toString().startsWith("admin")) {

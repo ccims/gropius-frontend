@@ -41,27 +41,27 @@ const routes: RouteRecordRaw[] = [
                     {
                         path: "",
                         name: "templates-issue",
-                        component: () => import("../views/home/Templates.vue"),
+                        component: () => import("../views/home/Templates.vue")
                     },
                     {
                         path: "component",
                         name: "templates-component",
-                        component: () => import("../views/home/Templates.vue"),
+                        component: () => import("../views/home/Templates.vue")
                     },
                     {
                         path: "artefact",
                         name: "templates-artefact",
-                        component: () => import("../views/home/Templates.vue"),
+                        component: () => import("../views/home/Templates.vue")
                     },
                     {
                         path: "interface-specification",
                         name: "templates-interface-specification",
-                        component: () => import("../views/home/Templates.vue"),
+                        component: () => import("../views/home/Templates.vue")
                     },
                     {
                         path: "relation",
                         name: "templates-relation",
-                        component: () => import("../views/home/Templates.vue"),
+                        component: () => import("../views/home/Templates.vue")
                     }
                 ]
             },

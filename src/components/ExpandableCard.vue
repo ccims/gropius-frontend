@@ -1,109 +1,97 @@
 <template>
-  <v-card variant="outlined" class="my-4">
-    <!-- Collapsed View -->
-    <div
-      v-if="!isExpanded"
-      class="d-flex align-center justify-space-between"
-    >
-      <!-- Preview before title, spacing/overflow must be handled by importer -->
-      <slot name="preview1" />
+    <v-card variant="outlined" class="my-4">
+        <div v-if="!isExpanded" class="d-flex align-center justify-space-between">
+            <!-- Preview before title, spacing/overflow must be handled by importer -->
+            <slot name="preview1" />
 
-      <div class="d-flex align-center flex-grow-1 overflow-hidden">
-        <div class="text-h6 font-weight-medium ma-2 text-truncate">
-          {{ props.name }}
+            <div class="d-flex align-center flex-grow-1 overflow-hidden">
+                <div class="text-h6 font-weight-medium ma-2 text-truncate">
+                    {{ props.name }}
+                </div>
+            </div>
+
+            <!-- Preview after title, spacing/overflow must be handled by importer -->
+            <slot name="preview2" />
+
+            <div class="d-flex align-center flex-shrink-0 ms-2">
+                <IconButton @click="emit('expand')">
+                    <v-icon>mdi-pencil</v-icon>
+                </IconButton>
+                <IconButton color="error" class="me-1" @click="emit('delete')">
+                    <v-icon>mdi-delete</v-icon>
+                </IconButton>
+            </div>
         </div>
-      </div>
 
-      <!-- Preview after title, spacing/overflow must be handled by importer -->
-      <slot name="preview2" />
+        <div v-else class="mt-2">
+            <v-text-field
+                class="mx-2 mb-2"
+                label="Name"
+                v-model="localName"
+                density="compact"
+                :error="!!props.nameErrorMessage"
+                :error-messages="props.nameErrorMessage"
+            />
+            <v-textarea
+                class="mx-2"
+                label="Description"
+                v-model="localDescription"
+                auto-grow
+                rows="1"
+                max-rows="2"
+                density="compact"
+            />
 
-      <div class="d-flex align-center flex-shrink-0 ms-2">
-        <IconButton @click="emit('expand')">
-          <v-icon>mdi-pencil</v-icon>
-        </IconButton>
-        <IconButton color="error" class="me-1" @click="emit('delete')">
-          <v-icon>mdi-delete</v-icon>
-        </IconButton>
-      </div>
-    </div>
+            <slot name="extra" />
 
-
-    <!-- Expanded View -->
-    <div v-else class="mt-2">
-      <v-text-field
-        class="mx-2 mb-2"
-        label="Name"
-        v-model="localName"
-        density="compact"
-        :error="!!props.nameErrorMessage"
-        :error-messages="props.nameErrorMessage"
-      />
-      <v-textarea
-        class="mx-2"
-        label="Description"
-        v-model="localDescription"
-        auto-grow
-        rows="1"
-        max-rows="2"
-        density="compact"
-      />
-
-      <!-- Add extra content within the expanded view -->
-      <slot name="extra" />
-
-      <div class="d-flex justify-end" style="gap: 3px;">
-        <v-btn class="mb-2" @click="emit('cancel')">Cancel</v-btn>
-        <v-btn
-          class="me-2"
-          @click="emit('confirm', { name: localName, description: localDescription })"
-        >
-          Confirm
-        </v-btn>
-      </div>
-    </div>
-  </v-card>
+            <div class="d-flex justify-end" style="gap: 3px">
+                <v-btn class="mb-2" @click="emit('cancel')">Cancel</v-btn>
+                <v-btn class="me-2" @click="emit('confirm', { name: localName, description: localDescription })">
+                    Confirm
+                </v-btn>
+            </div>
+        </div>
+    </v-card>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 
-//ExpandedKey has a type to avoid accidentally expanding multiple cards with the same name at once.
+//type exists to avoid expanding multiple cards with the same name at once.
 type ExpandedKey = {
-  nameID: string;
-  type: string;
+    nameID: string;
+    type: string;
 } | null;
 
 const props = defineProps<{
-  name: string;
-  description: string;
-  expandedCardKey: ExpandedKey;
-  type: string;
-  nameErrorMessage?: string;
+    name: string;
+    description: string;
+    expandedCardKey: ExpandedKey;
+    type: string;
+    nameErrorMessage?: string;
 }>();
 
 const emit = defineEmits<{
-  (e: "expand"): void;
-  (e: "cancel"): void;
-  (e: "confirm", payload: { name: string; description: string }): void;
-  (e: "delete"): void;
+    (e: "expand"): void;
+    (e: "cancel"): void;
+    (e: "confirm", payload: { name: string; description: string }): void;
+    (e: "delete"): void;
 }>();
 
-const isExpanded = computed(() => 
-  props.expandedCardKey?.type === props.type &&
-  props.expandedCardKey?.nameID === props.name
+const isExpanded = computed(
+    () => props.expandedCardKey?.type === props.type && props.expandedCardKey?.nameID === props.name
 );
 
 const localName = ref(props.name);
 const localDescription = ref(props.description);
 
 watch(
-  () => props.expandedCardKey,
-  () => {
-    // reset fields when expanded
-    if (isExpanded.value) {
-      localName.value = props.name;
-      localDescription.value = props.description;
+    () => props.expandedCardKey,
+    () => {
+        if (isExpanded.value) {
+            localName.value = props.name;
+            localDescription.value = props.description;
+        }
     }
-  }
 );
 </script>

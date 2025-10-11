@@ -20,7 +20,6 @@
                 </template>
             </ListItem>
         </template>
-        <!-- muss definitiv noch überabeitet werden und an die template Typen angepasst werde. das ne theo sesh -->
         <CreateIssueTemplateDialog @created-template="(template: IdObject) => selectTemplate(template)" />
     </PaginatedList>
 </template>
