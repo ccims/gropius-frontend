@@ -108,16 +108,21 @@
                                                 >
                                                 </v-text-field>
                                                 <div class="icon-container mx-n2">
-                                                    <IconButton
+                                                    <v-lazy
                                                         v-for="icon in filteredIcons"
                                                         :key="icon.name"
-                                                        color=""
-                                                        class="icon-wrapper"
-                                                        :class="{ selected: selectedIcon?.name === icon.name }"
-                                                        @click="selectIcon(icon)"
+                                                        min-height="48"
+                                                        transition="fade-transition"
                                                     >
-                                                        <SvgWrapper :path="icon.iconPath" />
-                                                    </IconButton>
+                                                        <IconButton
+                                                            color=""
+                                                            class="icon-wrapper"
+                                                            :class="{ selected: selectedIcon?.name === icon.name }"
+                                                            @click="selectIcon(icon)"
+                                                        >
+                                                            <SvgWrapper :path="icon.iconPath" />
+                                                        </IconButton>
+                                                    </v-lazy>
                                                 </div>
                                             </v-window-item>
 
