@@ -31,7 +31,7 @@ const tabs = computed(() => {
         { name: "Components", path: "/components" },
         { name: "Projects", path: "/projects" },
         { name: "IMSs", path: "/imss" },
-        { name: "Templates", path: "/templates" }
+        { name: "Templates", path: "/templates/issue" }
     ];
     if (store.user?.isAdmin) {
         tabs.push({ name: "Admin", path: "/admin" });

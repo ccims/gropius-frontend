@@ -1,9 +1,9 @@
 <template>
     <PaginatedList
-        name="components"
+        name="issueTemplates"
         :item-manager="itemManager"
         :sort-fields="sortFields"
-        :to="(component: Component) => componentRoute(component)"
+        :to="(template: IssueTemplate) => templateRoute(template)"
         query-param-prefix=""
     >
         <template #item="{ item }">
@@ -14,74 +14,69 @@
             >
                 <template #append>
                     <div class="text-medium-emphasis issue-container">
-                        <v-icon icon="mdi-alert-circle-outline" />
-                        {{ item.openIssues.totalCount }}
+                        <v-icon icon="mdi-file-outline" />
+                        {{ item.templateFieldSpecifications.length }} fields
                     </div>
                 </template>
             </ListItem>
         </template>
+
         <CreateIssueTemplateDialog @created-template="(template: IdObject) => selectTemplate(template)" />
     </PaginatedList>
 </template>
+
 <script lang="ts" setup>
 import PaginatedList, { ItemManager } from "@/components/PaginatedList.vue";
 import { ClientReturnType, useClient } from "@/graphql/client";
-import { ComponentOrder, ComponentOrderField } from "@/graphql/generated";
 import { RouteLocationRaw, useRouter } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
 import CreateIssueTemplateDialog from "@/components/dialog/CreateIssueTemplateDialog.vue";
 import { IdObject } from "@/util/types";
 
-type Component = ClientReturnType<"getComponentList">["components"]["nodes"][0];
+type IssueTemplate = ClientReturnType<"firstIssueTemplates">["issueTemplates"]["nodes"][0];
 
 const client = useClient();
 const router = useRouter();
 
 const sortFields = {
-    Name: ComponentOrderField.Name,
-    Template: [ComponentOrderField.TemplateName, ComponentOrderField.TemplateId],
-    "[Default]": ComponentOrderField.Id
+    Name: "NAME",
+    "[Default]": "ID"
 };
 
-const itemManager: ItemManager<Component, ComponentOrderField> = {
-    fetchItems: async function (
+const itemManager: ItemManager<IssueTemplate, string> = {
+    async fetchItems(
         filter: string,
-        orderBy: ComponentOrder[],
+        _orderBy: any[],
         count: number,
-        page: number
-    ): Promise<[Component[], number]> {
-        if (filter == undefined) {
-            const res = await client.getComponentList({
-                orderBy,
-                count,
-                skip: page * count
-            });
-            return [res.components.nodes, res.components.totalCount];
+        _page: number
+    ): Promise<[IssueTemplate[], number]> {
+        if (!filter) {
+            const res = await client.firstIssueTemplates({ count });
+            return [res.issueTemplates.nodes, res.issueTemplates.nodes.length];
         } else {
-            const res = await client.getFilteredComponentList({
-                query: filter,
-                count
-            });
-            return [res.searchComponents, res.searchComponents.length];
+            const res = await client.searchIssueTemplates({ query: filter, count });
+            return [res.searchIssueTemplates, res.searchIssueTemplates.length];
         }
     }
 };
 
-function selectComponent(component: IdObject) {
-    router.push(componentRoute(component));
+function selectTemplate(template: IdObject) {
+    router.push(templateRoute(template));
 }
 
-function componentRoute(component: IdObject): RouteLocationRaw {
+function templateRoute(template: IdObject): RouteLocationRaw {
     return {
-        name: "component",
+        name: "templates-issue",
         params: {
-            trackable: component.id
+            trackable: template.id
         }
     };
 }
 </script>
+
 <style scoped lang="scss">
 @use "@/styles/settings";
+
 .issue-container {
     min-width: settings.$icon-with-number-width;
 }

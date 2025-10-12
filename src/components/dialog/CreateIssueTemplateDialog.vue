@@ -12,7 +12,14 @@
             >
                 <template v-slot:item.1>
                     <v-form v-model="formGeneralValid" validate-on="blur">
-                        <v-text-field v-model="templateName" v-bind="templateNameProps" label="Name" class="mb-2" />
+                        <v-text-field
+                            v-model="templateName"
+                            v-bind="templateNameProps"
+                            label="Name"
+                            class="mb-2"
+                            :messages="templateAlreadyExists ? ['⚠️ A template with this name already exists'] : []"
+                            :class="{ 'text-warning': templateAlreadyExists }"
+                        />
                         <v-textarea
                             v-model="templateDescription"
                             v-bind="templateDescriptionProps"
@@ -470,10 +477,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useForm, defineField } from "vee-validate";
 import * as yup from "yup";
 import { fieldConfig } from "@/util/vuetifyFormConfig";
+import { useClient } from "@/graphql/client";
 import { onEvent } from "@/util/eventBus";
 import { computed } from "vue";
 import ConfirmationDialog from "./ConfirmationDialog.vue";
@@ -499,6 +507,33 @@ const formAssignmentTypeValid = ref(true);
 const formRelationTypeValid = ref(true);
 const formVersionTemplatesValid = ref(true);
 const formTemplateFieldsValid = ref(true);
+
+const schema = yup.object({
+    templateName: yup.string().required("Name is required"),
+    templateDescription: yup.string().optional(),
+    repositoryURL: yup.string().optional()
+});
+
+const { defineField, resetForm, handleSubmit, meta, validate } = useForm({
+    validationSchema: schema
+});
+
+const [templateName, templateNameProps] = defineField("templateName", fieldConfig);
+const [templateDescription, templateDescriptionProps] = defineField("templateDescription", fieldConfig);
+const [repositoryURL, repositoryURLProps] = defineField("repositoryURL", fieldConfig);
+
+const client = useClient();
+
+const templateAlreadyExists = ref<boolean>(false);
+watch(templateName, async (newName) => {
+    if (!newName) {
+        templateAlreadyExists.value = false;
+        return;
+    }
+
+    const res = await client.searchIssueTemplates({ query: newName, count: 1 });
+    templateAlreadyExists.value = res.searchIssueTemplates.some((t) => t.name === newName);
+});
 
 const expandedCardKey = ref<{
     nameID: string;
@@ -789,20 +824,6 @@ function cancelCreateCard() {
     deleteAssignmentTypeByName("");
     deleteRelationTypeByName("");
 }
-
-const schema = yup.object({
-    templateName: yup.string().required("Name is required"),
-    templateDescription: yup.string().optional(),
-    repositoryURL: yup.string().optional()
-});
-
-const { defineField, resetForm, handleSubmit, meta, validate } = useForm({
-    validationSchema: schema
-});
-
-const [templateName, templateNameProps] = defineField("templateName", fieldConfig);
-const [templateDescription, templateDescriptionProps] = defineField("templateDescription", fieldConfig);
-const [repositoryURL, repositoryURLProps] = defineField("repositoryURL", fieldConfig);
 
 onEvent("create-issue-template", () => {
     resetForm();
