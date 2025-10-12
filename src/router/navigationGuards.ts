@@ -28,10 +28,10 @@ export async function onLoginEnter(
             );
             await store.setNewTokenPair(tokenResponse.access_token, tokenResponse.refresh_token);
 
-            const next = store.redirectTo;
+            const redirectTo = store.redirectTo;
             store.redirectTo = "";
             return {
-                ...router.resolve(next),
+                ...router.resolve(redirectTo),
                 replace: true
             };
         } catch (err) {
@@ -59,7 +59,7 @@ export async function onAnyEnter(
 async function authorizeIfRequired(to: RouteLocationNormalized) {
     const store = useAppStore();
     if (!(await store.isLoggedIn())) {
-        window.location.href = await buildOAuthUrl([TokenScope.LOGIN_SERVICE, TokenScope.BACKEND]);
+        window.location.href = await buildOAuthUrl([TokenScope.LOGIN_SERVICE, TokenScope.BACKEND], to.fullPath);
         true;
     } else {
         await store.validateUser();

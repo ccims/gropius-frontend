@@ -18,11 +18,12 @@ function base64URLEncode(str: string): string {
     return btoa(str).replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
 }
 
-export async function buildOAuthUrl(scope: TokenScope[], redirectTo?: string): Promise<string> {
+export async function buildOAuthUrl(scope: TokenScope[], redirectTo: string): Promise<string> {
     const codeVerifierArray = new Uint8Array(32);
     crypto.getRandomValues(codeVerifierArray);
     const codeVerifier = base64URLEncode(String.fromCharCode.apply(null, Array.from(codeVerifierArray)));
     useAppStore().codeVerifier = codeVerifier;
+    useAppStore().redirectTo = redirectTo;
     const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(codeVerifier));
     const codeChallenge = base64URLEncode(String.fromCharCode.apply(null, Array.from(new Uint8Array(hash))));
     return (
@@ -32,7 +33,7 @@ export async function buildOAuthUrl(scope: TokenScope[], redirectTo?: string): P
             response_type: "code",
             scope: scope.join(" "),
             redirect_uri: window.location.origin + "/login",
-            state: JSON.stringify({ from: redirectTo, register: scope.includes(TokenScope.LOGIN_SERVICE_REGISTER) }),
+            state: JSON.stringify({ }),
             code_challenge_method: "S256",
             code_challenge: codeChallenge
         }).toString()
