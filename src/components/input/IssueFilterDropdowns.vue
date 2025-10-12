@@ -117,7 +117,7 @@ const props = defineProps({
     },
     stateIndices: {
         type: Array as PropType<number[]>,
-        required: true
+        required: false
     },
     onlyAssigned: {
         type: Boolean,
@@ -214,12 +214,13 @@ const assignedToFetch = async (search: string) => props.trackableId ?
 
 const stateIds = useFilterOption("concretestate");
 const stateInput = computed(() => {
-    const isSingleIssueState = props.stateIndices.length == 1;
+    const stateIndices = props.stateIndices ?? [0, 1]
+    const isSingleIssueState = stateIndices.length == 1;
     const customStateSelected = !!stateIds.value.length;
     if (!isSingleIssueState && !customStateSelected) {
         return undefined;
     }
-    const state = props.stateIndices[0] == 0;
+    const state = stateIndices[0] == 0;
     return {
         isOpen: isSingleIssueState ? { eq: state } : undefined,
         id: customStateSelected ? { in: stateIds.value } : undefined
@@ -230,7 +231,7 @@ const stateFetch = async (search: string) => props.trackableId ?
         .getUsedIssueStates({ trackable: props.trackableId, filter: search })
         .then((res) => (res.node as NodeReturnType<"getUsedIssueStates", "Component">).usedIssueStates.nodes) : [];
 const stateFilter = (item: { isOpen: boolean }) => {
-    if (props.stateIndices.length == 2) {
+    if (!props.stateIndices || props.stateIndices.length == 2) {
         return true;
     }
     return item.isOpen == (props.stateIndices[0] == 0);
@@ -239,6 +240,9 @@ const stateFilter = (item: { isOpen: boolean }) => {
 watch(
     () => props.stateIndices,
     (newVal, oldVal) => {
+        if(!newVal || !oldVal) {
+            return;
+        }
         if (newVal.length == oldVal.length && newVal[0] === oldVal[0]) {
             return;
         }
@@ -258,6 +262,13 @@ const dependencyArray = computed(() => {
     return [templateInput, labelInput, priorityInput, typeInput, assignedToInput, stateInput];
 });
 
+function setSingleFilters({type}: {type?: string}) {
+    console.log("Setting single filters", type)
+    if(type !== undefined){
+        typeIds.value = [type];
+    }
+}
+
 defineExpose({
     templateInput,
     labelInput,
@@ -265,7 +276,8 @@ defineExpose({
     typeInput,
     assignedToInput,
     stateInput,
-    dependencyArray
+    dependencyArray,
+    setSingleFilters
 });
 </script>
 
