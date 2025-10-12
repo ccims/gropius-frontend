@@ -1,5 +1,5 @@
 import { useAppStore } from "@/store/app";
-import { OAuthRespose } from "@/util/oauth";
+import { buildOAuthUrl, OAuthRespose, TokenScope } from "@/util/oauth";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import axios from "axios";
 import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
@@ -59,10 +59,8 @@ export async function onAnyEnter(
 async function authorizeIfRequired(to: RouteLocationNormalized) {
     const store = useAppStore();
     if (!(await store.isLoggedIn())) {
-        store.redirectTo = to.fullPath;
-        return {
-            name: "login"
-        };
+        window.location.href = await buildOAuthUrl([TokenScope.LOGIN_SERVICE, TokenScope.BACKEND]);
+        true;
     } else {
         await store.validateUser();
     }

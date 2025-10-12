@@ -26,6 +26,7 @@ import { ClientReturnType } from "@/graphql/client";
 import { useAppStore } from "@/store/app";
 import { PropType } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import axios from "axios";
 
 defineProps({
     user: {
@@ -39,6 +40,12 @@ const route = useRoute();
 const router = useRouter();
 
 async function logout() {
+    const csrf = (await axios.get<{ csrf: string }>(`/auth/api/internal/auth/csrf`)).data.csrf
+    await axios.post(`/auth/api/internal/auth/logout/current`, {}, {
+        headers: {
+            "x-csrf-token": csrf
+        }
+    });
     await store.logout();
     await router.push({
         name: "home",
