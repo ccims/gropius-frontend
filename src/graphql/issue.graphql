@@ -277,7 +277,11 @@ fragment IssueListItemInfo on Issue {
         name
         iconPath
     }
-
+    affects {
+        nodes {
+            id
+        }
+    }
 }
 
 fragment ParticipatingIssueListItemInfo on Issue {

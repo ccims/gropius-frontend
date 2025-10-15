@@ -4361,6 +4361,22 @@ export type CreateLabelPayload = {
     label: Label;
 };
 
+/** Input for the createLegalInformation mutation */
+export type CreateLegalInformationInput = {
+    /** Initial label of the LegalInformation */
+    label: Scalars["String"]["input"];
+    /** Initial priority of the LegalInformation */
+    priority: Scalars["Int"]["input"];
+    /** Initial text of the LegalInformation */
+    text: Scalars["String"]["input"];
+};
+
+export type CreateLegalInformationPayload = {
+    __typename?: "CreateLegalInformationPayload";
+    /** The created LegalInformation */
+    legalInformation: LegalInformation;
+};
+
 /** Input for the createProject mutation */
 export type CreateProjectInput = {
     /** The description of the NamedNode */
@@ -10439,6 +10455,69 @@ export enum LabelOrderField {
     Name = "NAME"
 }
 
+/** Legal Information to be accessible to users */
+export type LegalInformation = Node & {
+    __typename?: "LegalInformation";
+    /** The unique id of this node */
+    id: Scalars["ID"]["output"];
+    /** The label shown to user in the bottom right corner */
+    label: Scalars["String"]["output"];
+    /** The priority of this information, higher priority items are shown further left. */
+    priority: Scalars["Int"]["output"];
+    /** The markdown text shown to the user when accessing the information */
+    text: Scalars["String"]["output"];
+};
+
+/** The connection type for LegalInformation. */
+export type LegalInformationConnection = {
+    __typename?: "LegalInformationConnection";
+    /** A list of all edges of the current page. */
+    edges: Array<LegalInformationEdge>;
+    /** A list of all nodes of the current page. */
+    nodes: Array<LegalInformation>;
+    /** Information to aid in pagination. */
+    pageInfo: PageInfo;
+    /** Identifies the total count of items in the connection. */
+    totalCount: Scalars["Int"]["output"];
+};
+
+/** An edge in a connection. */
+export type LegalInformationEdge = {
+    __typename?: "LegalInformationEdge";
+    /** A cursor used in pagination. */
+    cursor: Scalars["String"]["output"];
+    /** The item at the end of the edge. */
+    node: LegalInformation;
+};
+
+/** Filter used to filter LegalInformation */
+export type LegalInformationFilterInput = {
+    /** Connects all subformulas via and */
+    and?: InputMaybe<Array<LegalInformationFilterInput>>;
+    /** Filter by id */
+    id?: InputMaybe<IdFilterInput>;
+    /** Negates the subformula */
+    not?: InputMaybe<LegalInformationFilterInput>;
+    /** Connects all subformulas via or */
+    or?: InputMaybe<Array<LegalInformationFilterInput>>;
+};
+
+/** Defines the order of a LegalInformation list */
+export type LegalInformationOrder = {
+    /** The direction to order by, defaults to ASC */
+    direction?: InputMaybe<OrderDirection>;
+    /** The field to order by, defaults to ID */
+    field?: InputMaybe<LegalInformationOrderField>;
+};
+
+/** Fields a list of LegalInformation can be sorted by */
+export enum LegalInformationOrderField {
+    /** Order by id */
+    Id = "ID",
+    /** Order by priority */
+    Priority = "PRIORITY"
+}
+
 /** Type of a Relation marker */
 export enum MarkerType {
     /** A regular arrow */
@@ -10699,6 +10778,8 @@ export type Mutation = {
      *
      */
     createLabel: CreateLabelPayload;
+    /** Creates a new LegalInformation, requires admin */
+    createLegalInformation: CreateLegalInformationPayload;
     /**
      * Creates a new Project, requires CAN_CREATE_PROJECTS.
      *         Automatically generates a default ProjectPermission which grants the authorized user READ and ADMIN
@@ -10792,6 +10873,8 @@ export type Mutation = {
      *
      */
     deleteLabel: DeleteNodePayload;
+    /** Deletes the specified LegalInformation, requires admin */
+    deleteLegalInformation: DeleteNodePayload;
     /** Deletes the specified Project, requires ADMIN on the project to delete */
     deleteProject: DeleteNodePayload;
     /**
@@ -10952,6 +11035,8 @@ export type Mutation = {
     updateIssueComment: UpdateIssueCommentPayload;
     /** Updates the specified Label, requires MANAGE_LABELS on any Trackable the Label is on */
     updateLabel: UpdateLabelPayload;
+    /** Updates the specified LegalInformation, requires admin */
+    updateLegalInformation: UpdateLegalInformationPayload;
     /** Updates the specified Project, requires ADMIN on the project to update */
     updateProject: UpdateProjectPayload;
     /**
@@ -11130,6 +11215,10 @@ export type MutationCreateLabelArgs = {
     input: CreateLabelInput;
 };
 
+export type MutationCreateLegalInformationArgs = {
+    input: CreateLegalInformationInput;
+};
+
 export type MutationCreateProjectArgs = {
     input: CreateProjectInput;
 };
@@ -11207,6 +11296,10 @@ export type MutationDeleteIssueCommentArgs = {
 };
 
 export type MutationDeleteLabelArgs = {
+    input: DeleteNodeInput;
+};
+
+export type MutationDeleteLegalInformationArgs = {
     input: DeleteNodeInput;
 };
 
@@ -11328,6 +11421,10 @@ export type MutationUpdateIssueCommentArgs = {
 
 export type MutationUpdateLabelArgs = {
     input: UpdateLabelInput;
+};
+
+export type MutationUpdateLegalInformationArgs = {
+    input: UpdateLegalInformationInput;
 };
 
 export type MutationUpdateProjectArgs = {
@@ -12700,6 +12797,8 @@ export type Query = {
     interfaceSpecificationTemplates: InterfaceSpecificationTemplateConnection;
     /** Query for nodes of type IssueTemplate */
     issueTemplates: IssueTemplateConnection;
+    /** Query for nodes of type LegalInformation */
+    legalInformation: LegalInformationConnection;
     /** Get a Node by id */
     node?: Maybe<Node>;
     /** Query for nodes of type Project */
@@ -12752,6 +12851,8 @@ export type Query = {
     searchIssues: Array<Issue>;
     /** Search for nodes of type Label */
     searchLabels: Array<Label>;
+    /** Search for nodes of type LegalInformation */
+    searchLegalInformation: Array<LegalInformation>;
     /** Search for nodes of type ProjectPermission */
     searchProjectPermissions: Array<ProjectPermission>;
     /** Search for nodes of type Project */
@@ -12849,6 +12950,16 @@ export type QueryIssueTemplatesArgs = {
     first?: InputMaybe<Scalars["Int"]["input"]>;
     last?: InputMaybe<Scalars["Int"]["input"]>;
     orderBy?: InputMaybe<Array<IssueTemplateOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type QueryLegalInformationArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<LegalInformationFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<LegalInformationOrder>>;
     skip?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
@@ -13032,6 +13143,13 @@ export type QuerySearchIssuesArgs = {
 
 export type QuerySearchLabelsArgs = {
     filter?: InputMaybe<LabelFilterInput>;
+    first: Scalars["Int"]["input"];
+    query: Scalars["String"]["input"];
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
+};
+
+export type QuerySearchLegalInformationArgs = {
+    filter?: InputMaybe<LegalInformationFilterInput>;
     first: Scalars["Int"]["input"];
     query: Scalars["String"]["input"];
     skip?: InputMaybe<Scalars["Int"]["input"]>;
@@ -16808,6 +16926,24 @@ export type UpdateLabelPayload = {
     label: Label;
 };
 
+/** Input for the updateLegalInformation mutation */
+export type UpdateLegalInformationInput = {
+    /** The id of the node to update */
+    id: Scalars["ID"]["input"];
+    /** The new label of the LegalInformation */
+    label?: InputMaybe<Scalars["String"]["input"]>;
+    /** The new priority of the LegalInformation */
+    priority?: InputMaybe<Scalars["Int"]["input"]>;
+    /** The new text of the LegalInformation */
+    text?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpdateLegalInformationPayload = {
+    __typename?: "UpdateLegalInformationPayload";
+    /** The updated LegalInformation */
+    legalInformation: LegalInformation;
+};
+
 /** Input for the updateProject mutation */
 export type UpdateProjectInput = {
     /** Ids of permissions to add, must be disjoint with removedPermissions. */
@@ -17703,6 +17839,7 @@ export type FirstAssignmentTypesQuery = {
           }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -17838,6 +17975,7 @@ export type GetNamedNodeQuery = {
         | { __typename?: "IssueTemplate"; name: string; id: string }
         | { __typename?: "IssueType"; name: string; id: string }
         | { __typename?: "Label"; name: string; id: string }
+        | { __typename?: "LegalInformation"; id: string }
         | { __typename?: "OutgoingRelationTypeChangedEvent"; id: string }
         | { __typename?: "PriorityChangedEvent"; id: string }
         | { __typename?: "Project"; name: string; id: string }
@@ -17926,6 +18064,7 @@ export type GetVersionedNodeQuery = {
         | { __typename?: "IssueTemplate"; id: string }
         | { __typename?: "IssueType"; id: string }
         | { __typename?: "Label"; id: string }
+        | { __typename?: "LegalInformation"; id: string }
         | { __typename?: "OutgoingRelationTypeChangedEvent"; id: string }
         | { __typename?: "PriorityChangedEvent"; id: string }
         | { __typename?: "Project"; id: string }
@@ -18062,6 +18201,7 @@ export type GetComponentQuery = {
         | { __typename?: "IssueTemplate"; id: string }
         | { __typename?: "IssueType"; id: string }
         | { __typename?: "Label"; id: string }
+        | { __typename?: "LegalInformation"; id: string }
         | { __typename?: "OutgoingRelationTypeChangedEvent"; id: string }
         | { __typename?: "PriorityChangedEvent"; id: string }
         | { __typename?: "Project"; id: string }
@@ -18187,6 +18327,18 @@ export type GetComponentDetailsQuery = {
                       } | null;
                       template: { __typename?: "IssueTemplate"; id: string; name: string; description: string };
                       type: { __typename?: "IssueType"; id: string; name: string; iconPath: string };
+                      affects: {
+                          __typename?: "AffectedByIssueConnection";
+                          nodes: Array<
+                              | { __typename?: "Component"; id: string }
+                              | { __typename?: "ComponentVersion"; id: string }
+                              | { __typename?: "Interface"; id: string }
+                              | { __typename?: "InterfacePart"; id: string }
+                              | { __typename?: "InterfaceSpecification"; id: string }
+                              | { __typename?: "InterfaceSpecificationVersion"; id: string }
+                              | { __typename?: "Project"; id: string }
+                          >;
+                      };
                       incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                       outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                   }>;
@@ -18262,6 +18414,18 @@ export type GetComponentDetailsQuery = {
                       } | null;
                       template: { __typename?: "IssueTemplate"; id: string; name: string; description: string };
                       type: { __typename?: "IssueType"; id: string; name: string; iconPath: string };
+                      affects: {
+                          __typename?: "AffectedByIssueConnection";
+                          nodes: Array<
+                              | { __typename?: "Component"; id: string }
+                              | { __typename?: "ComponentVersion"; id: string }
+                              | { __typename?: "Interface"; id: string }
+                              | { __typename?: "InterfacePart"; id: string }
+                              | { __typename?: "InterfaceSpecification"; id: string }
+                              | { __typename?: "InterfaceSpecificationVersion"; id: string }
+                              | { __typename?: "Project"; id: string }
+                          >;
+                      };
                       incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                       outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                   }>;
@@ -18305,6 +18469,7 @@ export type GetComponentDetailsQuery = {
         | { __typename?: "IssueTemplate"; id: string }
         | { __typename?: "IssueType"; id: string }
         | { __typename?: "Label"; id: string }
+        | { __typename?: "LegalInformation"; id: string }
         | { __typename?: "OutgoingRelationTypeChangedEvent"; id: string }
         | { __typename?: "PriorityChangedEvent"; id: string }
         | { __typename?: "Project"; id: string }
@@ -18393,6 +18558,7 @@ export type GetComponentTemplateDetailsQuery = {
         | { __typename?: "IssueTemplate"; id: string }
         | { __typename?: "IssueType"; id: string }
         | { __typename?: "Label"; id: string }
+        | { __typename?: "LegalInformation"; id: string }
         | { __typename?: "OutgoingRelationTypeChangedEvent"; id: string }
         | { __typename?: "PriorityChangedEvent"; id: string }
         | { __typename?: "Project"; id: string }
@@ -18493,6 +18659,7 @@ export type GetComponentGeneralDetailsQuery = {
         | { __typename?: "IssueTemplate"; id: string }
         | { __typename?: "IssueType"; id: string }
         | { __typename?: "Label"; id: string }
+        | { __typename?: "LegalInformation"; id: string }
         | { __typename?: "OutgoingRelationTypeChangedEvent"; id: string }
         | { __typename?: "PriorityChangedEvent"; id: string }
         | { __typename?: "Project"; id: string }
@@ -18657,6 +18824,7 @@ export type GetComponentPermissionListQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -18808,6 +18976,7 @@ export type FirstComponentPermissionsQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -19000,6 +19169,7 @@ export type GetComponentTemplateQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -19104,6 +19274,7 @@ export type GetComponentVersionTemplateQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -19192,6 +19363,7 @@ export type GetProjectComponentTemplatesQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | {
@@ -19305,6 +19477,7 @@ export type FirstComponentVersionsQuery = {
         | { __typename?: "IssueTemplate"; id: string }
         | { __typename?: "IssueType"; id: string }
         | { __typename?: "Label"; id: string }
+        | { __typename?: "LegalInformation"; id: string }
         | { __typename?: "OutgoingRelationTypeChangedEvent"; id: string }
         | { __typename?: "PriorityChangedEvent"; id: string }
         | { __typename?: "Project"; id: string }
@@ -19409,6 +19582,7 @@ export type GetComponentVersionListQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -19547,6 +19721,7 @@ export type GetComponentVersionGeneralDetailsQuery = {
         | { __typename?: "IssueTemplate"; id: string }
         | { __typename?: "IssueType"; id: string }
         | { __typename?: "Label"; id: string }
+        | { __typename?: "LegalInformation"; id: string }
         | { __typename?: "OutgoingRelationTypeChangedEvent"; id: string }
         | { __typename?: "PriorityChangedEvent"; id: string }
         | { __typename?: "Project"; id: string }
@@ -19749,6 +19924,7 @@ export type GetProjectGraphQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | {
@@ -20549,6 +20725,7 @@ export type GetImsQuery = {
         | { __typename?: "IssueTemplate"; id: string }
         | { __typename?: "IssueType"; id: string }
         | { __typename?: "Label"; id: string }
+        | { __typename?: "LegalInformation"; id: string }
         | { __typename?: "OutgoingRelationTypeChangedEvent"; id: string }
         | { __typename?: "PriorityChangedEvent"; id: string }
         | { __typename?: "Project"; id: string }
@@ -20648,6 +20825,7 @@ export type GetImsGeneralDetailsQuery = {
         | { __typename?: "IssueTemplate"; id: string }
         | { __typename?: "IssueType"; id: string }
         | { __typename?: "Label"; id: string }
+        | { __typename?: "LegalInformation"; id: string }
         | { __typename?: "OutgoingRelationTypeChangedEvent"; id: string }
         | { __typename?: "PriorityChangedEvent"; id: string }
         | { __typename?: "Project"; id: string }
@@ -20802,6 +20980,7 @@ export type GetImsPermissionListQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -20953,6 +21132,7 @@ export type FirstImsPermissionsQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -21107,6 +21287,7 @@ export type GetImsProjectListFromImsQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -21213,6 +21394,7 @@ export type GetImsProjectListFromTrackableQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | {
@@ -21349,6 +21531,7 @@ export type GetImsProjectGeneralDetailsQuery = {
         | { __typename?: "IssueTemplate"; id: string }
         | { __typename?: "IssueType"; id: string }
         | { __typename?: "Label"; id: string }
+        | { __typename?: "LegalInformation"; id: string }
         | { __typename?: "OutgoingRelationTypeChangedEvent"; id: string }
         | { __typename?: "PriorityChangedEvent"; id: string }
         | { __typename?: "Project"; id: string }
@@ -21520,6 +21703,7 @@ export type GetImsTemplateQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -21624,6 +21808,7 @@ export type GetImsProjectTemplateQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -21749,6 +21934,7 @@ export type GetInterfaceDefinitionListQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -21909,6 +22095,7 @@ export type GetInterfaceSpecificationListQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -22023,6 +22210,7 @@ export type GetInterfaceSpecificationGeneralDetailsQuery = {
         | { __typename?: "IssueTemplate"; id: string }
         | { __typename?: "IssueType"; id: string }
         | { __typename?: "Label"; id: string }
+        | { __typename?: "LegalInformation"; id: string }
         | { __typename?: "OutgoingRelationTypeChangedEvent"; id: string }
         | { __typename?: "PriorityChangedEvent"; id: string }
         | { __typename?: "Project"; id: string }
@@ -22119,6 +22307,7 @@ export type GetInterfaceSpecificationVisibilityInfoQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -22242,6 +22431,7 @@ export type FirstInterfaceSpecificationsQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -22435,6 +22625,7 @@ export type GetInterfaceSpecificationTemplateQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -22539,6 +22730,7 @@ export type GetInterfaceSpecificationVersionTemplateQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -22642,6 +22834,7 @@ export type GetInterfaceSpecificationVersionListQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -22756,6 +22949,7 @@ export type GetInterfaceSpecificationVersionGeneralDetailsQuery = {
         | { __typename?: "IssueTemplate"; id: string }
         | { __typename?: "IssueType"; id: string }
         | { __typename?: "Label"; id: string }
+        | { __typename?: "LegalInformation"; id: string }
         | { __typename?: "OutgoingRelationTypeChangedEvent"; id: string }
         | { __typename?: "PriorityChangedEvent"; id: string }
         | { __typename?: "Project"; id: string }
@@ -22884,6 +23078,7 @@ export type FirstInterfaceSpecificationVersionsQuery = {
         | { __typename?: "IssueTemplate"; id: string }
         | { __typename?: "IssueType"; id: string }
         | { __typename?: "Label"; id: string }
+        | { __typename?: "LegalInformation"; id: string }
         | { __typename?: "OutgoingRelationTypeChangedEvent"; id: string }
         | { __typename?: "PriorityChangedEvent"; id: string }
         | { __typename?: "Project"; id: string }
@@ -23044,6 +23239,18 @@ export type GetIssueListQuery = {
                       } | null;
                       template: { __typename?: "IssueTemplate"; id: string; name: string; description: string };
                       type: { __typename?: "IssueType"; id: string; name: string; iconPath: string };
+                      affects: {
+                          __typename?: "AffectedByIssueConnection";
+                          nodes: Array<
+                              | { __typename?: "Component"; id: string }
+                              | { __typename?: "ComponentVersion"; id: string }
+                              | { __typename?: "Interface"; id: string }
+                              | { __typename?: "InterfacePart"; id: string }
+                              | { __typename?: "InterfaceSpecification"; id: string }
+                              | { __typename?: "InterfaceSpecificationVersion"; id: string }
+                              | { __typename?: "Project"; id: string }
+                          >;
+                      };
                       incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                       outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                   }>;
@@ -23087,6 +23294,7 @@ export type GetIssueListQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | {
@@ -23163,6 +23371,18 @@ export type GetIssueListQuery = {
                       } | null;
                       template: { __typename?: "IssueTemplate"; id: string; name: string; description: string };
                       type: { __typename?: "IssueType"; id: string; name: string; iconPath: string };
+                      affects: {
+                          __typename?: "AffectedByIssueConnection";
+                          nodes: Array<
+                              | { __typename?: "Component"; id: string }
+                              | { __typename?: "ComponentVersion"; id: string }
+                              | { __typename?: "Interface"; id: string }
+                              | { __typename?: "InterfacePart"; id: string }
+                              | { __typename?: "InterfaceSpecification"; id: string }
+                              | { __typename?: "InterfaceSpecificationVersion"; id: string }
+                              | { __typename?: "Project"; id: string }
+                          >;
+                      };
                       incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                       outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                   }>;
@@ -23257,6 +23477,7 @@ export type GetComponentIssueListQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | {
@@ -23341,6 +23562,18 @@ export type GetComponentIssueListQuery = {
                       } | null;
                       template: { __typename?: "IssueTemplate"; id: string; name: string; description: string };
                       type: { __typename?: "IssueType"; id: string; name: string; iconPath: string };
+                      affects: {
+                          __typename?: "AffectedByIssueConnection";
+                          nodes: Array<
+                              | { __typename?: "Component"; id: string }
+                              | { __typename?: "ComponentVersion"; id: string }
+                              | { __typename?: "Interface"; id: string }
+                              | { __typename?: "InterfacePart"; id: string }
+                              | { __typename?: "InterfaceSpecification"; id: string }
+                              | { __typename?: "InterfaceSpecificationVersion"; id: string }
+                              | { __typename?: "Project"; id: string }
+                          >;
+                      };
                       incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                       outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                   }>;
@@ -23462,6 +23695,18 @@ export type GetIssueListOnAggregatedIssueQuery = {
                       } | null;
                       template: { __typename?: "IssueTemplate"; id: string; name: string; description: string };
                       type: { __typename?: "IssueType"; id: string; name: string; iconPath: string };
+                      affects: {
+                          __typename?: "AffectedByIssueConnection";
+                          nodes: Array<
+                              | { __typename?: "Component"; id: string }
+                              | { __typename?: "ComponentVersion"; id: string }
+                              | { __typename?: "Interface"; id: string }
+                              | { __typename?: "InterfacePart"; id: string }
+                              | { __typename?: "InterfaceSpecification"; id: string }
+                              | { __typename?: "InterfaceSpecificationVersion"; id: string }
+                              | { __typename?: "Project"; id: string }
+                          >;
+                      };
                       incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                       outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                   }>;
@@ -23513,6 +23758,7 @@ export type GetIssueListOnAggregatedIssueQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -23601,6 +23847,18 @@ export type GetFilteredIssueListQuery = {
         } | null;
         template: { __typename?: "IssueTemplate"; id: string; name: string; description: string };
         type: { __typename?: "IssueType"; id: string; name: string; iconPath: string };
+        affects: {
+            __typename?: "AffectedByIssueConnection";
+            nodes: Array<
+                | { __typename?: "Component"; id: string }
+                | { __typename?: "ComponentVersion"; id: string }
+                | { __typename?: "Interface"; id: string }
+                | { __typename?: "InterfacePart"; id: string }
+                | { __typename?: "InterfaceSpecification"; id: string }
+                | { __typename?: "InterfaceSpecificationVersion"; id: string }
+                | { __typename?: "Project"; id: string }
+            >;
+        };
         incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
         outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
     }>;
@@ -23674,6 +23932,18 @@ export type GetComponentFilteredIssueListQuery = {
         } | null;
         template: { __typename?: "IssueTemplate"; id: string; name: string; description: string };
         type: { __typename?: "IssueType"; id: string; name: string; iconPath: string };
+        affects: {
+            __typename?: "AffectedByIssueConnection";
+            nodes: Array<
+                | { __typename?: "Component"; id: string }
+                | { __typename?: "ComponentVersion"; id: string }
+                | { __typename?: "Interface"; id: string }
+                | { __typename?: "InterfacePart"; id: string }
+                | { __typename?: "InterfaceSpecification"; id: string }
+                | { __typename?: "InterfaceSpecificationVersion"; id: string }
+                | { __typename?: "Project"; id: string }
+            >;
+        };
         incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
         outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
     }>;
@@ -23764,6 +24034,18 @@ export type GetParticipatingIssueListQuery = {
                 } | null;
                 template: { __typename?: "IssueTemplate"; id: string; name: string; description: string };
                 type: { __typename?: "IssueType"; id: string; name: string; iconPath: string };
+                affects: {
+                    __typename?: "AffectedByIssueConnection";
+                    nodes: Array<
+                        | { __typename?: "Component"; id: string }
+                        | { __typename?: "ComponentVersion"; id: string }
+                        | { __typename?: "Interface"; id: string }
+                        | { __typename?: "InterfacePart"; id: string }
+                        | { __typename?: "InterfaceSpecification"; id: string }
+                        | { __typename?: "InterfaceSpecificationVersion"; id: string }
+                        | { __typename?: "Project"; id: string }
+                    >;
+                };
                 incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
                 outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
             }>;
@@ -23838,6 +24120,18 @@ export type GetParticipatingFilteredIssueListQuery = {
         } | null;
         template: { __typename?: "IssueTemplate"; id: string; name: string; description: string };
         type: { __typename?: "IssueType"; id: string; name: string; iconPath: string };
+        affects: {
+            __typename?: "AffectedByIssueConnection";
+            nodes: Array<
+                | { __typename?: "Component"; id: string }
+                | { __typename?: "ComponentVersion"; id: string }
+                | { __typename?: "Interface"; id: string }
+                | { __typename?: "InterfacePart"; id: string }
+                | { __typename?: "InterfaceSpecification"; id: string }
+                | { __typename?: "InterfaceSpecificationVersion"; id: string }
+                | { __typename?: "Project"; id: string }
+            >;
+        };
         incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
         outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
     }>;
@@ -25242,6 +25536,7 @@ export type GetIssueQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -25486,6 +25781,18 @@ export type IssueListItemInfoFragment = {
     priority?: { __typename?: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
     template: { __typename?: "IssueTemplate"; id: string; name: string; description: string };
     type: { __typename?: "IssueType"; id: string; name: string; iconPath: string };
+    affects: {
+        __typename?: "AffectedByIssueConnection";
+        nodes: Array<
+            | { __typename?: "Component"; id: string }
+            | { __typename?: "ComponentVersion"; id: string }
+            | { __typename?: "Interface"; id: string }
+            | { __typename?: "InterfacePart"; id: string }
+            | { __typename?: "InterfaceSpecification"; id: string }
+            | { __typename?: "InterfaceSpecificationVersion"; id: string }
+            | { __typename?: "Project"; id: string }
+        >;
+    };
     incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
     outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
 };
@@ -25537,6 +25844,18 @@ export type ParticipatingIssueListItemInfoFragment = {
     priority?: { __typename?: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
     template: { __typename?: "IssueTemplate"; id: string; name: string; description: string };
     type: { __typename?: "IssueType"; id: string; name: string; iconPath: string };
+    affects: {
+        __typename?: "AffectedByIssueConnection";
+        nodes: Array<
+            | { __typename?: "Component"; id: string }
+            | { __typename?: "ComponentVersion"; id: string }
+            | { __typename?: "Interface"; id: string }
+            | { __typename?: "InterfacePart"; id: string }
+            | { __typename?: "InterfaceSpecification"; id: string }
+            | { __typename?: "InterfaceSpecificationVersion"; id: string }
+            | { __typename?: "Project"; id: string }
+        >;
+    };
     incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
     outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
 };
@@ -25588,6 +25907,18 @@ export type ProjectComponentIssueListItemInfoFragment = {
     priority?: { __typename?: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
     template: { __typename?: "IssueTemplate"; id: string; name: string; description: string };
     type: { __typename?: "IssueType"; id: string; name: string; iconPath: string };
+    affects: {
+        __typename?: "AffectedByIssueConnection";
+        nodes: Array<
+            | { __typename?: "Component"; id: string }
+            | { __typename?: "ComponentVersion"; id: string }
+            | { __typename?: "Interface"; id: string }
+            | { __typename?: "InterfacePart"; id: string }
+            | { __typename?: "InterfaceSpecification"; id: string }
+            | { __typename?: "InterfaceSpecificationVersion"; id: string }
+            | { __typename?: "Project"; id: string }
+        >;
+    };
     incomingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
     outgoingRelations: { __typename?: "IssueRelationConnection"; totalCount: number };
 };
@@ -25707,6 +26038,7 @@ export type FirstIssuesQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | {
@@ -25832,6 +26164,7 @@ export type GetAssignedUsersQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | {
@@ -25952,6 +26285,7 @@ export type GetUsedIssueTemplatesQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | {
@@ -26069,6 +26403,7 @@ export type GetUsedIssueTypesQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | {
@@ -26182,6 +26517,7 @@ export type GetUsedIssueStatesQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | {
@@ -26295,6 +26631,7 @@ export type GetUsedIssuePrioritiesQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | {
@@ -26415,6 +26752,7 @@ export type GetUsedLabelsQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | {
@@ -26560,6 +26898,7 @@ export type FirstIssuePrioritiesQuery = {
           }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -26815,6 +27154,7 @@ export type FirstIssueRelationTypesQuery = {
           }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -27009,6 +27349,7 @@ export type FirstIssueStatesQuery = {
           }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -27167,6 +27508,7 @@ export type GetIssueTemplateQuery = {
           }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -27293,6 +27635,7 @@ export type FirstIssueTypesQuery = {
           }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -27413,6 +27756,7 @@ export type GetLabelListQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | {
@@ -27572,6 +27916,7 @@ export type FirstLabelsQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -27691,6 +28036,7 @@ export type FirstTrackableLabelsQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | {
@@ -27929,6 +28275,7 @@ export type GetPermissionUserListQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -28108,6 +28455,7 @@ export type GetProjectQuery = {
         | { __typename?: "IssueTemplate"; id: string }
         | { __typename?: "IssueType"; id: string }
         | { __typename?: "Label"; id: string }
+        | { __typename?: "LegalInformation"; id: string }
         | { __typename?: "OutgoingRelationTypeChangedEvent"; id: string }
         | { __typename?: "PriorityChangedEvent"; id: string }
         | {
@@ -28209,6 +28557,7 @@ export type GetProjectGeneralDetailsQuery = {
         | { __typename?: "IssueTemplate"; id: string }
         | { __typename?: "IssueType"; id: string }
         | { __typename?: "Label"; id: string }
+        | { __typename?: "LegalInformation"; id: string }
         | { __typename?: "OutgoingRelationTypeChangedEvent"; id: string }
         | { __typename?: "PriorityChangedEvent"; id: string }
         | {
@@ -28332,6 +28681,7 @@ export type GetProjectPermissionListQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | {
@@ -28484,6 +28834,7 @@ export type FirstProjectPermissionsQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | {
@@ -28694,6 +29045,7 @@ export type GetSyncPermissionTargetQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -30803,6 +31155,7 @@ export type GetUserQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -30929,6 +31282,7 @@ export type GetViewListQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | {
@@ -31094,6 +31448,7 @@ export type GetViewQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | { __typename?: "Project" }
@@ -31231,6 +31586,7 @@ export type FirstViewsQuery = {
         | { __typename?: "IssueTemplate" }
         | { __typename?: "IssueType" }
         | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
         | { __typename?: "OutgoingRelationTypeChangedEvent" }
         | { __typename?: "PriorityChangedEvent" }
         | {
@@ -31695,6 +32051,11 @@ export const IssueListItemInfoFragmentDoc = gql`
             id
             name
             iconPath
+        }
+        affects {
+            nodes {
+                id
+            }
         }
     }
     ${DefaultUserInfoFragmentDoc}

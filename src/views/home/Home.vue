@@ -107,22 +107,34 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
         const currentFilter = filterFromDropdown.value;
         const issueFilter: IssueFilterInput = currentFilter
             ? {
-                labels: currentFilter.labelInput,
-                template: currentFilter.templateInput,
-                assignments: currentFilter.assignedToInput,
-                priority: currentFilter.priorityInput,
-                type: currentFilter.typeInput,
-                state: currentFilter.stateInput
-            }
+                  labels: currentFilter.labelInput,
+                  template: currentFilter.templateInput,
+                  assignments: currentFilter.assignedToInput
+                      ? {
+                            any: {
+                                and: [currentFilter.assignedToInput.any]
+                            }
+                        }
+                      : undefined,
+                  priority: currentFilter.priorityInput,
+                  type: currentFilter.typeInput,
+                  state: currentFilter.stateInput
+              }
             : {};
         if (issueFilterIndex.value == 1) {
             issueFilter.createdBy = userFilter.value;
         } else if (issueFilterIndex.value == 2) {
-            issueFilter.assignments = {
-                any: {
+            if (issueFilter.assignments === undefined) {
+                issueFilter.assignments = {
+                    any: {
+                        user: userFilter.value
+                    }
+                };
+            } else {
+                issueFilter.assignments?.any?.and?.push({
                     user: userFilter.value
-                }
-            };
+                });
+            }
         }
         if (filter == undefined) {
             const res = await client.getParticipatingIssueList({

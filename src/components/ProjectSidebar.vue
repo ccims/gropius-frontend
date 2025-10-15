@@ -30,7 +30,11 @@
                     :sort-fields="sortFields"
                     :to="issueRoute"
                     :sort-ascending-initially="false"
-                    :dependencies="[selectedElementInfo.componentVersion.id, issueFilter]"
+                    :dependencies="[
+                        selectedElementInfo.componentVersion.id,
+                        issueFilter,
+                        ...(filterFromDropdown?.dependencyArray ?? [])
+                    ]"
                 >
                     <template #item="{ item }">
                         <IssueListItem :item="item" hide-details />
@@ -69,7 +73,11 @@
                                     {{ issueFilter.isOpen ? "Open" : "Closed" }}
                                 </v-chip>
                             </div>
-                            <IssueFilterDropdowns :item-manager="itemManager" ref="filterDropdowns" :state-indices="convertedIssueStateIndices" />
+                            <IssueFilterDropdowns
+                                :item-manager="itemManager"
+                                ref="filterDropdowns"
+                                :state-indices="convertedIssueStateIndices"
+                            />
                         </div>
                     </template>
                 </PaginatedList>
@@ -93,7 +101,6 @@ import { SelectedElement } from "@gropius/graph-editor";
 import { ContextMenuData } from "./GraphEditor.vue";
 import { NodeReturnType, useClient } from "@/graphql/client";
 import IssueListItem from "@/components/IssueListItem.vue";
-import IssueTypeIcon from "@/components/IssueTypeIcon.vue";
 import { IdObject } from "@/util/types";
 import { RouteLocationRaw } from "vue-router";
 import { ItemManager } from "@/util/itemManager";
@@ -196,29 +203,42 @@ const selectedElementInfo = computed<SelectableElementInfo | undefined>(() => {
     return selectableElementLookup.value.get(model.value.id);
 });
 
-watch(selectedElementInfo, (newValue) => {
-    if (newValue != undefined) {
-        const aggregatedIssue = newValue.aggregatedIssue;
-        if (aggregatedIssue != undefined) {
-            issueFilter.value = {
-                aggregatedIssue: aggregatedIssue.id,
-                isOpen: aggregatedIssue.isOpen,
-                affectedEntity: newValue.affectedEntity,
-                type: aggregatedIssue.type
-            };
-            filterFromDropdown.value?.setSingleFilters({type: aggregatedIssue.type?.id})
+watch(
+    selectedElementInfo,
+    (newValue) => {
+        console.log(newValue);
+        if (newValue != undefined) {
+            const aggregatedIssue = newValue.aggregatedIssue;
+            if (aggregatedIssue != undefined) {
+                issueFilter.value = {
+                    aggregatedIssue: aggregatedIssue.id,
+                    isOpen: aggregatedIssue.isOpen,
+                    affectedEntity: newValue.affectedEntity,
+                    type: aggregatedIssue.type
+                };
+                filterFromDropdown.value?.setSingleFilters({ type: aggregatedIssue.type?.id });
+            } else {
+                issueFilter.value = {
+                    affectedEntity: newValue.affectedEntity
+                };
+            }
         } else {
-            issueFilter.value = {
-                affectedEntity: newValue.affectedEntity
-            };
+            issueFilter.value = {};
+            filterFromDropdown.value?.resetFilters();
+            // TODO: doesnt work (maybe because the filter gets unmounted? router.replace gets called, but doesnt do anything
         }
-    }
-});
+    },
+    { flush: "sync" }
+);
 
-watch(filterFromDropdown, (newValue) => {
-    if(!newValue) return
-    newValue.setSingleFilters({type: issueFilter.value?.type?.id})
-}, {immediate: true})
+watch(
+    filterFromDropdown,
+    (newValue) => {
+        if (!newValue) return;
+        newValue.setSingleFilters({ type: issueFilter.value?.type?.id });
+    },
+    { immediate: true }
+);
 
 const sortFields = {
     Updated: IssueOrderField.LastUpdatedAt
@@ -236,6 +256,17 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
             additionalFilter.aggregatedIssue != undefined &&
             additionalFilter.affectedEntity != undefined &&
             additionalFilter.isOpen != undefined;
+        const currentFilter = filterFromDropdown.value;
+        const filterFields: IssueFilterInput = currentFilter
+            ? {
+                  labels: currentFilter.labelInput,
+                  template: currentFilter.templateInput,
+                  assignments: currentFilter.assignedToInput,
+                  priority: currentFilter.priorityInput,
+                  type: currentFilter.typeInput,
+                  state: currentFilter.stateInput
+              }
+            : {};
         if (filter == undefined) {
             const parameters = {
                 orderBy,
@@ -243,12 +274,8 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
                 skip: page * count
             };
             if (!useAggregatedIssue) {
-                const filterFields: IssueFilterInput = {};
                 if (additionalFilter.isOpen != undefined) {
                     filterFields.state = { isOpen: { eq: additionalFilter.isOpen } };
-                }
-                if (additionalFilter.type != undefined) {
-                    filterFields.type = { id: { eq: additionalFilter.type.id } };
                 }
                 if (additionalFilter.affectedEntity != undefined) {
                     filterFields.aggregatedBy = {
@@ -271,7 +298,6 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
                 return [issues.nodes, issues.totalCount];
             }
         } else {
-            const filterFields: IssueFilterInput = {};
             if (!useAggregatedIssue) {
                 if (additionalFilter.isOpen != undefined) {
                     filterFields.state = { isOpen: { eq: additionalFilter.isOpen } };

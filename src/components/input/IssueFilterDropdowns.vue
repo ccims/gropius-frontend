@@ -12,12 +12,7 @@
             label="Label"
             :item-manager="itemManager"
             :mapper="(item) => item.labels.nodes"
-            :additional-initial-values="
-                async () => trackableId ?
-                    client
-                        .firstTrackableLabels({ trackable: trackableId, count: 100 })
-                        .then((res) => (res.node as NodeReturnType<'firstTrackableLabels', 'Component'>).labels.nodes) : []
-            "
+            :additional-initial-values="labelInitialFetch"
             :fetch-on-search="labelFetch"
         >
             <template #default="{ item }">
@@ -134,37 +129,55 @@ const templateIds = useFilterOption("template");
 const templateInput = computed(() => {
     return templateIds.value.length > 0 ? { id: { in: templateIds.value } } : undefined;
 });
-const templateFetch = async (search: string) => props.trackableId ?
-    client
-        .getUsedIssueTemplates({ trackable: props.trackableId, filter: search })
-        .then((res) => (res.node as NodeReturnType<"getUsedIssueTemplates", "Component">).usedIssueTemplates.nodes) : [];
+const templateFetch = async (search: string) =>
+    props.trackableId
+        ? client
+              .getUsedIssueTemplates({ trackable: props.trackableId, filter: search })
+              .then(
+                  (res) => (res.node as NodeReturnType<"getUsedIssueTemplates", "Component">).usedIssueTemplates.nodes
+              )
+        : [];
 
 const labelIds = useFilterOption("label");
 const labelInput = computed(() => {
     return labelIds.value.length > 0 ? { any: { id: { in: labelIds.value } } } : undefined;
 });
-const labelFetch = async (search: string) => props.trackableId ?
-    client
-        .getUsedLabels({ trackable: props.trackableId, filter: search })
-        .then((res) => (res.node as NodeReturnType<"getUsedLabels", "Component">).usedLabels.nodes) : [];
+const labelFetch = async (search: string) =>
+    props.trackableId
+        ? client
+              .getUsedLabels({ trackable: props.trackableId, filter: search })
+              .then((res) => (res.node as NodeReturnType<"getUsedLabels", "Component">).usedLabels.nodes)
+        : [];
+const labelInitialFetch = async () =>
+    props.trackableId
+        ? client
+              .firstTrackableLabels({ trackable: props.trackableId, count: 100 })
+              .then((res) => (res.node as NodeReturnType<"firstTrackableLabels", "Component">).labels.nodes)
+        : [];
 
 const priorityIds = useFilterOption("priority");
 const priorityInput = computed(() => {
     return priorityIds.value.length > 0 ? { id: { in: priorityIds.value } } : undefined;
 });
-const priorityFetch = async (search: string) => props.trackableId ?
-    client
-        .getUsedIssuePriorities({ trackable: props.trackableId, filter: search })
-        .then((res) => (res.node as NodeReturnType<"getUsedIssuePriorities", "Component">).usedIssuePriorities.nodes) : [];
+const priorityFetch = async (search: string) =>
+    props.trackableId
+        ? client
+              .getUsedIssuePriorities({ trackable: props.trackableId, filter: search })
+              .then(
+                  (res) => (res.node as NodeReturnType<"getUsedIssuePriorities", "Component">).usedIssuePriorities.nodes
+              )
+        : [];
 
 const typeIds = useFilterOption("type");
 const typeInput = computed(() => {
     return typeIds.value.length > 0 ? { id: { in: typeIds.value } } : undefined;
 });
-const typeFetch = async (search: string) => props.trackableId ?
-    client
-        .getUsedIssueTypes({ trackable: props.trackableId, filter: search })
-        .then((res) => (res.node as NodeReturnType<"getUsedIssueTypes", "Component">).usedIssueTypes.nodes) : [];
+const typeFetch = async (search: string) =>
+    props.trackableId
+        ? client
+              .getUsedIssueTypes({ trackable: props.trackableId, filter: search })
+              .then((res) => (res.node as NodeReturnType<"getUsedIssueTypes", "Component">).usedIssueTypes.nodes)
+        : [];
 
 const assignedToIds = useFilterOption("assignedTo");
 const assignedToInput = computed(() => {
@@ -200,21 +213,23 @@ const assignedToMapper = (item: T) =>
             name
         };
     });
-const assignedToFetch = async (search: string) => props.trackableId ?
-    client.getAssignedUsers({ trackable: props.trackableId, filter: search }).then((res) =>
-        (res.node as NodeReturnType<"getAssignedUsers", "Component">).assignedUsers.nodes.map((node) => {
-            const name = node.id == userId.value ? "Me" : node.displayName;
-            return {
-                ...node,
-                displayName: name,
-                name
-            };
-        })
-    ) : [];
+const assignedToFetch = async (search: string) =>
+    props.trackableId
+        ? client.getAssignedUsers({ trackable: props.trackableId, filter: search }).then((res) =>
+              (res.node as NodeReturnType<"getAssignedUsers", "Component">).assignedUsers.nodes.map((node) => {
+                  const name = node.id == userId.value ? "Me" : node.displayName;
+                  return {
+                      ...node,
+                      displayName: name,
+                      name
+                  };
+              })
+          )
+        : [];
 
 const stateIds = useFilterOption("concretestate");
 const stateInput = computed(() => {
-    const stateIndices = props.stateIndices ?? [0, 1]
+    const stateIndices = props.stateIndices ?? [0, 1];
     const isSingleIssueState = stateIndices.length == 1;
     const customStateSelected = !!stateIds.value.length;
     if (!isSingleIssueState && !customStateSelected) {
@@ -226,10 +241,12 @@ const stateInput = computed(() => {
         id: customStateSelected ? { in: stateIds.value } : undefined
     };
 });
-const stateFetch = async (search: string) => props.trackableId ?
-    client
-        .getUsedIssueStates({ trackable: props.trackableId, filter: search })
-        .then((res) => (res.node as NodeReturnType<"getUsedIssueStates", "Component">).usedIssueStates.nodes) : [];
+const stateFetch = async (search: string) =>
+    props.trackableId
+        ? client
+              .getUsedIssueStates({ trackable: props.trackableId, filter: search })
+              .then((res) => (res.node as NodeReturnType<"getUsedIssueStates", "Component">).usedIssueStates.nodes)
+        : [];
 const stateFilter = (item: { isOpen: boolean }) => {
     if (!props.stateIndices || props.stateIndices.length == 2) {
         return true;
@@ -240,7 +257,7 @@ const stateFilter = (item: { isOpen: boolean }) => {
 watch(
     () => props.stateIndices,
     (newVal, oldVal) => {
-        if(!newVal || !oldVal) {
+        if (!newVal || !oldVal) {
             return;
         }
         if (newVal.length == oldVal.length && newVal[0] === oldVal[0]) {
@@ -249,24 +266,36 @@ watch(
         stateIds.value = [];
     }
 );
-watch(() => props.onlyAssigned, (newVal) => {
-    const user = userId.value
-    if  (newVal && user) {
-        assignedToIds.value = [user];
-    } else {
-        assignedToIds.value = [];
-    }
-}, { immediate: true });
+watch(
+    () => props.onlyAssigned,
+    (newVal) => {
+        const user = userId.value;
+        if (newVal && user) {
+            assignedToIds.value = [user];
+        } else {
+            assignedToIds.value = [];
+        }
+    },
+    { immediate: true }
+);
 
 const dependencyArray = computed(() => {
     return [templateInput, labelInput, priorityInput, typeInput, assignedToInput, stateInput];
 });
 
-function setSingleFilters({type}: {type?: string}) {
-    console.log("Setting single filters", type)
-    if(type !== undefined){
+function setSingleFilters({ type }: { type?: string }) {
+    if (type !== undefined) {
         typeIds.value = [type];
     }
+}
+
+function resetFilters() {
+    templateIds.value = [];
+    labelIds.value = [];
+    priorityIds.value = [];
+    typeIds.value = [];
+    assignedToIds.value = [];
+    stateIds.value = [];
 }
 
 defineExpose({
@@ -277,7 +306,8 @@ defineExpose({
     assignedToInput,
     stateInput,
     dependencyArray,
-    setSingleFilters
+    setSingleFilters,
+    resetFilters
 });
 </script>
 
