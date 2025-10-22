@@ -1,8 +1,7 @@
 <template>
     <v-card variant="outlined" class="my-4">
         <div v-if="!isExpanded" class="d-flex align-center justify-space-between">
-            <!-- Preview before title, spacing/overflow must be handled by importer -->
-            <slot name="preview1" />
+            <slot name="previewLeft" />
 
             <div class="d-flex align-center flex-grow-1 overflow-hidden">
                 <div class="text-h6 font-weight-medium ma-2 text-truncate">
@@ -10,8 +9,7 @@
                 </div>
             </div>
 
-            <!-- Preview after title, spacing/overflow must be handled by importer -->
-            <slot name="preview2" />
+            <slot name="previewRight" />
 
             <div class="d-flex align-center flex-shrink-0 ms-2">
                 <IconButton @click="emit('expand')">
@@ -44,7 +42,7 @@
 
             <slot name="extra" />
 
-            <div class="d-flex justify-end" style="gap: 3px">
+            <div class="d-flex justify-end ga-1">
                 <v-btn class="mb-2" @click="emit('cancel')">Cancel</v-btn>
                 <v-btn class="me-2" @click="emit('confirm', { name: localName, description: localDescription })">
                     Confirm
@@ -57,7 +55,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
 
-//type exists to avoid expanding multiple cards with the same name at once.
 type ExpandedKey = {
     nameID: string;
     type: string;
