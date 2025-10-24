@@ -1,10 +1,10 @@
 import { useRoute, useRouter } from "vue-router";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 
-export function useFilterOption(id: string) {
+export function useFilterOption(id: string, useQueryForFilter: boolean) {
     const route = useRoute();
     const router = useRouter();
-    return computed({
+    return useQueryForFilter ? computed({
         get: () => {
             const filter = route.query[id];
             const result = Array.isArray(filter) ? filter : filter ? [filter] : [];
@@ -19,5 +19,5 @@ export function useFilterOption(id: string) {
             }
             router.replace({ query });
         }
-    });
+    }) : ref([]);
 }

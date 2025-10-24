@@ -118,6 +118,11 @@ const props = defineProps({
         type: Boolean,
         required: false,
         default: false
+    },
+    useQueryForFilter: {
+        type: Boolean,
+        required: false,
+        default: true,
     }
 });
 
@@ -125,7 +130,7 @@ const client = useClient();
 const store = useAppStore();
 const userId = computed(() => store.user?.id);
 
-const templateIds = useFilterOption("template");
+const templateIds = useFilterOption("template", props.useQueryForFilter);
 const templateInput = computed(() => {
     return templateIds.value.length > 0 ? { id: { in: templateIds.value } } : undefined;
 });
@@ -138,7 +143,7 @@ const templateFetch = async (search: string) =>
               )
         : [];
 
-const labelIds = useFilterOption("label");
+const labelIds = useFilterOption("label", props.useQueryForFilter);
 const labelInput = computed(() => {
     return labelIds.value.length > 0 ? { any: { id: { in: labelIds.value } } } : undefined;
 });
@@ -155,7 +160,7 @@ const labelInitialFetch = async () =>
               .then((res) => (res.node as NodeReturnType<"firstTrackableLabels", "Component">).labels.nodes)
         : [];
 
-const priorityIds = useFilterOption("priority");
+const priorityIds = useFilterOption("priority", props.useQueryForFilter);
 const priorityInput = computed(() => {
     return priorityIds.value.length > 0 ? { id: { in: priorityIds.value } } : undefined;
 });
@@ -168,7 +173,7 @@ const priorityFetch = async (search: string) =>
               )
         : [];
 
-const typeIds = useFilterOption("type");
+const typeIds = useFilterOption("type", props.useQueryForFilter);
 const typeInput = computed(() => {
     return typeIds.value.length > 0 ? { id: { in: typeIds.value } } : undefined;
 });
@@ -179,7 +184,7 @@ const typeFetch = async (search: string) =>
               .then((res) => (res.node as NodeReturnType<"getUsedIssueTypes", "Component">).usedIssueTypes.nodes)
         : [];
 
-const assignedToIds = useFilterOption("assignedTo");
+const assignedToIds = useFilterOption("assignedTo", props.useQueryForFilter);
 const assignedToInput = computed(() => {
     return assignedToIds.value.length > 0
         ? {
@@ -227,7 +232,7 @@ const assignedToFetch = async (search: string) =>
           )
         : [];
 
-const stateIds = useFilterOption("concretestate");
+const stateIds = useFilterOption("concretestate", props.useQueryForFilter);
 const stateInput = computed(() => {
     const stateIndices = props.stateIndices ?? [0, 1];
     const isSingleIssueState = stateIndices.length == 1;

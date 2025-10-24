@@ -77,6 +77,7 @@
                                 :item-manager="itemManager"
                                 ref="filterDropdowns"
                                 :state-indices="convertedIssueStateIndices"
+                                :use-query-for-filter="false"
                             />
                         </div>
                     </template>
@@ -206,7 +207,6 @@ const selectedElementInfo = computed<SelectableElementInfo | undefined>(() => {
 watch(
     selectedElementInfo,
     (newValue) => {
-        console.log(newValue);
         if (newValue != undefined) {
             const aggregatedIssue = newValue.aggregatedIssue;
             if (aggregatedIssue != undefined) {
