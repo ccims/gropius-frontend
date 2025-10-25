@@ -114,6 +114,12 @@ const rightSidebarItems = computed(() => {
                 disabled = false;
                 break;
             }
+            case "admin-legal-information": {
+                name = "legal information";
+                eventName = "create-legal-information";
+                disabled = false;
+                break;
+            }
             default: {
                 throw new Error("Unknown route");
             }
@@ -192,6 +198,12 @@ const leftSidebarItems = computed(() => {
                     name: "OAuth2",
                     color: "secondary",
                     to: { name: "admin-auth-clients" }
+                },
+                {
+                    icon: "mdi-file-document",
+                    name: "Legal",
+                    color: "secondary",
+                    to: { name: "admin-legal-information" }
                 },
                 {
                     icon: "mdi-api",

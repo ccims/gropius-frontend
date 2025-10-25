@@ -59,7 +59,10 @@ query getComponentFilteredIssueList($query: String!, $count: Int!, $project: ID!
     searchIssues(
         query: $query
         first: $count
-        filter: { and: [$filter], trackables: { any: { isComponentAnd: { versions: { any: { partOfProject: $project } } } } } }
+        filter: {
+            and: [$filter]
+            trackables: { any: { isComponentAnd: { versions: { any: { partOfProject: $project } } } } }
+        }
     ) {
         ...ProjectComponentIssueListItemInfo
     }
@@ -234,6 +237,10 @@ fragment IssueListItemInfo on Issue {
     createdBy {
         ...DefaultUserInfo
     }
+    state {
+        id
+        name
+    }
     ...DefaultIssueIconInfo
     issueComments {
         totalCount
@@ -241,6 +248,13 @@ fragment IssueListItemInfo on Issue {
     labels {
         nodes {
             ...DefaultLabelInfo
+            trackables {
+                nodes {
+                    id
+                    name
+                    description
+                }
+            }
         }
     }
     assignments {
@@ -253,6 +267,17 @@ fragment IssueListItemInfo on Issue {
     priority {
         ...DefaultIssuePriorityInfo
     }
+    template {
+        id
+        name
+        description
+    }
+    type {
+        id
+        name
+        iconPath
+    }
+
 }
 
 fragment ParticipatingIssueListItemInfo on Issue {
@@ -308,6 +333,85 @@ query firstIssues($count: Int!, $trackable: ID!) {
             issues(orderBy: [{ field: LAST_UPDATED_AT, direction: DESC }], first: $count) {
                 nodes {
                     ...DefaultIssueInfo
+                }
+            }
+        }
+    }
+}
+
+query getAssignedUsers($trackable: ID!, $filter: String!) {
+    node(id: $trackable) {
+        ... on Trackable {
+            assignedUsers(filter: { username: {contains: $filter} }) {
+                nodes {
+                    ...DefaultUserInfo
+                }
+            }
+        }
+    }
+}
+
+query getUsedIssueTemplates($trackable: ID!, $filter: String!) {
+    node(id: $trackable) {
+        ... on Trackable {
+            usedIssueTemplates(filter: { name: {contains: $filter} }) {
+                nodes {
+                    ...DefaultIssueTemplateInfo
+                }
+            }
+        }
+    }
+}
+
+query getUsedIssueTypes($trackable: ID!, $filter: String!) {
+    node(id: $trackable) {
+        ... on Trackable {
+            usedIssueTypes(filter: { name: {contains: $filter} }) {
+                nodes {
+                    ...DefaultIssueTypeInfo
+                }
+            }
+        }
+    }
+}
+
+query getUsedIssueStates($trackable: ID!, $filter: String!) {
+    node(id: $trackable) {
+        ... on Trackable {
+            usedIssueStates(filter: { name: {contains: $filter} }) {
+                nodes {
+                    ...DefaultIssueStateInfo
+                }
+            }
+        }
+    }
+}
+
+query getUsedIssuePriorities($trackable: ID!, $filter: String!) {
+    node(id: $trackable) {
+        ... on Trackable {
+            usedIssuePriorities(filter: { name: {contains: $filter} }) {
+                nodes {
+                    ...DefaultIssuePriorityInfo
+                }
+            }
+        }
+    }
+}
+
+query getUsedLabels($trackable: ID!, $filter: String!) {
+    node(id: $trackable) {
+        ... on Trackable {
+            usedLabels(filter: { name: {contains: $filter} }) {
+                nodes {
+                    ...DefaultLabelInfo
+                    trackables {
+                        nodes {
+                            id
+                            name
+                            description
+                        }
+                    }
                 }
             }
         }

@@ -86,6 +86,11 @@ const routes: RouteRecordRaw[] = [
                         component: () => import("../views/admin/AuthClients.vue")
                     },
                     {
+                        path: "legal-information",
+                        name: "admin-legal-information",
+                        component: () => import("../views/admin/LegalInformation.vue")
+                    },
+                    {
                         path: "graphiql",
                         name: "admin-graphiql",
                         component: () => import("../views/admin/GraphiQL.vue")
@@ -403,6 +408,11 @@ const routes: RouteRecordRaw[] = [
         name: "login",
         component: () => import("../views/RouterOnly.vue"),
         beforeEnter: onLoginEnter
+    },
+    {
+        path: "/legal-information/:legalInformation",
+        name: "legal-information",
+        component: () => import("../views/LegalInformation.vue")
     }
 ];
 

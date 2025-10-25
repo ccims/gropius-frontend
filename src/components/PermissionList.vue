@@ -97,7 +97,7 @@
     "
 >
 import ListItem from "@/components/ListItem.vue";
-import PaginatedList, { ItemManager } from "@/components/PaginatedList.vue";
+import PaginatedList from "@/components/PaginatedList.vue";
 import ConfirmationDialog from "@/components/dialog/ConfirmationDialog.vue";
 import { enumToRegularCase } from "@/util/casingTransformers";
 import { permissionSortFields } from "@/util/permissionSortFields";
@@ -108,6 +108,7 @@ import ManagePermissionUsersDialog from "./dialog/ManagePermissionUsersDialog.vu
 import { IdObject, ValueOf } from "@/util/types";
 import CreatePermissionDialog from "./dialog/CreatePermissionDialog.vue";
 import UpdatePermissionDialog from "./dialog/UpdatePermissionDialog.vue";
+import { ItemManager } from "@/util/itemManager";
 
 export type UpdatePermissionFunctionInput<T> = IdObject &
     Partial<{

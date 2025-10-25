@@ -92,7 +92,7 @@
     </PaginatedList>
 </template>
 <script lang="ts" setup>
-import PaginatedList, { ItemManager } from "@/components/PaginatedList.vue";
+import PaginatedList from "@/components/PaginatedList.vue";
 import { NodeReturnType, useClient } from "@/graphql/client";
 import {
     DefaultInterfaceDefinitionInfoFragment,
@@ -108,6 +108,7 @@ import { withErrorMessage } from "@/util/withErrorMessage";
 import { trackableKey } from "@/util/keys";
 import ConfirmationDialog from "@/components/dialog/ConfirmationDialog.vue";
 import EditInterfaceDefinitionDialog from "@/components/dialog/EditInterfaceDefinitionDialog.vue";
+import { ItemManager } from "@/util/itemManager";
 
 type InterfaceDefinition = DefaultInterfaceDefinitionInfoFragment & {
     name: string;
@@ -130,8 +131,8 @@ const sortFields = {
     "[Default]": InterfaceDefinitionOrderField.Id
 };
 
-const itemManager: ItemManager<InterfaceDefinition, InterfaceDefinitionOrderField> = {
-    fetchItems: async function (
+class InterfaceDefinitionItemManager extends ItemManager<InterfaceDefinition, InterfaceDefinitionOrderField> {
+    protected async fetchItems(
         filter: string,
         orderBy: InterfaceDefinitionOrder[],
         count: number,
@@ -181,7 +182,11 @@ const itemManager: ItemManager<InterfaceDefinition, InterfaceDefinitionOrderFiel
             return [definitions, res.searchInterfaceSpecifications.length];
         }
     }
-};
+}
+const itemManager = new InterfaceDefinitionItemManager() as ItemManager<
+    InterfaceDefinition,
+    InterfaceDefinitionOrderField
+>;
 
 const componentTemplateInfo = computedAsync(
     async () => {

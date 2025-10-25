@@ -10,7 +10,7 @@
     </PermissionList>
 </template>
 <script lang="ts" setup>
-import { ItemManager } from "@/components/PaginatedList.vue";
+import { ItemManager } from "@/util/itemManager";
 import PermissionList, {
     CreatePermissionFunctionInput,
     UpdatePermissionFunctionInput
@@ -33,8 +33,8 @@ const globalId = computed(() => route.params.trackable as string);
 
 const permissionEntries = Object.values(PermissionEntry);
 
-const itemManager: ItemManager<DefaultGlobalPermissionInfoFragment, GlobalPermissionOrderField> = {
-    fetchItems: async function (
+class PermissionItemManager extends ItemManager<DefaultGlobalPermissionInfoFragment, GlobalPermissionOrderField> {
+    protected async fetchItems(
         filter: string | undefined,
         orderBy: GlobalPermissionOrder[],
         count: number,
@@ -56,7 +56,12 @@ const itemManager: ItemManager<DefaultGlobalPermissionInfoFragment, GlobalPermis
             return [res.searchGlobalPermissions, res.searchGlobalPermissions.length];
         }
     }
-};
+}
+
+const itemManager = new PermissionItemManager() as ItemManager<
+    DefaultGlobalPermissionInfoFragment,
+    GlobalPermissionOrderField
+>;
 
 async function deletePermission(id: string): Promise<void> {
     await client.deleteGlobalPermission({ globalPermission: id });

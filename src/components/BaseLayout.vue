@@ -68,6 +68,19 @@
                 </slot>
             </div>
         </div>
+        <div v-if="store.legalInformation?.length ?? 0 > 0" class="d-flex justify-end mr-3 mt-n2 mb-1 ga-3">
+            <RouterLink
+                v-for="info in store.legalInformation"
+                :key="info.id"
+                :to="{
+                    name: 'legal-information',
+                    params: { legalInformation: info.id }
+                }"
+                class="text-decoration-none text-medium-emphasis text-caption"
+            >
+                {{ info.label }}
+            </RouterLink>
+        </div>
     </div>
     <ErrorSnackbar />
 </template>
