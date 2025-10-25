@@ -26,9 +26,11 @@
 </template>
 
 <script lang="ts" setup>
-import PaginatedList, { ItemManager } from "@/components/PaginatedList.vue";
+import PaginatedList from "@/components/PaginatedList.vue";
+import { ItemManager } from "@/util/itemManager";
 import { ClientReturnType, useClient } from "@/graphql/client";
 import { RouteLocationRaw, useRouter } from "vue-router";
+import { IssueTemplateOrder, IssueTemplateOrderField } from "@/graphql/generated";
 import ListItem from "@/components/ListItem.vue";
 import CreateIssueTemplateDialog from "@/components/dialog/CreateIssueTemplateDialog.vue";
 import { IdObject } from "@/util/types";
@@ -43,12 +45,12 @@ const sortFields = {
     "[Default]": "ID"
 };
 
-const itemManager: ItemManager<IssueTemplate, string> = {
-    async fetchItems(
+class IssueTemplateItemManager extends ItemManager<IssueTemplate, IssueTemplateOrderField> {
+    protected async fetchItems(
         filter: string,
-        _orderBy: any[],
+        orderBy: IssueTemplateOrder[],
         count: number,
-        _page: number
+        page: number
     ): Promise<[IssueTemplate[], number]> {
         if (!filter) {
             const res = await client.firstIssueTemplates({ count });
@@ -58,7 +60,10 @@ const itemManager: ItemManager<IssueTemplate, string> = {
             return [res.searchIssueTemplates, res.searchIssueTemplates.length];
         }
     }
-};
+}
+
+const itemManager: ItemManager<IssueTemplate, IssueTemplateOrderField> = new IssueTemplateItemManager();
+
 
 function selectTemplate(template: IdObject) {
     router.push(templateRoute(template));

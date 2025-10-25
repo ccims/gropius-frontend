@@ -159,7 +159,7 @@
                                                     />
 
                                                     <div class="d-flex align-center">
-                                                        <v-text class="mr-2">Preview:</v-text>
+                                                        <span class="mr-2">Preview:</span>
                                                         <div
                                                             class="preview-box border rounded mr-2 d-flex align-center justify-center"
                                                         >
@@ -255,12 +255,12 @@
                                     </template>
 
                                     <template #extra>
-                                        <v-text-field
-                                            v-model.number="issuePriority.value"
+                                        <v-number-input
+                                            v-model="issuePriority.value"
+                                            :precision="null"
                                             label="Value"
                                             class="mx-2 mb-2"
                                             density="compact"
-                                            type="number"
                                             :error="!!valueErrorMessage"
                                             :error-messages="valueErrorMessage"
                                         />
@@ -710,9 +710,6 @@ function createIssuePriority(previousName: string, newName: string, description:
 
     if (value === null && previousName.trim() !== "") {
         valueErrorMessage.value = "Value is required";
-        return;
-    } else if (typeof value !== "number") {
-        valueErrorMessage.value = "Value must be a number";
         return;
     } else {
         valueErrorMessage.value = "";
