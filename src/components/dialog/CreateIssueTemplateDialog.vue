@@ -64,7 +64,8 @@
                                         () => {
                                             expandedCardKey = { nameID: IssueTypeInput.name, type: 'type' };
                                             selectedIcon =
-                                                iconList.find((icon) => icon.iconPath === IssueTypeInput.iconPath) ?? null;
+                                                iconList.find((icon) => icon.iconPath === IssueTypeInput.iconPath) ??
+                                                null;
                                             currentEditedName = IssueTypeInput.name;
                                             currentEditedDescription = IssueTypeInput.description;
                                             nameErrorMessage = '';
@@ -100,8 +101,7 @@
                                                 <v-tab value="add" class="flex-grow-1">Add Icon</v-tab>
                                             </v-tabs>
                                         </div>
-                                        
-                                        
+
                                         <v-window v-model="activeTab">
                                             <v-window-item value="select">
                                                 <v-text-field
@@ -116,15 +116,17 @@
                                                 >
                                                 </v-text-field>
 
-                                                
-                                                <div class="icon-container mx-n2" v-if="activeTab === 'select'" v-memo="[iconSearch]">
+                                                <div
+                                                    class="icon-container mx-n2"
+                                                    v-if="activeTab === 'select'"
+                                                    v-memo="[iconSearch]"
+                                                >
                                                     <v-lazy
                                                         v-for="icon in filteredIcons"
                                                         :key="icon.name"
                                                         min-height="48"
                                                         transition="fade-transition"
                                                     >
-                                                        
                                                         <IconButton
                                                             color=""
                                                             class="icon-wrapper"
@@ -132,18 +134,13 @@
                                                             @click="selectIcon(icon)"
                                                         >
                                                             <SvgWrapper :path="icon.iconPath" />
-                                                            <v-tooltip
-                                                                activator="parent"
-                                                                location="top"
-                                                            >
+                                                            <v-tooltip activator="parent" location="top">
                                                                 {{ icon.name }}
                                                             </v-tooltip>
                                                         </IconButton>
                                                     </v-lazy>
                                                 </div>
-                                                
                                             </v-window-item>
-                                         
 
                                             <v-window-item value="add">
                                                 <div class="d-flex flex-column" v-if="activeTab === 'add'">
@@ -176,15 +173,19 @@
                                                         <v-btn
                                                             color="primary"
                                                             size="small"
-                                                            :disabled="!newIcon.name || !newIcon.iconPath || !allowedPathElements"
+                                                            :disabled="
+                                                                !newIcon.name ||
+                                                                !newIcon.iconPath ||
+                                                                !allowedPathElements
+                                                            "
                                                             @click="confirmAddIcon"
                                                         >
                                                             Add
                                                         </v-btn>
                                                     </div>
 
-                                                    <div v-if="newIcon.iconPath" class="text-warning text-caption">
-                                                        24x24 Icon is required
+                                                    <div class="text-warning text-caption">
+                                                        Expected: 24x24, fill color, no stroke
                                                     </div>
                                                 </div>
                                             </v-window-item>
@@ -462,7 +463,14 @@
 
                 <template v-slot:item.4>
                     <v-form v-model="formIssueStatesValid">
-                        <v-combobox v-model="issueStates" label="Template Field Specifications" multiple chips clearable class="mb-2" />
+                        <v-combobox
+                            v-model="issueStates"
+                            label="Template Field Specifications"
+                            multiple
+                            chips
+                            clearable
+                            class="mb-2"
+                        />
                     </v-form>
                 </template>
             </v-stepper>
@@ -489,7 +497,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, watch, nextTick } from "vue";
 import { useForm } from "vee-validate";
 import * as yup from "yup";
 import { fieldConfig } from "@/util/vuetifyFormConfig";
@@ -503,14 +511,12 @@ import { iconList as baseIconList } from "../icons";
 import SvgWrapper from "../SvgWrapper.vue";
 
 import type {
-  IssueTypeInput,
-  IssuePriorityInput,
-  IssueStateInput,
-  AssignmentTypeInput,
-  IssueRelationTypeInput,
+    IssueTypeInput,
+    IssuePriorityInput,
+    IssueStateInput,
+    AssignmentTypeInput,
+    IssueRelationTypeInput
 } from "@/graphql/generated.ts";
-
-
 
 const createIssueTemplateDialog = ref(false);
 const step = ref(1);
@@ -605,7 +611,7 @@ const originalAllowedPathElements = (path: string) => /^[MmLlHhVvCcSsQqTtAaZz0-9
 
 watch(
     () => newIcon.value.iconPath,
-    (newPath) => allowedPathElements.value = originalAllowedPathElements(newPath)
+    (newPath) => (allowedPathElements.value = originalAllowedPathElements(newPath))
 );
 
 function confirmAddIcon() {
@@ -621,7 +627,7 @@ const IssueTypes = ref<IssueTypeInput[]>([
     {
         name: "Bug",
         description: "A bug in the system",
-        iconPath: iconList.value.find((icon) => icon.name === "GropiusBug")?.iconPath ?? ""
+        iconPath: iconList.value.find((icon) => icon.name === "Gropius-Bug")?.iconPath ?? ""
     },
     {
         name: "Feature",
