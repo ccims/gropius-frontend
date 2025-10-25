@@ -39,7 +39,7 @@ const routes: RouteRecordRaw[] = [
                 component: () => import("../views/RouterOnly.vue"),
                 children: [
                     {
-                        path: "issue",
+                        path: "",
                         name: "templates-issue",
                         component: () => import("../views/home/Templates/IssueTemplates.vue")
                     },
@@ -383,7 +383,7 @@ const routes: RouteRecordRaw[] = [
         ]
     },
     {
-        path: "/templates/issue/:trackable",
+        path: "/templates/:trackable",
         component: () => import("../views/component/Home.vue"),
         children: [
             {

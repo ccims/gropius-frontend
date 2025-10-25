@@ -116,11 +116,7 @@
                                                 >
                                                 </v-text-field>
 
-                                                <div
-                                                    class="icon-container mx-n2"
-                                                    v-if="activeTab === 'select'"
-                                                    v-memo="[iconSearch]"
-                                                >
+                                                <div class="icon-container mx-n2" v-if="activeTab === 'select'">
                                                     <v-lazy
                                                         v-for="icon in filteredIcons"
                                                         :key="icon.name"
@@ -616,8 +612,14 @@ watch(
 
 function confirmAddIcon() {
     if (newIcon.value.name && newIcon.value.iconPath && allowedPathElements) {
-        iconList.value.push({ name: newIcon.value.name, iconPath: newIcon.value.iconPath.trim().replace(/\"/g, "") });
-        selectedIcon.value = { name: newIcon.value.name, iconPath: newIcon.value.iconPath.trim().replace(/\"/g, "") };
+        const newEntry = {
+            name: newIcon.value.name,
+            iconPath: newIcon.value.iconPath.trim().replace(/\"/g, "")
+        };
+
+        iconList.value.unshift(newEntry);
+        selectedIcon.value = newEntry;
+        iconSearch.value = "";
         newIcon.value = { name: "", iconPath: "" };
         activeTab.value = "select";
     }
@@ -848,7 +850,6 @@ function next() {
     if (step.value < stepLabels.length) {
         step.value++;
     } else {
-        console.log("Submit issue template");
         createIssueTemplateDialog.value = false;
     }
 }
