@@ -94,7 +94,7 @@ import { NodeReturnType, useClient } from "@/graphql/client";
 import FilterDropdown from "@/components/input/FilterDropdown.vue";
 import IssueTypeIcon from "@/components/IssueTypeIcon.vue";
 import User from "@/components/info/User.vue";
-import { computed, PropType, watch } from "vue";
+import { computed, PropType, ref, watch } from "vue";
 import { ItemManager } from "@/util/itemManager";
 import { IssueListItemInfoFragment, IssueOrderField } from "@/graphql/generated";
 import { useFilterOption } from "@/util/useFilterOption";
@@ -112,7 +112,8 @@ const props = defineProps({
     },
     stateIndices: {
         type: Array as PropType<number[]>,
-        required: false
+        required: false,
+        default: () => [0, 1]
     },
     onlyAssigned: {
         type: Boolean,
@@ -122,7 +123,7 @@ const props = defineProps({
     useQueryForFilter: {
         type: Boolean,
         required: false,
-        default: true,
+        default: true
     }
 });
 
@@ -233,8 +234,18 @@ const assignedToFetch = async (search: string) =>
         : [];
 
 const stateIds = useFilterOption("concretestate", props.useQueryForFilter);
+const stateIndicesMirror = ref<number[]>([]);
+watch(
+    () => props.stateIndices,
+    (value) => {
+        const oldValue = stateIndicesMirror.value;
+        if (value.length == oldValue.length && value.every((item, index) => item === oldValue[index])) return;
+        stateIndicesMirror.value = value;
+    },
+    { immediate: true }
+);
 const stateInput = computed(() => {
-    const stateIndices = props.stateIndices ?? [0, 1];
+    const stateIndices = stateIndicesMirror.value;
     const isSingleIssueState = stateIndices.length == 1;
     const customStateSelected = !!stateIds.value.length;
     if (!isSingleIssueState && !customStateSelected) {
