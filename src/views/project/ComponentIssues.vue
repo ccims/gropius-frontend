@@ -85,7 +85,8 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
                   assignments: currentFilter.assignedToInput,
                   priority: currentFilter.priorityInput,
                   type: currentFilter.typeInput,
-                  state: currentFilter.stateInput
+                  state: currentFilter.stateInput,
+                  affects: currentFilter.affectedInput
               }
             : {};
         if (filter == undefined) {

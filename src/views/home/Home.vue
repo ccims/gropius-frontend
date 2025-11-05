@@ -29,7 +29,7 @@
                     <IssueFilterDropdowns
                         :item-manager="itemManager"
                         :state-indices="issueStateIndices"
-                        :only-assigned="issueFilterIndex == 2"
+                        :show-only-assigned-issues="issueFilterIndex == 2"
                         ref="filterDropdowns"
                     />
                 </template>
@@ -118,7 +118,8 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
                       : undefined,
                   priority: currentFilter.priorityInput,
                   type: currentFilter.typeInput,
-                  state: currentFilter.stateInput
+                  state: currentFilter.stateInput,
+                  affects: currentFilter.affectedInput
               }
             : {};
         if (issueFilterIndex.value == 1) {

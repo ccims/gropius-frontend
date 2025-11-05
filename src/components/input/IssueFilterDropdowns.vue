@@ -86,11 +86,26 @@
                 </span>
             </template>
         </FilterDropdown>
+        <FilterDropdown
+            v-model="affectedIds"
+            label="Affects"
+            :mapper="() => null"
+            :item-manager="itemManager"
+            :additional-initial-values="affectsInitialFetch"
+            :fetch-on-search="affectsFetch"
+        >
+            <template #default="{ item }">
+                <div class="d-flex align-center">
+                    <v-icon color="primary" class="opacity-100 mr-1" :icon="affectedByIssueIcon(item.typename)" />
+                    {{ item.name }}
+                </div>
+            </template>
+        </FilterDropdown>
     </div>
 </template>
 
 <script setup lang="ts" generic="T extends IssueListItemInfoFragment, S extends IssueOrderField">
-import { NodeReturnType, useClient } from "@/graphql/client";
+import { ClientReturnType, NodeReturnType, useClient } from "@/graphql/client";
 import FilterDropdown from "@/components/input/FilterDropdown.vue";
 import IssueTypeIcon from "@/components/IssueTypeIcon.vue";
 import User from "@/components/info/User.vue";
@@ -100,6 +115,12 @@ import { IssueListItemInfoFragment, IssueOrderField } from "@/graphql/generated"
 import { useFilterOption } from "@/util/useFilterOption";
 import { IdObject } from "@/util/types";
 import { useAppStore } from "@/store/app";
+import {
+    affectedByIssueDescription,
+    affectedByIssueIcon,
+    affectedByIssueName,
+    expandSearchResult
+} from "@/util/affectedByIssueUtils";
 
 const props = defineProps({
     itemManager: {
@@ -115,7 +136,7 @@ const props = defineProps({
         required: false,
         default: () => [0, 1]
     },
-    onlyAssigned: {
+    showOnlyAssignedIssues: {
         type: Boolean,
         required: false,
         default: false
@@ -270,6 +291,37 @@ const stateFilter = (item: { isOpen: boolean }) => {
     return item.isOpen == (props.stateIndices[0] == 0);
 };
 
+const affectedIds = useFilterOption("affected", props.useQueryForFilter);
+const affectedInput = computed(() => {
+    return affectedIds.value.length > 0 ? { any: { id: { in: affectedIds.value } } } : undefined;
+});
+const parseAffectedByIssues = (items: ClientReturnType<"searchAffectedByIssues">["searchAffectedByIssues"]) =>
+    expandSearchResult(items).map((itm) => ({
+        id: itm.id,
+        name: affectedByIssueName(itm),
+        description: affectedByIssueDescription(itm),
+        typename: itm.__typename
+    }));
+const affectsInitialFetch = async () =>
+    props.trackableId
+        ? client
+              .firstAffectedByIssues({ trackable: props.trackableId, count: 100, sublistCount: 100 })
+              .then((res) =>
+                  parseAffectedByIssues(
+                      (res.node as NodeReturnType<"firstAffectedByIssues", "Component">).affectedEntities.nodes
+                  )
+              )
+        : [];
+// TODO: doesn't work apparently
+const affectsFetch = async (search: string) =>
+    props.trackableId
+        ? client
+              .searchAffectedByIssues({ trackable: props.trackableId, query: search, count: 100 })
+              .then((res) => parseAffectedByIssues(res.searchAffectedByIssues))
+        : client
+              .searchAffectedByIssuesWithoutTrackable({ query: search, count: 100 })
+              .then((res) => parseAffectedByIssues(res.searchAffectedByIssues));
+
 watch(
     () => props.stateIndices,
     (newVal, oldVal) => {
@@ -283,7 +335,7 @@ watch(
     }
 );
 watch(
-    () => props.onlyAssigned,
+    () => props.showOnlyAssignedIssues,
     (newVal) => {
         const user = userId.value;
         if (newVal && user) {
@@ -296,7 +348,7 @@ watch(
 );
 
 const dependencyArray = computed(() => {
-    return [templateInput, labelInput, priorityInput, typeInput, assignedToInput, stateInput];
+    return [templateInput, labelInput, priorityInput, typeInput, assignedToInput, stateInput, affectedInput];
 });
 
 function setSingleFilters({ type }: { type?: string }) {
@@ -312,6 +364,7 @@ function resetFilters() {
     typeIds.value = [];
     assignedToIds.value = [];
     stateIds.value = [];
+    affectedIds.value = [];
 }
 
 defineExpose({
@@ -321,6 +374,7 @@ defineExpose({
     typeInput,
     assignedToInput,
     stateInput,
+    affectedInput,
     dependencyArray,
     setSingleFilters,
     resetFilters

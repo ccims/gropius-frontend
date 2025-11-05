@@ -224,8 +224,6 @@ watch(
             }
         } else {
             issueFilter.value = {};
-            filterFromDropdown.value?.resetFilters();
-            // TODO: doesnt work (maybe because the filter gets unmounted? router.replace gets called, but doesnt do anything
         }
     },
     { flush: "sync" }
@@ -264,7 +262,8 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
                   assignments: currentFilter.assignedToInput,
                   priority: currentFilter.priorityInput,
                   type: currentFilter.typeInput,
-                  state: currentFilter.stateInput
+                  state: currentFilter.stateInput,
+                  affects: currentFilter.affectedInput
               }
             : {};
         if (filter == undefined) {

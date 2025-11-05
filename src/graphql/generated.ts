@@ -2526,6 +2526,8 @@ export type Component = AffectedByIssue &
     TemplatedNode &
     Trackable & {
         __typename?: "Component";
+        /** The set of entities affected by any Issue */
+        affectedEntities: AffectedByIssueConnection;
         /** The issues which affect this entity */
         affectingIssues: IssueConnection;
         /** Artefacts of this trackable, typically some kind of file. */
@@ -2586,6 +2588,26 @@ export type Component = AffectedByIssue &
         /** Versions of this components. */
         versions: ComponentVersionConnection;
     };
+
+/**
+ * Entity which represents a software component, e.g. a library, a microservice, or a deployment platform, ....
+ *     The type of software component is defined by the template.
+ *     Can have issues, labels and artefacts as this is a Trackable.
+ *     Defines InterfaceSpecifications, but visible/invisible InterfaceSpecificationVersions depend on the ComponentVersion.
+ *     Can be affected by Issues.
+ *     READ is granted via an associated ComponentPermission or if READ is granted on any Project including any
+ *     ComponentVersion in `versions` of this Component.
+ *
+ */
+export type ComponentAffectedEntitiesArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<AffectedByIssueFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<AffectedByIssueOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
+};
 
 /**
  * Entity which represents a software component, e.g. a library, a microservice, or a deployment platform, ....
@@ -11996,6 +12018,8 @@ export type Project = AffectedByIssue &
     Node &
     Trackable & {
         __typename?: "Project";
+        /** The set of entities affected by any Issue */
+        affectedEntities: AffectedByIssueConnection;
         /** The issues which affect this entity */
         affectingIssues: IssueConnection;
         /** Artefacts of this trackable, typically some kind of file. */
@@ -12049,6 +12073,24 @@ export type Project = AffectedByIssue &
         /** Views on the architecture graph of this project. */
         views: ViewConnection;
     };
+
+/**
+ * A project of the Gropius system.
+ *     Consists of a set of ComponentVersions, which form a graph with the Relations between them.
+ *     Can be affected by issues.
+ *     Can have issues, labels and artefacts as this is a Trackable.
+ *     READ is granted via an associated ProjectPermission.
+ *
+ */
+export type ProjectAffectedEntitiesArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<AffectedByIssueFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<AffectedByIssueOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
+};
 
 /**
  * A project of the Gropius system.
@@ -16097,6 +16139,8 @@ export type TitleChangedEventFilterInput = {
  *
  */
 export type Trackable = {
+    /** The set of entities affected by any Issue */
+    affectedEntities: AffectedByIssueConnection;
     /** The issues which affect this entity */
     affectingIssues: IssueConnection;
     /** Artefacts of this trackable, typically some kind of file. */
@@ -16135,6 +16179,23 @@ export type Trackable = {
     usedIssueTypes: IssueTypeConnection;
     /** The set of Labels used by any issue (including Labels not on this Trackable) */
     usedLabels: LabelConnection;
+};
+
+/**
+ * An entity which can have Issues, Labels and Artefacts.
+ *     Has pinned issues.
+ *     Can be synced to an IMS by creating an IMSProject.
+ *     Can be affected by Issues.
+ *
+ */
+export type TrackableAffectedEntitiesArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<AffectedByIssueFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<AffectedByIssueOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 /**
@@ -17495,6 +17556,335 @@ export type SearchAffectedByIssuesQuery = {
           }
         | { __typename: "Project"; name: string; description: string; id: string }
     >;
+};
+
+export type SearchAffectedByIssuesWithoutTrackableQueryVariables = Exact<{
+    query: Scalars["String"]["input"];
+    count: Scalars["Int"]["input"];
+    sublistCount?: InputMaybe<Scalars["Int"]["input"]>;
+}>;
+
+export type SearchAffectedByIssuesWithoutTrackableQuery = {
+    __typename?: "Query";
+    searchAffectedByIssues: Array<
+        | {
+              __typename: "Component";
+              name: string;
+              description: string;
+              id: string;
+              versions: {
+                  __typename?: "ComponentVersionConnection";
+                  nodes: Array<{ __typename?: "ComponentVersion"; id: string; version: string }>;
+              };
+          }
+        | {
+              __typename: "ComponentVersion";
+              version: string;
+              id: string;
+              component: { __typename?: "Component"; name: string; description: string };
+          }
+        | {
+              __typename: "Interface";
+              id: string;
+              interfaceDefinition: {
+                  __typename?: "InterfaceDefinition";
+                  interfaceSpecificationVersion: {
+                      __typename?: "InterfaceSpecificationVersion";
+                      version: string;
+                      interfaceSpecification: {
+                          __typename?: "InterfaceSpecification";
+                          name: string;
+                          description: string;
+                      };
+                  };
+              };
+          }
+        | { __typename: "InterfacePart"; name: string; description: string; id: string }
+        | {
+              __typename: "InterfaceSpecification";
+              name: string;
+              description: string;
+              id: string;
+              versions: {
+                  __typename?: "InterfaceSpecificationVersionConnection";
+                  nodes: Array<{
+                      __typename?: "InterfaceSpecificationVersion";
+                      id: string;
+                      version: string;
+                      interfaceDefinitions: {
+                          __typename?: "InterfaceDefinitionConnection";
+                          nodes: Array<{
+                              __typename?: "InterfaceDefinition";
+                              visibleInterface?: { __typename?: "Interface"; id: string } | null;
+                          }>;
+                      };
+                  }>;
+              };
+          }
+        | {
+              __typename: "InterfaceSpecificationVersion";
+              version: string;
+              id: string;
+              interfaceDefinitions: {
+                  __typename?: "InterfaceDefinitionConnection";
+                  nodes: Array<{
+                      __typename?: "InterfaceDefinition";
+                      visibleInterface?: { __typename?: "Interface"; id: string } | null;
+                  }>;
+              };
+              interfaceSpecification: { __typename?: "InterfaceSpecification"; name: string; description: string };
+          }
+        | { __typename: "Project"; name: string; description: string; id: string }
+    >;
+};
+
+export type FirstAffectedByIssuesQueryVariables = Exact<{
+    trackable: Scalars["ID"]["input"];
+    count: Scalars["Int"]["input"];
+    sublistCount: Scalars["Int"]["input"];
+}>;
+
+export type FirstAffectedByIssuesQuery = {
+    __typename?: "Query";
+    node?:
+        | { __typename?: "AddedAffectedEntityEvent" }
+        | { __typename?: "AddedArtefactEvent" }
+        | { __typename?: "AddedLabelEvent" }
+        | { __typename?: "AddedToPinnedIssuesEvent" }
+        | { __typename?: "AddedToTrackableEvent" }
+        | { __typename?: "AggregatedIssue" }
+        | { __typename?: "AggregatedIssueRelation" }
+        | { __typename?: "Artefact" }
+        | { __typename?: "ArtefactTemplate" }
+        | { __typename?: "Assignment" }
+        | { __typename?: "AssignmentType" }
+        | { __typename?: "AssignmentTypeChangedEvent" }
+        | { __typename?: "Body" }
+        | {
+              __typename?: "Component";
+              affectedEntities: {
+                  __typename?: "AffectedByIssueConnection";
+                  nodes: Array<
+                      | {
+                            __typename: "Component";
+                            name: string;
+                            description: string;
+                            id: string;
+                            versions: {
+                                __typename?: "ComponentVersionConnection";
+                                nodes: Array<{ __typename?: "ComponentVersion"; id: string; version: string }>;
+                            };
+                        }
+                      | {
+                            __typename: "ComponentVersion";
+                            version: string;
+                            id: string;
+                            component: { __typename?: "Component"; name: string; description: string };
+                        }
+                      | {
+                            __typename: "Interface";
+                            id: string;
+                            interfaceDefinition: {
+                                __typename?: "InterfaceDefinition";
+                                interfaceSpecificationVersion: {
+                                    __typename?: "InterfaceSpecificationVersion";
+                                    version: string;
+                                    interfaceSpecification: {
+                                        __typename?: "InterfaceSpecification";
+                                        name: string;
+                                        description: string;
+                                    };
+                                };
+                            };
+                        }
+                      | { __typename: "InterfacePart"; name: string; description: string; id: string }
+                      | {
+                            __typename: "InterfaceSpecification";
+                            name: string;
+                            description: string;
+                            id: string;
+                            versions: {
+                                __typename?: "InterfaceSpecificationVersionConnection";
+                                nodes: Array<{
+                                    __typename?: "InterfaceSpecificationVersion";
+                                    id: string;
+                                    version: string;
+                                    interfaceDefinitions: {
+                                        __typename?: "InterfaceDefinitionConnection";
+                                        nodes: Array<{
+                                            __typename?: "InterfaceDefinition";
+                                            visibleInterface?: { __typename?: "Interface"; id: string } | null;
+                                        }>;
+                                    };
+                                }>;
+                            };
+                        }
+                      | {
+                            __typename: "InterfaceSpecificationVersion";
+                            version: string;
+                            id: string;
+                            interfaceDefinitions: {
+                                __typename?: "InterfaceDefinitionConnection";
+                                nodes: Array<{
+                                    __typename?: "InterfaceDefinition";
+                                    visibleInterface?: { __typename?: "Interface"; id: string } | null;
+                                }>;
+                            };
+                            interfaceSpecification: {
+                                __typename?: "InterfaceSpecification";
+                                name: string;
+                                description: string;
+                            };
+                        }
+                      | { __typename: "Project"; name: string; description: string; id: string }
+                  >;
+              };
+          }
+        | { __typename?: "ComponentPermission" }
+        | { __typename?: "ComponentTemplate" }
+        | { __typename?: "ComponentVersion" }
+        | { __typename?: "ComponentVersionTemplate" }
+        | { __typename?: "FillStyle" }
+        | { __typename?: "GlobalPermission" }
+        | { __typename?: "GropiusUser" }
+        | { __typename?: "IMS" }
+        | { __typename?: "IMSIssue" }
+        | { __typename?: "IMSIssueTemplate" }
+        | { __typename?: "IMSPermission" }
+        | { __typename?: "IMSProject" }
+        | { __typename?: "IMSProjectTemplate" }
+        | { __typename?: "IMSTemplate" }
+        | { __typename?: "IMSUser" }
+        | { __typename?: "IMSUserTemplate" }
+        | { __typename?: "IncomingRelationTypeChangedEvent" }
+        | { __typename?: "Interface" }
+        | { __typename?: "InterfaceDefinition" }
+        | { __typename?: "InterfacePart" }
+        | { __typename?: "InterfacePartTemplate" }
+        | { __typename?: "InterfaceSpecification" }
+        | { __typename?: "InterfaceSpecificationDerivationCondition" }
+        | { __typename?: "InterfaceSpecificationTemplate" }
+        | { __typename?: "InterfaceSpecificationVersion" }
+        | { __typename?: "InterfaceSpecificationVersionTemplate" }
+        | { __typename?: "IntraComponentDependencyParticipant" }
+        | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
+        | { __typename?: "Issue" }
+        | { __typename?: "IssueComment" }
+        | { __typename?: "IssuePriority" }
+        | { __typename?: "IssueRelation" }
+        | { __typename?: "IssueRelationType" }
+        | { __typename?: "IssueState" }
+        | { __typename?: "IssueTemplate" }
+        | { __typename?: "IssueType" }
+        | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
+        | { __typename?: "OutgoingRelationTypeChangedEvent" }
+        | { __typename?: "PriorityChangedEvent" }
+        | {
+              __typename?: "Project";
+              affectedEntities: {
+                  __typename?: "AffectedByIssueConnection";
+                  nodes: Array<
+                      | {
+                            __typename: "Component";
+                            name: string;
+                            description: string;
+                            id: string;
+                            versions: {
+                                __typename?: "ComponentVersionConnection";
+                                nodes: Array<{ __typename?: "ComponentVersion"; id: string; version: string }>;
+                            };
+                        }
+                      | {
+                            __typename: "ComponentVersion";
+                            version: string;
+                            id: string;
+                            component: { __typename?: "Component"; name: string; description: string };
+                        }
+                      | {
+                            __typename: "Interface";
+                            id: string;
+                            interfaceDefinition: {
+                                __typename?: "InterfaceDefinition";
+                                interfaceSpecificationVersion: {
+                                    __typename?: "InterfaceSpecificationVersion";
+                                    version: string;
+                                    interfaceSpecification: {
+                                        __typename?: "InterfaceSpecification";
+                                        name: string;
+                                        description: string;
+                                    };
+                                };
+                            };
+                        }
+                      | { __typename: "InterfacePart"; name: string; description: string; id: string }
+                      | {
+                            __typename: "InterfaceSpecification";
+                            name: string;
+                            description: string;
+                            id: string;
+                            versions: {
+                                __typename?: "InterfaceSpecificationVersionConnection";
+                                nodes: Array<{
+                                    __typename?: "InterfaceSpecificationVersion";
+                                    id: string;
+                                    version: string;
+                                    interfaceDefinitions: {
+                                        __typename?: "InterfaceDefinitionConnection";
+                                        nodes: Array<{
+                                            __typename?: "InterfaceDefinition";
+                                            visibleInterface?: { __typename?: "Interface"; id: string } | null;
+                                        }>;
+                                    };
+                                }>;
+                            };
+                        }
+                      | {
+                            __typename: "InterfaceSpecificationVersion";
+                            version: string;
+                            id: string;
+                            interfaceDefinitions: {
+                                __typename?: "InterfaceDefinitionConnection";
+                                nodes: Array<{
+                                    __typename?: "InterfaceDefinition";
+                                    visibleInterface?: { __typename?: "Interface"; id: string } | null;
+                                }>;
+                            };
+                            interfaceSpecification: {
+                                __typename?: "InterfaceSpecification";
+                                name: string;
+                                description: string;
+                            };
+                        }
+                      | { __typename: "Project"; name: string; description: string; id: string }
+                  >;
+              };
+          }
+        | { __typename?: "ProjectPermission" }
+        | { __typename?: "RelatedByIssueEvent" }
+        | { __typename?: "Relation" }
+        | { __typename?: "RelationCondition" }
+        | { __typename?: "RelationLayout" }
+        | { __typename?: "RelationPartnerLayout" }
+        | { __typename?: "RelationTemplate" }
+        | { __typename?: "RemovedAffectedEntityEvent" }
+        | { __typename?: "RemovedArtefactEvent" }
+        | { __typename?: "RemovedAssignmentEvent" }
+        | { __typename?: "RemovedFromPinnedIssuesEvent" }
+        | { __typename?: "RemovedFromTrackableEvent" }
+        | { __typename?: "RemovedIncomingRelationEvent" }
+        | { __typename?: "RemovedLabelEvent" }
+        | { __typename?: "RemovedOutgoingRelationEvent" }
+        | { __typename?: "RemovedTemplatedFieldEvent" }
+        | { __typename?: "StateChangedEvent" }
+        | { __typename?: "StrokeStyle" }
+        | { __typename?: "TemplateChangedEvent" }
+        | { __typename?: "TemplatedFieldChangedEvent" }
+        | { __typename?: "TitleChangedEvent" }
+        | { __typename?: "TypeChangedEvent" }
+        | { __typename?: "View" }
+        | null;
 };
 
 type DefaultAffectedByIssueInfo_Component_Fragment = {
@@ -32870,6 +33260,104 @@ export const SearchAffectedByIssuesDocument = gql`
     }
     ${DefaultAffectedByIssueInfoFragmentDoc}
 `;
+export const SearchAffectedByIssuesWithoutTrackableDocument = gql`
+    query searchAffectedByIssuesWithoutTrackable($query: String!, $count: Int!, $sublistCount: Int) {
+        searchAffectedByIssues(query: $query, first: $count) {
+            ...DefaultAffectedByIssueInfo
+            ... on Component {
+                versions(first: $sublistCount) {
+                    nodes {
+                        id
+                        version
+                    }
+                }
+            }
+            ... on InterfaceSpecification {
+                versions(first: $sublistCount) {
+                    nodes {
+                        id
+                        version
+                        interfaceDefinitions(first: $sublistCount, filter: { visibleInterface: {} }) {
+                            nodes {
+                                visibleInterface {
+                                    id
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            ... on InterfaceSpecificationVersion {
+                interfaceDefinitions(first: $sublistCount, filter: { visibleInterface: {} }) {
+                    nodes {
+                        visibleInterface {
+                            id
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${DefaultAffectedByIssueInfoFragmentDoc}
+`;
+export const FirstAffectedByIssuesDocument = gql`
+    query firstAffectedByIssues($trackable: ID!, $count: Int!, $sublistCount: Int!) {
+        node(id: $trackable) {
+            ... on Trackable {
+                affectedEntities(first: $count) {
+                    nodes {
+                        ...DefaultAffectedByIssueInfo
+                        ... on Component {
+                            versions(first: $sublistCount) {
+                                nodes {
+                                    id
+                                    version
+                                }
+                            }
+                        }
+                        ... on InterfaceSpecification {
+                            versions(first: $sublistCount) {
+                                nodes {
+                                    id
+                                    version
+                                    interfaceDefinitions(
+                                        first: $sublistCount
+                                        filter: {
+                                            visibleInterface: {}
+                                            componentVersion: { component: { id: { eq: $trackable } } }
+                                        }
+                                    ) {
+                                        nodes {
+                                            visibleInterface {
+                                                id
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        ... on InterfaceSpecificationVersion {
+                            interfaceDefinitions(
+                                first: $sublistCount
+                                filter: {
+                                    visibleInterface: {}
+                                    componentVersion: { component: { id: { eq: $trackable } } }
+                                }
+                            ) {
+                                nodes {
+                                    visibleInterface {
+                                        id
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ${DefaultAffectedByIssueInfoFragmentDoc}
+`;
 export const AddAffectedEntityToIssueDocument = gql`
     mutation addAffectedEntityToIssue($issue: ID!, $affectedEntity: ID!) {
         addAffectedEntityToIssue(input: { issue: $issue, affectedEntity: $affectedEntity }) {
@@ -35262,6 +35750,42 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
                         signal
                     }),
                 "searchAffectedByIssues",
+                "query",
+                variables
+            );
+        },
+        searchAffectedByIssuesWithoutTrackable(
+            variables: SearchAffectedByIssuesWithoutTrackableQueryVariables,
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
+        ): Promise<SearchAffectedByIssuesWithoutTrackableQuery> {
+            return withWrapper(
+                (wrappedRequestHeaders) =>
+                    client.request<SearchAffectedByIssuesWithoutTrackableQuery>({
+                        document: SearchAffectedByIssuesWithoutTrackableDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
+                "searchAffectedByIssuesWithoutTrackable",
+                "query",
+                variables
+            );
+        },
+        firstAffectedByIssues(
+            variables: FirstAffectedByIssuesQueryVariables,
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
+        ): Promise<FirstAffectedByIssuesQuery> {
+            return withWrapper(
+                (wrappedRequestHeaders) =>
+                    client.request<FirstAffectedByIssuesQuery>({
+                        document: FirstAffectedByIssuesDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
+                "firstAffectedByIssues",
                 "query",
                 variables
             );
