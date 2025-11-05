@@ -68,6 +68,7 @@ export async function onAnyEnter(
         // only query or hash change
         return true;
     }
+    useAppStore().validateLegalInformation();
     return await authorizeIfRequired(to);
 }
 
