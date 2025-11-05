@@ -312,7 +312,6 @@ const affectsInitialFetch = async () =>
                   )
               )
         : [];
-// TODO: doesn't work apparently
 const affectsFetch = async (search: string) =>
     props.trackableId
         ? client
