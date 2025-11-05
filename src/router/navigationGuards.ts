@@ -64,7 +64,7 @@ export async function onAnyEnter(
     if (to.name == "login") {
         return true;
     }
-    if(from.path === to.path) {
+    if(from.name === to.name) {
         // only query or hash change
         return true;
     }
