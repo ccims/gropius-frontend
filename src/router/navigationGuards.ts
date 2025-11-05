@@ -64,6 +64,10 @@ export async function onAnyEnter(
     if (to.name == "login") {
         return true;
     }
+    if(from.path === to.path) {
+        // only query or hash change
+        return true;
+    }
     return await authorizeIfRequired(to);
 }
 
