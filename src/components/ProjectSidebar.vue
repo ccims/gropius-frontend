@@ -127,7 +127,6 @@ const model = defineModel({
 
 const client = useClient();
 
-
 const filterFromDropdown = useTemplateRef("filterDropdowns");
 const convertedIssueStateIndices = computed(() => {
     const additionalFilter = issueFilter.value;
@@ -300,9 +299,6 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
             if (!useAggregatedIssue) {
                 if (additionalFilter.isOpen != undefined) {
                     filterFields.state = { isOpen: { eq: additionalFilter.isOpen } };
-                }
-                if (additionalFilter.type != undefined) {
-                    filterFields.type = { id: { eq: additionalFilter.type.id } };
                 }
                 if (additionalFilter.affectedEntity != undefined) {
                     filterFields.aggregatedBy = {
