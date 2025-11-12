@@ -29,13 +29,18 @@
     </FetchingAutocomplete>
 </template>
 <script setup lang="ts">
-import { ClientReturnType, NodeReturnType, useClient } from "@/graphql/client";
+import { NodeReturnType, useClient } from "@/graphql/client";
 import { DefaultAffectedByIssueInfoFragment, DefaultTrackableInfoFragment } from "@/graphql/generated";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
 import { PropType } from "vue";
-import { affectedByIssueDescription, affectedByIssueIcon, affectedByIssueName } from "@/util/affectedByIssueUtils";
+import {
+    affectedByIssueDescription,
+    affectedByIssueIcon,
+    affectedByIssueName,
+    expandSearchResult
+} from "@/util/affectedByIssueUtils";
 
 const props = defineProps({
     initialContext: {
@@ -76,59 +81,6 @@ async function searchAffected(
     }, "Error searching affectable entities");
     const ignoredIds = new Set(props.ignore);
     return searchRes.filter((item) => !ignoredIds.has(item.id));
-}
-
-function expandSearchResult(
-    items: ClientReturnType<"searchAffectedByIssues">["searchAffectedByIssues"]
-): DefaultAffectedByIssueInfoFragment[] {
-    const lookup = new Map<string, DefaultAffectedByIssueInfoFragment>();
-    for (const item of items) {
-        lookup.set(item.id, item);
-        if (item.__typename == "Component") {
-            for (const version of item.versions.nodes) {
-                lookup.set(version.id, {
-                    ...version,
-                    __typename: "ComponentVersion",
-                    component: item
-                });
-            }
-        }
-        if (item.__typename == "InterfaceSpecification") {
-            for (const version of item.versions.nodes) {
-                const mappedVersion = {
-                    ...version,
-                    __typename: "InterfaceSpecificationVersion",
-                    interfaceSpecification: item
-                } as const;
-                lookup.set(version.id, mappedVersion);
-                for (const definition of version.interfaceDefinitions.nodes) {
-                    if (definition.visibleInterface != undefined) {
-                        lookup.set(definition.visibleInterface.id, {
-                            id: definition.visibleInterface.id,
-                            __typename: "Interface",
-                            interfaceDefinition: {
-                                interfaceSpecificationVersion: mappedVersion
-                            }
-                        });
-                    }
-                }
-            }
-        }
-        if (item.__typename == "InterfaceSpecificationVersion") {
-            for (const definition of item.interfaceDefinitions.nodes) {
-                if (definition.visibleInterface != undefined) {
-                    lookup.set(definition.visibleInterface.id, {
-                        id: definition.visibleInterface.id,
-                        __typename: "Interface",
-                        interfaceDefinition: {
-                            interfaceSpecificationVersion: item
-                        }
-                    });
-                }
-            }
-        }
-    }
-    return [...lookup.values()];
 }
 
 async function searchTrackables(filter: string, count: number): Promise<DefaultTrackableInfoFragment[]> {

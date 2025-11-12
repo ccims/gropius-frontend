@@ -64,6 +64,10 @@ export async function onAnyEnter(
     if (to.name == "login") {
         return true;
     }
+    if(from.name === to.name) {
+        // only query or hash change
+        return true;
+    }
     useAppStore().validateLegalInformation();
     return await authorizeIfRequired(to);
 }

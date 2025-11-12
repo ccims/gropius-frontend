@@ -30,61 +30,55 @@
                     :sort-fields="sortFields"
                     :to="issueRoute"
                     :sort-ascending-initially="false"
-                    :dependencies="[selectedElementInfo.componentVersion.id, issueFilter]"
+                    :dependencies="[
+                        selectedElementInfo.componentVersion.id,
+                        issueFilter,
+                        ...(filterFromDropdown?.dependencyArray ?? [])
+                    ]"
                 >
                     <template #item="{ item }">
                         <IssueListItem :item="item" hide-details />
                     </template>
                     <template #additional-filter>
-                        <div class="ga-2 d-flex flex-wrap mb-2">
-                            <v-chip
-                                v-if="issueFilter.affectedEntity != undefined"
-                                rounded="lg"
-                                variant="outlined"
-                                closable
-                                close-icon="mdi-close"
-                                :prepend-icon="
-                                    selectedElementInfo.affectedEntity.__typename == 'ComponentVersion'
-                                        ? '$component-version'
-                                        : '$interface'
-                                "
-                                @click:close="issueFilter.affectedEntity = undefined"
-                            >
-                                {{ selectedElementInfo.affectedEntityName }}
-                            </v-chip>
-                            <v-chip
-                                v-if="issueFilter.type != undefined"
-                                rounded="lg"
-                                variant="outlined"
-                                closable
-                                close-icon="mdi-close"
-                                @click:close="issueFilter.type = undefined"
-                            >
-                                {{ issueFilter.type.name }}
-                                <template #prepend>
-                                    <IssueTypeIcon
-                                        :path="issueFilter.type.iconPath"
-                                        fill="currentColor"
-                                        height="18px"
-                                        class="v-icon--start"
-                                    />
-                                </template>
-                            </v-chip>
-                            <v-chip
-                                v-if="issueFilter.isOpen != undefined"
-                                rounded="lg"
-                                variant="outlined"
-                                closable
-                                close-icon="mdi-close"
-                                :class="{
-                                    'open-issue-chip': issueFilter.isOpen,
-                                    'closed-issue-chip': !issueFilter.isOpen
-                                }"
-                                prepend-icon="mdi-circle"
-                                @click:close="issueFilter.isOpen = undefined"
-                            >
-                                {{ issueFilter.isOpen ? "Open" : "Closed" }}
-                            </v-chip>
+                        <div>
+                            <div class="ga-2 d-flex flex-wrap mb-2">
+                                <v-chip
+                                    v-if="issueFilter.affectedEntity != undefined"
+                                    rounded="lg"
+                                    variant="outlined"
+                                    closable
+                                    close-icon="mdi-close"
+                                    :prepend-icon="
+                                        selectedElementInfo.affectedEntity.__typename == 'ComponentVersion'
+                                            ? '$component-version'
+                                            : '$interface'
+                                    "
+                                    @click:close="issueFilter.affectedEntity = undefined"
+                                >
+                                    {{ selectedElementInfo.affectedEntityName }}
+                                </v-chip>
+                                <v-chip
+                                    v-if="issueFilter.isOpen != undefined"
+                                    rounded="lg"
+                                    variant="outlined"
+                                    closable
+                                    close-icon="mdi-close"
+                                    :class="{
+                                        'open-issue-chip': issueFilter.isOpen,
+                                        'closed-issue-chip': !issueFilter.isOpen
+                                    }"
+                                    prepend-icon="mdi-circle"
+                                    @click:close="issueFilter.isOpen = undefined"
+                                >
+                                    {{ issueFilter.isOpen ? "Open" : "Closed" }}
+                                </v-chip>
+                            </div>
+                            <IssueFilterDropdowns
+                                :item-manager="itemManager"
+                                ref="filterDropdowns"
+                                :state-indices="convertedIssueStateIndices"
+                                :use-query-for-filter="false"
+                            />
                         </div>
                     </template>
                 </PaginatedList>
@@ -93,7 +87,7 @@
     </v-slide-x-reverse-transition>
 </template>
 <script setup lang="ts">
-import { PropType, computed, ref, watch } from "vue";
+import { PropType, computed, ref, watch, watchEffect } from "vue";
 import PaginatedList from "@/components/PaginatedList.vue";
 import {
     GraphAggregatedIssueInfoFragment,
@@ -108,10 +102,11 @@ import { SelectedElement } from "@gropius/graph-editor";
 import { ContextMenuData } from "./GraphEditor.vue";
 import { NodeReturnType, useClient } from "@/graphql/client";
 import IssueListItem from "@/components/IssueListItem.vue";
-import IssueTypeIcon from "@/components/IssueTypeIcon.vue";
 import { IdObject } from "@/util/types";
 import { RouteLocationRaw } from "vue-router";
 import { ItemManager } from "@/util/itemManager";
+import IssueFilterDropdowns from "@/components/input/IssueFilterDropdowns.vue";
+import { useTemplateRef } from "vue";
 
 type ProjectGraph = NodeReturnType<"getProjectGraph", "Project">;
 type Issue = IssueListItemInfoFragment;
@@ -131,6 +126,17 @@ const model = defineModel({
 });
 
 const client = useClient();
+
+const filterFromDropdown = useTemplateRef("filterDropdowns");
+const convertedIssueStateIndices = computed(() => {
+    const additionalFilter = issueFilter.value;
+    if (additionalFilter.isOpen === undefined) {
+        return [0, 1];
+    } else if (additionalFilter.isOpen) {
+        return [0];
+    }
+    return [1];
+});
 
 interface IssueFilterSpec {
     isOpen?: boolean;
@@ -197,22 +203,33 @@ const selectedElementInfo = computed<SelectableElementInfo | undefined>(() => {
     return selectableElementLookup.value.get(model.value.id);
 });
 
-watch(selectedElementInfo, (newValue) => {
-    if (newValue != undefined) {
-        const aggregatedIssue = newValue.aggregatedIssue;
-        if (aggregatedIssue != undefined) {
-            issueFilter.value = {
-                aggregatedIssue: aggregatedIssue.id,
-                isOpen: aggregatedIssue.isOpen,
-                affectedEntity: newValue.affectedEntity,
-                type: aggregatedIssue.type
-            };
+watch(
+    selectedElementInfo,
+    (newValue) => {
+        if (newValue != undefined) {
+            const aggregatedIssue = newValue.aggregatedIssue;
+            if (aggregatedIssue != undefined) {
+                issueFilter.value = {
+                    aggregatedIssue: aggregatedIssue.id,
+                    isOpen: aggregatedIssue.isOpen,
+                    affectedEntity: newValue.affectedEntity,
+                    type: aggregatedIssue.type
+                };
+                filterFromDropdown.value?.setSingleFilters({ type: aggregatedIssue.type?.id });
+            } else {
+                issueFilter.value = {
+                    affectedEntity: newValue.affectedEntity
+                };
+            }
         } else {
-            issueFilter.value = {
-                affectedEntity: newValue.affectedEntity
-            };
+            issueFilter.value = {};
         }
-    }
+    },
+    { flush: "sync" }
+);
+
+watchEffect(() => {
+    filterFromDropdown.value?.setSingleFilters({ type: issueFilter.value?.type?.id });
 });
 
 const sortFields = {
@@ -231,6 +248,18 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
             additionalFilter.aggregatedIssue != undefined &&
             additionalFilter.affectedEntity != undefined &&
             additionalFilter.isOpen != undefined;
+        const currentFilter = filterFromDropdown.value;
+        const filterFields: IssueFilterInput = currentFilter
+            ? {
+                  labels: currentFilter.labelInput,
+                  template: currentFilter.templateInput,
+                  assignments: currentFilter.assignedToInput,
+                  priority: currentFilter.priorityInput,
+                  type: currentFilter.typeInput,
+                  state: currentFilter.stateInput,
+                  affects: currentFilter.affectedInput
+              }
+            : {};
         if (filter == undefined) {
             const parameters = {
                 orderBy,
@@ -238,12 +267,8 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
                 skip: page * count
             };
             if (!useAggregatedIssue) {
-                const filterFields: IssueFilterInput = {};
                 if (additionalFilter.isOpen != undefined) {
                     filterFields.state = { isOpen: { eq: additionalFilter.isOpen } };
-                }
-                if (additionalFilter.type != undefined) {
-                    filterFields.type = { id: { eq: additionalFilter.type.id } };
                 }
                 if (additionalFilter.affectedEntity != undefined) {
                     filterFields.aggregatedBy = {
@@ -266,13 +291,9 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
                 return [issues.nodes, issues.totalCount];
             }
         } else {
-            const filterFields: IssueFilterInput = {};
             if (!useAggregatedIssue) {
                 if (additionalFilter.isOpen != undefined) {
                     filterFields.state = { isOpen: { eq: additionalFilter.isOpen } };
-                }
-                if (additionalFilter.type != undefined) {
-                    filterFields.type = { id: { eq: additionalFilter.type.id } };
                 }
                 if (additionalFilter.affectedEntity != undefined) {
                     filterFields.aggregatedBy = {
@@ -305,7 +326,7 @@ function issueRoute(issue: IdObject): RouteLocationRaw {
 </script>
 <style scoped>
 .sidebar {
-    width: 500px;
+    width: 600px;
 }
 
 .open-issue-chip :deep(.v-icon:not(.mdi-close)) {

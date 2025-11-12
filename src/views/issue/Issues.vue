@@ -45,8 +45,8 @@ type Issue = IssueListItemInfoFragment;
 const client = useClient();
 const router = useRouter();
 const route = useRoute();
-// @ts-ignore no idea why this is needed
-const filterFromDropdown = useTemplateRef<InstanceType<typeof IssueFilterDropdowns>>("filterDropdowns");
+
+const filterFromDropdown = useTemplateRef("filterDropdowns");
 
 const issueStateIndices = computed({
     get: () => {
@@ -82,7 +82,8 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
                   assignments: currentFilter.assignedToInput,
                   priority: currentFilter.priorityInput,
                   type: currentFilter.typeInput,
-                  state: currentFilter.stateInput
+                  state: currentFilter.stateInput,
+                  affects: currentFilter.affectedInput
               }
             : {};
         if (filter == undefined) {

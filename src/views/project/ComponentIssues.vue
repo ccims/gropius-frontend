@@ -5,7 +5,7 @@
         :sort-fields="issueSortFields"
         :to="(issue: Issue) => issueRoute(issue)"
         :sort-ascending-initially="false"
-        :dependencies="[stateFilterInput]"
+        :dependencies="filterFromDropdown?.dependencyArray ?? []"
         query-param-prefix=""
     >
         <template #item="{ item }">
@@ -13,6 +13,13 @@
         </template>
         <template #search-append>
             <IssueStateSegmentedButton v-model="issueStateIndices" class="ml-2" />
+        </template>
+        <template #additional-filter>
+            <IssueFilterDropdowns
+                :item-manager="itemManager"
+                :state-indices="issueStateIndices"
+                ref="filterDropdowns"
+            />
         </template>
         <IssueDialogs />
     </PaginatedList>
@@ -22,13 +29,19 @@ import { NodeReturnType, useClient } from "@/graphql/client";
 import { computed } from "vue";
 import { RouteLocationRaw, useRoute, useRouter } from "vue-router";
 import PaginatedList from "@/components/PaginatedList.vue";
-import { IssueOrder, IssueOrderField, ProjectComponentIssueListItemInfoFragment } from "@/graphql/generated";
+import {
+    IssueFilterInput,
+    IssueOrder,
+    IssueOrderField,
+    ProjectComponentIssueListItemInfoFragment
+} from "@/graphql/generated";
 import IssueListItem from "@/components/IssueListItem.vue";
 import IssueStateSegmentedButton from "@/components/input/IssueStateSegmentedButton.vue";
-import { IdObject } from "@/util/types";
 import IssueDialogs from "@/components/IssueDialogs.vue";
 import { issueSortFields } from "@/util/issueSortFields";
 import { ItemManager } from "@/util/itemManager";
+import IssueFilterDropdowns from "@/components/input/IssueFilterDropdowns.vue";
+import { useTemplateRef } from "vue";
 
 type Project = NodeReturnType<"getComponentIssueList", "Project">;
 type Issue = ProjectComponentIssueListItemInfoFragment;
@@ -36,6 +49,8 @@ type Issue = ProjectComponentIssueListItemInfoFragment;
 const client = useClient();
 const router = useRouter();
 const route = useRoute();
+
+const filterFromDropdown = useTemplateRef("filterDropdowns");
 
 const issueStateIndices = computed({
     get: () => {
@@ -53,15 +68,6 @@ const issueStateIndices = computed({
         router.replace({ query: { ...route.query, state } });
     }
 });
-
-const stateFilterInput = computed(() => {
-    if (issueStateIndices.value.length != 1) {
-        return undefined;
-    }
-    const state = issueStateIndices.value[0] == 0;
-    return { isOpen: { eq: state } };
-});
-
 const trackableId = computed(() => route.params.trackable as string);
 
 class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
@@ -71,13 +77,25 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
         count: number,
         page: number
     ): Promise<[Issue[], number]> {
+        const currentFilter = filterFromDropdown.value;
+        const issueFilter: IssueFilterInput = currentFilter
+            ? {
+                  labels: currentFilter.labelInput,
+                  template: currentFilter.templateInput,
+                  assignments: currentFilter.assignedToInput,
+                  priority: currentFilter.priorityInput,
+                  type: currentFilter.typeInput,
+                  state: currentFilter.stateInput,
+                  affects: currentFilter.affectedInput
+              }
+            : {};
         if (filter == undefined) {
             const res = await client.getComponentIssueList({
                 orderBy,
                 count,
                 skip: page * count,
                 project: trackableId.value,
-                filter: { state: stateFilterInput.value }
+                filter: issueFilter
             });
             const issues = (res.node as Project).componentIssues;
             return [issues.nodes, issues.totalCount];
@@ -86,7 +104,7 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
                 query: filter,
                 count,
                 project: trackableId.value,
-                filter: { state: stateFilterInput.value }
+                filter: issueFilter
             });
             return [res.searchIssues, res.searchIssues.length];
         }
