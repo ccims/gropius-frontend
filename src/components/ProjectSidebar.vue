@@ -87,7 +87,7 @@
     </v-slide-x-reverse-transition>
 </template>
 <script setup lang="ts">
-import { PropType, computed, ref, watch } from "vue";
+import { PropType, computed, ref, watch, watchEffect } from "vue";
 import PaginatedList from "@/components/PaginatedList.vue";
 import {
     GraphAggregatedIssueInfoFragment,
@@ -228,14 +228,9 @@ watch(
     { flush: "sync" }
 );
 
-watch(
-    filterFromDropdown,
-    (newValue) => {
-        if (!newValue) return;
-        newValue.setSingleFilters({ type: issueFilter.value?.type?.id });
-    },
-    { immediate: true }
-);
+watchEffect(() => {
+    filterFromDropdown.value?.setSingleFilters({ type: issueFilter.value?.type?.id });
+});
 
 const sortFields = {
     Updated: IssueOrderField.LastUpdatedAt
