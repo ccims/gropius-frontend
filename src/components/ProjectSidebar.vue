@@ -127,8 +127,8 @@ const model = defineModel({
 
 const client = useClient();
 
-// @ts-ignore no idea why this is needed
-const filterFromDropdown = useTemplateRef<InstanceType<typeof IssueFilterDropdowns>>("filterDropdowns");
+
+const filterFromDropdown = useTemplateRef("filterDropdowns");
 const convertedIssueStateIndices = computed(() => {
     const additionalFilter = issueFilter.value;
     if (additionalFilter.isOpen === undefined) {

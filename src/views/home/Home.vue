@@ -63,8 +63,7 @@ const router = useRouter();
 const route = useRoute();
 const store = useAppStore();
 
-// @ts-ignore no idea why this is needed
-const filterFromDropdown = useTemplateRef<InstanceType<typeof IssueFilterDropdowns>>("filterDropdowns");
+const filterFromDropdown = useTemplateRef("filterDropdowns");
 
 const issueStateIndices = computed({
     get: () => {

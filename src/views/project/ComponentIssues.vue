@@ -49,8 +49,8 @@ type Issue = ProjectComponentIssueListItemInfoFragment;
 const client = useClient();
 const router = useRouter();
 const route = useRoute();
-// @ts-ignore no idea why this is needed
-const filterFromDropdown = useTemplateRef<InstanceType<typeof IssueFilterDropdowns>>("filterDropdowns");
+
+const filterFromDropdown = useTemplateRef("filterDropdowns");
 
 const issueStateIndices = computed({
     get: () => {
