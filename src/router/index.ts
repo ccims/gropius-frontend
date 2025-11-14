@@ -34,6 +34,38 @@ const routes: RouteRecordRaw[] = [
                 component: () => import("../views/home/IMSs.vue")
             },
             {
+                path: "templates",
+                name: "templates",
+                component: () => import("../views/RouterOnly.vue"),
+                children: [
+                    {
+                        path: "",
+                        name: "templates-issue",
+                        component: () => import("../views/home/Templates/IssueTemplates.vue")
+                    },
+                    {
+                        path: "component",
+                        name: "templates-component",
+                        component: () => import("../views/home/Templates/IssueTemplates.vue")
+                    },
+                    {
+                        path: "artefact",
+                        name: "templates-artefact",
+                        component: () => import("../views/home/Templates/IssueTemplates.vue")
+                    },
+                    {
+                        path: "interface-specification",
+                        name: "templates-interface-specification",
+                        component: () => import("../views/home/Templates/IssueTemplates.vue")
+                    },
+                    {
+                        path: "relation",
+                        name: "templates-relation",
+                        component: () => import("../views/home/Templates/IssueTemplates.vue")
+                    }
+                ]
+            },
+            {
                 path: "admin",
                 name: "admin",
                 component: () => import("../views/RouterOnly.vue"),
@@ -347,6 +379,17 @@ const routes: RouteRecordRaw[] = [
                         component: () => import("../views/ims/details/Danger.vue")
                     }
                 ]
+            }
+        ]
+    },
+    {
+        path: "/templates/:trackable",
+        component: () => import("../views/component/Home.vue"),
+        children: [
+            {
+                path: "",
+                name: "issue-template",
+                component: () => import("../views/component/Home.vue")
             }
         ]
     },

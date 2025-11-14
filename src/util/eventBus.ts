@@ -13,6 +13,11 @@ export type Events = {
     "import-label": undefined;
     "create-ims": undefined;
     "create-ims-project": undefined;
+    "create-issue-template": undefined;
+    "create-artefact-template": undefined;
+    "create-component-template": undefined;
+    "create-interface-specification-template": undefined;
+    "create-relation-template": undefined;
     "create-permission": undefined;
     "import-permission": undefined;
     "add-component-version-to-project": undefined;
