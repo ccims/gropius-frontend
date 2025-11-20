@@ -22,6 +22,7 @@ export type Events = {
     "create-auth-client": undefined;
     "create-view": undefined;
     "add-interface-specification-version-to-component-version": undefined;
+    "create-legal-information": undefined;
 };
 
 export function onEvent(event: keyof Events, handler: (event: Events[keyof Events]) => void) {

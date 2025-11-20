@@ -13,7 +13,6 @@
     </PermissionList>
 </template>
 <script lang="ts" setup>
-import { ItemManager } from "@/components/PaginatedList.vue";
 import PermissionList, {
     CreatePermissionFunctionInput,
     UpdatePermissionFunctionInput
@@ -26,6 +25,7 @@ import {
     ImsPermissionOrderField,
     DefaultImsPermissionInfoFragment
 } from "@/graphql/generated";
+import { ItemManager } from "@/util/itemManager";
 import { IdObject } from "@/util/types";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
@@ -37,8 +37,8 @@ const imsId = computed(() => route.params.ims as string);
 
 const permissionEntries = Object.values(ImsPermissionEntry);
 
-const itemManager: ItemManager<DefaultImsPermissionInfoFragment, ImsPermissionOrderField> = {
-    fetchItems: async function (
+class ImsPermissionItemManager extends ItemManager<DefaultImsPermissionInfoFragment, ImsPermissionOrderField> {
+    protected async fetchItems(
         filter: string | undefined,
         orderBy: ImsPermissionOrder[],
         count: number,
@@ -62,7 +62,11 @@ const itemManager: ItemManager<DefaultImsPermissionInfoFragment, ImsPermissionOr
             return [res.searchIMSPermissions, res.searchIMSPermissions.length];
         }
     }
-};
+}
+const itemManager = new ImsPermissionItemManager() as ItemManager<
+    DefaultImsPermissionInfoFragment,
+    ImsPermissionOrderField
+>;
 
 async function removePermission(id: string): Promise<void> {
     await client.removeIMSPermissionFromIMS({ ims: imsId.value, imsPermission: id });
