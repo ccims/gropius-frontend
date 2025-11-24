@@ -51,7 +51,7 @@ export const useAppStore = defineStore("app", {
             this.refreshToken = refreshToken;
             await this.validateUser();
         },
-        async logout(): Promise<void> {
+        logout(): void {
             this.accessToken = "";
             this.refreshToken = "";
             this.redirectTo = "";

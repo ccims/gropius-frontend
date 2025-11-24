@@ -2,21 +2,12 @@
     <v-card color="surface-elevated-3" rounded="lger" class="mt-2 pa-3 account-card" elevation="4">
         <div class="d-flex flex-column align-center">
             <img :src="user.avatar" class="large-avatar rounded-circle mb-2" />
-
             <p class="text-h5 text-on-surface text-ellipsis max-width-100">Hi {{ user.displayName }}</p>
-
-            <p class="text-medium-emphasis">
-                {{ user.username }}
-            </p>
-
-            <p v-if="user.email" class="text-medium-emphasis text-ellipsis">
-                {{ user.email }}
-            </p>
-
+            <p class="text-medium-emphasis">{{ user.username }}</p>
+            <p v-if="user.email" class="text-medium-emphasis text-ellipsis">{{ user.email }}</p>
             <DefaultButton variant="outlined" class="mt-3 w-100" href="/auth/flow/account">
                 Manage Account
             </DefaultButton>
-
             <DefaultButton variant="tonal" class="mt-3 w-100" @click="logout"> Logout </DefaultButton>
         </div>
     </v-card>
@@ -46,7 +37,7 @@ async function logout() {
             "x-csrf-token": csrf
         }
     });
-    await store.logout();
+    store.logout();
     await router.push({
         name: "home",
         force: true

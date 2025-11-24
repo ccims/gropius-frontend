@@ -14,18 +14,14 @@ export async function onLoginEnter(
 
     if (oauthCode !== undefined && oauthCode.length > 0) {
         try {
-            const tokenResponse: OAuthRespose = await withErrorMessage(
-                async () =>
-                    (
-                        await axios.post("/auth/oauth/token", {
-                            grant_type: "authorization_code",
-                            client_id: "gropius-auth-client",
-                            code: oauthCode,
-                            code_verifier: store.codeVerifier
-                        })
-                    ).data,
-                "Could not login."
-            );
+            const tokenResponse: OAuthRespose = (
+                await axios.post("/auth/oauth/token", {
+                    grant_type: "authorization_code",
+                    client_id: "gropius-auth-client",
+                    code: oauthCode,
+                    code_verifier: store.codeVerifier
+                })
+            ).data;
             await store.setNewTokenPair(tokenResponse.access_token, tokenResponse.refresh_token);
 
             const redirectTo = store.redirectTo;
@@ -34,8 +30,9 @@ export async function onLoginEnter(
                 ...router.resolve(redirectTo),
                 replace: true
             };
-        } catch (err) {
+        } catch (err: any) {
             console.log(err);
+            store.pushError("Could not login");
             return {
                 name: "home",
                 replace: true
@@ -53,7 +50,7 @@ export async function onAnyEnter(
     if (to.name == "login") {
         return true;
     }
-    if(from.name === to.name) {
+    if (from.name === to.name) {
         // only query or hash change
         return true;
     }
