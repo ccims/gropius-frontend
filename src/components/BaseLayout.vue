@@ -129,7 +129,7 @@ const props = defineProps({
 });
 
 const theme = useTheme();
-const lightMode = useLocalStorage("lightMode", true);
+const lightMode = useLocalStorage("gropiusFrontend__lightMode", true);
 const store = useAppStore();
 
 function toggleDarkMode() {

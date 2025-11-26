@@ -72,6 +72,24 @@ export default defineConfig({
             }
         }
     },
+    preview: {
+        port: 4200,
+        proxy: {
+            "/api/graphql": {
+                target: "http://localhost:8080/graphql",
+                changeOrigin: true,
+                secure: false,
+                ws: true,
+                ignorePath: true
+            },
+            "/auth": {
+                target: "http://localhost:3000",
+                changeOrigin: true,
+                secure: false,
+                ws: true
+            }
+        }
+    },
     optimizeDeps: {
         exclude: ["vuetify", "@github/task-lists-element"]
     },
