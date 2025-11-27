@@ -35,7 +35,10 @@ export function useClient() {
                     store.accessToken = "";
                     store.refreshToken = "";
                     const router = useRouter();
-                    router.push({ name: "login" });
+                    router.push({
+                        name: "home",
+                        force: true
+                    });
                     throw err;
                 }
             } else {
