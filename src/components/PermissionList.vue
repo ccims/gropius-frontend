@@ -64,7 +64,7 @@
         </template>
         <template #additional-filter>
             <div class="d-flex ga-2 align-center h-100">
-                <v-switch v-model="allUsers" label="Show only permissions for all users" class="" />
+                <v-switch v-model="allUsers" label="Show only permissions for all users" :inset="false" />
                 <FilterDropdown
                     v-model="users"
                     label="User"
