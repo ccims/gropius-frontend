@@ -124,6 +124,7 @@ import { ItemManager } from "@/util/itemManager";
 import FilterDropdown from "@/components/input/FilterDropdown.vue";
 import { useFilterOption } from "@/util/useFilterOption";
 import { useClient } from "@/graphql/client";
+import { GlobalPermissionFilterInput } from "@/graphql/generated";
 
 export type UpdatePermissionFunctionInput<T> = IdObject &
     Partial<{
@@ -193,7 +194,7 @@ function importedPermission(permission: IdObject) {
 const allUsers = ref<boolean>(false);
 const users = useFilterOption("users", true);
 const userFilter = computed(() => {
-    const filter: any = {};
+    const filter: GlobalPermissionFilterInput = {};
     if (allUsers.value) {
         filter.allUsers = { eq: true };
     }

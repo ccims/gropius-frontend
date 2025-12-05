@@ -58,7 +58,7 @@ const sortFields = {
 
 const templateIds = useFilterOption("template", true);
 const templateInput = computed(() => {
-    if (templateIds.value.length == 0) {
+    if (templateIds.value.length === 0) {
         return undefined;
     }
     return { id: { in: templateIds.value } };
