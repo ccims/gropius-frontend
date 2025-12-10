@@ -7,7 +7,7 @@
             (imsProject: IMSProject) => (imsProject.ims ? imsProjectRoute(imsProject.id, imsProject.ims.id) : undefined)
         "
         query-param-prefix=""
-        :dependencies="[templateInput]"
+        :dependencies="dependencyArray"
     >
         <template #item="{ item }">
             <ListItem
@@ -77,6 +77,8 @@ const templateInput = computed(() => {
 });
 const templateFetch = async (query: string) =>
     client.searchIMSTemplates({ query: query, count: 100 }).then((res) => res.searchIMSTemplates);
+
+const dependencyArray = computed(() => [templateInput]);
 
 class IMSProjectItemManager extends ItemManager<IMSProject, ImsProjectOrderField> {
     protected async fetchItems(

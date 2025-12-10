@@ -5,7 +5,7 @@
         :sort-fields="sortFields"
         :to="(component: Component) => componentRoute(component)"
         query-param-prefix=""
-        :dependencies="[templateInput]"
+        :dependencies="dependencyArray"
     >
         <template #item="{ item }">
             <ListItem
@@ -66,6 +66,8 @@ const templateInput = computed(() => {
 });
 const templateFetch = async (query: string) =>
     client.searchComponentTemplates({ query: query, count: 100 }).then((res) => res.searchComponentTemplates);
+
+const dependencyArray = computed(() => [templateInput])
 
 class ComponentItemManager extends ItemManager<Component, ComponentOrderField> {
     protected async fetchItems(

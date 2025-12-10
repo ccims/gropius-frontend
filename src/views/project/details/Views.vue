@@ -4,7 +4,7 @@
         :item-manager="itemManager"
         :sort-fields="sortFields"
         :to="() => undefined"
-        :dependencies="[modifiedViews, templateInput]"
+        :dependencies="dependencyArray"
         query-param-prefix=""
     >
         <template #item="{ item }">
@@ -114,6 +114,8 @@ const templateInput = computed(() => {
 });
 const templateFetch = async (query: string) =>
     client.searchComponentTemplates({ query: query, count: 100 }).then((res) => res.searchComponentTemplates);
+
+const dependencyArray = computed(() => [modifiedViews, templateInput]);
 
 class ViewItemManager extends ItemManager<View, ViewOrderField> {
     protected async fetchItems(

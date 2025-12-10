@@ -4,7 +4,7 @@
         :item-manager="itemManager"
         :sort-fields="sortFields"
         :to="() => undefined"
-        :dependencies="[modifiedIds, templateInput, interfaceSpecificationInput]"
+        :dependencies="dependencyArray"
         query-param-prefix=""
     >
         <template #item="{ item }">
@@ -201,6 +201,8 @@ const templateFetch = async (search: string) =>
                 description: t.description
             }))
         );
+
+const dependencyArray = computed(() => [modifiedIds, templateInput, interfaceSpecificationInput])
 
 class InterfaceDefinitionItemManager extends ItemManager<InterfaceDefinition, InterfaceDefinitionOrderField> {
     protected async fetchItems(

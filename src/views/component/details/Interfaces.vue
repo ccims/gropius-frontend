@@ -5,7 +5,7 @@
         :sort-fields="sortFields"
         :to="(interfaceSpecification: InterfaceSpecification) => interfaceSpecificationRoute(interfaceSpecification)"
         query-param-prefix=""
-        :dependencies="[templateInput]"
+        :dependencies="dependencyArray"
     >
         <template #item="{ item }">
             <ListItem
@@ -85,9 +85,10 @@ const templateInput = computed<InterfaceSpecificationFilterInput | undefined>(()
         return undefined;
     }
     return {
-        template: { id: { in: templateIds.value } }
+        id: { in: templateIds.value }
     };
 });
+const dependencyArray = computed(() => [templateInput])
 const templateFetch = async (search: string) =>
     client
         .searchInterfaceSpecificationTemplates({

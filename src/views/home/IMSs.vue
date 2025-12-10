@@ -5,7 +5,7 @@
         :sort-fields="sortFields"
         :to="(ims: IMS) => imsRoute(ims)"
         query-param-prefix=""
-        :dependencies="[templateInput]"
+        :dependencies="dependencyArray"
     >
         <template #item="{ item }">
             <ListItem
@@ -65,6 +65,8 @@ const templateInput = computed(() => {
 });
 const templateFetch = async (query: string) =>
     client.searchIMSTemplates({ query: query, count: 100 }).then((res) => res.searchIMSTemplates);
+
+const dependencyArray = computed(() => [templateInput]);
 
 class IMSItemManager extends ItemManager<IMS, ImsOrderField> {
     protected async fetchItems(
