@@ -114,7 +114,7 @@ import ConfirmationDialog from "@/components/dialog/ConfirmationDialog.vue";
 import { enumToRegularCase } from "@/util/casingTransformers";
 import { permissionSortFields } from "@/util/permissionSortFields";
 import { withErrorMessage } from "@/util/withErrorMessage";
-import { computed, PropType } from "vue";
+import { computed, PropType, watch } from "vue";
 import { ref } from "vue";
 import ManagePermissionUsersDialog from "./dialog/ManagePermissionUsersDialog.vue";
 import { IdObject, ValueOf } from "@/util/types";
@@ -193,6 +193,16 @@ function importedPermission(permission: IdObject) {
 
 const allUsers = ref<boolean>(false);
 const users = useFilterOption("users", true);
+watch(allUsers, (newVal) => {
+    if (newVal) {
+        users.value = [];
+    }
+});
+watch(users, (newVal) => {
+    if (newVal.length > 0) {
+        allUsers.value = false;
+    }
+});
 const userFilter = computed(() => {
     const filter: GlobalPermissionFilterInput = {};
     if (allUsers.value) {
