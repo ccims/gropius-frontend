@@ -31,7 +31,8 @@ export async function query<TData, TVariables extends Variables = Variables>(
     try {
         return await useClient().request<TData, TVariables>(query, ...variables);
     } catch (error) {
-        // TODO: Better error handling
+        pushErrorMessage("Error in query");
+        console.error(error);
         return undefined;
     }
 }
