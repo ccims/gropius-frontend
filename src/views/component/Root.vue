@@ -1,27 +1,30 @@
 <template>
-    <BaseLayout
+    <BaseLayoutWithError
         :title-segments="titleSegments"
         :tabs="tabs"
         :right-sidebar-items="rightSidebarItems"
         :left-sidebar-items="leftSidebarItems"
+        :data-present="!!component"
+        :evaluating="evaluating"
     >
         <template #content>
             <router-view />
         </template>
-    </BaseLayout>
+    </BaseLayoutWithError>
 </template>
 
 <script lang="ts" setup>
 import BaseLayout from "@/components/BaseLayout.vue";
 import { NodeReturnType, useClient } from "@/graphql/client";
 import { computedAsync } from "@vueuse/core";
-import { computed, ref } from "vue";
+import { computed, ref, shallowRef } from "vue";
 import { RouteLocationRaw, useRoute } from "vue-router";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import { inject } from "vue";
 import { eventBusKey, trackableKey } from "@/util/keys";
 import { provide } from "vue";
 import { onEvent } from "@/util/eventBus";
+import BaseLayoutWithError from "@/components/BaseLayoutWithError.vue";
 
 type Component = NodeReturnType<"getComponent", "Component">;
 
@@ -39,7 +42,7 @@ const titleSegmentDependency = ref(0);
 onEvent("title-segment-changed", () => {
     titleSegmentDependency.value++;
 });
-
+const evaluating = shallowRef(false);
 const component = computedAsync(
     async () => {
         if (!componentId.value) {
@@ -53,7 +56,7 @@ const component = computedAsync(
         return res.node as Component;
     },
     null,
-    { shallow: false }
+    { shallow: false, evaluating }
 );
 
 const version = computedAsync(

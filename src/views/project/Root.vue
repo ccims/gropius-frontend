@@ -1,26 +1,28 @@
 <template>
-    <BaseLayout
+    <BaseLayoutWithError
         :title-segments="titleSegments"
         :tabs="tabs"
         :right-sidebar-items="rightSidebarItems"
         :left-sidebar-items="leftSidebarItems"
+        :data-present="!!project"
+        :evaluating="evaluating"
     >
         <template #content>
             <router-view />
         </template>
-    </BaseLayout>
+    </BaseLayoutWithError>
 </template>
 
 <script lang="ts" setup>
-import BaseLayout from "@/components/BaseLayout.vue";
 import { NodeReturnType, useClient } from "@/graphql/client";
 import { computedAsync } from "@vueuse/core";
-import { computed, provide, ref } from "vue";
+import { computed, provide, ref, shallowRef, watch } from "vue";
 import { RouteLocationRaw, useRoute } from "vue-router";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import { eventBusKey, trackableKey } from "@/util/keys";
 import { inject } from "vue";
 import { onEvent } from "@/util/eventBus";
+import BaseLayoutWithError from "@/components/BaseLayoutWithError.vue";
 
 type Project = NodeReturnType<"getProject", "Project">;
 
@@ -33,7 +35,7 @@ const titleSegmentDependency = ref(0);
 onEvent("title-segment-changed", () => {
     titleSegmentDependency.value++;
 });
-
+const evaluating = shallowRef(false)
 const project = computedAsync(
     async () => {
         if (!projectId.value) {
@@ -44,7 +46,7 @@ const project = computedAsync(
         return res.node as Project;
     },
     null,
-    { shallow: false }
+    { shallow: false, evaluating }
 );
 
 provide(trackableKey, project);
