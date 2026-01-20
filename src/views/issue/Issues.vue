@@ -37,7 +37,7 @@ import { issueSortFields } from "@/util/issueSortFields";
 import { ItemManager } from "@/util/itemManager";
 import IssueFilterDropdowns from "@/components/input/IssueFilterDropdowns.vue";
 import { IssueListItemInfoFragment, IssueOrderField, IssueOrder, IssueFilterInput } from "@/gql/graphql";
-import { query, queryNode } from "@/gql/client";
+import { request, queryNode } from "@/gql/client";
 import { graphql } from "@/gql";
 
 type Issue = IssueListItemInfoFragment;
@@ -130,7 +130,7 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
                 return [component.issues.nodes, component.issues.totalCount];
             }
         } else {
-            const res = await query(getFilteredIssueList, {
+            const res = await request(getFilteredIssueList, {
                 query: filter,
                 count,
                 filter: {

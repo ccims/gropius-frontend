@@ -24,7 +24,7 @@ export function useClient() {
 type Variables = Record<string, unknown>;
 type VariablesAndRequestHeadersArgs<V extends Variables> =
     V extends Record<any, never> ? [variables?: V] : [variables: V];
-export async function query<TData, TVariables extends Variables = Variables>(
+export async function request<TData, TVariables extends Variables = Variables>(
     query: DocumentNode | TypedDocumentNode<TData, TVariables>,
     ...variables: VariablesAndRequestHeadersArgs<TVariables>
 ) {
