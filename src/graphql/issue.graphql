@@ -1,16 +1,3 @@
-query getIssueList($orderBy: [IssueOrder!]!, $count: Int!, $skip: Int!, $filter: IssueFilterInput, $trackable: ID!) {
-    node(id: $trackable) {
-        ... on Trackable {
-            issues(filter: $filter, orderBy: $orderBy, first: $count, skip: $skip) {
-                nodes {
-                    ...IssueListItemInfo
-                }
-                totalCount
-            }
-        }
-    }
-}
-
 query getComponentIssueList(
     $orderBy: [IssueOrder!]!
     $count: Int!
@@ -46,12 +33,6 @@ query getIssueListOnAggregatedIssue(
                 totalCount
             }
         }
-    }
-}
-
-query getFilteredIssueList($query: String!, $count: Int!, $filter: IssueFilterInput) {
-    searchIssues(query: $query, first: $count, filter: $filter) {
-        ...IssueListItemInfo
     }
 }
 
@@ -346,7 +327,7 @@ query firstIssues($count: Int!, $trackable: ID!) {
 query getAssignedUsers($trackable: ID!, $filter: String!) {
     node(id: $trackable) {
         ... on Trackable {
-            assignedUsers(filter: { username: {contains: $filter} }) {
+            assignedUsers(filter: { username: { contains: $filter } }) {
                 nodes {
                     ...DefaultUserInfo
                 }
@@ -358,7 +339,7 @@ query getAssignedUsers($trackable: ID!, $filter: String!) {
 query getUsedIssueTemplates($trackable: ID!, $filter: String!) {
     node(id: $trackable) {
         ... on Trackable {
-            usedIssueTemplates(filter: { name: {contains: $filter} }) {
+            usedIssueTemplates(filter: { name: { contains: $filter } }) {
                 nodes {
                     ...DefaultIssueTemplateInfo
                 }
@@ -370,7 +351,7 @@ query getUsedIssueTemplates($trackable: ID!, $filter: String!) {
 query getUsedIssueTypes($trackable: ID!, $filter: String!) {
     node(id: $trackable) {
         ... on Trackable {
-            usedIssueTypes(filter: { name: {contains: $filter} }) {
+            usedIssueTypes(filter: { name: { contains: $filter } }) {
                 nodes {
                     ...DefaultIssueTypeInfo
                 }
@@ -382,7 +363,7 @@ query getUsedIssueTypes($trackable: ID!, $filter: String!) {
 query getUsedIssueStates($trackable: ID!, $filter: String!) {
     node(id: $trackable) {
         ... on Trackable {
-            usedIssueStates(filter: { name: {contains: $filter} }) {
+            usedIssueStates(filter: { name: { contains: $filter } }) {
                 nodes {
                     ...DefaultIssueStateInfo
                 }
@@ -394,7 +375,7 @@ query getUsedIssueStates($trackable: ID!, $filter: String!) {
 query getUsedIssuePriorities($trackable: ID!, $filter: String!) {
     node(id: $trackable) {
         ... on Trackable {
-            usedIssuePriorities(filter: { name: {contains: $filter} }) {
+            usedIssuePriorities(filter: { name: { contains: $filter } }) {
                 nodes {
                     ...DefaultIssuePriorityInfo
                 }
@@ -406,7 +387,7 @@ query getUsedIssuePriorities($trackable: ID!, $filter: String!) {
 query getUsedLabels($trackable: ID!, $filter: String!) {
     node(id: $trackable) {
         ... on Trackable {
-            usedLabels(filter: { name: {contains: $filter} }) {
+            usedLabels(filter: { name: { contains: $filter } }) {
                 nodes {
                     ...DefaultLabelInfo
                     trackables {

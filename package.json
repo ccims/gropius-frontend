@@ -6,7 +6,7 @@
         "dev": "vite",
         "build": "vite build",
         "preview": "vite preview",
-        "codegen": "graphql-codegen --config codegen.yaml",
+        "codegen": "graphql-codegen --config codegen.ts",
         "format": "prettier --write \"**/*.{ts,json,js,tsx,jsx,vue}\""
     },
     "dependencies": {
@@ -57,6 +57,7 @@
         "@graphql-codegen/typescript-document-nodes": "^4.0.16",
         "@graphql-codegen/typescript-graphql-request": "^6.3.0",
         "@graphql-codegen/typescript-operations": "^4.6.1",
+        "@graphql-typed-document-node/core": "^3.2.0",
         "@types/node": "^24.3.0",
         "@types/react": "^19.1.01",
         "@types/react-dom": "^19.1.9",
