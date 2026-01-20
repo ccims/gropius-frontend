@@ -480,6 +480,8 @@ import IssueDialogs from "@/components/IssueDialogs.vue";
 import { affectedByIssueDescription, affectedByIssueIcon } from "@/util/affectedByIssueUtils";
 import { affectedByIssueName } from "@/util/affectedByIssueUtils";
 import CreateLabelDialog from "@/components/dialog/CreateLabelDialog.vue";
+import { graphql } from "@/gql";
+import { request } from "@/gql/client";
 
 export type Issue = NodeReturnType<"getIssue", "Issue">;
 
@@ -680,11 +682,22 @@ function createLabel(name: string) {
 
 const editedAssignmentTypes = ref<Record<string, boolean>>({});
 
+const removeAssignmentMutation = graphql(`
+    mutation removeAssignment($id: ID!) {
+        removeAssignment(input: { assignment: $id }) {
+            removedAssignmentEvent {
+                ...RemovedAssignmentEventTimelineInfo
+            }
+        }
+    }
+`);
+
 async function removeAssignment(relationId: string) {
-    const event = await withErrorMessage(async () => {
-        const res = await client.removeAssignment({ id: relationId });
-        return res.removeAssignment.removedAssignmentEvent;
-    }, "Error removing assignment from issue");
+    const res = await request(removeAssignmentMutation, { id: relationId });
+    if(!res) {
+        return;
+    }
+    const event = res.removeAssignment.removedAssignmentEvent
     addTimelineItem(event);
     const index = assignments.value.findIndex((relation) => relation.id == relationId);
     if (index != -1) {
