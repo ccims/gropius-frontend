@@ -12,14 +12,23 @@
             >
                 <template v-slot:item.1>
                     <v-form v-model="formGeneralValid" validate-on="blur">
-                        <v-text-field
-                            v-model="templateName"
-                            v-bind="templateNameProps"
-                            label="Name"
-                            class="mb-2"
-                            :messages="templateAlreadyExists ? ['⚠️ A template with this name already exists'] : []"
-                            :class="{ 'text-warning': templateAlreadyExists }"
-                        />
+                        <v-row>
+                            <v-col cols="6">
+                                <v-text-field
+                                    v-model="templateName"
+                                    v-bind="templateNameProps"
+                                    label="Name"
+                                    class="mb-2"
+                                    :messages="
+                                        templateAlreadyExists ? ['⚠️ A template with this name already exists'] : []
+                                    "
+                                    :class="{ 'text-warning': templateAlreadyExists }"
+                                />
+                            </v-col>
+                            <v-col cols="6">
+                                <IssueTemplatesAutocomplete v-model="selectedTemplates"> </IssueTemplatesAutocomplete>
+                            </v-col>
+                        </v-row>
                         <v-textarea
                             v-model="templateDescription"
                             v-bind="templateDescriptionProps"
@@ -36,7 +45,7 @@
                 </template>
 
                 <template v-slot:item.2>
-                    <v-form v-model="formIssueTypesValid">
+                    <v-form v-model="formissueTypesValid">
                         <v-row>
                             <v-col cols="4">
                                 <v-btn
@@ -53,7 +62,7 @@
                                     >+ Add Issue Type
                                 </v-btn>
                                 <ExpandableCard
-                                    v-for="IssueTypeInput in IssueTypes"
+                                    v-for="IssueTypeInput in issueTypes"
                                     :key="IssueTypeInput.name"
                                     :name="IssueTypeInput.name"
                                     :description="IssueTypeInput.description"
@@ -197,7 +206,7 @@
                                     class="bg-white text-primary rounded-sm px-4 py-2"
                                     @click="
                                         () => {
-                                            createIssuePriority('', '', '', 0);
+                                            createIssuePriority('', '', '', 0, '');
                                             expandedCardKey = { nameID: '', type: 'priority' };
                                         }
                                     "
@@ -237,11 +246,17 @@
                                                 issuePriority.name,
                                                 name,
                                                 description,
-                                                issuePriority.value
+                                                issuePriority.value,
+                                                selectedIcon?.iconPath ?? ''
                                             );
                                         }
                                     "
                                 >
+                                    <template #previewLeft>
+                                        <div class="border rounded d-flex align-center mx-2 my-1">
+                                            <SvgWrapper :path="issuePriority.iconPath" />
+                                        </div>
+                                    </template>
                                     <template #previewRight>
                                         <div class="border rounded d-flex align-center mr-4 my-1">
                                             <span class="text-h6 mx-1">
@@ -264,6 +279,97 @@
                                             :error="!!valueErrorMessage"
                                             :error-messages="valueErrorMessage"
                                         />
+                                        <div class="d-flex align-center justify-center">
+                                            <v-tabs v-model="activeTab" density="compact" class="flex-grow-1">
+                                                <v-tab value="select" class="flex-grow-1">Select Icon</v-tab>
+                                                <v-tab value="add" class="flex-grow-1">Add Icon</v-tab>
+                                            </v-tabs>
+                                        </div>
+
+                                        <v-window v-model="activeTab">
+                                            <v-window-item value="select">
+                                                <v-text-field
+                                                    v-model="iconSearch"
+                                                    label="Search"
+                                                    density="compact"
+                                                    hide-details
+                                                    rounded
+                                                    class="mb-2"
+                                                    prepend-inner-icon="mdi-magnify"
+                                                    clearable
+                                                >
+                                                </v-text-field>
+
+                                                <div class="icon-container mx-n2" v-if="activeTab === 'select'">
+                                                    <v-lazy
+                                                        v-for="icon in filteredIcons"
+                                                        :key="icon.name"
+                                                        min-height="48"
+                                                        transition="fade-transition"
+                                                    >
+                                                        <IconButton
+                                                            color=""
+                                                            class="icon-wrapper"
+                                                            :class="{ selected: selectedIcon?.name === icon.name }"
+                                                            @click="selectIcon(icon)"
+                                                        >
+                                                            <SvgWrapper :path="icon.iconPath" />
+                                                            <v-tooltip activator="parent" location="top">
+                                                                {{ icon.name }}
+                                                            </v-tooltip>
+                                                        </IconButton>
+                                                    </v-lazy>
+                                                </div>
+                                            </v-window-item>
+
+                                            <v-window-item value="add">
+                                                <div class="d-flex flex-column" v-if="activeTab === 'add'">
+                                                    <v-text-field
+                                                        v-model="newIcon.name"
+                                                        label="Icon Name"
+                                                        density="compact"
+                                                        hide-details
+                                                        class="mb-6"
+                                                    />
+
+                                                    <v-text-field
+                                                        v-model="newIcon.iconPath"
+                                                        label="SVG Path (24x24)"
+                                                        density="compact"
+                                                        hide-details
+                                                        class="scroll-x mb-4"
+                                                        clearable
+                                                        @click:clear="clearNewIconPath"
+                                                    />
+
+                                                    <div class="d-flex align-center">
+                                                        <span class="mr-2">Preview:</span>
+                                                        <div
+                                                            class="preview-box border rounded mr-2 d-flex align-center justify-center"
+                                                        >
+                                                            <SvgWrapper :path="newIcon.iconPath" />
+                                                        </div>
+
+                                                        <v-btn
+                                                            color="primary"
+                                                            size="small"
+                                                            :disabled="
+                                                                !newIcon.name ||
+                                                                !newIcon.iconPath ||
+                                                                !allowedPathElements
+                                                            "
+                                                            @click="confirmAddIcon"
+                                                        >
+                                                            Add
+                                                        </v-btn>
+                                                    </div>
+
+                                                    <div class="text-warning text-caption">
+                                                        Expected: 24x24, fill color, no stroke
+                                                    </div>
+                                                </div>
+                                            </v-window-item>
+                                        </v-window>
                                     </template>
                                 </ExpandableCard>
                             </v-col>
@@ -459,14 +565,63 @@
 
                 <template v-slot:item.4>
                     <v-form v-model="formIssueStatesValid">
-                        <v-combobox
-                            v-model="issueStates"
-                            label="Template Field Specifications"
-                            multiple
-                            chips
-                            clearable
-                            class="mb-2"
-                        />
+                        <v-btn
+                            variant="outlined"
+                            block
+                            color="primary"
+                            class="bg-white text-primary rounded-sm px-4 py-2"
+                            @click="
+                                () => {
+                                    createTemplateFieldSpecification('', '', {});
+                                    expandedCardKey = { nameID: '', type: 'templateFieldSpecification' };
+                                }
+                            "
+                            >+ Add Template Field Specification
+                        </v-btn>
+                        <ExpandableCard
+                            v-for="specifications in templateFieldSpecifications"
+                            :key="specifications.name"
+                            :name="specifications.name"
+                            :expandedCardKey="expandedCardKey"
+                            type="templateFieldSpecification"
+                            :nameErrorMessage="nameErrorMessage"
+                            @expand="
+                                () => {
+                                    expandedCardKey = {
+                                        nameID: specifications.name,
+                                        type: 'templateFieldSpecification'
+                                    };
+                                    currentEditedName = specifications.name;
+                                    currentEditedTemplatedValue = specifications.value;
+                                    nameErrorMessage = '';
+                                }
+                            "
+                            @cancel="
+                                () => {
+                                    cancelCreateCard();
+                                    specifications.name = currentEditedName;
+                                    specifications.value = currentEditedTemplatedValue;
+                                }
+                            "
+                            @delete="deleteTemplateFieldSpecificationByName(specifications.name)"
+                            @confirm="
+                                ({ name }) => {
+                                    if (!name) {
+                                        nameErrorMessage = 'Name is required';
+                                        return;
+                                    }
+                                    createTemplateFieldSpecification(specifications.name, name, specifications.value);
+                                }
+                            "
+                        >
+                            <template #extra>
+                                <TemplatedFieldSpecificationsValueBox
+                                    v-model="specifications.value"
+                                    :rawNode="specifications.value"
+                                >
+                                </TemplatedFieldSpecificationsValueBox>
+                            </template>
+                        </ExpandableCard>
                     </v-form>
                 </template>
             </v-stepper>
@@ -493,26 +648,31 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { useForm } from "vee-validate";
 import * as yup from "yup";
 import { fieldConfig } from "@/util/vuetifyFormConfig";
-import { useClient } from "@/graphql/client";
+import { NodeReturnType, useClient } from "@/graphql/client";
 import { onEvent } from "@/util/eventBus";
 import { computed } from "vue";
 import ConfirmationDialog from "./ConfirmationDialog.vue";
+import IssueTemplatesAutocomplete from "../input/IssueTemplatesAutocomplete.vue";
 import ExpandableCard from "../ExpandableCard.vue";
+import TemplatedFieldSpecificationsValueBox from "../TemplatedFieldSpecificationsValueBox.vue";
 
 import { iconList as baseIconList } from "../icons";
 import SvgWrapper from "../SvgWrapper.vue";
 
-import type {
-    IssueTypeInput,
-    IssuePriorityInput,
-    IssueStateInput,
-    AssignmentTypeInput,
-    IssueRelationTypeInput
-} from "@/graphql/generated.ts";
+import {
+    type IssueTypeInput,
+    type IssuePriorityInput,
+    type IssueStateInput,
+    type AssignmentTypeInput,
+    type IssueRelationTypeInput,
+    type JsonFieldInput
+} from "@/graphql/generated";
+
+//import type { TemplatedFieldSpecification } from "../TemplatedFieldSpecificationsValueBox.vue";
 
 const createIssueTemplateDialog = ref(false);
 const step = ref(1);
@@ -524,7 +684,7 @@ const stepLabels = [
 ];
 
 const formGeneralValid = ref(false);
-const formIssueTypesValid = ref(true);
+const formissueTypesValid = ref(true);
 const formIssuePrioritiesValid = ref(true);
 const formIssueStatesValid = ref(true);
 const formAssignmentTypeValid = ref(true);
@@ -559,6 +719,11 @@ watch(templateName, async (newName) => {
     templateAlreadyExists.value = res.searchIssueTemplates.some((t: { name: string }) => t.name === newName);
 });
 
+const selectedTemplates = ref<string[]>([]);
+async function loadTemplate(id: string) {
+    return await client.getIssueTemplateFields({ id });
+}
+
 const expandedCardKey = ref<{
     nameID: string;
     type: string;
@@ -575,6 +740,8 @@ const currentEditedIsOpen = ref<boolean>(false);
 
 const currentEditedInverseName = ref<string>("");
 const inverseNameErrorMessage = ref<string>("");
+
+const currentEditedTemplatedValue = ref<JsonFieldInput["value"]>();
 
 type Icon = {
     name: string;
@@ -625,44 +792,29 @@ function confirmAddIcon() {
     }
 }
 
-const IssueTypes = ref<IssueTypeInput[]>([
-    {
-        name: "Bug",
-        description: "A bug in the system",
-        iconPath: iconList.value.find((icon) => icon.name === "Gropius-Bug")?.iconPath ?? ""
-    },
-    {
-        name: "Feature",
-        description: "A new feature",
-        iconPath: iconList.value.find((icon) => icon.name === "Feature")?.iconPath ?? ""
-    },
-    {
-        name: "Misc",
-        description: "Miscellaneous",
-        iconPath: iconList.value.find((icon) => icon.name === "Miscellaneous")?.iconPath ?? ""
-    },
-    {
-        name: "Task",
-        description: "A task",
-        iconPath: iconList.value.find((icon) => icon.name === "Task")?.iconPath ?? ""
-    }
-]);
-const issuePriorities = ref<IssuePriorityInput[]>([
-    { name: "High", description: "High priority", value: 3 },
-    { name: "Low", description: "Low priority", value: 1 },
-    { name: "Medium", description: "Medium priority", value: 2 }
-]);
-const issueStates = ref<IssueStateInput[]>([
-    { name: "Completed", description: "The issue is completed", isOpen: false },
-    { name: "Not planned", description: "The issue is not planned", isOpen: false },
-    { name: "Open", description: "The issue is open", isOpen: true }
-]);
+const issueTypes = ref<IssueTypeInput[]>([]);
+const issuePriorities = ref<IssuePriorityInput[]>([]);
+const issueStates = ref<IssueStateInput[]>([]);
 const assignmentTypes = ref<AssignmentTypeInput[]>([]);
-const relationTypes = ref<IssueRelationTypeInput[]>([
-    { name: "Depends on", inverseName: "Depended on by", description: "Depends on another issue" },
-    { name: "Duplicate", inverseName: "Duplicate", description: "Is a duplicate of another issue" },
-    { name: "Part of", inverseName: "Has part", description: "Is part of another issue" }
-]);
+const relationTypes = ref<IssueRelationTypeInput[]>([]);
+const templateFieldSpecifications = ref<JsonFieldInput[]>([]);
+function handleTemplateInheritance() {
+    loadTemplate(selectedTemplates.value[0])
+        .then((template) => {
+            if (!template?.node) return;
+            const templateNode = template.node as NodeReturnType<"getIssueTemplateFields", "IssueTemplate">;
+            console.log(templateNode);
+            issueTypes.value = templateNode.issueTypes.nodes;
+            issueStates.value = templateNode.issueStates.nodes;
+            issuePriorities.value = templateNode.issuePriorities.nodes;
+            assignmentTypes.value = templateNode.assignmentTypes.nodes;
+            relationTypes.value = templateNode.relationTypes.nodes;
+            templateFieldSpecifications.value = templateNode.templateFieldSpecifications;
+        })
+        .catch((e) => {
+            console.error(e);
+        });
+}
 
 function createIssueTypeInput(previousName: string, newName: string, description: string, iconPath: string) {
     if (newName.trim().length === 0 && previousName.trim().length !== 0) {
@@ -671,7 +823,7 @@ function createIssueTypeInput(previousName: string, newName: string, description
     }
     if (previousName.trim().toLowerCase() !== newName.trim().toLowerCase()) {
         {
-            if (IssueTypes.value.some((item) => item.name.trim().toLowerCase() === newName.trim().toLowerCase())) {
+            if (issueTypes.value.some((item) => item.name.trim().toLowerCase() === newName.trim().toLowerCase())) {
                 nameErrorMessage.value = "Name already exists";
                 return;
             } else {
@@ -681,9 +833,9 @@ function createIssueTypeInput(previousName: string, newName: string, description
     }
 
     deleteIssueTypeInputByName(previousName);
-    IssueTypes.value.push({ name: newName, description: description, iconPath: iconPath });
+    issueTypes.value.push({ name: newName, description: description, iconPath: iconPath });
 
-    IssueTypes.value.sort((a, b) => a.name.localeCompare(b.name));
+    issueTypes.value.sort((a, b) => a.name.localeCompare(b.name));
     expandedCardKey.value = null;
     selectedIcon.value = null;
     currentEditedName.value = "";
@@ -691,10 +843,16 @@ function createIssueTypeInput(previousName: string, newName: string, description
 }
 
 function deleteIssueTypeInputByName(nameToDelete: string) {
-    IssueTypes.value = IssueTypes.value.filter((t) => t.name !== nameToDelete);
+    issueTypes.value = issueTypes.value.filter((t) => t.name !== nameToDelete);
 }
 
-function createIssuePriority(previousName: string, newName: string, description: string, value: number) {
+function createIssuePriority(
+    previousName: string,
+    newName: string,
+    description: string,
+    value: number,
+    iconPath: string
+) {
     if (newName.trim().length === 0 && previousName.trim().length !== 0) {
         nameErrorMessage.value = "Name is required";
         return;
@@ -716,7 +874,7 @@ function createIssuePriority(previousName: string, newName: string, description:
     }
 
     deleteIssuePriorityByName(previousName);
-    issuePriorities.value.push({ name: newName, description, value });
+    issuePriorities.value.push({ name: newName, description, value, iconPath });
 
     issuePriorities.value.sort((a, b) => a.name.localeCompare(b.name));
     expandedCardKey.value = null;
@@ -819,16 +977,102 @@ function deleteRelationTypeByName(nameToDelete: string) {
     relationTypes.value = relationTypes.value.filter((s) => s.name !== nameToDelete);
 }
 
+function createTemplateFieldSpecification(previousName: string, newName: string, value: JsonFieldInput["value"]) {
+    if (newName.trim().length === 0 && previousName.trim().length !== 0) {
+        nameErrorMessage.value = "Name is required";
+        return;
+    }
+
+    if (previousName.trim().toLowerCase() !== newName.trim().toLowerCase()) {
+        if (
+            templateFieldSpecifications.value.some(
+                (item) => item.name.trim().toLowerCase() === newName.trim().toLowerCase()
+            )
+        ) {
+            nameErrorMessage.value = "Name already exists";
+            return;
+        } else {
+            nameErrorMessage.value = "";
+        }
+    }
+
+    deleteTemplateFieldSpecificationByName(previousName);
+
+    templateFieldSpecifications.value.push({
+        name: newName,
+        value: value
+    });
+
+    templateFieldSpecifications.value.sort((a, b) => a.name.localeCompare(b.name));
+
+    expandedCardKey.value = null;
+    currentEditedName.value = "";
+    currentEditedDescription.value = "";
+}
+
+function deleteTemplateFieldSpecificationByName(nameToDelete: string) {
+    templateFieldSpecifications.value = templateFieldSpecifications.value.filter((s) => s.name !== nameToDelete);
+}
+
+/*
+function createTemplateFieldSpecificationEnumEntry(previousName: string, newName: string) {
+  if (newName.trim().length === 0 && previousName.trim().length !== 0) {
+    nameErrorMessage.value = "Name is required";
+    return;
+  }
+
+  if (previousName.trim().toLowerCase() !== newName.trim().toLowerCase()) {
+    if (
+      templateFieldSpecificationEnumEntries.value.some(
+        (item) => item.trim().toLowerCase() === newName.trim().toLowerCase()
+      )
+    ) {
+      nameErrorMessage.value = "Name already exists";
+      return;
+    } else {
+      nameErrorMessage.value = "";
+    }
+  }
+
+  deleteTemplateFieldSpecificationEnumEntryByName(previousName);
+
+  templateFieldSpecificationEnumEntries.value.push(newName);
+
+  templateFieldSpecificationEnumEntries.value.sort((a, b) => a.localeCompare(b));
+
+  expandedCardKey.value = null;
+  currentEditedName.value = "";
+}
+  */
+
 function cancelCreateCard() {
     expandedCardKey.value = null;
     nameErrorMessage.value = "";
     inverseNameErrorMessage.value = "";
     valueErrorMessage.value = "";
+
     deleteIssueTypeInputByName("");
     deleteIssuePriorityByName("");
     deleteIssueStateByName("");
     deleteAssignmentTypeByName("");
     deleteRelationTypeByName("");
+    //deleteTemplateFieldSpecificationByName("");
+}
+
+function createIssueTemplate() {
+    client.createIssueTemplate({
+        input: {
+            name: templateName.value,
+            description: templateDescription.value ?? "",
+            extends: selectedTemplates.value,
+            issueTypes: issueTypes.value,
+            issuePriorities: issuePriorities.value,
+            issueStates: issueStates.value,
+            assignmentTypes: assignmentTypes.value,
+            relationTypes: relationTypes.value
+        }
+    });
+    console.log("Issue template created");
 }
 
 onEvent("create-issue-template", () => {
@@ -839,6 +1083,9 @@ onEvent("create-issue-template", () => {
 
 function next() {
     if (step.value === 1) {
+        console.log("Template values:");
+        console.log(selectedTemplates.value[0]);
+        handleTemplateInheritance();
         if (!meta.value.valid) {
             validate();
             return;
@@ -847,6 +1094,7 @@ function next() {
     if (step.value < stepLabels.length) {
         step.value++;
     } else {
+        createIssueTemplate();
         createIssueTemplateDialog.value = false;
     }
 }

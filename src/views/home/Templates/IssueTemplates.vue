@@ -41,8 +41,8 @@ const client = useClient();
 const router = useRouter();
 
 const sortFields = {
-    Name: "NAME",
-    "[Default]": "ID"
+    Name: IssueTemplateOrderField.Name,
+    "[Default]": IssueTemplateOrderField.Id
 };
 
 class IssueTemplateItemManager extends ItemManager<IssueTemplate, IssueTemplateOrderField> {
@@ -63,7 +63,6 @@ class IssueTemplateItemManager extends ItemManager<IssueTemplate, IssueTemplateO
 }
 
 const itemManager: ItemManager<IssueTemplate, IssueTemplateOrderField> = new IssueTemplateItemManager();
-
 
 function selectTemplate(template: IdObject) {
     router.push(templateRoute(template));

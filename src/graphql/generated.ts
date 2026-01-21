@@ -2526,6 +2526,8 @@ export type Component = AffectedByIssue &
     TemplatedNode &
     Trackable & {
         __typename?: "Component";
+        /** The set of entities affected by any Issue */
+        affectedEntities: AffectedByIssueConnection;
         /** The issues which affect this entity */
         affectingIssues: IssueConnection;
         /** Artefacts of this trackable, typically some kind of file. */
@@ -2586,6 +2588,26 @@ export type Component = AffectedByIssue &
         /** Versions of this components. */
         versions: ComponentVersionConnection;
     };
+
+/**
+ * Entity which represents a software component, e.g. a library, a microservice, or a deployment platform, ....
+ *     The type of software component is defined by the template.
+ *     Can have issues, labels and artefacts as this is a Trackable.
+ *     Defines InterfaceSpecifications, but visible/invisible InterfaceSpecificationVersions depend on the ComponentVersion.
+ *     Can be affected by Issues.
+ *     READ is granted via an associated ComponentPermission or if READ is granted on any Project including any
+ *     ComponentVersion in `versions` of this Component.
+ *
+ */
+export type ComponentAffectedEntitiesArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<AffectedByIssueFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<AffectedByIssueOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
+};
 
 /**
  * Entity which represents a software component, e.g. a library, a microservice, or a deployment platform, ....
@@ -9247,6 +9269,8 @@ export type IssuePriority = BaseNode &
         description: Scalars["String"]["output"];
         /** Checks if the current user has a specific permission on this Node */
         hasPermission: Scalars["Boolean"]["output"];
+        /** A path that is used as the icon for issues. Used with a 0 0 24 24 viewBox. No stroke, only fill. */
+        iconPath: Scalars["String"]["output"];
         /** The unique id of this node */
         id: Scalars["ID"]["output"];
         /** The name of this entity. */
@@ -9344,6 +9368,8 @@ export type IssuePriorityFilterInput = {
 export type IssuePriorityInput = {
     /** The description of the NamedNode */
     description: Scalars["String"]["input"];
+    /** A path that is used as the icon for issues. Used with a 0 0 24 24 viewBox. No stroke, only fill. */
+    iconPath: Scalars["String"]["input"];
     /** The name of the NamedNode, must not be blank */
     name: Scalars["String"]["input"];
     /** The value of the created IssuePriority, used to compare/order different IssuePriorities */
@@ -10143,7 +10169,7 @@ export type IssueType = BaseNode &
         description: Scalars["String"]["output"];
         /** Checks if the current user has a specific permission on this Node */
         hasPermission: Scalars["Boolean"]["output"];
-        /** A path that is used as the icon for issues. Used with a 0 0 100 100 viewBox. No stroke, only fill. */
+        /** A path that is used as the icon for issues. Used with a 0 0 24 24 viewBox. No stroke, only fill. */
         iconPath: Scalars["String"]["output"];
         /** The unique id of this node */
         id: Scalars["ID"]["output"];
@@ -10240,7 +10266,7 @@ export type IssueTypeFilterInput = {
 export type IssueTypeInput = {
     /** The description of the NamedNode */
     description: Scalars["String"]["input"];
-    /** A path that is used as the icon for issues. Used with a 0 0 100 100 viewBox. No stroke, only fill. */
+    /** A path that is used as the icon for issues. Used with a 0 0 24 24 viewBox. No stroke, only fill. */
     iconPath: Scalars["String"]["input"];
     /** The name of the NamedNode, must not be blank */
     name: Scalars["String"]["input"];
@@ -10966,6 +10992,10 @@ export type Mutation = {
      *
      */
     updateArtefact: UpdateArtefactPayload;
+    /** Updates an ArtefactTemplate, requires CAN_CREATE_TEMPLATES */
+    updateArtefactTemplate: UpdateArtefactTemplatePayload;
+    /** Updates an AssignmentType, requires CAN_CREATE_TEMPLATES */
+    updateAssignmentType: UpdateAssignmentTypePayload;
     /**
      * Updates an IssueComment. If the user created the IssueComment, requires READ on any of the Trackables the
      *         Issue is on. Otherwise, requires MODERATOR on any of the Trackables the Issue is on.
@@ -10981,8 +11011,12 @@ export type Mutation = {
      *
      */
     updateComponentPermission: UpdateComponentPermissionPayload;
+    /** Updates a ComponentTemplate, requires CAN_CREATE_TEMPLATES */
+    updateComponentTemplate: UpdateComponentTemplatePayload;
     /** Updates the specified ComponentVersion, requires ADMIN on the Component of the ComponentVersion to update */
     updateComponentVersion: UpdateComponentVersionPayload;
+    /** Updates a ComponentVersionTemplate, requires CAN_CREATE_TEMPLATES */
+    updateComponentVersionTemplate: UpdateComponentVersionTemplatePayload;
     /** Updates a GlobalPermission, requires that the user is an admin */
     updateGlobalPermission: UpdateGlobalPermissionPayload;
     /**
@@ -11013,19 +11047,27 @@ export type Mutation = {
      *
      */
     updateInterfacePart: UpdateInterfacePartPayload;
+    /** Updates an InterfacePartTemplate, requires CAN_CREATE_TEMPLATES */
+    updateInterfacePartTemplate: UpdateInterfacePartTemplatePayload;
     /** Updates the specified InterfaceSpecification, requires ADMIN on the Component of the InterfaceSpecification to update */
     updateInterfaceSpecification: UpdateInterfaceSpecificationPayload;
+    /** Updates an InterfaceSpecificationTemplate, requires CAN_CREATE_TEMPLATES */
+    updateInterfaceSpecificationTemplate: UpdateInterfaceSpecificationTemplatePayload;
     /**
      * Updates the specified InterfaceSpecificationVersion,
      *         requires ADMIN on the Component of the InterfaceSpecification of the InterfaceSpecificationVersion to update
      *
      */
     updateInterfaceSpecificationVersion: UpdateInterfaceSpecificationVersionPayload;
+    /** Updates an InterfaceSpecificationVersionTemplate, requires CAN_CREATE_TEMPLATES */
+    updateInterfaceSpecificationVersionTemplate: UpdateInterfaceSpecificationVersionTemplatePayload;
     /**
      * Updates the specified IntraComponentDependencySpecification, requires ADMIN on the Component associated with the
      *         IntraComponentDependencySpecification to update.
      */
     updateIntraComponentDependencySpecification: UpdateIntraComponentDependencySpecificationPayload;
+    /** Updates an IntraComponentDependencySpecificationType, requires CAN_CREATE_TEMPLATES */
+    updateIntraComponentDependencySpecificationType: UpdateIntraComponentDependencySpecificationTypePayload;
     /**
      * Updates an IssueComment. If the user created the IssueComment, requires READ on any of the Trackables the
      *         Issue is on. Otherwise, requires MODERATOR on any of the Trackables the Issue is on.
@@ -11033,6 +11075,16 @@ export type Mutation = {
      *
      */
     updateIssueComment: UpdateIssueCommentPayload;
+    /** Updates an IssuePriority, requires CAN_CREATE_TEMPLATES */
+    updateIssuePriority: UpdateIssuePriorityPayload;
+    /** Updates an IssueRelationType, requires CAN_CREATE_TEMPLATES */
+    updateIssueRelationType: UpdateIssueRelationTypePayload;
+    /** Updates an IssueState, requires CAN_CREATE_TEMPLATES */
+    updateIssueState: UpdateIssueStatePayload;
+    /** Updates an IssueTemplate, requires CAN_CREATE_TEMPLATES */
+    updateIssueTemplate: UpdateIssueTemplatePayload;
+    /** Updates an IssueType, requires CAN_CREATE_TEMPLATES */
+    updateIssueType: UpdateIssueTypePayload;
     /** Updates the specified Label, requires MANAGE_LABELS on any Trackable the Label is on */
     updateLabel: UpdateLabelPayload;
     /** Updates the specified LegalInformation, requires admin */
@@ -11051,6 +11103,8 @@ export type Mutation = {
      *
      */
     updateRelation: UpdateRelationPayload;
+    /** Updates a RelationTemplate, requires CAN_CREATE_TEMPLATES */
+    updateRelationTemplate: UpdateRelationTemplatePayload;
     /** Updates whether the current user allows sync self/others on the specified target */
     updateSyncPermissions: UpdateSyncPermissionsPayload;
     /** Updates the deprecation state of the template, requires CAN_CREATE_TEMPLATES */
@@ -11363,6 +11417,14 @@ export type MutationUpdateArtefactArgs = {
     input: UpdateArtefactInput;
 };
 
+export type MutationUpdateArtefactTemplateArgs = {
+    input: UpdateArtefactTemplateInput;
+};
+
+export type MutationUpdateAssignmentTypeArgs = {
+    input: UpdateAssignmentTypeInput;
+};
+
 export type MutationUpdateBodyArgs = {
     input: UpdateBodyInput;
 };
@@ -11375,8 +11437,16 @@ export type MutationUpdateComponentPermissionArgs = {
     input: UpdateComponentPermissionInput;
 };
 
+export type MutationUpdateComponentTemplateArgs = {
+    input: UpdateComponentTemplateInput;
+};
+
 export type MutationUpdateComponentVersionArgs = {
     input: UpdateComponentVersionInput;
+};
+
+export type MutationUpdateComponentVersionTemplateArgs = {
+    input: UpdateComponentVersionTemplateInput;
 };
 
 export type MutationUpdateGlobalPermissionArgs = {
@@ -11403,20 +11473,56 @@ export type MutationUpdateInterfacePartArgs = {
     input: UpdateInterfacePartInput;
 };
 
+export type MutationUpdateInterfacePartTemplateArgs = {
+    input: UpdateInterfacePartTemplateInput;
+};
+
 export type MutationUpdateInterfaceSpecificationArgs = {
     input: UpdateInterfaceSpecificationInput;
+};
+
+export type MutationUpdateInterfaceSpecificationTemplateArgs = {
+    input: UpdateInterfaceSpecificationTemplateInput;
 };
 
 export type MutationUpdateInterfaceSpecificationVersionArgs = {
     input: UpdateInterfaceSpecificationVersionInput;
 };
 
+export type MutationUpdateInterfaceSpecificationVersionTemplateArgs = {
+    input: UpdateInterfaceSpecificationVersionTemplateInput;
+};
+
 export type MutationUpdateIntraComponentDependencySpecificationArgs = {
     input: UpdateIntraComponentDependencySpecificationInput;
 };
 
+export type MutationUpdateIntraComponentDependencySpecificationTypeArgs = {
+    input: UpdateIntraComponentDependencySpecificationTypeInput;
+};
+
 export type MutationUpdateIssueCommentArgs = {
     input: UpdateIssueCommentInput;
+};
+
+export type MutationUpdateIssuePriorityArgs = {
+    input: UpdateIssuePriorityInput;
+};
+
+export type MutationUpdateIssueRelationTypeArgs = {
+    input: UpdateIssueRelationTypeInput;
+};
+
+export type MutationUpdateIssueStateArgs = {
+    input: UpdateIssueStateInput;
+};
+
+export type MutationUpdateIssueTemplateArgs = {
+    input: UpdateIssueTemplateInput;
+};
+
+export type MutationUpdateIssueTypeArgs = {
+    input: UpdateIssueTypeInput;
 };
 
 export type MutationUpdateLabelArgs = {
@@ -11437,6 +11543,10 @@ export type MutationUpdateProjectPermissionArgs = {
 
 export type MutationUpdateRelationArgs = {
     input: UpdateRelationInput;
+};
+
+export type MutationUpdateRelationTemplateArgs = {
+    input: UpdateRelationTemplateInput;
 };
 
 export type MutationUpdateSyncPermissionsArgs = {
@@ -11996,6 +12106,8 @@ export type Project = AffectedByIssue &
     Node &
     Trackable & {
         __typename?: "Project";
+        /** The set of entities affected by any Issue */
+        affectedEntities: AffectedByIssueConnection;
         /** The issues which affect this entity */
         affectingIssues: IssueConnection;
         /** Artefacts of this trackable, typically some kind of file. */
@@ -12049,6 +12161,24 @@ export type Project = AffectedByIssue &
         /** Views on the architecture graph of this project. */
         views: ViewConnection;
     };
+
+/**
+ * A project of the Gropius system.
+ *     Consists of a set of ComponentVersions, which form a graph with the Relations between them.
+ *     Can be affected by issues.
+ *     Can have issues, labels and artefacts as this is a Trackable.
+ *     READ is granted via an associated ProjectPermission.
+ *
+ */
+export type ProjectAffectedEntitiesArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<AffectedByIssueFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<AffectedByIssueOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
+};
 
 /**
  * A project of the Gropius system.
@@ -16097,6 +16227,8 @@ export type TitleChangedEventFilterInput = {
  *
  */
 export type Trackable = {
+    /** The set of entities affected by any Issue */
+    affectedEntities: AffectedByIssueConnection;
     /** The issues which affect this entity */
     affectingIssues: IssueConnection;
     /** Artefacts of this trackable, typically some kind of file. */
@@ -16135,6 +16267,23 @@ export type Trackable = {
     usedIssueTypes: IssueTypeConnection;
     /** The set of Labels used by any issue (including Labels not on this Trackable) */
     usedLabels: LabelConnection;
+};
+
+/**
+ * An entity which can have Issues, Labels and Artefacts.
+ *     Has pinned issues.
+ *     Can be synced to an IMS by creating an IMSProject.
+ *     Can be affected by Issues.
+ *
+ */
+export type TrackableAffectedEntitiesArgs = {
+    after?: InputMaybe<Scalars["String"]["input"]>;
+    before?: InputMaybe<Scalars["String"]["input"]>;
+    filter?: InputMaybe<AffectedByIssueFilterInput>;
+    first?: InputMaybe<Scalars["Int"]["input"]>;
+    last?: InputMaybe<Scalars["Int"]["input"]>;
+    orderBy?: InputMaybe<Array<AffectedByIssueOrder>>;
+    skip?: InputMaybe<Scalars["Int"]["input"]>;
 };
 
 /**
@@ -16570,6 +16719,38 @@ export type UpdateArtefactPayload = {
     artefact: Artefact;
 };
 
+/** Input for the updateArtefactTemplate mutation */
+export type UpdateArtefactTemplateInput = {
+    /** The description of the NamedNode */
+    description?: InputMaybe<Scalars["String"]["input"]>;
+    /** The id of the node to update */
+    id: Scalars["ID"]["input"];
+    /** The new name of the NamedNode, must not be empty */
+    name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpdateArtefactTemplatePayload = {
+    __typename?: "UpdateArtefactTemplatePayload";
+    /** The updated ArtefactTemplate */
+    artefactTemplate: ArtefactTemplate;
+};
+
+/** Input for the updateAssignmentType mutation */
+export type UpdateAssignmentTypeInput = {
+    /** The description of the NamedNode */
+    description?: InputMaybe<Scalars["String"]["input"]>;
+    /** The id of the node to update */
+    id: Scalars["ID"]["input"];
+    /** The new name of the NamedNode, must not be empty */
+    name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpdateAssignmentTypePayload = {
+    __typename?: "UpdateAssignmentTypePayload";
+    /** The updated AssignmentType */
+    assignmentType: AssignmentType;
+};
+
 /** Input for the updateBody mutation */
 export type UpdateBodyInput = {
     /** The body of the Comment */
@@ -16655,6 +16836,26 @@ export type UpdateComponentPermissionPayload = {
     componentPermission: ComponentPermission;
 };
 
+/** Input for the updateComponentTemplate mutation */
+export type UpdateComponentTemplateInput = {
+    /** The description of the NamedNode */
+    description?: InputMaybe<Scalars["String"]["input"]>;
+    /** The id of the node to update */
+    id: Scalars["ID"]["input"];
+    /** The new name of the NamedNode, must not be empty */
+    name?: InputMaybe<Scalars["String"]["input"]>;
+    /** The corner radius of the shape, ignored for circle/ellipse */
+    shapeRadius?: InputMaybe<Scalars["Float"]["input"]>;
+    /** The type of the shape */
+    shapeType?: InputMaybe<ShapeType>;
+};
+
+export type UpdateComponentTemplatePayload = {
+    __typename?: "UpdateComponentTemplatePayload";
+    /** The updated ComponentTemplate */
+    componentTemplate: ComponentTemplate;
+};
+
 /** Input for the updateComponentVersion mutation */
 export type UpdateComponentVersionInput = {
     /** The id of the node to update */
@@ -16671,6 +16872,22 @@ export type UpdateComponentVersionPayload = {
     __typename?: "UpdateComponentVersionPayload";
     /** The updated ComponentVersion */
     componentVersion: ComponentVersion;
+};
+
+/** Input for the updateComponentVersionTemplate mutation */
+export type UpdateComponentVersionTemplateInput = {
+    /** The description of the NamedNode */
+    description?: InputMaybe<Scalars["String"]["input"]>;
+    /** The id of the node to update */
+    id: Scalars["ID"]["input"];
+    /** The new name of the NamedNode, must not be empty */
+    name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpdateComponentVersionTemplatePayload = {
+    __typename?: "UpdateComponentVersionTemplatePayload";
+    /** The updated ComponentVersionTemplate */
+    componentVersionTemplate: ComponentVersionTemplate;
 };
 
 /** Input for the updateGlobalPermission mutation */
@@ -16807,6 +17024,22 @@ export type UpdateInterfacePartPayload = {
     interfacePart: InterfacePart;
 };
 
+/** Input for the updateInterfacePartTemplate mutation */
+export type UpdateInterfacePartTemplateInput = {
+    /** The description of the NamedNode */
+    description?: InputMaybe<Scalars["String"]["input"]>;
+    /** The id of the node to update */
+    id: Scalars["ID"]["input"];
+    /** The new name of the NamedNode, must not be empty */
+    name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpdateInterfacePartTemplatePayload = {
+    __typename?: "UpdateInterfacePartTemplatePayload";
+    /** The updated InterfacePartTemplate */
+    interfacePartTemplate: InterfacePartTemplate;
+};
+
 /** Input for the updateInterfaceSpecification mutation */
 export type UpdateInterfaceSpecificationInput = {
     /** The description of the NamedNode */
@@ -16846,6 +17079,26 @@ export type UpdateInterfaceSpecificationPayload = {
     interfaceSpecification: InterfaceSpecification;
 };
 
+/** Input for the updateInterfaceSpecificationTemplate mutation */
+export type UpdateInterfaceSpecificationTemplateInput = {
+    /** The description of the NamedNode */
+    description?: InputMaybe<Scalars["String"]["input"]>;
+    /** The id of the node to update */
+    id: Scalars["ID"]["input"];
+    /** The new name of the NamedNode, must not be empty */
+    name?: InputMaybe<Scalars["String"]["input"]>;
+    /** The corner radius of the shape, ignored for circle/ellipse */
+    shapeRadius?: InputMaybe<Scalars["Float"]["input"]>;
+    /** The type of the shape */
+    shapeType?: InputMaybe<ShapeType>;
+};
+
+export type UpdateInterfaceSpecificationTemplatePayload = {
+    __typename?: "UpdateInterfaceSpecificationTemplatePayload";
+    /** The updated InterfaceSpecificationTemplate */
+    interfaceSpecificationTemplate: InterfaceSpecificationTemplate;
+};
+
 /** Input for the updateInterfaceSpecificationVersion mutation */
 export type UpdateInterfaceSpecificationVersionInput = {
     /** The id of the node to update */
@@ -16862,6 +17115,22 @@ export type UpdateInterfaceSpecificationVersionPayload = {
     __typename?: "UpdateInterfaceSpecificationVersionPayload";
     /** The updated InterfaceSpecificationVersion */
     interfaceSpecificationVersion: InterfaceSpecificationVersion;
+};
+
+/** Input for the updateInterfaceSpecificationVersionTemplate mutation */
+export type UpdateInterfaceSpecificationVersionTemplateInput = {
+    /** The description of the NamedNode */
+    description?: InputMaybe<Scalars["String"]["input"]>;
+    /** The id of the node to update */
+    id: Scalars["ID"]["input"];
+    /** The new name of the NamedNode, must not be empty */
+    name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpdateInterfaceSpecificationVersionTemplatePayload = {
+    __typename?: "UpdateInterfaceSpecificationVersionTemplatePayload";
+    /** The updated InterfaceSpecificationVersionTemplate */
+    interfaceSpecificationVersionTemplate: InterfaceSpecificationVersionTemplate;
 };
 
 /** Input for the updateIntraComponentDependencySpecification mutation */
@@ -16890,6 +17159,22 @@ export type UpdateIntraComponentDependencySpecificationPayload = {
     intraComponentDependencySpecification: IntraComponentDependencySpecification;
 };
 
+/** Input for the updateIntraComponentDependencySpecificationType mutation */
+export type UpdateIntraComponentDependencySpecificationTypeInput = {
+    /** The description of the NamedNode */
+    description?: InputMaybe<Scalars["String"]["input"]>;
+    /** The id of the node to update */
+    id: Scalars["ID"]["input"];
+    /** The new name of the NamedNode, must not be empty */
+    name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpdateIntraComponentDependencySpecificationTypePayload = {
+    __typename?: "UpdateIntraComponentDependencySpecificationTypePayload";
+    /** The updated IntraComponentDependencySpecificationType */
+    intraComponentDependencySpecificationType: IntraComponentDependencySpecificationType;
+};
+
 /** Input for the updateIssueComment mutation */
 export type UpdateIssueCommentInput = {
     /** Ids of Artefacts which should be added to `referencedArtefacts` */
@@ -16906,6 +17191,94 @@ export type UpdateIssueCommentPayload = {
     __typename?: "UpdateIssueCommentPayload";
     /** The updated IssueComment */
     issueComment: IssueComment;
+};
+
+/** Input for the updateIssuePriority mutation */
+export type UpdateIssuePriorityInput = {
+    /** The description of the NamedNode */
+    description?: InputMaybe<Scalars["String"]["input"]>;
+    /** A path that is used as the icon for issues */
+    iconPath?: InputMaybe<Scalars["String"]["input"]>;
+    /** The id of the node to update */
+    id: Scalars["ID"]["input"];
+    /** The new name of the NamedNode, must not be empty */
+    name?: InputMaybe<Scalars["String"]["input"]>;
+    /** The value of the IssuePriority, used to compare/order different IssuePriorities */
+    value?: InputMaybe<Scalars["Float"]["input"]>;
+};
+
+export type UpdateIssuePriorityPayload = {
+    __typename?: "UpdateIssuePriorityPayload";
+    /** The updated IssuePriority */
+    issuePriority: IssuePriority;
+};
+
+/** Input for the updateIssueRelationType mutation */
+export type UpdateIssueRelationTypeInput = {
+    /** The description of the NamedNode */
+    description?: InputMaybe<Scalars["String"]["input"]>;
+    /** The id of the node to update */
+    id: Scalars["ID"]["input"];
+    /** The name of the relation from the inverse (incoming) perspective */
+    inverseName?: InputMaybe<Scalars["String"]["input"]>;
+    /** The new name of the NamedNode, must not be empty */
+    name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpdateIssueRelationTypePayload = {
+    __typename?: "UpdateIssueRelationTypePayload";
+    /** The updated IssueRelationType */
+    issueRelationType: IssueRelationType;
+};
+
+/** Input for the updateIssueState mutation */
+export type UpdateIssueStateInput = {
+    /** The description of the NamedNode */
+    description?: InputMaybe<Scalars["String"]["input"]>;
+    /** The id of the node to update */
+    id: Scalars["ID"]["input"];
+    /** The new name of the NamedNode, must not be empty */
+    name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpdateIssueStatePayload = {
+    __typename?: "UpdateIssueStatePayload";
+    /** The updated IssueState */
+    issueState: IssueState;
+};
+
+/** Input for the updateIssueTemplate mutation */
+export type UpdateIssueTemplateInput = {
+    /** The description of the NamedNode */
+    description?: InputMaybe<Scalars["String"]["input"]>;
+    /** The id of the node to update */
+    id: Scalars["ID"]["input"];
+    /** The new name of the NamedNode, must not be empty */
+    name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpdateIssueTemplatePayload = {
+    __typename?: "UpdateIssueTemplatePayload";
+    /** The updated IssueTemplate */
+    issueTemplate: IssueTemplate;
+};
+
+/** Input for the updateIssueType mutation */
+export type UpdateIssueTypeInput = {
+    /** The description of the NamedNode */
+    description?: InputMaybe<Scalars["String"]["input"]>;
+    /** A path that is used as the icon for issues */
+    iconPath?: InputMaybe<Scalars["String"]["input"]>;
+    /** The id of the node to update */
+    id: Scalars["ID"]["input"];
+    /** The new name of the NamedNode, must not be empty */
+    name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpdateIssueTypePayload = {
+    __typename?: "UpdateIssueTypePayload";
+    /** The updated IssueType */
+    issueType: IssueType;
 };
 
 /** Input for the updateLabel mutation */
@@ -17046,6 +17419,24 @@ export type UpdateRelationPayload = {
     __typename?: "UpdateRelationPayload";
     /** The updated Relation */
     relation: Relation;
+};
+
+/** Input for the updateRelationTemplate mutation */
+export type UpdateRelationTemplateInput = {
+    /** The description of the NamedNode */
+    description?: InputMaybe<Scalars["String"]["input"]>;
+    /** The id of the node to update */
+    id: Scalars["ID"]["input"];
+    /** The type of the marker at the end of the relation */
+    markerType?: InputMaybe<MarkerType>;
+    /** The new name of the NamedNode, must not be empty */
+    name?: InputMaybe<Scalars["String"]["input"]>;
+};
+
+export type UpdateRelationTemplatePayload = {
+    __typename?: "UpdateRelationTemplatePayload";
+    /** The updated RelationTemplate */
+    relationTemplate: RelationTemplate;
 };
 
 /** Input for the updateSyncPermissions mutation */
@@ -27253,6 +27644,41 @@ export type DefaultIssueTemplateInfoFragment = {
     templateFieldSpecifications: Array<{ __typename?: "JSONField"; name: string; value?: any | null }>;
 };
 
+export type IssueTemplateFieldsFragment = {
+    __typename?: "IssueTemplate";
+    id: string;
+    name: string;
+    description: string;
+    extends: { __typename?: "IssueTemplateConnection"; nodes: Array<{ __typename?: "IssueTemplate"; id: string }> };
+    issueTypes: {
+        __typename?: "IssueTypeConnection";
+        nodes: Array<{ __typename?: "IssueType"; name: string; description: string; iconPath: string }>;
+    };
+    issuePriorities: {
+        __typename?: "IssuePriorityConnection";
+        nodes: Array<{
+            __typename?: "IssuePriority";
+            name: string;
+            description: string;
+            value: number;
+            iconPath: string;
+        }>;
+    };
+    issueStates: {
+        __typename?: "IssueStateConnection";
+        nodes: Array<{ __typename?: "IssueState"; name: string; description: string; isOpen: boolean }>;
+    };
+    assignmentTypes: {
+        __typename?: "AssignmentTypeConnection";
+        nodes: Array<{ __typename?: "AssignmentType"; name: string; description: string }>;
+    };
+    relationTypes: {
+        __typename?: "IssueRelationTypeConnection";
+        nodes: Array<{ __typename?: "IssueRelationType"; name: string; description: string; inverseName: string }>;
+    };
+    templateFieldSpecifications: Array<{ __typename?: "JSONField"; name: string; value?: any | null }>;
+};
+
 export type SearchIssueTemplatesQueryVariables = Exact<{
     query: Scalars["String"]["input"];
     count: Scalars["Int"]["input"];
@@ -27380,6 +27806,189 @@ export type GetIssueTemplateQuery = {
         | { __typename?: "TypeChangedEvent" }
         | { __typename?: "View" }
         | null;
+};
+
+export type GetIssueTemplateFieldsQueryVariables = Exact<{
+    id: Scalars["ID"]["input"];
+}>;
+
+export type GetIssueTemplateFieldsQuery = {
+    __typename?: "Query";
+    node?:
+        | { __typename?: "AddedAffectedEntityEvent" }
+        | { __typename?: "AddedArtefactEvent" }
+        | { __typename?: "AddedLabelEvent" }
+        | { __typename?: "AddedToPinnedIssuesEvent" }
+        | { __typename?: "AddedToTrackableEvent" }
+        | { __typename?: "AggregatedIssue" }
+        | { __typename?: "AggregatedIssueRelation" }
+        | { __typename?: "Artefact" }
+        | { __typename?: "ArtefactTemplate" }
+        | { __typename?: "Assignment" }
+        | { __typename?: "AssignmentType" }
+        | { __typename?: "AssignmentTypeChangedEvent" }
+        | { __typename?: "Body" }
+        | { __typename?: "Component" }
+        | { __typename?: "ComponentPermission" }
+        | { __typename?: "ComponentTemplate" }
+        | { __typename?: "ComponentVersion" }
+        | { __typename?: "ComponentVersionTemplate" }
+        | { __typename?: "FillStyle" }
+        | { __typename?: "GlobalPermission" }
+        | { __typename?: "GropiusUser" }
+        | { __typename?: "IMS" }
+        | { __typename?: "IMSIssue" }
+        | { __typename?: "IMSIssueTemplate" }
+        | { __typename?: "IMSPermission" }
+        | { __typename?: "IMSProject" }
+        | { __typename?: "IMSProjectTemplate" }
+        | { __typename?: "IMSTemplate" }
+        | { __typename?: "IMSUser" }
+        | { __typename?: "IMSUserTemplate" }
+        | { __typename?: "IncomingRelationTypeChangedEvent" }
+        | { __typename?: "Interface" }
+        | { __typename?: "InterfaceDefinition" }
+        | { __typename?: "InterfacePart" }
+        | { __typename?: "InterfacePartTemplate" }
+        | { __typename?: "InterfaceSpecification" }
+        | { __typename?: "InterfaceSpecificationDerivationCondition" }
+        | { __typename?: "InterfaceSpecificationTemplate" }
+        | { __typename?: "InterfaceSpecificationVersion" }
+        | { __typename?: "InterfaceSpecificationVersionTemplate" }
+        | { __typename?: "IntraComponentDependencyParticipant" }
+        | { __typename?: "IntraComponentDependencySpecification" }
+        | { __typename?: "IntraComponentDependencySpecificationType" }
+        | { __typename?: "Issue" }
+        | { __typename?: "IssueComment" }
+        | { __typename?: "IssuePriority" }
+        | { __typename?: "IssueRelation" }
+        | { __typename?: "IssueRelationType" }
+        | { __typename?: "IssueState" }
+        | {
+              __typename?: "IssueTemplate";
+              id: string;
+              name: string;
+              description: string;
+              extends: {
+                  __typename?: "IssueTemplateConnection";
+                  nodes: Array<{ __typename?: "IssueTemplate"; id: string }>;
+              };
+              issueTypes: {
+                  __typename?: "IssueTypeConnection";
+                  nodes: Array<{ __typename?: "IssueType"; name: string; description: string; iconPath: string }>;
+              };
+              issuePriorities: {
+                  __typename?: "IssuePriorityConnection";
+                  nodes: Array<{
+                      __typename?: "IssuePriority";
+                      name: string;
+                      description: string;
+                      value: number;
+                      iconPath: string;
+                  }>;
+              };
+              issueStates: {
+                  __typename?: "IssueStateConnection";
+                  nodes: Array<{ __typename?: "IssueState"; name: string; description: string; isOpen: boolean }>;
+              };
+              assignmentTypes: {
+                  __typename?: "AssignmentTypeConnection";
+                  nodes: Array<{ __typename?: "AssignmentType"; name: string; description: string }>;
+              };
+              relationTypes: {
+                  __typename?: "IssueRelationTypeConnection";
+                  nodes: Array<{
+                      __typename?: "IssueRelationType";
+                      name: string;
+                      description: string;
+                      inverseName: string;
+                  }>;
+              };
+              templateFieldSpecifications: Array<{ __typename?: "JSONField"; name: string; value?: any | null }>;
+          }
+        | { __typename?: "IssueType" }
+        | { __typename?: "Label" }
+        | { __typename?: "LegalInformation" }
+        | { __typename?: "OutgoingRelationTypeChangedEvent" }
+        | { __typename?: "PriorityChangedEvent" }
+        | { __typename?: "Project" }
+        | { __typename?: "ProjectPermission" }
+        | { __typename?: "RelatedByIssueEvent" }
+        | { __typename?: "Relation" }
+        | { __typename?: "RelationCondition" }
+        | { __typename?: "RelationLayout" }
+        | { __typename?: "RelationPartnerLayout" }
+        | { __typename?: "RelationTemplate" }
+        | { __typename?: "RemovedAffectedEntityEvent" }
+        | { __typename?: "RemovedArtefactEvent" }
+        | { __typename?: "RemovedAssignmentEvent" }
+        | { __typename?: "RemovedFromPinnedIssuesEvent" }
+        | { __typename?: "RemovedFromTrackableEvent" }
+        | { __typename?: "RemovedIncomingRelationEvent" }
+        | { __typename?: "RemovedLabelEvent" }
+        | { __typename?: "RemovedOutgoingRelationEvent" }
+        | { __typename?: "RemovedTemplatedFieldEvent" }
+        | { __typename?: "StateChangedEvent" }
+        | { __typename?: "StrokeStyle" }
+        | { __typename?: "TemplateChangedEvent" }
+        | { __typename?: "TemplatedFieldChangedEvent" }
+        | { __typename?: "TitleChangedEvent" }
+        | { __typename?: "TypeChangedEvent" }
+        | { __typename?: "View" }
+        | null;
+};
+
+export type CreateIssueTemplateMutationVariables = Exact<{
+    input: CreateIssueTemplateInput;
+}>;
+
+export type CreateIssueTemplateMutation = {
+    __typename?: "Mutation";
+    createIssueTemplate: {
+        __typename?: "CreateIssueTemplatePayload";
+        issueTemplate: {
+            __typename?: "IssueTemplate";
+            id: string;
+            name: string;
+            description: string;
+            extends: {
+                __typename?: "IssueTemplateConnection";
+                nodes: Array<{ __typename?: "IssueTemplate"; id: string }>;
+            };
+            issueTypes: {
+                __typename?: "IssueTypeConnection";
+                nodes: Array<{ __typename?: "IssueType"; name: string; description: string; iconPath: string }>;
+            };
+            issuePriorities: {
+                __typename?: "IssuePriorityConnection";
+                nodes: Array<{
+                    __typename?: "IssuePriority";
+                    name: string;
+                    description: string;
+                    value: number;
+                    iconPath: string;
+                }>;
+            };
+            issueStates: {
+                __typename?: "IssueStateConnection";
+                nodes: Array<{ __typename?: "IssueState"; name: string; description: string; isOpen: boolean }>;
+            };
+            assignmentTypes: {
+                __typename?: "AssignmentTypeConnection";
+                nodes: Array<{ __typename?: "AssignmentType"; name: string; description: string }>;
+            };
+            relationTypes: {
+                __typename?: "IssueRelationTypeConnection";
+                nodes: Array<{
+                    __typename?: "IssueRelationType";
+                    name: string;
+                    description: string;
+                    inverseName: string;
+                }>;
+            };
+            templateFieldSpecifications: Array<{ __typename?: "JSONField"; name: string; value?: any | null }>;
+        };
+    };
 };
 
 export type DefaultIssueTypeInfoFragment = {
@@ -32140,6 +32749,57 @@ export const DefaultIssueTemplateInfoFragmentDoc = gql`
         }
     }
 `;
+export const IssueTemplateFieldsFragmentDoc = gql`
+    fragment IssueTemplateFields on IssueTemplate {
+        id
+        name
+        description
+        extends {
+            nodes {
+                id
+            }
+        }
+        issueTypes {
+            nodes {
+                name
+                description
+                iconPath
+            }
+        }
+        issuePriorities {
+            nodes {
+                name
+                description
+                value
+                iconPath
+            }
+        }
+        issueStates {
+            nodes {
+                name
+                description
+                isOpen
+            }
+        }
+        assignmentTypes {
+            nodes {
+                name
+                description
+            }
+        }
+        relationTypes {
+            nodes {
+                name
+                description
+                inverseName
+            }
+        }
+        templateFieldSpecifications {
+            name
+            value
+        }
+    }
+`;
 export const BaseLegalInformationInfoFragmentDoc = gql`
     fragment BaseLegalInformationInfo on LegalInformation {
         id
@@ -34709,6 +35369,26 @@ export const GetIssueTemplateDocument = gql`
         }
     }
     ${DefaultIssueTemplateInfoFragmentDoc}
+`;
+export const GetIssueTemplateFieldsDocument = gql`
+    query getIssueTemplateFields($id: ID!) {
+        node(id: $id) {
+            ... on IssueTemplate {
+                ...IssueTemplateFields
+            }
+        }
+    }
+    ${IssueTemplateFieldsFragmentDoc}
+`;
+export const CreateIssueTemplateDocument = gql`
+    mutation createIssueTemplate($input: CreateIssueTemplateInput!) {
+        createIssueTemplate(input: $input) {
+            issueTemplate {
+                ...IssueTemplateFields
+            }
+        }
+    }
+    ${IssueTemplateFieldsFragmentDoc}
 `;
 export const SearchIssueTypesDocument = gql`
     query searchIssueTypes($template: ID!, $query: String!, $count: Int!) {
@@ -37910,6 +38590,42 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
                     }),
                 "getIssueTemplate",
                 "query",
+                variables
+            );
+        },
+        getIssueTemplateFields(
+            variables: GetIssueTemplateFieldsQueryVariables,
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
+        ): Promise<GetIssueTemplateFieldsQuery> {
+            return withWrapper(
+                (wrappedRequestHeaders) =>
+                    client.request<GetIssueTemplateFieldsQuery>({
+                        document: GetIssueTemplateFieldsDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
+                "getIssueTemplateFields",
+                "query",
+                variables
+            );
+        },
+        createIssueTemplate(
+            variables: CreateIssueTemplateMutationVariables,
+            requestHeaders?: GraphQLClientRequestHeaders,
+            signal?: RequestInit["signal"]
+        ): Promise<CreateIssueTemplateMutation> {
+            return withWrapper(
+                (wrappedRequestHeaders) =>
+                    client.request<CreateIssueTemplateMutation>({
+                        document: CreateIssueTemplateDocument,
+                        variables,
+                        requestHeaders: { ...requestHeaders, ...wrappedRequestHeaders },
+                        signal
+                    }),
+                "createIssueTemplate",
+                "mutation",
                 variables
             );
         },

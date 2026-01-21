@@ -31,6 +31,7 @@
                 :error-messages="props.nameErrorMessage"
             />
             <v-textarea
+                v-if="props.description !== undefined"
                 class="mx-2"
                 label="Description"
                 v-model="localDescription"
@@ -62,7 +63,7 @@ type ExpandedKey = {
 
 const props = defineProps<{
     name: string;
-    description: string;
+    description?: string;
     expandedCardKey: ExpandedKey;
     type: string;
     nameErrorMessage?: string;
@@ -80,14 +81,14 @@ const isExpanded = computed(
 );
 
 const localName = ref(props.name);
-const localDescription = ref(props.description);
+const localDescription = ref(props.description ?? "");
 
 watch(
     () => props.expandedCardKey,
     () => {
         if (isExpanded.value) {
             localName.value = props.name;
-            localDescription.value = props.description;
+            localDescription.value = props.description ?? "";
         }
     }
 );

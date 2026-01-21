@@ -383,17 +383,6 @@ const routes: RouteRecordRaw[] = [
         ]
     },
     {
-        path: "/templates/:trackable",
-        component: () => import("../views/component/Home.vue"),
-        children: [
-            {
-                path: "",
-                name: "issue-template",
-                component: () => import("../views/component/Home.vue")
-            }
-        ]
-    },
-    {
         path: "/graphiql",
         component: () => import("../views/graphiql/Root.vue"),
         children: [
