@@ -13,21 +13,31 @@
 <script setup lang="ts">
 import BaseLayout from "@/components/BaseLayout.vue";
 import Markdown from "@/components/Markdown.vue";
-import { NodeReturnType, useClient } from "@/graphql/client";
-import { withErrorMessage } from "@/util/withErrorMessage";
+import { queryNodeThrow } from "@/gql/client";
+import { graphql } from "@/gql";
 import { computedAsync } from "@vueuse/core";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
+import { withErrorMessage } from "@/util/withErrorMessage";
 
 const route = useRoute();
-const client = useClient();
 
 const legalInformationId = computed(() => route.params.legalInformation as string);
 
+const getLegalInformationQuery = graphql(`
+    query getLegalInformation($id: ID!) {
+        node(id: $id) {
+            __typename
+            ...on LegalInformation {
+                ...DefaultLegalInformationInfo
+            }
+        }
+    }
+`);
+
 const legalInformation = computedAsync(async () => {
     return await withErrorMessage(async () => {
-        const res = await client.getLegalInformation({ id: legalInformationId.value });
-        return res.node as NodeReturnType<"getLegalInformation", "LegalInformation">;
-    }, "Error fetching legal information");
+        return await queryNodeThrow(getLegalInformationQuery, "LegalInformation", { id: legalInformationId.value });
+    }, "Error loading legal information");
 });
 </script>

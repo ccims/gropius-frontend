@@ -14,13 +14,32 @@
     </FetchingAutocomplete>
 </template>
 <script setup lang="ts">
-import { useClient } from "@/graphql/client";
-import { DefaultTrackableInfoFragment, TrackableFilterInput } from "@/graphql/generated";
+import { graphql } from "@/gql";
+import { requestThrow } from "@/gql/client";
+import { DefaultTrackableInfoFragment, TrackableFilterInput } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
 import { PropType } from "vue";
 import { affectedByIssueIcon } from "@/util/affectedByIssueUtils";
+
+const searchTrackablesQuery = graphql(`
+    query searchTrackables($query: String!, $count: Int!, $filter: TrackableFilterInput) {
+        searchTrackables(query: $query, first: $count, filter: $filter) {
+            ...DefaultTrackableInfo
+        }
+    }
+`);
+
+const firstTrackablesQuery = graphql(`
+    query firstTrackables($count: Int!, $filter: TrackableFilterInput) {
+        trackables(first: $count, filter: $filter) {
+            nodes {
+                ...DefaultTrackableInfo
+            }
+        }
+    }
+`);
 
 const props = defineProps({
     ignore: {
@@ -39,16 +58,14 @@ const props = defineProps({
     }
 });
 
-const client = useClient();
-
 async function searchTrackables(filter: string, count: number): Promise<DefaultTrackableInfoFragment[]> {
     const searchRes = await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await client.searchTrackables({ query, count, filter: props.filter });
+            const res = await requestThrow(searchTrackablesQuery, { query, count, filter: props.filter });
             return res.searchTrackables;
         } else {
-            const res = await client.firstTrackables({ count, filter: props.filter });
+            const res = await requestThrow(firstTrackablesQuery, { count, filter: props.filter });
             return res.trackables.nodes;
         }
     }, "Error searching trackables");

@@ -53,7 +53,8 @@ import * as yup from "yup";
 import { useForm } from "vee-validate";
 import { fieldConfig } from "@/util/vuetifyFormConfig";
 import { useBlockingWithErrorMessage, withErrorMessage } from "@/util/withErrorMessage";
-import { NodeReturnType, useClient } from "@/graphql/client";
+import { queryNodeThrow, requestThrow } from "@/gql/client";
+import { graphql } from "@/gql";
 import { toTypedSchema } from "@vee-validate/yup";
 import TemplatedNodeDialogContent from "./TemplatedNodeDialogContent.vue";
 import TemplatedFieldsInput, { Field } from "../input/schema/TemplatedFieldsInput.vue";
@@ -65,8 +66,36 @@ import TrackableAutocomplete from "../input/TrackableAutocomplete.vue";
 import IMSAutocomplete from "../input/IMSAutocomplete.vue";
 
 const createIMSProjectDialog = ref(false);
-const client = useClient();
 const [blockWithErrorMessage, submitDisabled] = useBlockingWithErrorMessage();
+
+const getIMSProjectTemplateForDialogQuery = graphql(`
+    query getIMSProjectTemplateForDialog($id: ID!) {
+        node(id: $id) {
+            id
+            ... on IMS {
+                template {
+                    imsProjectTemplate {
+                        id
+                        templateFieldSpecifications {
+                            name
+                            value
+                        }
+                    }
+                }
+            }
+        }
+    }
+`);
+
+const createIMSProjectMutation = graphql(`
+    mutation createIMSProject($input: CreateIMSProjectInput!) {
+        createIMSProject(input: $input) {
+            imsProject {
+                id
+            }
+        }
+    }
+`);
 
 const props = defineProps({
     ims: {
@@ -112,10 +141,9 @@ const templateValue = computedAsync(
         if (id == null) {
             return null;
         }
-        const templateRes = await withErrorMessage(async () => {
-            return client.getIMSProjectTemplate({ id });
+        const imsNode = await withErrorMessage(async () => {
+            return queryNodeThrow(getIMSProjectTemplateForDialogQuery, "IMS", { id });
         }, "Error loading IMS");
-        const imsNode = templateRes.node as NodeReturnType<"getIMSProjectTemplate", "IMS">;
         return imsNode.template.imsProjectTemplate;
     },
     null,
@@ -137,7 +165,7 @@ onEvent("create-ims-project", () => {
 
 const createIMSProject = handleSubmit(async (state) => {
     const ims = await blockWithErrorMessage(async () => {
-        const res = await client.createIMSProject({
+        const res = await requestThrow(createIMSProjectMutation, {
             input: {
                 ...state,
                 description: state.description ?? "",

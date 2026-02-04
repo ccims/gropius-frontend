@@ -40,7 +40,8 @@ import * as yup from "yup";
 import { useForm } from "vee-validate";
 import { fieldConfig } from "@/util/vuetifyFormConfig";
 import { useBlockingWithErrorMessage, withErrorMessage } from "@/util/withErrorMessage";
-import { NodeReturnType, useClient } from "@/graphql/client";
+import { requestThrow, queryNodeThrow } from "@/gql/client";
+import { graphql } from "@/gql";
 import { toTypedSchema } from "@vee-validate/yup";
 import TemplatedNodeDialogContent from "./TemplatedNodeDialogContent.vue";
 import TemplatedFieldsInput, { Field } from "../input/schema/TemplatedFieldsInput.vue";
@@ -49,8 +50,36 @@ import { generateDefaultData } from "../input/schema/generateDefaultData";
 import { IdObject } from "@/util/types";
 
 const createInterfaceSpecificationVersionDialog = ref(false);
-const client = useClient();
 const [blockWithErrorMessage, submitDisabled] = useBlockingWithErrorMessage();
+
+const getInterfaceSpecificationVersionTemplateQuery = graphql(`
+    query getInterfaceSpecificationVersionTemplateForDialog($interfaceSpecification: ID!) {
+        node(id: $interfaceSpecification) {
+            id
+            ... on InterfaceSpecification {
+                template {
+                    interfaceSpecificationVersionTemplate {
+                        id
+                        templateFieldSpecifications {
+                            name
+                            value
+                        }
+                    }
+                }
+            }
+        }
+    }
+`);
+
+const createInterfaceSpecificationVersionMutation = graphql(`
+    mutation createInterfaceSpecificationVersion($input: CreateInterfaceSpecificationVersionInput!) {
+        createInterfaceSpecificationVersion(input: $input) {
+            interfaceSpecificationVersion {
+                id
+            }
+        }
+    }
+`);
 
 const props = defineProps({
     interfaceSpecification: {
@@ -93,17 +122,12 @@ const [tags, tagsProps] = defineField("tags", fieldConfig);
 const templatedFields = ref<Field[]>([]);
 const templateValue = computedAsync(
     async () => {
-        const templateRes = await withErrorMessage(async () => {
-            return client.getInterfaceSpecificationVersionTemplate({
+        const interfaceSpecification = await withErrorMessage(async () => {
+            return queryNodeThrow(getInterfaceSpecificationVersionTemplateQuery, "InterfaceSpecification", {
                 interfaceSpecification: props.interfaceSpecification
             });
         }, "Error loading template");
-        const interfaceSpecificationNode = templateRes.node as NodeReturnType<
-            "getInterfaceSpecificationVersionTemplate",
-            "InterfaceSpecification"
-        >;
-        const templateNode = interfaceSpecificationNode.template.interfaceSpecificationVersionTemplate;
-        return templateNode;
+        return interfaceSpecification.template.interfaceSpecificationVersionTemplate;
     },
     null,
     { shallow: false }
@@ -124,7 +148,7 @@ onEvent("create-interface-specification-version", () => {
 
 const createInterfaceSpecificationVersion = handleSubmit(async (state) => {
     const interfaceSpecificationVersion = await blockWithErrorMessage(async () => {
-        const res = await client.createInterfaceSpecificationVersion({
+        const res = await requestThrow(createInterfaceSpecificationVersionMutation, {
             input: {
                 ...state,
                 tags: state.tags ?? [],

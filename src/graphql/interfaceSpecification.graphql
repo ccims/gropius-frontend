@@ -1,28 +1,3 @@
-query getInterfaceSpecificationList(
-    $orderBy: [InterfaceSpecificationOrder!]!
-    $count: Int!
-    $skip: Int!
-    $component: ID!
-    $filter: InterfaceSpecificationFilterInput!
-) {
-    node(id: $component) {
-        ... on Component {
-            interfaceSpecifications(orderBy: $orderBy, first: $count, skip: $skip, filter: $filter) {
-                nodes {
-                    ...InterfaceSpecificationListItemInfo
-                }
-                totalCount
-            }
-        }
-    }
-}
-
-query getFilteredInterfaceSpecificationList($query: String!, $count: Int!, $filter: InterfaceSpecificationFilterInput!) {
-    searchInterfaceSpecifications(query: $query, first: $count, filter: $filter) {
-        ...InterfaceSpecificationListItemInfo
-    }
-}
-
 fragment InterfaceSpecificationListItemInfo on InterfaceSpecification {
     id
     name
@@ -34,88 +9,9 @@ fragment InterfaceSpecificationListItemInfo on InterfaceSpecification {
     }
 }
 
-query getInterfaceSpecificationGeneralDetails($id: ID!) {
-    node(id: $id) {
-        id
-        ... on InterfaceSpecification {
-            name
-            description
-            templatedFields {
-                name
-                value
-            }
-            template {
-                templateFieldSpecifications {
-                    name
-                    value
-                }
-            }
-        }
-    }
-}
-
-query getInterfaceSpecificationVisibilityInfo($id: ID!, $componentTemplate: ID!) {
-    node(id: $id) {
-        ...on InterfaceSpecification {
-            template {
-                canBeVisibleOnComponents(filter: { id: { eq: $componentTemplate } }) {
-                    totalCount
-                }
-                canBeInvisibleOnComponents(filter: { id: { eq: $componentTemplate } }) {
-                    totalCount
-                }
-            }
-        }
-    }
-}
-
 fragment DefaultInterfaceSpecificationInfo on InterfaceSpecification {
     id
     name
     description
 }
 
-query searchInterfaceSpecifications($query: String!, $count: Int!, $component: ID!) {
-    searchInterfaceSpecifications(query: $query, first: $count, filter: { component: { id: { eq: $component } } }) {
-        ...DefaultInterfaceSpecificationInfo
-    }
-}
-
-query firstInterfaceSpecifications($count: Int!, $component: ID!) {
-    node(id: $component) {
-        ... on Component {
-            interfaceSpecifications(first: $count) {
-                nodes {
-                    ...DefaultInterfaceSpecificationInfo
-                }
-            }
-        }
-    }
-}
-
-mutation createInterfaceSpecification($input: CreateInterfaceSpecificationInput!) {
-    createInterfaceSpecification(input: $input) {
-        interfaceSpecification {
-            id
-            versions {
-                nodes {
-                    id
-                }
-            }
-        }
-    }
-}
-
-mutation updateInterfaceSpecification($input: UpdateInterfaceSpecificationInput!) {
-    updateInterfaceSpecification(input: $input) {
-        interfaceSpecification {
-            id
-        }
-    }
-}
-
-mutation deleteInterfaceSpecification($id: ID!) {
-    deleteInterfaceSpecification(input: { id: $id }) {
-        __typename
-    }
-}

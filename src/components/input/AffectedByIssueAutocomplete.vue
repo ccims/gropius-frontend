@@ -29,8 +29,9 @@
     </FetchingAutocomplete>
 </template>
 <script setup lang="ts">
-import { NodeReturnType, useClient } from "@/graphql/client";
-import { DefaultAffectedByIssueInfoFragment, DefaultTrackableInfoFragment } from "@/graphql/generated";
+import { graphql } from "@/gql";
+import { queryNodeThrow, requestThrow } from "@/gql/client";
+import { DefaultAffectedByIssueInfoFragment, DefaultTrackableInfoFragment } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
@@ -41,6 +42,46 @@ import {
     affectedByIssueName,
     expandSearchResult
 } from "@/util/affectedByIssueUtils";
+
+const searchAffectedByIssuesForAutocompleteQuery = graphql(`
+    query searchAffectedByIssuesForAutocomplete($query: String!, $count: Int!, $trackable: ID!, $sublistCount: Int) {
+        searchAffectedByIssues(query: $query, first: $count, filter: { relatedTo: $trackable }) {
+            ...DetailedAffectedByIssueInfo
+        }
+    }
+`);
+
+const firstComponentVersionsForAutocompleteQuery = graphql(`
+    query firstComponentVersionsForAutocomplete($component: ID!, $count: Int!) {
+        node(id: $component) {
+            ... on Component {
+                versions(first: $count) {
+                    nodes {
+                        ...DefaultComponentVersionInfo
+                    }
+                }
+            }
+        }
+    }
+`);
+
+const searchTrackablesForAutocompleteQuery = graphql(`
+    query searchTrackablesForAutocomplete($query: String!, $count: Int!) {
+        searchTrackables(query: $query, first: $count) {
+            ...DefaultTrackableInfo
+        }
+    }
+`);
+
+const firstTrackablesForAutocompleteQuery = graphql(`
+    query firstTrackablesForAutocomplete($count: Int!) {
+        trackables(first: $count) {
+            nodes {
+                ...DefaultTrackableInfo
+            }
+        }
+    }
+`);
 
 const props = defineProps({
     initialContext: {
@@ -54,8 +95,6 @@ const props = defineProps({
     }
 });
 
-const client = useClient();
-
 async function searchAffected(
     filter: string,
     count: number,
@@ -64,7 +103,7 @@ async function searchAffected(
     const searchRes = await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await client.searchAffectedByIssues({
+            const res = await requestThrow(searchAffectedByIssuesForAutocompleteQuery, {
                 query,
                 count,
                 trackable: context!.id,
@@ -72,9 +111,8 @@ async function searchAffected(
             });
             return expandSearchResult(res.searchAffectedByIssues);
         } else if (context!.__typename == "Component") {
-            const res = (await client.firstComponentVersions({ component: context!.id, count: count - 1 }))
-                .node as NodeReturnType<"firstComponentVersions", "Component">;
-            return [context!, ...res.versions.nodes];
+            const node = await queryNodeThrow(firstComponentVersionsForAutocompleteQuery, "Component", { component: context!.id, count: count - 1 });
+            return [context!, ...node.versions.nodes];
         } else {
             return [context!];
         }
@@ -87,10 +125,10 @@ async function searchTrackables(filter: string, count: number): Promise<DefaultT
     return await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await client.searchTrackables({ query, count });
+            const res = await requestThrow(searchTrackablesForAutocompleteQuery, { query, count });
             return res.searchTrackables;
         } else {
-            const res = await client.firstTrackables({ count });
+            const res = await requestThrow(firstTrackablesForAutocompleteQuery, { count });
             return res.trackables.nodes;
         }
     }, "Error searching trackables");

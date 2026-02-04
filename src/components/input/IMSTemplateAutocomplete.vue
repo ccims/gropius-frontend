@@ -6,22 +6,39 @@
     </FetchingAutocomplete>
 </template>
 <script setup lang="ts">
-import { useClient } from "@/graphql/client";
-import { DefaultImsTemplateInfoFragment } from "@/graphql/generated";
+import { graphql } from "@/gql";
+import { requestThrow } from "@/gql/client";
+import { DefaultImsTemplateInfoFragment } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
 
-const client = useClient();
+const searchIMSTemplatesForAutocompleteQuery = graphql(`
+    query searchIMSTemplatesForAutocomplete($query: String!, $count: Int!) {
+        searchIMSTemplates(query: $query, first: $count, filter: { isDeprecated: { eq: false } }) {
+            ...DefaultIMSTemplateInfo
+        }
+    }
+`);
+
+const firstIMSTemplatesForAutocompleteQuery = graphql(`
+    query firstIMSTemplatesForAutocomplete($count: Int!) {
+        imsTemplates(first: $count, orderBy: [{ field: NAME }], filter: { isDeprecated: { eq: false } }) {
+            nodes {
+                ...DefaultIMSTemplateInfo
+            }
+        }
+    }
+`);
 
 async function searchIMSTemplates(filter: string, count: number): Promise<DefaultImsTemplateInfoFragment[]> {
     return await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await client.searchIMSTemplates({ query, count });
+            const res = await requestThrow(searchIMSTemplatesForAutocompleteQuery, { query, count });
             return res.searchIMSTemplates;
         } else {
-            const res = await client.firstIMSTemplates({ count });
+            const res = await requestThrow(firstIMSTemplatesForAutocompleteQuery, { count });
             return res.imsTemplates.nodes;
         }
     }, "Error searching IMS templates");

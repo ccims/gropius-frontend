@@ -13,15 +13,15 @@
     </v-card>
 </template>
 <script setup lang="ts">
-import { ClientReturnType } from "@/graphql/client";
 import { useAppStore } from "@/store/app";
 import { PropType } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
+import { CurrentUserInfoFragment } from "@/gql/graphql";
 
 defineProps({
     user: {
-        type: Object as PropType<ClientReturnType<"getCurrentUser">["currentUser"] & object>,
+        type: Object as PropType<CurrentUserInfoFragment & object>,
         required: true
     }
 });

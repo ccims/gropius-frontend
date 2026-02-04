@@ -54,19 +54,50 @@ import ConfirmationDialog from "@/components/dialog/ConfirmationDialog.vue";
 import CreateLabelDialog from "@/components/dialog/CreateLabelDialog.vue";
 import ImportLabelDialog from "@/components/dialog/ImportLabelDialog.vue";
 import UpdateLabelDialog from "@/components/dialog/UpdateLabelDialog.vue";
-import { NodeReturnType, useClient } from "@/graphql/client";
-import { LabelOrder, LabelOrderField } from "@/graphql/generated";
+import { queryNode, request, requestThrow } from "@/gql/client";
+import { graphql } from "@/gql";
+import { LabelOrder, LabelOrderField, DefaultLabelInfoFragment } from "@/gql/graphql";
 import { ItemManager } from "@/util/itemManager";
 import { trackableKey } from "@/util/keys";
-import { withErrorMessage } from "@/util/withErrorMessage";
 import { inject } from "vue";
 import { computed, ref } from "vue";
 import { useRoute } from "vue-router";
+import { withErrorMessage } from "@/util/withErrorMessage";
 
-type Trackable = NodeReturnType<"getLabelList", "Component">;
-type Label = Trackable["labels"]["nodes"][0];
+const getLabelListQuery = graphql(`
+    query getLabelList($orderBy: [LabelOrder!]!, $count: Int!, $skip: Int!, $trackable: ID!) {
+        node(id: $trackable) {
+            __typename
+            ... on Trackable {
+                labels(orderBy: $orderBy, first: $count, skip: $skip) {
+                    nodes {
+                        ...DefaultLabelInfo
+                    }
+                    totalCount
+                }
+            }
+        }
+    }
+`);
 
-const client = useClient();
+const getFilteredLabelListQuery = graphql(`
+    query getFilteredLabelList($query: String!, $count: Int!, $trackable: ID!) {
+        searchLabels(query: $query, first: $count, filter: { trackables: { any: { id: { eq: $trackable } } } }) {
+            ...DefaultLabelInfo
+        }
+    }
+`);
+
+const removeLabelFromTrackableMutation = graphql(`
+    mutation removeLabelFromTrackable($trackable: ID!, $label: ID!) {
+        removeLabelFromTrackable(input: { label: $label, trackable: $trackable }) {
+            __typename
+        }
+    }
+`);
+
+type Label = DefaultLabelInfoFragment;
+
 const route = useRoute();
 
 const trackableId = computed(() => route.params.trackable as string);
@@ -95,29 +126,33 @@ class LabelItemManager extends ItemManager<Label, LabelOrderField> {
         page: number
     ): Promise<[Label[], number]> {
         if (filter == undefined) {
-            const res = await client.getLabelList({
+            const res = await queryNode(getLabelListQuery, "Component", {
                 orderBy,
                 count,
                 skip: page * count,
                 trackable: trackableId.value
             });
-            const labels = (res.node as Trackable).labels;
-            return [labels.nodes, labels.totalCount];
+            if (res) {
+                return [res.labels.nodes, res.labels.totalCount];
+            }
         } else {
-            const res = await client.getFilteredLabelList({
+            const res = await request(getFilteredLabelListQuery, {
                 query: filter,
                 count,
                 trackable: trackableId.value
             });
-            return [res.searchLabels, res.searchLabels.length];
+            if (res) {
+                return [res.searchLabels, res.searchLabels.length];
+            }
         }
+        return [[], 0];
     }
 }
 const itemManager: ItemManager<Label, LabelOrderField> = new LabelItemManager();
 
 async function removeLabel(labelId: string) {
     await withErrorMessage(async () => {
-        await client.removeLabelFromTrackable({
+        await requestThrow(removeLabelFromTrackableMutation, {
             label: labelId,
             trackable: trackableId.value
         });

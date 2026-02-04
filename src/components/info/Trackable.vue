@@ -2,7 +2,7 @@
     <custom-router-link :to="trackableLocation" :text="trackable.name" :tooltip="trackable.description" />
 </template>
 <script setup lang="ts">
-import { DefaultTrackableInfoFragment } from "@/graphql/generated";
+import { DefaultTrackableInfoFragment } from "@/gql/graphql";
 import { computed } from "vue";
 import { PropType } from "vue";
 import { RouteLocationRaw } from "vue-router";

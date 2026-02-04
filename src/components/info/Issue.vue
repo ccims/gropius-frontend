@@ -14,7 +14,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import { DefaultIssueInfoFragment } from "@/graphql/generated";
+import { DefaultIssueInfoFragment } from "@/gql/graphql";
 import { PropType, computed } from "vue";
 import IssueIcon from "../IssueIcon.vue";
 import Trackable from "./Trackable.vue";

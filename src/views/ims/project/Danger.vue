@@ -19,17 +19,27 @@
 import DetailCompartment from "@/components/DetailCompartment.vue";
 import ConfirmationDialog from "@/components/dialog/ConfirmationDialog.vue";
 import SyncOthersAllowedSwitch from "@/components/input/SyncOthersAllowedSwitch.vue";
-import { useClient } from "@/graphql/client";
+import { request } from "@/gql/client";
+import { graphql } from "@/gql";
 import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-const client = useClient();
+const deleteIMSProjectMutation = graphql(`
+    mutation deleteIMSProject($id: ID!) {
+        deleteIMSProject(input: {id: $id}) {
+            __typename
+        }
+    }
+`);
+
 const route = useRoute();
 const router = useRouter();
 const imsProjectId = computed(() => route.params.project as string);
 
 async function deleteIMSProject() {
-    await client.deleteIMSProject({ id: imsProjectId.value });
-    router.push({ name: "ims", params: { trackable: route.params.ims } });
+    const res = await request(deleteIMSProjectMutation, { id: imsProjectId.value });
+    if (res) {
+        router.push({ name: "ims", params: { trackable: route.params.ims } });
+    }
 }
 </script>

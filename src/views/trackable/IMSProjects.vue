@@ -37,7 +37,8 @@
 </template>
 <script lang="ts" setup>
 import PaginatedList from "@/components/PaginatedList.vue";
-import { NodeReturnType, useClient } from "@/graphql/client";
+import { queryNode, request, requestThrow } from "@/gql/client";
+import { graphql } from "@/gql";
 import { RouteLocationRaw, useRoute, useRouter } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
 import { IdObject } from "@/util/types";
@@ -46,7 +47,7 @@ import {
     ImsProjectFilterInput,
     ImsProjectOrder,
     ImsProjectOrderField
-} from "@/graphql/generated";
+} from "@/gql/graphql";
 import SyncSelfAllowedSwitch from "@/components/input/SyncSelfAllowedSwitch.vue";
 import { computed } from "vue";
 import CreateIMSProjectDialog from "@/components/dialog/CreateIMSProjectDialog.vue";
@@ -54,9 +55,47 @@ import { ItemManager } from "@/util/itemManager";
 import { useFilterOption } from "@/util/useFilterOption";
 import FilterDropdown from "@/components/input/FilterDropdown.vue";
 
+const getIMSProjectListFromTrackableQuery = graphql(`
+    query getIMSProjectListFromTrackable(
+        $orderBy: [IMSProjectOrder!]!
+        $count: Int!
+        $skip: Int!
+        $trackable: ID!
+        $filter: IMSProjectFilterInput!
+    ) {
+        node(id: $trackable) {
+            __typename
+            ... on Trackable {
+                syncsTo(orderBy: $orderBy, first: $count, skip: $skip, filter: $filter) {
+                    nodes {
+                        ...DefaultIMSProjectInfo
+                    }
+                    totalCount
+                }
+            }
+        }
+    }
+`);
+
+const getFilteredIMSProjectListQuery = graphql(`
+    query getFilteredIMSProjectList($query: String!, $count: Int!, $filter: IMSProjectFilterInput!) {
+        searchIMSProjects(query: $query, first: $count, filter: $filter) {
+            ...DefaultIMSProjectInfo
+        }
+    }
+`);
+
+const searchIMSTemplatesQuery = graphql(`
+    query searchIMSTemplates($query: String!, $count: Int!) {
+        searchIMSTemplates(query: $query, first: $count) {
+            id
+            name
+        }
+    }
+`);
+
 type IMSProject = DefaultImsProjectInfoFragment;
 
-const client = useClient();
 const router = useRouter();
 const route = useRoute();
 
@@ -75,8 +114,10 @@ const templateInput = computed(() => {
     }
     return { id: { in: templateIds.value } };
 });
-const templateFetch = async (query: string) =>
-    client.searchIMSTemplates({ query: query, count: 100 }).then((res) => res.searchIMSTemplates);
+const templateFetch = async (query: string) => {
+    const res = await requestThrow(searchIMSTemplatesQuery, { query: query, count: 100 });
+    return res.searchIMSTemplates;
+};
 
 const dependencyArray = computed(() => [templateInput]);
 
@@ -93,24 +134,27 @@ class IMSProjectItemManager extends ItemManager<IMSProject, ImsProjectOrderField
             }
         };
         if (filter == undefined) {
-            const res = (
-                await client.getIMSProjectListFromTrackable({
-                    orderBy,
-                    count,
-                    skip: page * count,
-                    trackable: trackable.value,
-                    filter: generalFilters
-                })
-            ).node as NodeReturnType<"getIMSProjectListFromTrackable", "Component">;
-            return [res.syncsTo.nodes, res.syncsTo.totalCount];
+            const res = await queryNode(getIMSProjectListFromTrackableQuery, "Component", {
+                orderBy,
+                count,
+                skip: page * count,
+                trackable: trackable.value,
+                filter: generalFilters
+            });
+            if (res) {
+                return [res.syncsTo.nodes, res.syncsTo.totalCount];
+            }
         } else {
-            const res = await client.getFilteredIMSProjectList({
+            const res = await request(getFilteredIMSProjectListQuery, {
                 query: filter,
                 count,
                 filter: { ...generalFilters, trackable: { id: { eq: trackable.value } } }
             });
-            return [res.searchIMSProjects, res.searchIMSProjects.length];
+            if (res) {
+                return [res.searchIMSProjects, res.searchIMSProjects.length];
+            }
         }
+        return [[], 0];
     }
 }
 const itemManager: ItemManager<IMSProject, ImsProjectOrderField> = new IMSProjectItemManager();

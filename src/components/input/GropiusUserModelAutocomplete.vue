@@ -13,13 +13,22 @@
     </FetchingAutocomplete>
 </template>
 <script setup lang="ts">
-import { DefaultUserInfoFragment, GropiusUserFilterInput } from "@/graphql/generated";
+import { graphql } from "@/gql";
+import { requestThrow } from "@/gql/client";
+import { DefaultUserInfoFragment, GropiusUserFilterInput } from "@/gql/graphql";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import User from "../info/User.vue";
 import { PropType } from "vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
 import { withErrorMessage } from "@/util/withErrorMessage";
-import { useClient } from "@/graphql/client";
+
+const searchGropiusUsersQuery = graphql(`
+    query searchGropiusUsers($query: String!, $count: Int!, $filter: GropiusUserFilterInput) {
+        searchGropiusUsers(query: $query, first: $count, filter: $filter) {
+            ...DefaultUserInfo
+        }
+    }
+`);
 
 const props = defineProps({
     label: {
@@ -33,13 +42,11 @@ const props = defineProps({
     }
 });
 
-const client = useClient();
-
 async function searchGropiusUsers(filter: string, count: number): Promise<DefaultUserInfoFragment[]> {
     return await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await client.searchGropiusUsers({ query, count, filter: props.filter });
+            const res = await requestThrow(searchGropiusUsersQuery, { query, count, filter: props.filter });
             return res.searchGropiusUsers;
         } else {
             return [];

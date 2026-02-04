@@ -189,18 +189,69 @@
     </TimelineItemBase>
 </template>
 <script setup lang="ts">
-import { PropType, inject, ref, computed } from "vue";
+import { graphql } from "@/gql";
+import { requestThrow } from "@/gql/client";
+import { computed, inject, PropType, ref } from "vue";
 import TimelineItemBase, { TimelineItemType } from "./TimelineItemBase.vue";
 import User from "@/components/info/User.vue";
 import RelativeTimeWrapper from "../RelativeTimeWrapper.vue";
 import Markdown from "@/components/Markdown.vue";
-import { useClient } from "@/graphql/client";
-import { useBlockingWithErrorMessage, withErrorMessage } from "@/util/withErrorMessage";
+import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
 import ConfirmationDialog from "@/components/dialog/ConfirmationDialog.vue";
 import { markdownToText } from "@/util/markdownToText";
 import { useRouter } from "vue-router";
 import { issueKey } from "@/util/keys";
-import { CommentTimelineInfoFragment } from "@/graphql/generated";
+import { CommentTimelineInfoFragment } from "@/gql/graphql";
+
+const updateBodyMutation = graphql(`
+    mutation updateBodyForTimeline($id: ID!, $body: String!) {
+        updateBody(input: { id: $id, body: $body }) {
+            body {
+                id
+                body
+                bodyLastEditedAt
+                bodyLastEditedBy {
+                    ...DefaultUserInfo
+                }
+            }
+        }
+    }
+`);
+
+const updateIssueCommentMutation = graphql(`
+    mutation updateIssueCommentForTimeline($id: ID!, $body: String!) {
+        updateIssueComment(input: { id: $id, body: $body }) {
+            issueComment {
+                id
+                body
+                bodyLastEditedAt
+                bodyLastEditedBy {
+                    ...DefaultUserInfo
+                }
+            }
+        }
+    }
+`);
+
+const createIssueCommentMutation = graphql(`
+    mutation createIssueCommentForTimeline($issue: ID!, $body: String!, $answers: ID) {
+        createIssueComment(input: { issue: $issue, body: $body, answers: $answers }) {
+            issueComment {
+                ...IssueCommentTimelineInfo
+            }
+        }
+    }
+`);
+
+const deleteIssueCommentMutation = graphql(`
+    mutation deleteIssueCommentForTimeline($id: ID!) {
+        deleteIssueComment(input: { id: $id }) {
+            issueComment {
+                ...IssueCommentTimelineInfo
+            }
+        }
+    }
+`);
 
 export type Comment = (
     | Omit<TimelineItemType<"IssueComment">, "createdBy">
@@ -238,7 +289,6 @@ const menuOpen = ref(false);
 const editMode = ref(props.newComment);
 const itemBody = ref(props.item.body);
 const hasChanged = ref(false);
-const client = useClient();
 const router = useRouter();
 const [blockWithErrorMessage, submitDisabled] = useBlockingWithErrorMessage();
 
@@ -247,7 +297,13 @@ const noDescriptionText = "No description provided";
 
 const answersId = computed(() => {
     const item = props.item;
-    if (item.__typename === "IssueComment" && issue != undefined && item.answers?.id != undefined) {
+    const currentIssue = issue?.value;
+    if (
+        item.__typename === "IssueComment" &&
+        currentIssue != undefined &&
+        "comment" in currentIssue &&
+        item.answers?.id != undefined
+    ) {
         return item.answers?.id;
     }
     return null;
@@ -255,8 +311,9 @@ const answersId = computed(() => {
 
 const answers = computed(() => {
     const id = answersId.value;
-    if (id != undefined) {
-        return issue?.value?.timelineItems?.nodes?.find((c) => c.id === id) as Comment;
+    const currentIssue = issue?.value;
+    if (id != undefined && currentIssue && "timelineItems" in currentIssue) {
+        return currentIssue.timelineItems?.nodes?.find((c: any) => c.id === id) as Comment;
     }
     return null;
 });
@@ -288,16 +345,14 @@ async function updatedItemBody(value: string) {
 async function saveComment(newContent: string) {
     let newItem: CommentTimelineInfoFragment;
     if (props.item.__typename === "Body") {
-        const newBody = await blockWithErrorMessage(
-            () => client.updateBody({ id: props.item.id, body: newContent }),
-            "Error updating body"
-        );
+        const newBody = await blockWithErrorMessage(async () => {
+            return await requestThrow(updateBodyMutation, { id: props.item.id, body: newContent });
+        }, "Error updating body");
         newItem = newBody.updateBody.body;
     } else {
-        const newComment = await blockWithErrorMessage(
-            () => client.updateIssueComment({ id: props.item.id, body: newContent }),
-            "Error updating comment"
-        );
+        const newComment = await blockWithErrorMessage(async () => {
+            return await requestThrow(updateIssueCommentMutation, { id: props.item.id, body: newContent });
+        }, "Error updating comment");
         newItem = newComment.updateIssueComment.issueComment!;
     }
     props.item.bodyLastEditedAt = newItem.bodyLastEditedAt;
@@ -308,10 +363,17 @@ async function saveComment(newContent: string) {
 }
 
 async function createComment() {
-    const newComment = await blockWithErrorMessage(
-        () => client.createIssueComment({ issue: issue?.value?.id!, body: itemBody.value, answers: answersId.value }),
-        "Error creating comment"
-    );
+    const newComment = await blockWithErrorMessage(async () => {
+        const currentIssue = issue?.value;
+        if (!currentIssue || !("id" in currentIssue)) {
+            throw new Error("Issue not available");
+        }
+        return await requestThrow(createIssueCommentMutation, {
+            issue: currentIssue.id,
+            body: itemBody.value,
+            answers: answersId.value
+        });
+    }, "Error creating comment");
     emit("addItem", newComment.createIssueComment.issueComment!);
     itemBody.value = "";
 }
@@ -338,10 +400,9 @@ function selectAnswers() {
 }
 
 async function deleteComment() {
-    const newItem = await blockWithErrorMessage(
-        () => client.deleteIssueComment({ id: props.item.id }),
-        "Error deleting comment"
-    );
+    const newItem = await blockWithErrorMessage(async () => {
+        return await requestThrow(deleteIssueCommentMutation, { id: props.item.id });
+    }, "Error deleting comment");
     emit("updateItem", newItem.deleteIssueComment.issueComment);
 }
 </script>

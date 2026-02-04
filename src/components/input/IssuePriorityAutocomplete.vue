@@ -12,11 +12,34 @@
     </FetchingAutocomplete>
 </template>
 <script setup lang="ts">
-import { NodeReturnType, useClient } from "@/graphql/client";
-import { DefaultIssuePriorityInfoFragment } from "@/graphql/generated";
+import { graphql } from "@/gql";
+import { queryNodeThrow, requestThrow } from "@/gql/client";
+import { DefaultIssuePriorityInfoFragment } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
+
+const searchIssuePrioritiesQuery = graphql(`
+    query searchIssuePriorities($template: ID!, $query: String!, $count: Int!) {
+        searchIssuePriorities(query: $query, first: $count, filter: { partOf: { any: { id: { eq: $template } } } }) {
+            ...DefaultIssuePriorityInfo
+        }
+    }
+`);
+
+const firstIssuePrioritiesQuery = graphql(`
+    query firstIssuePriorities($template: ID!, $count: Int!) {
+        node(id: $template) {
+            ... on IssueTemplate {
+                issuePriorities(first: $count, orderBy: [{ field: VALUE }, { field: NAME }]) {
+                    nodes {
+                        ...DefaultIssuePriorityInfo
+                    }
+                }
+            }
+        }
+    }
+`);
 
 const props = defineProps({
     template: {
@@ -25,8 +48,6 @@ const props = defineProps({
     }
 });
 
-const client = useClient();
-
 async function searchIssuePriorities(filter: string, count: number): Promise<DefaultIssuePriorityInfoFragment[]> {
     if (props.template == undefined) {
         return [];
@@ -34,12 +55,11 @@ async function searchIssuePriorities(filter: string, count: number): Promise<Def
     return await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await client.searchIssuePriorities({ template: props.template!, query, count });
+            const res = await requestThrow(searchIssuePrioritiesQuery, { template: props.template!, query, count });
             return res.searchIssuePriorities;
         } else {
-            const res = await client.firstIssuePriorities({ template: props.template!, count });
-            const nodeRes = res.node as NodeReturnType<"firstIssuePriorities", "IssueTemplate">;
-            return nodeRes.issuePriorities.nodes;
+            const node = await queryNodeThrow(firstIssuePrioritiesQuery, "IssueTemplate", { template: props.template!, count });
+            return node.issuePriorities.nodes;
         }
     }, "Error searching issue priorities");
 }

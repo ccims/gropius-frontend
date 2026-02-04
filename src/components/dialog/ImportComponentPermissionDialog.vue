@@ -23,18 +23,29 @@
     </v-dialog>
 </template>
 <script setup lang="ts">
-import { useClient } from "@/graphql/client";
+import { graphql } from "@/gql";
+import { requestThrow } from "@/gql/client";
 import { onEvent } from "@/util/eventBus";
 import { ref } from "vue";
 import ImportDialogContent from "./ImportDialogContent.vue";
 import ExternalComponentPermissionAutocomplete from "../input/ExternalComponentPermissionAutocomplete.vue";
-import { DefaultComponentPermissionInfoFragment } from "@/graphql/generated";
-import { useBlockingWithErrorMessage, withErrorMessage } from "@/util/withErrorMessage";
+import { DefaultComponentPermissionInfoFragment } from "@/gql/graphql";
+import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
 import Permission from "../info/Permission.vue";
 import { IdObject } from "@/util/types";
 
+const addComponentPermissionToComponentMutation = graphql(`
+    mutation addComponentPermissionToComponent($component: ID!, $componentPermission: ID!) {
+        updateComponent(input: {
+            id: $component
+            addedPermissions: [$componentPermission]
+        }) {
+            __typename
+        }
+    }
+`);
+
 const importComponentPermissionDialog = ref(false);
-const client = useClient();
 const [blockWithErrorMessage, submitDisabled] = useBlockingWithErrorMessage();
 
 const emit = defineEmits<{
@@ -54,7 +65,7 @@ onEvent("import-permission", () => {
 
 async function importComponentPermission(componentPermission: IdObject) {
     blockWithErrorMessage(async () => {
-        await client.addComponentPermissionToComponent({
+        await requestThrow(addComponentPermissionToComponentMutation, {
             componentPermission: componentPermission.id,
             component: props.component
         });

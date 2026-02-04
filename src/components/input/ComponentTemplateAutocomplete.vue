@@ -11,11 +11,30 @@
     </FetchingAutocomplete>
 </template>
 <script setup lang="ts">
-import { useClient } from "@/graphql/client";
-import { DefaultComponentTemplateInfoFragment } from "@/graphql/generated";
+import { graphql } from "@/gql";
+import { requestThrow } from "@/gql/client";
+import { DefaultComponentTemplateInfoFragment } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
+
+const searchComponentTemplatesForAutocompleteQuery = graphql(`
+    query searchComponentTemplatesForAutocomplete($query: String!, $count: Int!) {
+        searchComponentTemplates(query: $query, first: $count, filter: { isDeprecated: { eq: false } }) {
+            ...DefaultComponentTemplateInfo
+        }
+    }
+`);
+
+const firstComponentTemplatesForAutocompleteQuery = graphql(`
+    query firstComponentTemplatesForAutocomplete($count: Int!) {
+        componentTemplates(first: $count, orderBy: [{ field: NAME }], filter: { isDeprecated: { eq: false } }) {
+            nodes {
+                ...DefaultComponentTemplateInfo
+            }
+        }
+    }
+`);
 
 defineProps({
     multiple: {
@@ -25,8 +44,6 @@ defineProps({
     }
 });
 
-const client = useClient();
-
 async function searchComponentTemplates(
     filter: string,
     count: number
@@ -34,10 +51,10 @@ async function searchComponentTemplates(
     return await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await client.searchComponentTemplates({ query, count });
+            const res = await requestThrow(searchComponentTemplatesForAutocompleteQuery, { query, count });
             return res.searchComponentTemplates;
         } else {
-            const res = await client.firstComponentTemplates({ count });
+            const res = await requestThrow(firstComponentTemplatesForAutocompleteQuery, { count });
             return res.componentTemplates.nodes;
         }
     }, "Error searching component templates");

@@ -23,18 +23,29 @@
     </v-dialog>
 </template>
 <script setup lang="ts">
-import { useClient } from "@/graphql/client";
+import { graphql } from "@/gql";
+import { requestThrow } from "@/gql/client";
 import { onEvent } from "@/util/eventBus";
 import { ref } from "vue";
 import ImportDialogContent from "./ImportDialogContent.vue";
 import ExternalProjectPermissionAutocomplete from "../input/ExternalProjectPermissionAutocomplete.vue";
-import { DefaultProjectPermissionInfoFragment } from "@/graphql/generated";
-import { useBlockingWithErrorMessage, withErrorMessage } from "@/util/withErrorMessage";
+import { DefaultProjectPermissionInfoFragment } from "@/gql/graphql";
+import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
 import Permission from "../info/Permission.vue";
 import { IdObject } from "@/util/types";
 
+const addProjectPermissionToProjectMutation = graphql(`
+    mutation addProjectPermissionToProject($project: ID!, $projectPermission: ID!) {
+        updateProject(input: {
+            id: $project
+            addedPermissions: [$projectPermission]
+        }) {
+            __typename
+        }
+    }
+`);
+
 const importProjectPermissionDialog = ref(false);
-const client = useClient();
 const [blockWithErrorMessage, submitDisabled] = useBlockingWithErrorMessage();
 
 const emit = defineEmits<{
@@ -54,7 +65,7 @@ onEvent("import-permission", () => {
 
 async function importProjectPermission(projectPermission: IdObject) {
     blockWithErrorMessage(async () => {
-        await client.addProjectPermissionToProject({
+        await requestThrow(addProjectPermissionToProjectMutation, {
             projectPermission: projectPermission.id,
             project: props.project
         });

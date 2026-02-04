@@ -167,41 +167,41 @@
     />
 </template>
 <script lang="ts" setup>
-import { NodeReturnType, useClient } from "@/graphql/client";
+import { NodeReturnType, queryNodeThrow, requestThrow } from "@/gql/client";
+import { graphql } from "@/gql";
 import {
-    GraphRelationPartnerTemplateInfoFragment,
-    GraphRelationPartnerInfoFragment,
+    GetProjectGraphQuery,
     GraphComponentVersionInfoFragment,
+    GraphRelationPartnerInfoFragment,
+    GraphRelationPartnerTemplateInfoFragment,
     GraphRelationTemplateInfoFragment,
-    RelationTemplateFilterInput,
     Point,
+    RelationTemplateFilterInput,
     UpdateViewInput
-} from "@/graphql/generated";
-import { withErrorMessage } from "@/util/withErrorMessage";
+} from "@/gql/graphql";
 import { computedAsync } from "@vueuse/core";
 import GraphEditor, { ContextMenuData } from "@/components/GraphEditor.vue";
 import {
-    Graph,
-    ShapeStyle,
-    StrokeStyle,
-    FillStyle,
     ComponentVersion,
-    IssueType,
+    CreateRelationContext,
+    FillStyle,
+    Graph,
+    GraphLayout,
     Interface,
+    IssueRelation,
+    IssueType,
+    LayoutEngine,
     Relation,
     RelationStyle,
-    IssueRelation,
-    GraphLayout,
-    LayoutEngine,
-    CreateRelationContext,
-    SelectedElement
+    SelectedElement,
+    ShapeStyle,
+    StrokeStyle
 } from "@gropius/graph-editor";
-import { computed, ref, watch } from "vue";
+import { computed, inject, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { onEvent } from "@/util/eventBus";
 import FilterChip from "@/components/input/FilterChip.vue";
 import ComponentVersionAutocomplete from "@/components/input/ComponentVersionAutocomplete.vue";
-import { inject } from "vue";
 import { eventBusKey } from "@/util/keys";
 import RelationTemplateAutocomplete from "@/components/input/RelationTemplateAutocomplete.vue";
 import { IdObject } from "@/util/types";
@@ -213,11 +213,154 @@ import CreateComponentVersionDialog from "@/components/dialog/CreateComponentVer
 import InterfaceSpecificationVersionAutocomplete from "@/components/input/InterfaceSpecificationVersionAutocomplete.vue";
 import CreateInterfaceSpecificationDialog from "@/components/dialog/CreateInterfaceSpecificationDialog.vue";
 import CreateInterfaceSpecificationVersionDialog from "@/components/dialog/CreateInterfaceSpecificationVersionDialog.vue";
+import { withErrorMessage } from "@/util/withErrorMessage";
 
-type ProjectGraph = NodeReturnType<"getProjectGraph", "Project">;
+const getViewQuery = graphql(`
+    query getView($id: ID!) {
+        node(id: $id) {
+            __typename
+            id
+            ... on View {
+                name
+                filterByTemplate {
+                    nodes {
+                        id
+                    }
+                }
+                relationLayouts {
+                    nodes {
+                        relation {
+                            id
+                        }
+                        points {
+                            x
+                            y
+                        }
+                    }
+                }
+                relationPartnerLayouts {
+                    nodes {
+                        relationPartner {
+                            id
+                        }
+                        pos {
+                            x
+                            y
+                        }
+                    }
+                }
+            }
+        }
+    }
+`);
+
+const addComponentVersionToProjectMutation = graphql(`
+    mutation addComponentVersionToProject($project: ID!, $componentVersion: ID!) {
+        addComponentVersionToProject(input: { componentVersion: $componentVersion, project: $project }) {
+            componentVersion {
+                component {
+                    template {
+                        id
+                    }
+                }
+            }
+        }
+    }
+`);
+
+const addInterfaceSpecificationVersionToComponentVersionMutation = graphql(`
+    mutation addInterfaceSpecificationVersionToComponentVersion(
+        $input: AddInterfaceSpecificationVersionToComponentVersionInput!
+    ) {
+        addInterfaceSpecificationVersionToComponentVersion(input: $input) {
+            __typename
+        }
+    }
+`);
+
+const removeComponentVersionFromProjectMutation = graphql(`
+    mutation removeComponentVersionFromProject($project: ID!, $componentVersion: ID!) {
+        removeComponentVersionFromProject(input: { componentVersion: $componentVersion, project: $project }) {
+            project {
+                id
+            }
+        }
+    }
+`);
+
+const createRelationMutation = graphql(`
+    mutation createRelation($start: ID!, $end: ID!, $template: ID!) {
+        createRelation(input: { start: $start, end: $end, template: $template, templatedFields: [] }) {
+            relation {
+                id
+            }
+        }
+    }
+`);
+
+const deleteRelationMutation = graphql(`
+    mutation deleteRelation($id: ID!) {
+        deleteRelation(input: { id: $id }) {
+            id
+        }
+    }
+`);
+
+const updateViewMutation = graphql(`
+    mutation updateView($input: UpdateViewInput!) {
+        updateView(input: $input) {
+            __typename
+        }
+    }
+`);
+
+const updateProjectMutation = graphql(`
+    mutation updateProject($input: UpdateProjectInput!) {
+        updateProject(input: $input) {
+            project {
+                id
+            }
+        }
+    }
+`);
+
+const getProjectGraphQuery = graphql(`
+    query getProjectGraph($project: ID!) {
+        node(id: $project) {
+            __typename
+            ... on Project {
+                ...GraphInfo
+                relationLayouts {
+                    nodes {
+                        relation {
+                            id
+                        }
+                        points {
+                            x
+                            y
+                        }
+                    }
+                }
+                relationPartnerLayouts {
+                    nodes {
+                        relationPartner {
+                            id
+                        }
+                        pos {
+                            x
+                            y
+                        }
+                    }
+                }
+            }
+        }
+    }
+`);
+
+// Type inferred from the query result
+type ProjectGraph = NodeReturnType<GetProjectGraphQuery, "Project">;
 type GraphLayoutSource = Pick<ProjectGraph, "relationLayouts" | "relationPartnerLayouts">;
 
-const client = useClient();
 const route = useRoute();
 const router = useRouter();
 const eventBus = inject(eventBusKey);
@@ -235,11 +378,10 @@ const originalGraph = computedAsync(
         if (!trackableId.value) {
             return null;
         }
-        const graph = await withErrorMessage(
-            async () => (await client.getProjectGraph({ project: trackableId.value })).node as ProjectGraph,
+        return await withErrorMessage(
+            async () => await queryNodeThrow(getProjectGraphQuery, "Project", { project: trackableId.value }),
             "Error loading project graph"
         );
-        return graph;
     },
     null,
     { shallow: false, evaluating }
@@ -262,11 +404,10 @@ const currentView = computedAsync(
         if (viewId == undefined) {
             return null;
         }
-        const currentView = await withErrorMessage(
-            async () => (await client.getView({ id: viewId })).node as NodeReturnType<"getView", "View">,
+        return await withErrorMessage(
+            async () => await queryNodeThrow(getViewQuery, "View", { id: viewId }),
             "Error loading view"
         );
-        return currentView;
     },
     null,
     { shallow: false }
@@ -635,7 +776,7 @@ eventBus?.on("add-component-version-to-project", () => {
 async function addComponentVersion(componentVersion: IdObject) {
     showAddComponentVersionDialog.value = false;
     await withErrorMessage(async () => {
-        const res = await client.addComponentVersionToProject({
+        const res = await requestThrow(addComponentVersionToProjectMutation, {
             componentVersion: componentVersion.id,
             project: trackableId.value
         });
@@ -672,7 +813,7 @@ function addInterface(componentVersion: string) {
 async function addInterfaceSpecificationVersion(interfaceSpecificationVersion: IdObject) {
     showAddInterfaceDialog.value = false;
     await withErrorMessage(async () => {
-        await client.addInterfaceSpecificationVersionToComponentVersion({
+        await requestThrow(addInterfaceSpecificationVersionToComponentVersionMutation, {
             input: {
                 interfaceSpecificationVersion: interfaceSpecificationVersion.id,
                 componentVersion: interfaceSpecificationComponent.value!.version,
@@ -699,7 +840,7 @@ async function createInterfaceSpecificationVersion(version: string, interfaceSpe
 
 async function removeComponentVersion(componentVersion: string) {
     await withErrorMessage(async () => {
-        await client.removeComponentVersionFromProject({
+        await requestThrow(removeComponentVersionFromProjectMutation, {
             componentVersion,
             project: trackableId.value
         });
@@ -724,7 +865,7 @@ async function createRelation(relationTemplate: IdObject) {
     createRelationContext.value = undefined;
     showSelectRelationTemplateDialog.value = false;
     await withErrorMessage(async () => {
-        await client.createRelation({
+        await requestThrow(createRelationMutation, {
             start: context.start,
             end: context.end,
             template: relationTemplate.id
@@ -742,7 +883,7 @@ watch(showSelectRelationTemplateDialog, (newValue) => {
 
 async function deleteRelation(relation: string) {
     await withErrorMessage(async () => {
-        await client.deleteRelation({
+        await requestThrow(deleteRelationMutation, {
             id: relation
         });
         if (layout.value != undefined) {
@@ -845,7 +986,7 @@ async function updateLayoutOrView() {
                     filterByTemplate = [];
                 }
             }
-            await client.updateView({
+            await requestThrow(updateViewMutation, {
                 input: {
                     id: view.value!,
                     ...layoutDiff,
@@ -858,7 +999,7 @@ async function updateLayoutOrView() {
         }, "Error updating view");
     } else {
         await withErrorMessage(async () => {
-            await client.updateProject({
+            await requestThrow(updateProjectMutation, {
                 input: {
                     id: trackableId.value,
                     ...layoutDiff
@@ -910,7 +1051,7 @@ function navigateTo(id: string) {
     }
 
     .v-sheet {
-        width: min(1000px, calc(100vw - 3 * settings.$side-bar-width));
+        width: min(1000px, calc(100vw - 3 * #{settings.$side-bar-width}));
         overflow-y: visible !important;
     }
 }

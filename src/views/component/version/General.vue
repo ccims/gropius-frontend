@@ -38,16 +38,47 @@
 import DetailCompartment from "@/components/DetailCompartment.vue";
 import InputWrapper from "@/components/input/InputWrapper.vue";
 import TemplatedFieldsDetailCompartment from "@/components/TemplatedFieldsDetailCompartment.vue";
-import { NodeReturnType, useClient } from "@/graphql/client";
-import { UpdateComponentVersionInput } from "@/graphql/generated";
+import { UpdateComponentVersionInput } from "@/gql/graphql";
 import { eventBusKey, trackableKey } from "@/util/keys";
-import { withErrorMessage } from "@/util/withErrorMessage";
 import { computedAsync } from "@vueuse/core";
-import { inject } from "vue";
-import { computed } from "vue";
+import { computed, inject } from "vue";
 import { useRoute } from "vue-router";
+import { graphql } from "@/gql";
+import { queryNodeThrow, requestThrow } from "@/gql/client";
+import { withErrorMessage } from "@/util/withErrorMessage";
 
-const client = useClient();
+const getComponentVersionGeneralDetailsQuery = graphql(`
+    query getComponentVersionGeneralDetails($id: ID!) {
+        node(id: $id) {
+            id
+            ... on ComponentVersion {
+                version
+                tags
+                templatedFields {
+                    name
+                    value
+                }
+                template {
+                    templateFieldSpecifications {
+                        name
+                        value
+                    }
+                }
+            }
+        }
+    }
+`);
+
+const updateComponentVersionMutation = graphql(`
+    mutation updateComponentVersion($input: UpdateComponentVersionInput!) {
+        updateComponentVersion(input: $input) {
+            componentVersion {
+                id
+            }
+        }
+    }
+`);
+
 const route = useRoute();
 const eventBus = inject(eventBusKey);
 const componentVersionId = computed(() => route.params.version as string);
@@ -59,11 +90,13 @@ const componentVersion = computedAsync(
         if (!componentVersionId.value) {
             return null;
         }
-        const res = await withErrorMessage(
-            () => client.getComponentVersionGeneralDetails({ id: componentVersionId.value }),
+        return await withErrorMessage(
+            () =>
+                queryNodeThrow(getComponentVersionGeneralDetailsQuery, "ComponentVersion", {
+                    id: componentVersionId.value
+                }),
             "Error loading component version details"
         );
-        return res.node as NodeReturnType<"getComponentVersionGeneralDetails", "ComponentVersion">;
     },
     null,
     { shallow: false }
@@ -72,7 +105,7 @@ const componentVersion = computedAsync(
 async function save(input: Omit<UpdateComponentVersionInput, "id">) {
     await withErrorMessage(
         () =>
-            client.updateComponentVersion({
+            requestThrow(updateComponentVersionMutation, {
                 input: {
                     id: componentVersionId.value,
                     ...input

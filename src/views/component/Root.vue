@@ -14,21 +14,57 @@
 </template>
 
 <script lang="ts" setup>
-import BaseLayout from "@/components/BaseLayout.vue";
-import { NodeReturnType, useClient } from "@/graphql/client";
 import { computedAsync } from "@vueuse/core";
-import { computed, ref, shallowRef } from "vue";
+import { computed, inject, provide, ref, shallowRef } from "vue";
 import { RouteLocationRaw, useRoute } from "vue-router";
-import { withErrorMessage } from "@/util/withErrorMessage";
-import { inject } from "vue";
 import { eventBusKey, trackableKey } from "@/util/keys";
-import { provide } from "vue";
 import { onEvent } from "@/util/eventBus";
 import BaseLayoutWithError from "@/components/BaseLayoutWithError.vue";
+import { graphql } from "@/gql";
+import { queryNodeThrow } from "@/gql/client";
+import { withErrorMessage } from "@/util/withErrorMessage";
 
-type Component = NodeReturnType<"getComponent", "Component">;
+const getComponentQuery = graphql(`
+    query getComponent($id: ID!) {
+        node(id: $id) {
+            id
+            ... on Component {
+                __typename
+                name
+                description
+                ...OpenIssueCount
+                createIssues: hasPermission(permission: CREATE_ISSUES)
+                manageLabels: hasPermission(permission: MANAGE_LABELS)
+                manageIssues: hasPermission(permission: MANAGE_ISSUES)
+                manageIMS: hasPermission(permission: MANAGE_IMS)
+                admin: hasPermission(permission: ADMIN)
+            }
+        }
+    }
+`);
 
-const client = useClient();
+const getVersionedNodeQuery = graphql(`
+    query getVersionedNode($id: ID!) {
+        node(id: $id) {
+            id
+            ... on Versioned {
+                version
+            }
+        }
+    }
+`);
+
+const getNamedNodeQuery = graphql(`
+    query getNamedNodeComponent($id: ID!) {
+        node(id: $id) {
+            id
+            ... on Named {
+                name
+            }
+        }
+    }
+`);
+
 const route = useRoute();
 const componentId = computed(() => route.params.trackable as string);
 const componentVersionId = computed(() => route.params.version as string | undefined);
@@ -49,11 +85,9 @@ const component = computedAsync(
             return null;
         }
         titleSegmentDependency.value;
-        const res = await withErrorMessage(
-            () => client.getComponent({ id: componentId.value }),
-            "Error loading component"
-        );
-        return res.node as Component;
+        return await withErrorMessage(() => {
+            return queryNodeThrow(getComponentQuery, "Component", { id: componentId.value });
+        }, "Error loading component");
     },
     null,
     { shallow: false, evaluating }
@@ -65,11 +99,10 @@ const version = computedAsync(
             return null;
         }
         titleSegmentDependency.value;
-        const res = await withErrorMessage(
-            () => client.getVersionedNode({ id: componentVersionId.value! }),
-            "Error loading project version"
-        );
-        return res.node as { id: string; version: string };
+        return (await withErrorMessage(
+            () => queryNodeThrow(getVersionedNodeQuery, "ComponentVersion", { id: componentVersionId.value! }),
+            "Error loading component version"
+        )) as { id: string; version: string };
     },
     null,
     { shallow: false }
@@ -81,11 +114,13 @@ const interfaceSpecification = computedAsync(
             return null;
         }
         titleSegmentDependency.value;
-        const res = await withErrorMessage(
-            () => client.getNamedNode({ id: interfaceSpecificationId.value! }),
+        return (await withErrorMessage(
+            () =>
+                queryNodeThrow(getNamedNodeQuery, "InterfaceSpecification", {
+                    id: interfaceSpecificationId.value!
+                }),
             "Error loading interface specification"
-        );
-        return res.node as { id: string; name: string };
+        )) as { id: string; name: string };
     },
     null,
     { shallow: false }
@@ -97,11 +132,13 @@ const interfaceSpecificationVersion = computedAsync(
             return null;
         }
         titleSegmentDependency.value;
-        const res = await withErrorMessage(
-            () => client.getVersionedNode({ id: interfaceSpecificationVersionId.value! }),
+        return (await withErrorMessage(
+            () =>
+                queryNodeThrow(getVersionedNodeQuery, "InterfaceSpecificationVersion", {
+                    id: interfaceSpecificationVersionId.value!
+                }),
             "Error loading interface specification version"
-        );
-        return res.node as { id: string; version: string };
+        )) as { id: string; version: string };
     },
     null,
     { shallow: false }

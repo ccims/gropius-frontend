@@ -11,15 +11,38 @@
     </FetchingAutocomplete>
 </template>
 <script setup lang="ts">
-import { useClient } from "@/graphql/client";
+import { graphql } from "@/gql";
+import { requestThrow } from "@/gql/client";
 import {
     DefaultInterfaceSpecificationTemplateInfoFragment,
     InterfaceSpecificationTemplateFilterInput
-} from "@/graphql/generated";
+} from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
 import { PropType } from "vue";
+
+const searchInterfaceSpecificationTemplatesQuery = graphql(`
+    query searchInterfaceSpecificationTemplates($query: String!, $count: Int!, $filter: InterfaceSpecificationTemplateFilterInput) {
+        searchInterfaceSpecificationTemplates(query: $query, first: $count, filter: $filter) {
+            ...DefaultInterfaceSpecificationTemplateInfo
+        }
+    }
+`);
+
+const firstInterfaceSpecificationTemplatesQuery = graphql(`
+    query firstInterfaceSpecificationTemplates($count: Int!, $filter: InterfaceSpecificationTemplateFilterInput) {
+        interfaceSpecificationTemplates(
+            first: $count
+            orderBy: [{ field: NAME }]
+            filter: $filter
+        ) {
+            nodes {
+                ...DefaultInterfaceSpecificationTemplateInfo
+            }
+        }
+    }
+`);
 
 const props = defineProps({
     interfaceSpecificationTemplateFilter: {
@@ -28,8 +51,6 @@ const props = defineProps({
     }
 });
 
-const client = useClient();
-
 async function searchInterfaceSpecificationTemplates(
     filter: string,
     count: number
@@ -37,14 +58,14 @@ async function searchInterfaceSpecificationTemplates(
     return await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await client.searchInterfaceSpecificationTemplates({
+            const res = await requestThrow(searchInterfaceSpecificationTemplatesQuery, {
                 query,
                 count,
                 filter: props.interfaceSpecificationTemplateFilter
             });
             return res.searchInterfaceSpecificationTemplates;
         } else {
-            const res = await client.firstInterfaceSpecificationTemplates({
+            const res = await requestThrow(firstInterfaceSpecificationTemplatesQuery, {
                 count,
                 filter: props.interfaceSpecificationTemplateFilter
             });

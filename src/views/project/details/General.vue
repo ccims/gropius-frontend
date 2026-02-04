@@ -47,16 +47,42 @@
 import DetailCompartment from "@/components/DetailCompartment.vue";
 import InputWrapper from "@/components/input/InputWrapper.vue";
 import ViewAutocomplete from "@/components/input/ViewAutocomplete.vue";
-import { NodeReturnType, useClient } from "@/graphql/client";
-import { UpdateProjectInput } from "@/graphql/generated";
+import { UpdateProjectInput } from "@/gql/graphql";
 import { eventBusKey } from "@/util/keys";
-import { withErrorMessage } from "@/util/withErrorMessage";
 import { computedAsync } from "@vueuse/core";
-import { inject } from "vue";
-import { computed } from "vue";
+import { computed, inject } from "vue";
 import { useRoute } from "vue-router";
+import { graphql } from "@/gql";
+import { queryNodeThrow, request } from "@/gql/client";
+import { withErrorMessage } from "@/util/withErrorMessage";
 
-const client = useClient();
+const getProjectGeneralDetailsQuery = graphql(`
+    query getProjectGeneralDetails($id: ID!) {
+        node(id: $id) {
+            id
+            ... on Project {
+                name
+                description
+                repositoryURL
+                defaultView {
+                    id
+                }
+                admin: hasPermission(permission: ADMIN)
+            }
+        }
+    }
+`);
+
+const updateProjectMutation = graphql(`
+    mutation updateProject($input: UpdateProjectInput!) {
+        updateProject(input: $input) {
+            project {
+                id
+            }
+        }
+    }
+`);
+
 const route = useRoute();
 const eventBus = inject(eventBusKey);
 const projectId = computed(() => route.params.trackable as string);
@@ -66,11 +92,10 @@ const project = computedAsync(
         if (!projectId.value) {
             return null;
         }
-        const res = await withErrorMessage(
-            () => client.getProjectGeneralDetails({ id: projectId.value }),
+        return await withErrorMessage(
+            () => queryNodeThrow(getProjectGeneralDetailsQuery, "Project", { id: projectId.value }),
             "Error loading project details"
         );
-        return res.node as NodeReturnType<"getProjectGeneralDetails", "Project">;
     },
     null,
     { shallow: false }
@@ -93,7 +118,7 @@ const defaultView = computed({
 async function save(input: Omit<UpdateProjectInput, "id">) {
     await withErrorMessage(
         () =>
-            client.updateProject({
+            request(updateProjectMutation, {
                 input: {
                     id: projectId.value,
                     ...input

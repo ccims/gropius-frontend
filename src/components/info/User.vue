@@ -22,7 +22,7 @@
     </span>
 </template>
 <script setup lang="ts">
-import { DefaultUserInfoFragment } from "@/graphql/generated";
+import { DefaultUserInfoFragment } from "@/gql/graphql";
 import { PropType } from "vue";
 
 defineProps({

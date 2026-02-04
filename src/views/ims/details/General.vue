@@ -25,16 +25,49 @@
 import DetailCompartment from "@/components/DetailCompartment.vue";
 import InputWrapper from "@/components/input/InputWrapper.vue";
 import TemplatedFieldsDetailCompartment from "@/components/TemplatedFieldsDetailCompartment.vue";
-import { NodeReturnType, useClient } from "@/graphql/client";
-import { UpdateComponentInput } from "@/graphql/generated";
+import { queryNodeThrow, requestThrow } from "@/gql/client";
+import { graphql } from "@/gql";
+import { UpdateComponentInput } from "@/gql/graphql";
 import { eventBusKey } from "@/util/keys";
-import { withErrorMessage } from "@/util/withErrorMessage";
 import { computedAsync } from "@vueuse/core";
-import { inject } from "vue";
-import { computed } from "vue";
+import { computed, inject } from "vue";
 import { useRoute } from "vue-router";
+import { withErrorMessage } from "@/util/withErrorMessage";
 
-const client = useClient();
+const getIMSGeneralDetailsQuery = graphql(`
+    query getIMSGeneralDetails($id: ID!) {
+        node(id: $id) {
+            __typename
+            id
+            ... on IMS {
+                name
+                description
+                templatedFields {
+                    name
+                    value
+                }
+                template {
+                    templateFieldSpecifications {
+                        name
+                        value
+                    }
+                }
+                admin: hasPermission(permission: ADMIN)
+            }
+        }
+    }
+`);
+
+const updateIMSMutation = graphql(`
+    mutation updateIMS($input: UpdateIMSInput!) {
+        updateIMS(input: $input) {
+            ims {
+                id
+            }
+        }
+    }
+`);
+
 const route = useRoute();
 const eventBus = inject(eventBusKey);
 const imsId = computed(() => route.params.ims as string);
@@ -44,11 +77,11 @@ const ims = computedAsync(
         if (!imsId.value) {
             return null;
         }
-        const res = await withErrorMessage(
-            () => client.getIMSGeneralDetails({ id: imsId.value }),
+
+        return await withErrorMessage(
+            () => queryNodeThrow(getIMSGeneralDetailsQuery, "IMS", { id: imsId.value }),
             "Error loading IMS details"
         );
-        return res.node as NodeReturnType<"getIMSGeneralDetails", "IMS">;
     },
     null,
     { shallow: false }
@@ -57,7 +90,7 @@ const ims = computedAsync(
 async function save(input: Omit<UpdateComponentInput, "id">) {
     await withErrorMessage(
         () =>
-            client.updateIMS({
+            requestThrow(updateIMSMutation, {
                 input: {
                     id: imsId.value,
                     ...input

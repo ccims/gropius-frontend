@@ -7,7 +7,7 @@
     </v-chip>
 </template>
 <script setup lang="ts">
-import { DefaultAffectedByIssueInfoFragment } from "@/graphql/generated";
+import { DefaultAffectedByIssueInfoFragment } from "@/gql/graphql";
 import { affectedByIssueName, affectedByIssueIcon, affectedByIssueDescription } from "@/util/affectedByIssueUtils";
 import { computed } from "vue";
 import { PropType } from "vue";

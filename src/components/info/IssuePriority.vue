@@ -8,7 +8,7 @@
     <span v-else class="priority-wrapper text-high-emphasis ml-1">No priority</span>
 </template>
 <script setup lang="ts">
-import { DefaultIssuePriorityInfoFragment } from "@/graphql/generated";
+import { DefaultIssuePriorityInfoFragment } from "@/gql/graphql";
 import { PropType } from "vue";
 
 defineProps({

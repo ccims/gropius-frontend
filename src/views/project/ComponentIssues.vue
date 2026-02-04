@@ -25,7 +25,8 @@
     </PaginatedList>
 </template>
 <script lang="ts" setup>
-import { NodeReturnType, useClient } from "@/graphql/client";
+import { queryNode, request } from "@/gql/client";
+import { graphql } from "@/gql";
 import { computed } from "vue";
 import { RouteLocationRaw, useRoute, useRouter } from "vue-router";
 import PaginatedList from "@/components/PaginatedList.vue";
@@ -34,7 +35,7 @@ import {
     IssueOrder,
     IssueOrderField,
     ProjectComponentIssueListItemInfoFragment
-} from "@/graphql/generated";
+} from "@/gql/graphql";
 import IssueListItem from "@/components/IssueListItem.vue";
 import IssueStateSegmentedButton from "@/components/input/IssueStateSegmentedButton.vue";
 import IssueDialogs from "@/components/IssueDialogs.vue";
@@ -43,10 +44,32 @@ import { ItemManager } from "@/util/itemManager";
 import IssueFilterDropdowns from "@/components/input/IssueFilterDropdowns.vue";
 import { useTemplateRef } from "vue";
 
-type Project = NodeReturnType<"getComponentIssueList", "Project">;
+const getComponentIssueListQuery = graphql(`
+    query getComponentIssueList($orderBy: [IssueOrder!]!, $count: Int!, $skip: Int!, $filter: IssueFilterInput, $project: ID!) {
+        node(id: $project) {
+            __typename
+            ... on Project {
+                componentIssues(filter: $filter, orderBy: $orderBy, first: $count, skip: $skip) {
+                    nodes {
+                        ...ProjectComponentIssueListItemInfo
+                    }
+                    totalCount
+                }
+            }
+        }
+    }
+`);
+
+const getComponentFilteredIssueListQuery = graphql(`
+    query getComponentFilteredIssueList($query: String!, $count: Int!, $project: ID!, $filter: IssueFilterInput!) {
+        searchIssues(query: $query, first: $count, filter: {and: [$filter], trackables: {any: {isComponentAnd: {versions: {any: {partOfProject: $project}}}}}}) {
+            ...ProjectComponentIssueListItemInfo
+        }
+    }
+`);
+
 type Issue = ProjectComponentIssueListItemInfoFragment;
 
-const client = useClient();
 const router = useRouter();
 const route = useRoute();
 
@@ -90,24 +113,28 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
               }
             : {};
         if (filter == undefined) {
-            const res = await client.getComponentIssueList({
+            const res = await queryNode(getComponentIssueListQuery, "Project", {
                 orderBy,
                 count,
                 skip: page * count,
                 project: trackableId.value,
                 filter: issueFilter
             });
-            const issues = (res.node as Project).componentIssues;
-            return [issues.nodes, issues.totalCount];
+            if (res) {
+                return [res.componentIssues.nodes, res.componentIssues.totalCount];
+            }
         } else {
-            const res = await client.getComponentFilteredIssueList({
+            const res = await request(getComponentFilteredIssueListQuery, {
                 query: filter,
                 count,
                 project: trackableId.value,
                 filter: issueFilter
             });
-            return [res.searchIssues, res.searchIssues.length];
+            if (res) {
+                return [res.searchIssues, res.searchIssues.length];
+            }
         }
+        return [[], 0];
     }
 }
 const itemManager: ItemManager<Issue, IssueOrderField> = new IssueItemManager();

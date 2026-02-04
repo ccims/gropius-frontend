@@ -25,17 +25,36 @@
 </template>
 <script lang="ts" setup>
 import PaginatedList from "@/components/PaginatedList.vue";
-import { ClientReturnType, useClient } from "@/graphql/client";
-import { ProjectOrderField, ProjectOrder } from "@/graphql/generated";
+import { request } from "@/gql/client";
+import { graphql } from "@/gql";
+import { ProjectOrderField, ProjectOrder, ProjectListItemInfoFragment } from "@/gql/graphql";
 import { RouteLocationRaw, useRouter } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
 import CreateProjectDialog from "@/components/dialog/CreateProjectDialog.vue";
 import { IdObject } from "@/util/types";
 import { ItemManager } from "@/util/itemManager";
 
-type Project = ClientReturnType<"getProjectList">["projects"]["nodes"][0];
+const getProjectListQuery = graphql(`
+    query getProjectList($orderBy: [ProjectOrder!]!, $count: Int!, $skip: Int!) {
+        projects(orderBy: $orderBy, first: $count, skip: $skip) {
+            nodes {
+                ...ProjectListItemInfo
+            }
+            totalCount
+        }
+    }
+`);
 
-const client = useClient();
+const getFilteredProjectListQuery = graphql(`
+    query getFilteredProjectList($query: String!, $count: Int!) {
+        searchProjects(query: $query, first: $count) {
+            ...ProjectListItemInfo
+        }
+    }
+`);
+
+type Project = ProjectListItemInfoFragment;
+
 const router = useRouter();
 
 const sortFields = {
@@ -51,19 +70,24 @@ class ProjectItemManager extends ItemManager<Project, ProjectOrderField> {
         page: number
     ): Promise<[Project[], number]> {
         if (filter == undefined) {
-            const res = await client.getProjectList({
+            const res = await request(getProjectListQuery, {
                 orderBy,
                 count,
                 skip: page * count
             });
-            return [res.projects.nodes, res.projects.totalCount];
+            if (res) {
+                return [res.projects.nodes, res.projects.totalCount];
+            }
         } else {
-            const res = await client.getFilteredProjectList({
+            const res = await request(getFilteredProjectListQuery, {
                 query: filter,
                 count
             });
-            return [res.searchProjects, res.searchProjects.length];
+            if (res) {
+                return [res.searchProjects, res.searchProjects.length];
+            }
         }
+        return [[], 0];
     }
 }
 const itemManager: ItemManager<Project, ProjectOrderField> = new ProjectItemManager();

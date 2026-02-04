@@ -52,14 +52,36 @@
 <script lang="ts" setup>
 import CustomList from "@/components/CustomList.vue";
 import IssueListItem from "@/components/IssueListItem.vue";
-import { NodeReturnType, useClient } from "@/graphql/client";
 import { IdObject } from "@/util/types";
-import { withErrorMessage } from "@/util/withErrorMessage";
 import { computedAsync } from "@vueuse/core";
 import { computed } from "vue";
 import { RouteLocationRaw, useRoute } from "vue-router";
+import { graphql } from "@/gql";
+import { queryNodeThrow } from "@/gql/client";
+import { withErrorMessage } from "@/util/withErrorMessage";
 
-const client = useClient();
+const getComponentDetailsQuery = graphql(`
+    query getComponentDetails($id: ID!) {
+        node(id: $id) {
+            id
+            ... on Component {
+                name
+                description
+                issues(orderBy: [{ field: LAST_UPDATED_AT, direction: DESC }], first: 20) {
+                    nodes {
+                        ...IssueListItemInfo
+                    }
+                }
+                pinnedIssues {
+                    nodes {
+                        ...IssueListItemInfo
+                    }
+                }
+            }
+        }
+    }
+`);
+
 const route = useRoute();
 const componentId = computed(() => route.params.trackable as string);
 
@@ -68,11 +90,9 @@ const component = computedAsync(
         if (!componentId.value) {
             return null;
         }
-        const res = await withErrorMessage(
-            () => client.getComponentDetails({ id: componentId.value }),
-            "Error loading component details"
-        );
-        return res.node as NodeReturnType<"getComponentDetails", "Component">;
+        return await withErrorMessage(async () => {
+            return await queryNodeThrow(getComponentDetailsQuery, "Component", { id: componentId.value });
+        }, "Error loading component details");
     },
     null,
     { shallow: false }

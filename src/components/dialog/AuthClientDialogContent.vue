@@ -43,7 +43,7 @@ import { TokenScope } from "@/util/oauth";
 import { computed, PropType, ref } from "vue";
 import ConfirmationDialog from "./ConfirmationDialog.vue";
 import GropiusUserModelAutocomplete from "../input/GropiusUserModelAutocomplete.vue";
-import { DefaultUserInfoFragment } from "@/graphql/generated";
+import { DefaultUserInfoFragment } from "@/gql/graphql";
 
 export interface AuthClientInput {
     name?: string;

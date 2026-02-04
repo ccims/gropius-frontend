@@ -1,4 +1,4 @@
-import { IssueOrderField } from "@/graphql/generated";
+import { IssueOrderField } from "@/gql/graphql";
 
 export const issueSortFields = {
     Updated: IssueOrderField.LastUpdatedAt,

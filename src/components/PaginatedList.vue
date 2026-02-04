@@ -60,7 +60,7 @@ import CustomList from "./CustomList.vue";
 import { computed } from "vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
 import { WritableComputedRef } from "vue";
-import { OrderDirection } from "@/graphql/generated";
+import { OrderDirection } from "@/gql/graphql";
 import { ItemManager } from "@/util/itemManager";
 
 const props = defineProps({

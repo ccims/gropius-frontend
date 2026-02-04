@@ -17,12 +17,13 @@
     </FetchingAutocomplete>
 </template>
 <script setup lang="ts">
-import { NodeReturnType, useClient } from "@/graphql/client";
+import { requestThrow, queryNodeThrow } from "@/gql/client";
+import { graphql } from "@/gql";
 import {
     ComponentFilterInput,
     DefaultComponentVersionInfoFragment,
     DefaultTrackableInfoFragment
-} from "@/graphql/generated";
+} from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
@@ -44,7 +45,46 @@ const props = defineProps({
     }
 });
 
-const client = useClient();
+const searchComponentVersionsQuery = graphql(`
+    query searchComponentVersions($query: String!, $count: Int!, $component: ID!) {
+        searchComponentVersions(query: $query, first: $count, filter: { component: { id: { eq: $component } } }) {
+            ...DefaultComponentVersionInfo
+        }
+    }
+`);
+
+const firstComponentVersionsQuery = graphql(`
+    query firstComponentVersions($component: ID!, $count: Int!) {
+        node(id: $component) {
+            id
+            ... on Component {
+                versions(first: $count) {
+                    nodes {
+                        ...DefaultComponentVersionInfo
+                    }
+                }
+            }
+        }
+    }
+`);
+
+const searchComponentsQuery = graphql(`
+    query searchComponentsForVersionAutocomplete($query: String!, $count: Int!, $filter: ComponentFilterInput) {
+        searchComponents(query: $query, first: $count, filter: $filter) {
+            ...DefaultTrackableInfo
+        }
+    }
+`);
+
+const firstComponentsQuery = graphql(`
+    query firstComponentsForVersionAutocomplete($count: Int!, $filter: ComponentFilterInput) {
+        components(first: $count, filter: $filter) {
+            nodes {
+                ...DefaultTrackableInfo
+            }
+        }
+    }
+`);
 
 async function searchComponentVersions(
     filter: string,
@@ -54,12 +94,14 @@ async function searchComponentVersions(
     return await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await client.searchComponentVersions({ query, count, component: context!.id });
+            const res = await requestThrow(searchComponentVersionsQuery, { query, count, component: context!.id });
             return res.searchComponentVersions;
         } else {
-            const res = (await client.firstComponentVersions({ component: context!.id, count: count - 1 }))
-                .node as NodeReturnType<"firstComponentVersions", "Component">;
-            return res.versions.nodes;
+            const component = await queryNodeThrow(firstComponentVersionsQuery, "Component", {
+                component: context!.id,
+                count: count - 1
+            });
+            return component.versions.nodes;
         }
     }, "Error searching component versions");
 }
@@ -68,10 +110,10 @@ async function searchComponents(filter: string, count: number): Promise<DefaultT
     return await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await client.searchComponents({ query, count, filter: props.componentFilter });
+            const res = await requestThrow(searchComponentsQuery, { query, count, filter: props.componentFilter });
             return res.searchComponents;
         } else {
-            const res = await client.firstComponents({ count, filter: props.componentFilter });
+            const res = await requestThrow(firstComponentsQuery, { count, filter: props.componentFilter });
             return res.components.nodes;
         }
     }, "Error searching components");

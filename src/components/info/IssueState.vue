@@ -7,7 +7,7 @@
     </v-chip>
 </template>
 <script lang="ts" setup>
-import { DefaultIssueStateInfoFragment } from "@/graphql/generated";
+import { DefaultIssueStateInfoFragment } from "@/gql/graphql";
 import { PropType } from "vue";
 
 defineProps({

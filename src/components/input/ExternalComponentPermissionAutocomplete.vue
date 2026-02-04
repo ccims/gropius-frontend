@@ -21,8 +21,9 @@
     </FetchingAutocomplete>
 </template>
 <script setup lang="ts">
-import { NodeReturnType, useClient } from "@/graphql/client";
-import { DefaultComponentPermissionInfoFragment, DefaultTrackableInfoFragment } from "@/graphql/generated";
+import { requestThrow, queryNodeThrow } from "@/gql/client";
+import { graphql } from "@/gql";
+import { DefaultComponentPermissionInfoFragment, DefaultTrackableInfoFragment } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
@@ -40,7 +41,45 @@ const props = defineProps({
     }
 });
 
-const client = useClient();
+const searchComponentPermissionsQuery = graphql(`
+    query searchComponentPermissionsForExternal($query: String!, $count: Int!, $component: ID!) {
+        searchComponentPermissions(query: $query, first: $count, filter: { nodesWithPermission: { any: { id: { eq: $component } } } }) {
+            ...DefaultComponentPermissionInfo
+        }
+    }
+`);
+
+const firstComponentPermissionsQuery = graphql(`
+    query firstComponentPermissions($component: ID!, $count: Int!) {
+        node(id: $component) {
+            ... on Component {
+                permissions(first: $count, orderBy: [{ field: NAME }]) {
+                    nodes {
+                        ...DefaultComponentPermissionInfo
+                    }
+                }
+            }
+        }
+    }
+`);
+
+const searchComponentsQuery = graphql(`
+    query searchComponentsForPermissionAutocomplete($query: String!, $count: Int!) {
+        searchComponents(query: $query, first: $count) {
+            ...DefaultTrackableInfo
+        }
+    }
+`);
+
+const firstComponentsQuery = graphql(`
+    query firstComponentsForPermissionAutocomplete($count: Int!) {
+        components(first: $count) {
+            nodes {
+                ...DefaultTrackableInfo
+            }
+        }
+    }
+`);
 
 async function searchComponentPermissions(
     filter: string,
@@ -50,11 +89,11 @@ async function searchComponentPermissions(
     return await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await client.searchComponentPermissions({ query, count, component: context!.id });
+            const res = await requestThrow(searchComponentPermissionsQuery, { query, count, component: context!.id });
             return res.searchComponentPermissions;
         } else {
-            const res = await client.firstComponentPermissions({ component: context!.id, count });
-            return (res.node as NodeReturnType<"firstComponentPermissions", "Component">).permissions.nodes;
+            const component = await queryNodeThrow(firstComponentPermissionsQuery, "Component", { component: context!.id, count });
+            return component.permissions.nodes;
         }
     }, "Error searching component permissions");
 }
@@ -63,10 +102,10 @@ async function searchComponents(filter: string, count: number): Promise<DefaultT
     return await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await client.searchComponents({ query, count });
+            const res = await requestThrow(searchComponentsQuery, { query, count });
             return res.searchComponents;
         } else {
-            const res = await client.firstComponents({ count });
+            const res = await requestThrow(firstComponentsQuery, { count });
             return res.components.nodes;
         }
     }, "Error searching components");

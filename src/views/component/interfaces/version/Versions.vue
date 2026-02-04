@@ -41,8 +41,9 @@
 </template>
 <script lang="ts" setup>
 import PaginatedList from "@/components/PaginatedList.vue";
-import { NodeReturnType, useClient } from "@/graphql/client";
-import { InterfaceSpecificationVersionOrder, InterfaceSpecificationVersionOrderField } from "@/graphql/generated";
+import { request, queryNode } from "@/gql/client";
+import { graphql } from "@/gql";
+import { InterfaceSpecificationVersionOrder, InterfaceSpecificationVersionOrderField, InterfaceSpecificationVersionListItemInfoFragment } from "@/gql/graphql";
 import { RouteLocationRaw, useRoute, useRouter } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
 import { computed } from "vue";
@@ -50,12 +51,40 @@ import CreateInterfaceSpecificationVersionDialog from "@/components/dialog/Creat
 import { IdObject } from "@/util/types";
 import { ItemManager } from "@/util/itemManager";
 
-type InterfaceSpecificationVersion = NodeReturnType<
-    "getInterfaceSpecificationVersionList",
-    "InterfaceSpecification"
->["versions"]["nodes"][0];
+type InterfaceSpecificationVersion = InterfaceSpecificationVersionListItemInfoFragment;
 
-const client = useClient();
+const getInterfaceSpecificationVersionListQuery = graphql(`
+    query getInterfaceSpecificationVersionList(
+        $orderBy: [InterfaceSpecificationVersionOrder!]!
+        $count: Int!
+        $skip: Int!
+        $interfaceSpecification: ID!
+    ) {
+        node(id: $interfaceSpecification) {
+            ... on InterfaceSpecification {
+                versions(orderBy: $orderBy, first: $count, skip: $skip) {
+                    nodes {
+                        ...InterfaceSpecificationVersionListItemInfo
+                    }
+                    totalCount
+                }
+            }
+        }
+    }
+`);
+
+const getFilteredInterfaceSpecificationVersionListQuery = graphql(`
+    query getFilteredInterfaceSpecificationVersionList($query: String!, $count: Int!, $interfaceSpecification: ID!) {
+        searchInterfaceSpecificationVersions(
+            query: $query
+            first: $count
+            filter: { interfaceSpecification: { id: { eq: $interfaceSpecification } } }
+        ) {
+            ...InterfaceSpecificationVersionListItemInfo
+        }
+    }
+`);
+
 const router = useRouter();
 const route = useRoute();
 const interfaceSpecificationId = computed(() => route.params.interfaceSpecification as string);
@@ -76,23 +105,30 @@ class InterfaceSpecificationItemManager extends ItemManager<
         page: number
     ): Promise<[InterfaceSpecificationVersion[], number]> {
         if (filter == undefined) {
-            const res = (
-                await client.getInterfaceSpecificationVersionList({
+            const interfaceSpecification = await queryNode(
+                getInterfaceSpecificationVersionListQuery,
+                "InterfaceSpecification",
+                {
                     orderBy,
                     count,
                     skip: page * count,
                     interfaceSpecification: interfaceSpecificationId.value
-                })
-            ).node as NodeReturnType<"getInterfaceSpecificationVersionList", "InterfaceSpecification">;
-            return [res.versions.nodes!, res.versions.totalCount];
+                }
+            );
+            if (interfaceSpecification) {
+                return [interfaceSpecification.versions.nodes, interfaceSpecification.versions.totalCount];
+            }
         } else {
-            const res = await client.getFilteredInterfaceSpecificationVersionList({
+            const res = await request(getFilteredInterfaceSpecificationVersionListQuery, {
                 query: filter,
                 count,
                 interfaceSpecification: interfaceSpecificationId.value
             });
-            return [res.searchInterfaceSpecificationVersions, res.searchInterfaceSpecificationVersions.length];
+            if (res) {
+                return [res.searchInterfaceSpecificationVersions, res.searchInterfaceSpecificationVersions.length];
+            }
         }
+        return [[], 0];
     }
 }
 const itemManager = new InterfaceSpecificationItemManager() as ItemManager<

@@ -30,16 +30,54 @@
 import DetailCompartment from "@/components/DetailCompartment.vue";
 import InputWrapper from "@/components/input/InputWrapper.vue";
 import TemplatedFieldsDetailCompartment from "@/components/TemplatedFieldsDetailCompartment.vue";
-import { NodeReturnType, useClient } from "@/graphql/client";
-import { UpdateImsProjectInput } from "@/graphql/generated";
+import { queryNodeThrow, requestThrow } from "@/gql/client";
+import { graphql } from "@/gql";
+import { UpdateImsProjectInput } from "@/gql/graphql";
 import { eventBusKey } from "@/util/keys";
-import { withErrorMessage } from "@/util/withErrorMessage";
 import { computedAsync } from "@vueuse/core";
-import { inject } from "vue";
-import { computed } from "vue";
+import { computed, inject } from "vue";
 import { useRoute } from "vue-router";
+import { withErrorMessage } from "@/util/withErrorMessage";
 
-const client = useClient();
+const getIMSProjectGeneralDetailsQuery = graphql(`
+    query getIMSProjectGeneralDetails($id: ID!) {
+        node(id: $id) {
+            __typename
+            id
+            ... on IMSProject {
+                name
+                description
+                templatedFields {
+                    name
+                    value
+                }
+                template {
+                    templateFieldSpecifications {
+                        name
+                        value
+                    }
+                }
+                ims {
+                    syncTrackables: hasPermission(permission: SYNC_TRACKABLES)
+                }
+                trackable {
+                    manageIMS: hasPermission(permission: MANAGE_IMS)
+                }
+            }
+        }
+    }
+`);
+
+const updateIMSProjectMutation = graphql(`
+    mutation updateIMSProject($input: UpdateIMSProjectInput!) {
+        updateIMSProject(input: $input) {
+            imsProject {
+                id
+            }
+        }
+    }
+`);
+
 const route = useRoute();
 const eventBus = inject(eventBusKey);
 const imsProjectId = computed(() => route.params.project as string);
@@ -49,11 +87,11 @@ const imsProject = computedAsync(
         if (!imsProjectId.value) {
             return null;
         }
-        const res = await withErrorMessage(
-            () => client.getIMSProjectGeneralDetails({ id: imsProjectId.value }),
+
+        return await withErrorMessage(
+            () => queryNodeThrow(getIMSProjectGeneralDetailsQuery, "IMSProject", { id: imsProjectId.value }),
             "Error loading imsProject details"
         );
-        return res.node as NodeReturnType<"getIMSProjectGeneralDetails", "IMSProject">;
     },
     null,
     { shallow: false }
@@ -70,7 +108,7 @@ const hasPermission = computed(() => {
 async function save(input: Omit<UpdateImsProjectInput, "id">) {
     await withErrorMessage(
         () =>
-            client.updateIMSProject({
+            requestThrow(updateIMSProjectMutation, {
                 input: {
                     id: imsProjectId.value,
                     ...input

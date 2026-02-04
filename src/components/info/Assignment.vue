@@ -10,7 +10,7 @@
     </span>
 </template>
 <script setup lang="ts">
-import { DefaultAssignmentInfoFragment } from "@/graphql/generated";
+import { DefaultAssignmentInfoFragment } from "@/gql/graphql";
 import { PropType } from "vue";
 import User from "./User.vue";
 

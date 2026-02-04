@@ -24,8 +24,9 @@
     </FetchingAutocomplete>
 </template>
 <script setup lang="ts">
-import { NodeReturnType, useClient } from "@/graphql/client";
-import { DefaultIssueInfoFragment, DefaultTrackableInfoFragment } from "@/graphql/generated";
+import { requestThrow, queryNodeThrow } from "@/gql/client";
+import { graphql } from "@/gql";
+import { DefaultIssueInfoFragment, DefaultTrackableInfoFragment } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
@@ -49,7 +50,45 @@ const props = defineProps({
     }
 });
 
-const client = useClient();
+const searchIssuesQuery = graphql(`
+    query searchIssuesForExternal($query: String!, $count: Int!, $trackable: ID!) {
+        searchIssues(query: $query, first: $count, filter: { trackables: { any: { id: { eq: $trackable } } } }) {
+            ...DefaultIssueInfo
+        }
+    }
+`);
+
+const firstIssuesQuery = graphql(`
+    query firstIssuesForExternalAutocomplete($trackable: ID!, $count: Int!) {
+        node(id: $trackable) {
+            ... on Component {
+                issues(first: $count, orderBy: [{ field: LAST_UPDATED_AT, direction: DESC }]) {
+                    nodes {
+                        ...DefaultIssueInfo
+                    }
+                }
+            }
+        }
+    }
+`);
+
+const searchTrackablesQuery = graphql(`
+    query searchTrackablesForExternal($query: String!, $count: Int!) {
+        searchTrackables(query: $query, first: $count) {
+            ...DefaultTrackableInfo
+        }
+    }
+`);
+
+const firstTrackablesQuery = graphql(`
+    query firstTrackablesForExternal($count: Int!) {
+        trackables(first: $count) {
+            nodes {
+                ...DefaultTrackableInfo
+            }
+        }
+    }
+`);
 
 function generateSubtitle(issue: DefaultIssueInfoFragment): string {
     return issue.trackables.nodes.map((trackable) => trackable.name).join(", ");
@@ -63,11 +102,11 @@ async function searchIssues(
     const searchRes = await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await client.searchIssues({ query, count, trackable: context!.id });
+            const res = await requestThrow(searchIssuesQuery, { query, count, trackable: context!.id });
             return res.searchIssues;
         } else {
-            const res = await client.firstIssues({ trackable: context!.id, count });
-            return (res.node as NodeReturnType<"firstIssues", "Component">).issues.nodes;
+            const component = await queryNodeThrow(firstIssuesQuery, "Component", { trackable: context!.id, count });
+            return component.issues.nodes;
         }
     }, "Error searching issues");
     const ignoredIds = new Set(props.ignore);
@@ -78,10 +117,10 @@ async function searchTrackables(filter: string, count: number): Promise<DefaultT
     return await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await client.searchTrackables({ query, count });
+            const res = await requestThrow(searchTrackablesQuery, { query, count });
             return res.searchTrackables;
         } else {
-            const res = await client.firstTrackables({ count });
+            const res = await requestThrow(firstTrackablesQuery, { count });
             return res.trackables.nodes;
         }
     }, "Error searching trackables");

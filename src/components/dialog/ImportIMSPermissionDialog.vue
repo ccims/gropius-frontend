@@ -23,18 +23,29 @@
     </v-dialog>
 </template>
 <script setup lang="ts">
-import { useClient } from "@/graphql/client";
+import { graphql } from "@/gql";
+import { requestThrow } from "@/gql/client";
 import { onEvent } from "@/util/eventBus";
 import { ref } from "vue";
 import ImportDialogContent from "./ImportDialogContent.vue";
 import ExternalIMSPermissionAutocomplete from "../input/ExternalIMSPermissionAutocomplete.vue";
-import { DefaultImsPermissionInfoFragment } from "@/graphql/generated";
-import { useBlockingWithErrorMessage, withErrorMessage } from "@/util/withErrorMessage";
+import { DefaultImsPermissionInfoFragment } from "@/gql/graphql";
+import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
 import Permission from "../info/Permission.vue";
 import { IdObject } from "@/util/types";
 
+const addIMSPermissionToIMSMutation = graphql(`
+    mutation addIMSPermissionToIMS($ims: ID!, $imsPermission: ID!) {
+        updateIMS(input: {
+            id: $ims
+            addedPermissions: [$imsPermission]
+        }) {
+            __typename
+        }
+    }
+`);
+
 const importIMSPermissionDialog = ref(false);
-const client = useClient();
 const [blockWithErrorMessage, submitDisabled] = useBlockingWithErrorMessage();
 
 const emit = defineEmits<{
@@ -54,7 +65,7 @@ onEvent("import-permission", () => {
 
 async function importIMSPermission(imsPermission: IdObject) {
     blockWithErrorMessage(async () => {
-        await client.addIMSPermissionToIMS({
+        await requestThrow(addIMSPermissionToIMSMutation, {
             imsPermission: imsPermission.id,
             ims: props.ims
         });

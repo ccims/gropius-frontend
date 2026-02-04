@@ -20,7 +20,8 @@
     />
 </template>
 <script setup lang="ts">
-import { NodeReturnType, useClient } from "@/graphql/client";
+import { requestThrow, queryNodeThrow } from "@/gql/client";
+import { graphql } from "@/gql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import { computedAsync } from "@vueuse/core";
 import ConfirmationDialog from "../dialog/ConfirmationDialog.vue";
@@ -33,16 +34,31 @@ const props = defineProps({
     }
 });
 
-const client = useClient();
+const getSyncPermissionTargetQuery = graphql(`
+    query getSyncPermissionTargetForSwitch($id: ID!) {
+        node(id: $id) {
+            id
+            ... on IMS {
+                isSyncOthersAllowed
+            }
+        }
+    }
+`);
+
+const updateSyncPermissionsMutation = graphql(`
+    mutation updateSyncPermissionsForSwitch($input: UpdateSyncPermissionsInput!) {
+        updateSyncPermissions(input: $input) {
+            __typename
+        }
+    }
+`);
 
 const targetNode = computedAsync(
     async () => {
         return await withErrorMessage(async () => {
-            return (
-                await client.getSyncPermissionTarget({
-                    id: props.target
-                })
-            ).node as NodeReturnType<"getSyncPermissionTarget", "IMS">;
+            return await queryNodeThrow(getSyncPermissionTargetQuery, "IMS", {
+                id: props.target
+            });
         }, "Failed to get sync permission target");
     },
     null,
@@ -59,9 +75,9 @@ function toggleSyncOthersAllowed(value: boolean) {
     }
 }
 
-function updateSyncOthersAllowed(value: boolean) {
-    withErrorMessage(async () => {
-        await client.updateSyncPermissions({
+async function updateSyncOthersAllowed(value: boolean) {
+    await withErrorMessage(async () => {
+        await requestThrow(updateSyncPermissionsMutation, {
             input: {
                 id: props.target,
                 canSyncOthers: value

@@ -65,7 +65,7 @@
 import SimpleField from "@/components/input/SimpleField.vue";
 import IssueTemplateAutocomplete from "@/components/input/IssueTemplateAutocomplete.vue";
 import Markdown from "@/components/Markdown.vue";
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { onEvent } from "@/util/eventBus";
 import IssueTypeAutocomplete from "../input/IssueTypeAutocomplete.vue";
 import IssueStateAutocomplete from "../input/IssueStateAutocomplete.vue";
@@ -73,11 +73,11 @@ import * as yup from "yup";
 import { useForm } from "vee-validate";
 import { fieldConfig } from "@/util/vuetifyFormConfig";
 import { useBlockingWithErrorMessage, withErrorMessage } from "@/util/withErrorMessage";
-import { NodeReturnType, useClient } from "@/graphql/client";
+import { queryNodeThrow, requestThrow } from "@/gql/client";
+import { graphql } from "@/gql";
 import { toTypedSchema } from "@vee-validate/yup";
 import IssueIcon from "../IssueIcon.vue";
-import { DefaultIssueIconInfoFragment } from "@/graphql/generated";
-import { computed } from "vue";
+import { DefaultIssueIconInfoFragment } from "@/gql/graphql";
 import TemplatedNodeDialogContent from "./TemplatedNodeDialogContent.vue";
 import TemplatedFieldsInputVue, { Field } from "../input/schema/TemplatedFieldsInput.vue";
 import { computedAsync } from "@vueuse/core";
@@ -85,10 +85,33 @@ import { generateDefaultData } from "../input/schema/generateDefaultData";
 import { IdObject } from "@/util/types";
 
 const createIssueDialog = ref(false);
-const client = useClient();
 const typePath = ref<string | undefined>(undefined);
 const isOpen = ref<boolean | undefined>(undefined);
 const [blockWithErrorMessage, submitDisabled] = useBlockingWithErrorMessage();
+
+const getIssueTemplateQuery = graphql(`
+    query getIssueTemplateForDialog($id: ID!) {
+        node(id: $id) {
+            id
+            ... on IssueTemplate {
+                templateFieldSpecifications {
+                    name
+                    value
+                }
+            }
+        }
+    }
+`);
+
+const createIssueFromDialogMutation = graphql(`
+    mutation createIssueFromDialog($input: CreateIssueInput!) {
+        createIssue(input: $input) {
+            issue {
+                id
+            }
+        }
+    }
+`);
 
 const emit = defineEmits<{
     (event: "created-issue", issue: IdObject): void;
@@ -147,11 +170,9 @@ const templateValue = computedAsync(
         if (template.value == null) {
             return null;
         }
-        const templateRes = await withErrorMessage(async () => {
-            return client.getIssueTemplate({ id: template.value! });
+        return await withErrorMessage(async () => {
+            return queryNodeThrow(getIssueTemplateQuery, "IssueTemplate", { id: template.value! });
         }, "Error loading template");
-        const templateNode = templateRes.node as NodeReturnType<"getIssueTemplate", "IssueTemplate">;
-        return templateNode;
     },
     null,
     { shallow: false }
@@ -181,7 +202,7 @@ watch(
 
 const createIssue = handleSubmit(async (state) => {
     const issue = await blockWithErrorMessage(async () => {
-        const res = await client.createIssue({
+        const res = await requestThrow(createIssueFromDialogMutation, {
             input: {
                 ...state,
                 body: state.body ?? "",

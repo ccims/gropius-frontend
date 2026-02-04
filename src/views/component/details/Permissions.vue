@@ -22,25 +22,80 @@ import PermissionList, {
     UpdatePermissionFunctionInput
 } from "@/components/PermissionList.vue";
 import ImportComponentPermissionDialog from "@/components/dialog/ImportComponentPermissionDialog.vue";
-import { NodeReturnType, useClient } from "@/graphql/client";
+import { request, queryNode, requestThrow } from "@/gql/client";
+import { graphql } from "@/gql";
 import {
     ComponentPermissionEntry,
     ComponentPermissionOrder,
     ComponentPermissionOrderField,
     DefaultComponentPermissionInfoFragment
-} from "@/graphql/generated";
+} from "@/gql/graphql";
 import { ItemManager } from "@/util/itemManager";
 import { IdObject } from "@/util/types";
 import { computed, useTemplateRef } from "vue";
 import { useRoute } from "vue-router";
 
-const client = useClient();
 const route = useRoute();
 
 const componentId = computed(() => route.params.trackable as string);
 const permissionList = useTemplateRef("permissionList");
 
 const permissionEntries = Object.values(ComponentPermissionEntry);
+
+const getComponentPermissionListQuery = graphql(`
+    query getComponentPermissionList(
+        $orderBy: [ComponentPermissionOrder!]!
+        $count: Int!
+        $skip: Int!
+        $component: ID!
+        $filter: ComponentPermissionFilterInput!
+    ) {
+        node(id: $component) {
+            ... on Component {
+                permissions(orderBy: $orderBy, first: $count, skip: $skip, filter: $filter) {
+                    nodes {
+                        ...DefaultComponentPermissionInfo
+                    }
+                    totalCount
+                }
+            }
+        }
+    }
+`);
+
+const getFilteredComponentPermissionListQuery = graphql(`
+    query getFilteredComponentPermissionList($query: String!, $count: Int!, $filter: ComponentPermissionFilterInput!) {
+        searchComponentPermissions(query: $query, first: $count, filter: $filter) {
+            ...DefaultComponentPermissionInfo
+        }
+    }
+`);
+
+const removeComponentPermissionFromComponentMutation = graphql(`
+    mutation removeComponentPermissionFromComponent($component: ID!, $componentPermission: ID!) {
+        updateComponent(input: { id: $component, removedPermissions: [$componentPermission] }) {
+            __typename
+        }
+    }
+`);
+
+const updateComponentPermissionMutation = graphql(`
+    mutation updateComponentPermission($input: UpdateComponentPermissionInput!) {
+        updateComponentPermission(input: $input) {
+            __typename
+        }
+    }
+`);
+
+const createComponentPermissionMutation = graphql(`
+    mutation createComponentPermission($input: CreateComponentPermissionInput!) {
+        createComponentPermission(input: $input) {
+            componentPermission {
+                id
+            }
+        }
+    }
+`);
 
 class ComponentPermissionItemManager extends ItemManager<
     DefaultComponentPermissionInfoFragment,
@@ -53,17 +108,18 @@ class ComponentPermissionItemManager extends ItemManager<
         page: number
     ): Promise<[DefaultComponentPermissionInfoFragment[], number]> {
         if (filter == undefined) {
-            const res = await client.getComponentPermissionList({
+            const component = await queryNode(getComponentPermissionListQuery, "Component", {
                 orderBy,
                 count,
                 skip: page * count,
                 component: componentId.value,
-                filter: permissionList.value?.userFilter
+                filter: permissionList.value?.userFilter ?? {}
             });
-            const permissions = (res.node as NodeReturnType<"getComponentPermissionList", "Component">).permissions;
-            return [permissions.nodes, permissions.totalCount];
+            if (component) {
+                return [component.permissions.nodes, component.permissions.totalCount];
+            }
         } else {
-            const res = await client.getFilteredComponentPermissionList({
+            const res = await request(getFilteredComponentPermissionListQuery, {
                 query: filter,
                 count,
                 filter: {
@@ -71,8 +127,11 @@ class ComponentPermissionItemManager extends ItemManager<
                     nodesWithPermission: { any: { id: { eq: componentId.value } } }
                 }
             });
-            return [res.searchComponentPermissions, res.searchComponentPermissions.length];
+            if (res) {
+                return [res.searchComponentPermissions, res.searchComponentPermissions.length];
+            }
         }
+        return [[], 0];
     }
 }
 
@@ -82,15 +141,18 @@ const itemManager = new ComponentPermissionItemManager() as ItemManager<
 >;
 
 async function removePermission(id: string): Promise<void> {
-    await client.removeComponentPermissionFromComponent({ component: componentId.value, componentPermission: id });
+    await request(removeComponentPermissionFromComponentMutation, {
+        component: componentId.value,
+        componentPermission: id
+    });
 }
 
 async function updatePermission(input: UpdatePermissionFunctionInput<ComponentPermissionEntry>): Promise<void> {
-    await client.updateComponentPermission({ input });
+    await request(updateComponentPermissionMutation, { input });
 }
 
 async function createPermission(input: CreatePermissionFunctionInput<ComponentPermissionEntry>): Promise<IdObject> {
-    const res = await client.createComponentPermission({
+    const res = await requestThrow(createComponentPermissionMutation, {
         input: { nodesWithPermission: [componentId.value], ...input }
     });
     return res.createComponentPermission.componentPermission;

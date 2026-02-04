@@ -8,10 +8,19 @@
     />
 </template>
 <script setup lang="ts">
-import { useClient } from "@/graphql/client";
-import { DefaultSyncPermissionTargetInfoFragment } from "@/graphql/generated";
+import { graphql } from "@/gql";
+import { requestThrow } from "@/gql/client";
+import { DefaultSyncPermissionTargetInfoFragment } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import { PropType } from "vue";
+
+const updateSyncPermissionsMutation = graphql(`
+    mutation updateSyncPermissionsForSwitch($input: UpdateSyncPermissionsInput!) {
+        updateSyncPermissions(input: $input) {
+            __typename
+        }
+    }
+`);
 
 const props = defineProps({
     target: {
@@ -20,11 +29,9 @@ const props = defineProps({
     }
 });
 
-const client = useClient();
-
-function updateSyncSelfAllowed(value: boolean) {
-    withErrorMessage(async () => {
-        await client.updateSyncPermissions({
+async function updateSyncSelfAllowed(value: boolean) {
+    await withErrorMessage(async () => {
+        await requestThrow(updateSyncPermissionsMutation, {
             input: {
                 id: props.target.id,
                 canSyncSelf: value

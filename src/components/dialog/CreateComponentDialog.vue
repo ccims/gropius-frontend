@@ -68,22 +68,22 @@
     </v-dialog>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { onEvent } from "@/util/eventBus";
 import * as yup from "yup";
 import { useForm } from "vee-validate";
 import { fieldConfig } from "@/util/vuetifyFormConfig";
 import { useBlockingWithErrorMessage, withErrorMessage } from "@/util/withErrorMessage";
-import { NodeReturnType, useClient } from "@/graphql/client";
+import { queryNodeThrow, requestThrow } from "@/gql/client";
+import { graphql } from "@/gql";
 import { toTypedSchema } from "@vee-validate/yup";
 import ComponentTemplateAutocomplete from "../input/ComponentTemplateAutocomplete.vue";
 import TemplatedFieldsInput, { Field } from "../input/schema/TemplatedFieldsInput.vue";
 import { computedAsync } from "@vueuse/core";
 import { generateDefaultData } from "../input/schema/generateDefaultData";
-import { watch } from "vue";
 import { IdObject } from "@/util/types";
 import VersionedTemplatedNodeDialogContent from "./VersionedTemplatedNodeDialogContent.vue";
-import { ComponentVersionInput } from "@/graphql/generated";
+import { ComponentVersionInput } from "@/gql/graphql";
 
 const props = defineProps({
     initialName: {
@@ -98,8 +98,42 @@ const props = defineProps({
 });
 
 const createComponentDialog = ref(false);
-const client = useClient();
 const [blockWithErrorMessage, submitDisabled] = useBlockingWithErrorMessage();
+
+const getComponentTemplateQuery = graphql(`
+    query getComponentTemplateForDialog($id: ID!) {
+        node(id: $id) {
+            id
+            ... on ComponentTemplate {
+                templateFieldSpecifications {
+                    name
+                    value
+                }
+                componentVersionTemplate {
+                    templateFieldSpecifications {
+                        name
+                        value
+                    }
+                }
+            }
+        }
+    }
+`);
+
+const createComponentMutation = graphql(`
+    mutation createComponentFromDialog($input: CreateComponentInput!) {
+        createComponent(input: $input) {
+            component {
+                id
+                versions {
+                    nodes {
+                        id
+                    }
+                }
+            }
+        }
+    }
+`);
 
 const emit = defineEmits<{
     (event: "created-component", component: IdObject, componentVersion: IdObject | undefined): void;
@@ -138,11 +172,9 @@ const templateValue = computedAsync(
         if (template.value == null) {
             return null;
         }
-        const templateRes = await withErrorMessage(async () => {
-            return client.getComponentTemplate({ id: template.value! });
+        return await withErrorMessage(async () => {
+            return queryNodeThrow(getComponentTemplateQuery, "ComponentTemplate", { id: template.value! });
         }, "Error loading template");
-        const templateNode = templateRes.node as NodeReturnType<"getComponentTemplate", "ComponentTemplate">;
-        return templateNode;
     },
     null,
     { shallow: false }
@@ -213,7 +245,7 @@ async function createComponent(hasVersion: boolean) {
             const versionFields = await getVersionFields();
             versions.push(versionFields!);
         }
-        const res = await client.createComponent({
+        const res = await requestThrow(createComponentMutation, {
             input: {
                 ...componentFields!,
                 versions: versions
