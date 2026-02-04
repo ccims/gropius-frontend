@@ -25,13 +25,12 @@ type Variables = Record<string, unknown>;
 type VariablesAndRequestHeadersArgs<V extends Variables> =
     V extends Record<any, never> ? [variables?: V] : [variables: V];
 
-
 export async function request<TData, TVariables extends Variables = Variables>(
     query: DocumentNode | TypedDocumentNode<TData, TVariables>,
     ...variables: VariablesAndRequestHeadersArgs<TVariables>
 ) {
     try {
-        return requestThrow(query, ...variables)
+        return requestThrow(query, ...variables);
     } catch (error) {
         pushErrorMessage("Error in query");
         console.error(error);
@@ -78,12 +77,12 @@ export async function queryNodeThrow<
     type: DataType,
     ...variables: VariablesAndRequestHeadersArgs<TVariables>
 ): Promise<NodeReturnType<TData, DataType>> {
-        const data = await requestThrow(query, ...variables);
-        const node = data.node;
-        if (!node) {
-            throw new Error("Node not found");
-        }
-        return data.node as NodeReturnType<TData, DataType>;
+    const data = await requestThrow(query, ...variables);
+    const node = data.node;
+    if (!node) {
+        throw new Error("Node not found");
+    }
+    return data.node as NodeReturnType<TData, DataType>;
 }
 
 type NodeReturnType<TData extends { node?: any }, DataType extends string> = Extract<

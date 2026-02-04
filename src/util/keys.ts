@@ -6,7 +6,6 @@ import { NodeReturnType } from "@/gql/client";
 
 export const eventBusKey: InjectionKey<Emitter<Events>> = Symbol("eventBus");
 
-
 export const issueKey: InjectionKey<Ref<Readonly<NodeReturnType<GetIssueQuery, "Issue">> | null>> = Symbol("issue");
 
 // Trackable can be either a Project or Component from their respective queries

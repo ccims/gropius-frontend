@@ -43,7 +43,11 @@
 import PaginatedList from "@/components/PaginatedList.vue";
 import { request, queryNode } from "@/gql/client";
 import { graphql } from "@/gql";
-import { InterfaceSpecificationVersionOrder, InterfaceSpecificationVersionOrderField, InterfaceSpecificationVersionListItemInfoFragment } from "@/gql/graphql";
+import {
+    InterfaceSpecificationVersionOrder,
+    InterfaceSpecificationVersionOrderField,
+    InterfaceSpecificationVersionListItemInfoFragment
+} from "@/gql/graphql";
 import { RouteLocationRaw, useRoute, useRouter } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
 import { computed } from "vue";

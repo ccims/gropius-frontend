@@ -75,7 +75,7 @@ import { computedAsync } from "@vueuse/core";
 const getInterfaceSpecificationVisibilityInfoQuery = graphql(`
     query getInterfaceSpecificationVisibilityInfo($id: ID!, $componentTemplate: ID!) {
         node(id: $id) {
-            ...on InterfaceSpecification {
+            ... on InterfaceSpecification {
                 template {
                     canBeVisibleOnComponents(filter: { id: { eq: $componentTemplate } }) {
                         totalCount
@@ -90,7 +90,9 @@ const getInterfaceSpecificationVisibilityInfoQuery = graphql(`
 `);
 
 const addInterfaceSpecificationVersionToComponentVersionMutation = graphql(`
-    mutation addInterfaceSpecificationVersionToComponentVersion($input: AddInterfaceSpecificationVersionToComponentVersionInput!) {
+    mutation addInterfaceSpecificationVersionToComponentVersion(
+        $input: AddInterfaceSpecificationVersionToComponentVersionInput!
+    ) {
         addInterfaceSpecificationVersionToComponentVersion(input: $input) {
             __typename
         }

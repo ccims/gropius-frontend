@@ -32,7 +32,11 @@ const props = defineProps({
 
 const searchLabelsQuery = graphql(`
     query searchLabels($issue: ID!, $query: String!, $count: Int!) {
-        searchLabels(query: $query, first: $count, filter: { trackables: { any: { issues: { any: { id: { eq: $issue } } } } } }) {
+        searchLabels(
+            query: $query
+            first: $count
+            filter: { trackables: { any: { issues: { any: { id: { eq: $issue } } } } } }
+        ) {
             ...DefaultLabelInfo
         }
     }

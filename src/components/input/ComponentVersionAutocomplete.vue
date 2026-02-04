@@ -19,11 +19,7 @@
 <script setup lang="ts">
 import { requestThrow, queryNodeThrow } from "@/gql/client";
 import { graphql } from "@/gql";
-import {
-    ComponentFilterInput,
-    DefaultComponentVersionInfoFragment,
-    DefaultTrackableInfoFragment
-} from "@/gql/graphql";
+import { ComponentFilterInput, DefaultComponentVersionInfoFragment, DefaultTrackableInfoFragment } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";

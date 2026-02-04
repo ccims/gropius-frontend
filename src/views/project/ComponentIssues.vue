@@ -45,7 +45,13 @@ import IssueFilterDropdowns from "@/components/input/IssueFilterDropdowns.vue";
 import { useTemplateRef } from "vue";
 
 const getComponentIssueListQuery = graphql(`
-    query getComponentIssueList($orderBy: [IssueOrder!]!, $count: Int!, $skip: Int!, $filter: IssueFilterInput, $project: ID!) {
+    query getComponentIssueList(
+        $orderBy: [IssueOrder!]!
+        $count: Int!
+        $skip: Int!
+        $filter: IssueFilterInput
+        $project: ID!
+    ) {
         node(id: $project) {
             __typename
             ... on Project {
@@ -62,7 +68,14 @@ const getComponentIssueListQuery = graphql(`
 
 const getComponentFilteredIssueListQuery = graphql(`
     query getComponentFilteredIssueList($query: String!, $count: Int!, $project: ID!, $filter: IssueFilterInput!) {
-        searchIssues(query: $query, first: $count, filter: {and: [$filter], trackables: {any: {isComponentAnd: {versions: {any: {partOfProject: $project}}}}}}) {
+        searchIssues(
+            query: $query
+            first: $count
+            filter: {
+                and: [$filter]
+                trackables: { any: { isComponentAnd: { versions: { any: { partOfProject: $project } } } } }
+            }
+        ) {
             ...ProjectComponentIssueListItemInfo
         }
     }

@@ -36,10 +36,7 @@ import { IdObject } from "@/util/types";
 
 const addIMSPermissionToIMSMutation = graphql(`
     mutation addIMSPermissionToIMS($ims: ID!, $imsPermission: ID!) {
-        updateIMS(input: {
-            id: $ims
-            addedPermissions: [$imsPermission]
-        }) {
+        updateIMS(input: { id: $ims, addedPermissions: [$imsPermission] }) {
             __typename
         }
     }

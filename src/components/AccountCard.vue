@@ -31,12 +31,16 @@ const route = useRoute();
 const router = useRouter();
 
 async function logout() {
-    const csrf = (await axios.get<{ csrf: string }>(`/auth/api/internal/auth/csrf`)).data.csrf
-    await axios.post(`/auth/api/internal/auth/logout/current`, {}, {
-        headers: {
-            "x-csrf-token": csrf
+    const csrf = (await axios.get<{ csrf: string }>(`/auth/api/internal/auth/csrf`)).data.csrf;
+    await axios.post(
+        `/auth/api/internal/auth/logout/current`,
+        {},
+        {
+            headers: {
+                "x-csrf-token": csrf
+            }
         }
-    });
+    );
     store.logout();
     await router.push({
         name: "home",

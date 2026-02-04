@@ -54,10 +54,17 @@ async function searchRelationTemplates(filter: string, count: number): Promise<D
     return await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await requestThrow(searchRelationTemplatesQuery, { query, count, filter: props.relationTemplateFilter });
+            const res = await requestThrow(searchRelationTemplatesQuery, {
+                query,
+                count,
+                filter: props.relationTemplateFilter
+            });
             return res.searchRelationTemplates;
         } else {
-            const res = await requestThrow(getRelationTemplatesQuery, { count: count - 1, filter: props.relationTemplateFilter });
+            const res = await requestThrow(getRelationTemplatesQuery, {
+                count: count - 1,
+                filter: props.relationTemplateFilter
+            });
             return res.relationTemplates.nodes;
         }
     }, "Error searching relation templates");

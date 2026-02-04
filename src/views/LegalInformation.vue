@@ -28,7 +28,7 @@ const getLegalInformationQuery = graphql(`
     query getLegalInformation($id: ID!) {
         node(id: $id) {
             __typename
-            ...on LegalInformation {
+            ... on LegalInformation {
                 ...DefaultLegalInformationInfo
             }
         }

@@ -111,7 +111,10 @@ async function searchAffected(
             });
             return expandSearchResult(res.searchAffectedByIssues);
         } else if (context!.__typename == "Component") {
-            const node = await queryNodeThrow(firstComponentVersionsForAutocompleteQuery, "Component", { component: context!.id, count: count - 1 });
+            const node = await queryNodeThrow(firstComponentVersionsForAutocompleteQuery, "Component", {
+                component: context!.id,
+                count: count - 1
+            });
             return [context!, ...node.versions.nodes];
         } else {
             return [context!];

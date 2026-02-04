@@ -40,7 +40,13 @@ const permissionList = useTemplateRef("permissionList");
 const permissionEntries = Object.values(ProjectPermissionEntry);
 
 const getProjectPermissionListQuery = graphql(`
-    query getProjectPermissionList($orderBy: [ProjectPermissionOrder!]!, $count: Int!, $skip: Int!, $project: ID!, $filter: ProjectPermissionFilterInput!) {
+    query getProjectPermissionList(
+        $orderBy: [ProjectPermissionOrder!]!
+        $count: Int!
+        $skip: Int!
+        $project: ID!
+        $filter: ProjectPermissionFilterInput!
+    ) {
         node(id: $project) {
             ... on Project {
                 permissions(orderBy: $orderBy, first: $count, skip: $skip, filter: $filter) {
@@ -64,10 +70,7 @@ const getFilteredProjectPermissionListQuery = graphql(`
 
 const removeProjectPermissionFromProjectMutation = graphql(`
     mutation removeProjectPermissionFromProject($project: ID!, $projectPermission: ID!) {
-        updateProject(input: {
-            id: $project
-            removedPermissions: [$projectPermission]
-        }) {
+        updateProject(input: { id: $project, removedPermissions: [$projectPermission] }) {
             __typename
         }
     }
@@ -102,17 +105,13 @@ class ProjectPermissionItemManager extends ItemManager<
         page: number
     ): Promise<[DefaultProjectPermissionInfoFragment[], number]> {
         if (filter == undefined) {
-            const project = await queryNode(
-                getProjectPermissionListQuery,
-                "Project",
-                {
-                    orderBy,
-                    count,
-                    skip: page * count,
-                    project: projectId.value,
-                    filter: permissionList.value?.userFilter ?? {}
-                }
-            );
+            const project = await queryNode(getProjectPermissionListQuery, "Project", {
+                orderBy,
+                count,
+                skip: page * count,
+                project: projectId.value,
+                filter: permissionList.value?.userFilter ?? {}
+            });
             if (project) {
                 return [project.permissions.nodes, project.permissions.totalCount];
             }

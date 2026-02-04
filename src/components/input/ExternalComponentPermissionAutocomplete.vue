@@ -43,7 +43,11 @@ const props = defineProps({
 
 const searchComponentPermissionsQuery = graphql(`
     query searchComponentPermissionsForExternal($query: String!, $count: Int!, $component: ID!) {
-        searchComponentPermissions(query: $query, first: $count, filter: { nodesWithPermission: { any: { id: { eq: $component } } } }) {
+        searchComponentPermissions(
+            query: $query
+            first: $count
+            filter: { nodesWithPermission: { any: { id: { eq: $component } } } }
+        ) {
             ...DefaultComponentPermissionInfo
         }
     }
@@ -92,7 +96,10 @@ async function searchComponentPermissions(
             const res = await requestThrow(searchComponentPermissionsQuery, { query, count, component: context!.id });
             return res.searchComponentPermissions;
         } else {
-            const component = await queryNodeThrow(firstComponentPermissionsQuery, "Component", { component: context!.id, count });
+            const component = await queryNodeThrow(firstComponentPermissionsQuery, "Component", {
+                component: context!.id,
+                count
+            });
             return component.permissions.nodes;
         }
     }, "Error searching component permissions");

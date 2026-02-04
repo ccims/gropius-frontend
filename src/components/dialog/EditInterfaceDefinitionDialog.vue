@@ -59,7 +59,7 @@ import ConfirmationDialog from "./ConfirmationDialog.vue";
 const getInterfaceSpecificationVisibilityInfoQuery = graphql(`
     query getInterfaceSpecificationVisibilityInfo($id: ID!, $componentTemplate: ID!) {
         node(id: $id) {
-            ...on InterfaceSpecification {
+            ... on InterfaceSpecification {
                 template {
                     canBeVisibleOnComponents(filter: { id: { eq: $componentTemplate } }) {
                         totalCount

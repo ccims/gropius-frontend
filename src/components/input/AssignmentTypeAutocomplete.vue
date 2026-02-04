@@ -52,7 +52,10 @@ async function searchAssignmentTypes(filter: string, count: number): Promise<Def
             const res = await requestThrow(searchAssignmentTypesQuery, { template: props.template!, query, count });
             return res.searchAssignmentTypes;
         } else {
-            const node = await queryNodeThrow(firstAssignmentTypesQuery, "IssueTemplate", { template: props.template!, count });
+            const node = await queryNodeThrow(firstAssignmentTypesQuery, "IssueTemplate", {
+                template: props.template!,
+                count
+            });
             return node.assignmentTypes.nodes;
         }
     }, "Error searching issue types");

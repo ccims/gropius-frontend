@@ -115,17 +115,13 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
               }
             : {};
         if (filter == undefined) {
-            const component = await queryNode(
-                getIssueList,
-                "Component",
-                {
-                    orderBy,
-                    count,
-                    skip: page * count,
-                    trackable: trackableId.value,
-                    filter: generalFilters
-                },
-            );
+            const component = await queryNode(getIssueList, "Component", {
+                orderBy,
+                count,
+                skip: page * count,
+                trackable: trackableId.value,
+                filter: generalFilters
+            });
             if (component) {
                 return [component.issues.nodes, component.issues.totalCount];
             }

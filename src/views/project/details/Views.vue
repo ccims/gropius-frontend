@@ -205,17 +205,13 @@ class ViewItemManager extends ItemManager<View, ViewOrderField> {
         page: number
     ): Promise<[View[], number]> {
         if (filter == undefined) {
-            const project = await queryNodeThrow(
-                getViewListQuery,
-                "Project",
-                {
-                    orderBy,
-                    count,
-                    skip: page * count,
-                    project: trackableId.value,
-                    filter: { filterByTemplate: templateInput.value }
-                }
-            );
+            const project = await queryNodeThrow(getViewListQuery, "Project", {
+                orderBy,
+                count,
+                skip: page * count,
+                project: trackableId.value,
+                filter: { filterByTemplate: templateInput.value }
+            });
             return [project.views.nodes, project.views.totalCount];
         } else {
             const res = await requestThrow(getFilteredViewListQuery, {
@@ -231,7 +227,9 @@ const itemManager: ItemManager<View, ViewOrderField> = new ViewItemManager();
 
 const templates = computedAsync(async () => {
     return withErrorMessage(async () => {
-        const project = await queryNodeThrow(getProjectComponentTemplatesQuery, "Project", { project: trackableId.value });
+        const project = await queryNodeThrow(getProjectComponentTemplatesQuery, "Project", {
+            project: trackableId.value
+        });
         const templateLookup = new Map<string, { id: string; name: string }>();
         for (const componentVersion of project.components.nodes) {
             const template = componentVersion.component.template;

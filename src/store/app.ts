@@ -40,7 +40,6 @@ const legalInformationQuery = graphql(`
     }
 `);
 
-
 export const useAppStore = defineStore("app", {
     state: () => ({
         tokenRefreshLock: shallowRef(new Mutex()),

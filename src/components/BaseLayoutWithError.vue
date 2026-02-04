@@ -21,10 +21,10 @@ const props = defineProps({
         default: () => []
     },
     dataPresent: {
-        type: Boolean,
+        type: Boolean
     },
     evaluating: {
-        type: Boolean,
+        type: Boolean
     }
 });
 </script>

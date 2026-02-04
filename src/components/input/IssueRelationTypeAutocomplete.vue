@@ -61,7 +61,10 @@ async function searchIssueRelationTypes(
             const res = await requestThrow(searchIssueRelationTypesQuery, { template: props.template!, query, count });
             return res.searchIssueRelationTypes;
         } else {
-            const issueTemplate = await queryNodeThrow(firstIssueRelationTypesQuery, "IssueTemplate", { template: props.template!, count });
+            const issueTemplate = await queryNodeThrow(firstIssueRelationTypesQuery, "IssueTemplate", {
+                template: props.template!,
+                count
+            });
             return issueTemplate.relationTypes.nodes;
         }
     }, "Error searching issue types");

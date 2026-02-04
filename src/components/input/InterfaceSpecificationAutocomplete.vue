@@ -55,10 +55,17 @@ async function searchIssueTypes(filter: string, count: number): Promise<DefaultI
     return await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await requestThrow(searchInterfaceSpecificationsQuery, { component: props.component!, query, count });
+            const res = await requestThrow(searchInterfaceSpecificationsQuery, {
+                component: props.component!,
+                query,
+                count
+            });
             return res.searchInterfaceSpecifications;
         } else {
-            const component = await queryNodeThrow(firstInterfaceSpecificationsQuery, "Component", { component: props.component!, count });
+            const component = await queryNodeThrow(firstInterfaceSpecificationsQuery, "Component", {
+                component: props.component!,
+                count
+            });
             return component.interfaceSpecifications.nodes;
         }
     }, "Error searching interface specifications");

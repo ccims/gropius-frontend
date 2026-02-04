@@ -58,7 +58,10 @@ async function searchIssuePriorities(filter: string, count: number): Promise<Def
             const res = await requestThrow(searchIssuePrioritiesQuery, { template: props.template!, query, count });
             return res.searchIssuePriorities;
         } else {
-            const node = await queryNodeThrow(firstIssuePrioritiesQuery, "IssueTemplate", { template: props.template!, count });
+            const node = await queryNodeThrow(firstIssuePrioritiesQuery, "IssueTemplate", {
+                template: props.template!,
+                count
+            });
             return node.issuePriorities.nodes;
         }
     }, "Error searching issue priorities");

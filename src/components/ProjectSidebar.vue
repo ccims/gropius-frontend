@@ -176,7 +176,6 @@ const model = defineModel({
     required: false
 });
 
-
 const filterFromDropdown = useTemplateRef("filterDropdowns");
 const convertedIssueStateIndices = computed(() => {
     const additionalFilter = issueFilter.value;
@@ -325,28 +324,20 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
                         any: { relationPartner: { id: { eq: additionalFilter.affectedEntity.id } } }
                     };
                 }
-                const trackable = await queryNode(
-                    getIssueListQuery,
-                    "Component",
-                    {
-                        ...parameters,
-                        trackable: selectedElementInfo.value!.componentVersion.component.id,
-                        filter: filterFields
-                    }
-                );
+                const trackable = await queryNode(getIssueListQuery, "Component", {
+                    ...parameters,
+                    trackable: selectedElementInfo.value!.componentVersion.component.id,
+                    filter: filterFields
+                });
                 if (trackable) {
                     return [trackable.issues.nodes, trackable.issues.totalCount];
                 }
             } else {
-                const aggregatedIssue = await queryNode(
-                    getIssueListOnAggregatedIssueQuery,
-                    "AggregatedIssue",
-                    {
-                        ...parameters,
-                        aggregatedIssue: additionalFilter.aggregatedIssue!,
-                        filter: filterFields
-                    }
-                );
+                const aggregatedIssue = await queryNode(getIssueListOnAggregatedIssueQuery, "AggregatedIssue", {
+                    ...parameters,
+                    aggregatedIssue: additionalFilter.aggregatedIssue!,
+                    filter: filterFields
+                });
                 if (aggregatedIssue) {
                     return [aggregatedIssue.issues.nodes, aggregatedIssue.issues.totalCount];
                 }

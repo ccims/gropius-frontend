@@ -92,7 +92,10 @@ async function searchLabels(
             const res = await requestThrow(searchTrackableLabelsQuery, { query, count, trackable: context!.id });
             return res.searchLabels;
         } else {
-            const node = await queryNodeThrow(firstTrackableLabelsForExternalQuery, "Component", { trackable: context!.id, count });
+            const node = await queryNodeThrow(firstTrackableLabelsForExternalQuery, "Component", {
+                trackable: context!.id,
+                count
+            });
             return node.labels.nodes;
         }
     }, "Error searching labels");

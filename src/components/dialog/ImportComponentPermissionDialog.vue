@@ -36,10 +36,7 @@ import { IdObject } from "@/util/types";
 
 const addComponentPermissionToComponentMutation = graphql(`
     mutation addComponentPermissionToComponent($component: ID!, $componentPermission: ID!) {
-        updateComponent(input: {
-            id: $component
-            addedPermissions: [$componentPermission]
-        }) {
+        updateComponent(input: { id: $component, addedPermissions: [$componentPermission] }) {
             __typename
         }
     }

@@ -29,8 +29,16 @@ import { transformSearchQuery } from "@/util/searchQueryTransformer";
 import { PropType } from "vue";
 
 const searchInterfaceSpecificationVersionsForAutocompleteQuery = graphql(`
-    query searchInterfaceSpecificationVersionsForAutocomplete($query: String!, $count: Int!, $interfaceSpecification: ID!) {
-        searchInterfaceSpecificationVersions(query: $query, first: $count, filter: { interfaceSpecification: { id: { eq: $interfaceSpecification } } }) {
+    query searchInterfaceSpecificationVersionsForAutocomplete(
+        $query: String!
+        $count: Int!
+        $interfaceSpecification: ID!
+    ) {
+        searchInterfaceSpecificationVersions(
+            query: $query
+            first: $count
+            filter: { interfaceSpecification: { id: { eq: $interfaceSpecification } } }
+        ) {
             ...DefaultInterfaceSpecificationVersionInfo
         }
     }
@@ -103,10 +111,14 @@ async function searchInterfaceSpecificationVersions(
             });
             return res.searchInterfaceSpecificationVersions;
         } else {
-            const node = await queryNodeThrow(firstInterfaceSpecificationVersionsForAutocompleteQuery, "InterfaceSpecification", {
-                interfaceSpecification: context!.id,
-                count: count - 1
-            });
+            const node = await queryNodeThrow(
+                firstInterfaceSpecificationVersionsForAutocompleteQuery,
+                "InterfaceSpecification",
+                {
+                    interfaceSpecification: context!.id,
+                    count: count - 1
+                }
+            );
             return node.versions.nodes;
         }
     }, "Error searching interface specification versions");
@@ -119,10 +131,17 @@ async function searchInterfaceSpecifications(
     return await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await requestThrow(searchInterfaceSpecificationsForAutocompleteQuery, { query, count, component: props.component });
+            const res = await requestThrow(searchInterfaceSpecificationsForAutocompleteQuery, {
+                query,
+                count,
+                component: props.component
+            });
             return res.searchInterfaceSpecifications;
         } else {
-            const node = await queryNodeThrow(firstInterfaceSpecificationsForAutocompleteQuery, "Component", { count, component: props.component });
+            const node = await queryNodeThrow(firstInterfaceSpecificationsForAutocompleteQuery, "Component", {
+                count,
+                component: props.component
+            });
             return node.interfaceSpecifications.nodes;
         }
     }, "Error searching interface specifications");

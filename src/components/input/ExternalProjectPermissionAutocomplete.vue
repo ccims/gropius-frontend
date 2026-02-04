@@ -31,7 +31,11 @@ import { PropType } from "vue";
 
 const searchProjectPermissionsQuery = graphql(`
     query searchProjectPermissions($project: ID!, $query: String!, $count: Int!) {
-        searchProjectPermissions(query: $query, first: $count, filter: { nodesWithPermission: { any: { id: { eq: $project } } } }) {
+        searchProjectPermissions(
+            query: $query
+            first: $count
+            filter: { nodesWithPermission: { any: { id: { eq: $project } } } }
+        ) {
             ...DefaultProjectPermissionInfo
         }
     }

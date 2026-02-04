@@ -12,7 +12,7 @@ const config: CodegenConfig = {
             presetConfig: {
                 fragmentMasking: false
             }
-        },
+        }
     },
     watch: true
 };

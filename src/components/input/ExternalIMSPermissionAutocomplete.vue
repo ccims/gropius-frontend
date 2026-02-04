@@ -19,10 +19,7 @@
 <script setup lang="ts">
 import { requestThrow, queryNodeThrow } from "@/gql/client";
 import { graphql } from "@/gql";
-import {
-    DefaultImsInfoFragment,
-    DefaultImsPermissionInfoFragment
-} from "@/gql/graphql";
+import { DefaultImsInfoFragment, DefaultImsPermissionInfoFragment } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
@@ -42,7 +39,11 @@ const props = defineProps({
 
 const searchIMSPermissionsQuery = graphql(`
     query searchIMSPermissionsForExternal($query: String!, $count: Int!, $ims: ID!) {
-        searchIMSPermissions(query: $query, first: $count, filter: { nodesWithPermission: { any: { id: { eq: $ims } } } }) {
+        searchIMSPermissions(
+            query: $query
+            first: $count
+            filter: { nodesWithPermission: { any: { id: { eq: $ims } } } }
+        ) {
             ...DefaultIMSPermissionInfo
         }
     }

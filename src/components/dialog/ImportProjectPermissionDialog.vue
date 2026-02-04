@@ -36,10 +36,7 @@ import { IdObject } from "@/util/types";
 
 const addProjectPermissionToProjectMutation = graphql(`
     mutation addProjectPermissionToProject($project: ID!, $projectPermission: ID!) {
-        updateProject(input: {
-            id: $project
-            addedPermissions: [$projectPermission]
-        }) {
+        updateProject(input: { id: $project, addedPermissions: [$projectPermission] }) {
             __typename
         }
     }

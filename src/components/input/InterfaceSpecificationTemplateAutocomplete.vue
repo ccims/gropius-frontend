@@ -23,7 +23,11 @@ import { transformSearchQuery } from "@/util/searchQueryTransformer";
 import { PropType } from "vue";
 
 const searchInterfaceSpecificationTemplatesQuery = graphql(`
-    query searchInterfaceSpecificationTemplates($query: String!, $count: Int!, $filter: InterfaceSpecificationTemplateFilterInput) {
+    query searchInterfaceSpecificationTemplates(
+        $query: String!
+        $count: Int!
+        $filter: InterfaceSpecificationTemplateFilterInput
+    ) {
         searchInterfaceSpecificationTemplates(query: $query, first: $count, filter: $filter) {
             ...DefaultInterfaceSpecificationTemplateInfo
         }
@@ -32,11 +36,7 @@ const searchInterfaceSpecificationTemplatesQuery = graphql(`
 
 const firstInterfaceSpecificationTemplatesQuery = graphql(`
     query firstInterfaceSpecificationTemplates($count: Int!, $filter: InterfaceSpecificationTemplateFilterInput) {
-        interfaceSpecificationTemplates(
-            first: $count
-            orderBy: [{ field: NAME }]
-            filter: $filter
-        ) {
+        interfaceSpecificationTemplates(first: $count, orderBy: [{ field: NAME }], filter: $filter) {
             nodes {
                 ...DefaultInterfaceSpecificationTemplateInfo
             }

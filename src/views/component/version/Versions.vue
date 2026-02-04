@@ -94,16 +94,12 @@ class ComponentVersionItemManager extends ItemManager<ComponentVersion, Componen
         page: number
     ): Promise<[ComponentVersion[], number]> {
         if (filter == undefined) {
-            const component = await queryNode(
-                getComponentVersionListQuery,
-                "Component",
-                {
-                    orderBy,
-                    count,
-                    skip: page * count,
-                    component: trackableId.value
-                }
-            );
+            const component = await queryNode(getComponentVersionListQuery, "Component", {
+                orderBy,
+                count,
+                skip: page * count,
+                component: trackableId.value
+            });
             if (component) {
                 return [component.versions.nodes, component.versions.totalCount];
             }

@@ -69,10 +69,14 @@ async function searchIssueTypes(
             });
             return res.searchInterfaceSpecificationVersions;
         } else {
-            const interfaceSpec = await queryNodeThrow(firstInterfaceSpecificationVersionsForModelQuery, "InterfaceSpecification", {
-                interfaceSpecification: props.interfaceSpecification!,
-                count
-            });
+            const interfaceSpec = await queryNodeThrow(
+                firstInterfaceSpecificationVersionsForModelQuery,
+                "InterfaceSpecification",
+                {
+                    interfaceSpecification: props.interfaceSpecification!,
+                    count
+                }
+            );
             return interfaceSpec.versions.nodes;
         }
     }, "Error searching interface specification versions");

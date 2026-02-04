@@ -68,7 +68,8 @@ const model = defineModel({
 const cachedModel = useCachedRef(model);
 
 async function updateView(state: View) {
-    const view = await blockWithErrorMessage(async () => { const res = await requestThrow(updateViewMutation, {
+    const view = await blockWithErrorMessage(async () => {
+        const res = await requestThrow(updateViewMutation, {
             input: {
                 ...state,
                 id: model.value!.id

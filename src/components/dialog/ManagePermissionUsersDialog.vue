@@ -83,7 +83,11 @@ const getPermissionUserListQuery = graphql(`
 
 const getFilteredPermissionUserListQuery = graphql(`
     query getFilteredPermissionUserList($query: String!, $count: Int!, $permission: ID!) {
-        searchGropiusUsers(query: $query, first: $count, filter: { permissions: { any: { id: { eq: $permission } } } }) {
+        searchGropiusUsers(
+            query: $query
+            first: $count
+            filter: { permissions: { any: { id: { eq: $permission } } } }
+        ) {
             ...DefaultUserInfo
         }
     }
@@ -176,16 +180,12 @@ class UserItemManager extends ItemManager<DefaultUserInfoFragment, GropiusUserOr
         page: number
     ): Promise<[DefaultUserInfoFragment[], number]> {
         if (filter == undefined) {
-            const permission = await queryNode(
-                getPermissionUserListQuery,
-                "ComponentPermission",
-                {
-                    orderBy,
-                    count,
-                    skip: page * count,
-                    permission: model.value!.id
-                }
-            );
+            const permission = await queryNode(getPermissionUserListQuery, "ComponentPermission", {
+                orderBy,
+                count,
+                skip: page * count,
+                permission: model.value!.id
+            });
             if (permission) {
                 return [permission.users.nodes, permission.users.totalCount];
             }

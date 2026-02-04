@@ -26,7 +26,7 @@ import { useRoute, useRouter } from "vue-router";
 
 const deleteIMSMutation = graphql(`
     mutation deleteIMS($id: ID!) {
-        deleteIMS(input: {id: $id}) {
+        deleteIMS(input: { id: $id }) {
             __typename
         }
     }

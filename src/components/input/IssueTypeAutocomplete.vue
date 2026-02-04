@@ -61,7 +61,10 @@ async function searchIssueTypes(filter: string, count: number): Promise<DefaultI
             const res = await requestThrow(searchIssueTypesQuery, { template: props.template!, query, count });
             return res.searchIssueTypes;
         } else {
-            const node = await queryNodeThrow(firstIssueTypesQuery, "IssueTemplate", { template: props.template!, count });
+            const node = await queryNodeThrow(firstIssueTypesQuery, "IssueTemplate", {
+                template: props.template!,
+                count
+            });
             return node.issueTypes.nodes;
         }
     }, "Error searching issue types");
