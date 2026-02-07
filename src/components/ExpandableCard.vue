@@ -71,7 +71,7 @@ const props = withDefaults(
         editable?: boolean;
     }>(),
     {
-        editable: true,
+        editable: true
     }
 );
 

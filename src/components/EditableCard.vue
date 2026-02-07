@@ -57,7 +57,7 @@ const props = withDefaults(
         prependIcon?: string;
     }>(),
     {
-        editable: true,
+        editable: true
     }
 );
 

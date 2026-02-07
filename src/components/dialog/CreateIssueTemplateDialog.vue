@@ -72,13 +72,14 @@
                                     :expandedCardKey="expandedCardKey"
                                     type="type"
                                     :nameErrorMessage="nameErrorMessage"
-                                    :editable="!disabledCards.issueTypes.some((entry) => entry.entry === IssueType.name)"
+                                    :editable="
+                                        !disabledCards.issueTypes.some((entry) => entry.entry === IssueType.name)
+                                    "
                                     @expand="
                                         () => {
                                             expandedCardKey = { nameID: IssueType.name, type: 'type' };
                                             selectedIcon =
-                                                iconList.find((icon) => icon.iconPath === IssueType.iconPath) ??
-                                                null;
+                                                iconList.find((icon) => icon.iconPath === IssueType.iconPath) ?? null;
                                             currentEditedName = IssueType.name;
                                             currentEditedDescription = IssueType.description;
                                             nameErrorMessage = '';
@@ -108,101 +109,99 @@
                                     </template>
 
                                     <template #extra>
-                                    <div v-if="expandedCardKey?.nameID === IssueType.name">
+                                        <div v-if="expandedCardKey?.nameID === IssueType.name">
+                                            <div class="d-flex align-center justify-center">
+                                                <v-tabs v-model="activeTab" density="compact" class="flex-grow-1">
+                                                    <v-tab value="select" class="flex-grow-1">Select Icon</v-tab>
+                                                    <v-tab value="add" class="flex-grow-1">Add Icon</v-tab>
+                                                </v-tabs>
+                                            </div>
 
-                                        
-                                        <div class="d-flex align-center justify-center">
-                                            <v-tabs v-model="activeTab" density="compact" class="flex-grow-1">
-                                                <v-tab value="select" class="flex-grow-1">Select Icon</v-tab>
-                                                <v-tab value="add" class="flex-grow-1">Add Icon</v-tab>
-                                            </v-tabs>
-                                        </div>
-
-                                        <v-window v-model="activeTab">
-                                            <v-window-item value="select">
-                                                <v-text-field
-                                                    v-model="iconSearch"
-                                                    label="Search"
-                                                    density="compact"
-                                                    hide-details
-                                                    rounded
-                                                    class="mb-2"
-                                                    prepend-inner-icon="mdi-magnify"
-                                                    clearable
-                                                >
-                                                </v-text-field>
-
-                                                <div class="icon-container mx-n2" v-if="activeTab === 'select'">
-                                                    <v-lazy
-                                                        v-for="icon in filteredIcons"
-                                                        :key="icon.name"
-                                                        min-height="48"
-                                                        transition="fade-transition"
-                                                    >
-                                                        <IconButton
-                                                            color=""
-                                                            class="icon-wrapper"
-                                                            :class="{ selected: selectedIcon?.name === icon.name }"
-                                                            @click="selectIcon(icon)"
-                                                        >
-                                                            <SvgWrapper :path="icon.iconPath" />
-                                                            <v-tooltip activator="parent" location="top">
-                                                                {{ icon.name }}
-                                                            </v-tooltip>
-                                                        </IconButton>
-                                                    </v-lazy>
-                                                </div>
-                                            </v-window-item>
-
-                                            <v-window-item value="add">
-                                                <div class="d-flex flex-column" v-if="activeTab === 'add'">
+                                            <v-window v-model="activeTab">
+                                                <v-window-item value="select">
                                                     <v-text-field
-                                                        v-model="newIcon.name"
-                                                        label="Icon Name"
+                                                        v-model="iconSearch"
+                                                        label="Search"
                                                         density="compact"
                                                         hide-details
-                                                        class="mb-6"
-                                                    />
-
-                                                    <v-text-field
-                                                        v-model="newIcon.iconPath"
-                                                        label="SVG Path (24x24)"
-                                                        density="compact"
-                                                        hide-details
-                                                        class="scroll-x mb-4"
+                                                        rounded
+                                                        class="mb-2"
+                                                        prepend-inner-icon="mdi-magnify"
                                                         clearable
-                                                        @click:clear="clearNewIconPath"
-                                                    />
+                                                    >
+                                                    </v-text-field>
 
-                                                    <div class="d-flex align-center">
-                                                        <span class="mr-2">Preview:</span>
-                                                        <div
-                                                            class="preview-box border rounded mr-2 d-flex align-center justify-center"
+                                                    <div class="icon-container mx-n2" v-if="activeTab === 'select'">
+                                                        <v-lazy
+                                                            v-for="icon in filteredIcons"
+                                                            :key="icon.name"
+                                                            min-height="48"
+                                                            transition="fade-transition"
                                                         >
-                                                            <SvgWrapper :path="newIcon.iconPath" />
+                                                            <IconButton
+                                                                color=""
+                                                                class="icon-wrapper"
+                                                                :class="{ selected: selectedIcon?.name === icon.name }"
+                                                                @click="selectIcon(icon)"
+                                                            >
+                                                                <SvgWrapper :path="icon.iconPath" />
+                                                                <v-tooltip activator="parent" location="top">
+                                                                    {{ icon.name }}
+                                                                </v-tooltip>
+                                                            </IconButton>
+                                                        </v-lazy>
+                                                    </div>
+                                                </v-window-item>
+
+                                                <v-window-item value="add">
+                                                    <div class="d-flex flex-column" v-if="activeTab === 'add'">
+                                                        <v-text-field
+                                                            v-model="newIcon.name"
+                                                            label="Icon Name"
+                                                            density="compact"
+                                                            hide-details
+                                                            class="mb-6"
+                                                        />
+
+                                                        <v-text-field
+                                                            v-model="newIcon.iconPath"
+                                                            label="SVG Path (24x24)"
+                                                            density="compact"
+                                                            hide-details
+                                                            class="scroll-x mb-4"
+                                                            clearable
+                                                            @click:clear="clearNewIconPath"
+                                                        />
+
+                                                        <div class="d-flex align-center">
+                                                            <span class="mr-2">Preview:</span>
+                                                            <div
+                                                                class="preview-box border rounded mr-2 d-flex align-center justify-center"
+                                                            >
+                                                                <SvgWrapper :path="newIcon.iconPath" />
+                                                            </div>
+
+                                                            <v-btn
+                                                                color="primary"
+                                                                size="small"
+                                                                :disabled="
+                                                                    !newIcon.name ||
+                                                                    !newIcon.iconPath ||
+                                                                    !allowedPathElements
+                                                                "
+                                                                @click="confirmAddIcon"
+                                                            >
+                                                                Add
+                                                            </v-btn>
                                                         </div>
 
-                                                        <v-btn
-                                                            color="primary"
-                                                            size="small"
-                                                            :disabled="
-                                                                !newIcon.name ||
-                                                                !newIcon.iconPath ||
-                                                                !allowedPathElements
-                                                            "
-                                                            @click="confirmAddIcon"
-                                                        >
-                                                            Add
-                                                        </v-btn>
+                                                        <div class="text-warning text-caption">
+                                                            Expected: 24x24, fill color, no stroke
+                                                        </div>
                                                     </div>
-
-                                                    <div class="text-warning text-caption">
-                                                        Expected: 24x24, fill color, no stroke
-                                                    </div>
-                                                </div>
-                                            </v-window-item>
-                                        </v-window>
-                                    </div>
+                                                </v-window-item>
+                                            </v-window>
+                                        </div>
                                     </template>
                                 </ExpandableCard>
                             </v-col>
@@ -228,7 +227,11 @@
                                     :expandedCardKey="expandedCardKey"
                                     type="priority"
                                     :nameErrorMessage="nameErrorMessage"
-                                    :editable="!disabledCards.issuePriorities.some((entry) => entry.entry === issuePriority.name)"
+                                    :editable="
+                                        !disabledCards.issuePriorities.some(
+                                            (entry) => entry.entry === issuePriority.name
+                                        )
+                                    "
                                     @expand="
                                         () => {
                                             expandedCardKey = { nameID: issuePriority.name, type: 'priority' };
@@ -404,7 +407,9 @@
                                     :expandedCardKey="expandedCardKey"
                                     type="state"
                                     :nameErrorMessage="nameErrorMessage"
-                                    :editable="!disabledCards.issueStates.some((entry) => entry.entry === issueState.name)"
+                                    :editable="
+                                        !disabledCards.issueStates.some((entry) => entry.entry === issueState.name)
+                                    "
                                     @expand="
                                         () => {
                                             expandedCardKey = { nameID: issueState.name, type: 'state' };
@@ -471,7 +476,11 @@
                                     :expandedCardKey="expandedCardKey"
                                     type="assignment"
                                     :nameErrorMessage="nameErrorMessage"
-                                    :editable="!disabledCards.assignmentTypes.some((entry) => entry.entry === assignmentType.name)"
+                                    :editable="
+                                        !disabledCards.assignmentTypes.some(
+                                            (entry) => entry.entry === assignmentType.name
+                                        )
+                                    "
                                     @expand="
                                         () => {
                                             expandedCardKey = { nameID: assignmentType.name, type: 'assignment' };
@@ -522,7 +531,9 @@
                                     :expandedCardKey="expandedCardKey"
                                     type="relation"
                                     :nameErrorMessage="nameErrorMessage"
-                                    :editable="!disabledCards.relationTypes.some((entry) => entry.entry === relationType.name)"
+                                    :editable="
+                                        !disabledCards.relationTypes.some((entry) => entry.entry === relationType.name)
+                                    "
                                     @expand="
                                         () => {
                                             expandedCardKey = { nameID: relationType.name, type: 'relation' };
@@ -597,7 +608,11 @@
                             :expandedCardKey="expandedCardKey"
                             type="templateFieldSpecification"
                             :nameErrorMessage="nameErrorMessage"
-                            :editable="!disabledCards.templateFieldSpecifications.some((entry) => entry.entry === specifications.name)"
+                            :editable="
+                                !disabledCards.templateFieldSpecifications.some(
+                                    (entry) => entry.entry === specifications.name
+                                )
+                            "
                             @expand="
                                 () => {
                                     expandedCardKey = {
@@ -822,16 +837,14 @@ type InheritedEntry = {
     fromTemplate: string;
 };
 
-const disabledCards = ref<Record<string, InheritedEntry[]>>(
-    {
-        issueTypes: [],
-        issuePriorities: [],
-        issueStates: [],
-        assignmentTypes: [],
-        relationTypes: [],
-        templateFieldSpecifications: []
-    }
-);
+const disabledCards = ref<Record<string, InheritedEntry[]>>({
+    issueTypes: [],
+    issuePriorities: [],
+    issueStates: [],
+    assignmentTypes: [],
+    relationTypes: [],
+    templateFieldSpecifications: []
+});
 
 const templateInheritanceErrorMessage = ref<string>("");
 const isInheritanceConflict = ref<boolean>(false);
@@ -844,11 +857,10 @@ async function handleTemplateInheritance() {
             if (template?.node) {
                 const templateNode = template.node as NodeReturnType<"getIssueTemplateFields", "IssueTemplate">;
                 await handleInheritanceConflicts(templateNode);
-                if(templateInheritanceErrorMessage.value) {
+                if (templateInheritanceErrorMessage.value) {
                     isInheritanceConflict.value = true;
                     return;
                 }
-                
             }
         } catch (e) {
             console.error(e);
@@ -863,39 +875,56 @@ watch(selectedTemplates, async () => {
 });
 
 async function handleInheritanceConflicts(templateNode: NodeReturnType<"getIssueTemplateFields", "IssueTemplate">) {
-
-    for(const issueType of disabledCards.value.issueTypes){
-        if(templateNode.id !== issueType.fromTemplate && templateNode.issueTypes.nodes.some(t=>t.name===issueType.entry)){
+    for (const issueType of disabledCards.value.issueTypes) {
+        if (
+            templateNode.id !== issueType.fromTemplate &&
+            templateNode.issueTypes.nodes.some((t) => t.name === issueType.entry)
+        ) {
             templateInheritanceErrorMessage.value = `${templateNode.name} is in conflict with ${await getTemplateName(issueType.fromTemplate)}`;
             return;
         }
     }
-    for(const issuePriority of disabledCards.value.issuePriorities){
-        if(templateNode.id !== issuePriority.fromTemplate && templateNode.issuePriorities.nodes.some(t=>t.name===issuePriority.entry)){
+    for (const issuePriority of disabledCards.value.issuePriorities) {
+        if (
+            templateNode.id !== issuePriority.fromTemplate &&
+            templateNode.issuePriorities.nodes.some((t) => t.name === issuePriority.entry)
+        ) {
             templateInheritanceErrorMessage.value = `${templateNode.name} is in conflict with ${await getTemplateName(issuePriority.fromTemplate)}`;
             return;
         }
     }
-    for(const issueState of disabledCards.value.issueStates){
-        if(templateNode.id !== issueState.fromTemplate && templateNode.issueStates.nodes.some(t=>t.name===issueState.entry)){
+    for (const issueState of disabledCards.value.issueStates) {
+        if (
+            templateNode.id !== issueState.fromTemplate &&
+            templateNode.issueStates.nodes.some((t) => t.name === issueState.entry)
+        ) {
             templateInheritanceErrorMessage.value = `${templateNode.name} is in conflict with ${await getTemplateName(issueState.fromTemplate)}`;
             return;
         }
     }
-    for(const assignmentType of disabledCards.value.assignmentTypes){
-        if(templateNode.id !== assignmentType.fromTemplate && templateNode.assignmentTypes.nodes.some(t=>t.name===assignmentType.entry)){
+    for (const assignmentType of disabledCards.value.assignmentTypes) {
+        if (
+            templateNode.id !== assignmentType.fromTemplate &&
+            templateNode.assignmentTypes.nodes.some((t) => t.name === assignmentType.entry)
+        ) {
             templateInheritanceErrorMessage.value = `${templateNode.name} is in conflict with ${await getTemplateName(assignmentType.fromTemplate)}`;
             return;
         }
     }
-    for(const relationType of disabledCards.value.relationTypes){
-        if(templateNode.id !== relationType.fromTemplate && templateNode.relationTypes.nodes.some(t=>t.name===relationType.entry)){
+    for (const relationType of disabledCards.value.relationTypes) {
+        if (
+            templateNode.id !== relationType.fromTemplate &&
+            templateNode.relationTypes.nodes.some((t) => t.name === relationType.entry)
+        ) {
             templateInheritanceErrorMessage.value = `${templateNode.name} is in conflict with ${await getTemplateName(relationType.fromTemplate)}`;
             return;
         }
     }
-    for(const templateFieldSpecification of disabledCards.value.templateFieldSpecifications){
-        if(templateNode.id !== templateFieldSpecification.fromTemplate && templateNode.templateFieldSpecifications.some(t=>t.name===templateFieldSpecification.entry)){
+    for (const templateFieldSpecification of disabledCards.value.templateFieldSpecifications) {
+        if (
+            templateNode.id !== templateFieldSpecification.fromTemplate &&
+            templateNode.templateFieldSpecifications.some((t) => t.name === templateFieldSpecification.entry)
+        ) {
             templateInheritanceErrorMessage.value = `${templateNode.name} is in conflict with ${await getTemplateName(templateFieldSpecification.fromTemplate)}`;
             return;
         }
@@ -906,12 +935,26 @@ async function handleInheritanceConflicts(templateNode: NodeReturnType<"getIssue
 }
 
 function pushAttributes(templateNode: NodeReturnType<"getIssueTemplateFields", "IssueTemplate">) {
-    issueTypes.value.push(...templateNode.issueTypes.nodes.filter(t => !issueTypes.value.some(e => e.name === t.name)));
-    issueStates.value.push(...templateNode.issueStates.nodes.filter(t => !issueStates.value.some(e => e.name === t.name)));
-    issuePriorities.value.push(...templateNode.issuePriorities.nodes.filter(t => !issuePriorities.value.some(e => e.name === t.name)));
-    assignmentTypes.value.push(...templateNode.assignmentTypes.nodes.filter(t => !assignmentTypes.value.some(e => e.name === t.name)));
-    relationTypes.value.push(...templateNode.relationTypes.nodes.filter(t => !relationTypes.value.some(e => e.name === t.name)));
-    templateFieldSpecifications.value.push(...templateNode.templateFieldSpecifications.filter(t => !templateFieldSpecifications.value.some(e => e.name === t.name)));
+    issueTypes.value.push(
+        ...templateNode.issueTypes.nodes.filter((t) => !issueTypes.value.some((e) => e.name === t.name))
+    );
+    issueStates.value.push(
+        ...templateNode.issueStates.nodes.filter((t) => !issueStates.value.some((e) => e.name === t.name))
+    );
+    issuePriorities.value.push(
+        ...templateNode.issuePriorities.nodes.filter((t) => !issuePriorities.value.some((e) => e.name === t.name))
+    );
+    assignmentTypes.value.push(
+        ...templateNode.assignmentTypes.nodes.filter((t) => !assignmentTypes.value.some((e) => e.name === t.name))
+    );
+    relationTypes.value.push(
+        ...templateNode.relationTypes.nodes.filter((t) => !relationTypes.value.some((e) => e.name === t.name))
+    );
+    templateFieldSpecifications.value.push(
+        ...templateNode.templateFieldSpecifications.filter(
+            (t) => !templateFieldSpecifications.value.some((e) => e.name === t.name)
+        )
+    );
 }
 
 function deleteObsoleteAttributes() {
@@ -922,40 +965,74 @@ function deleteObsoleteAttributes() {
     };
 
     issueTypes.value = issueTypes.value.filter((item) => !isObsolete(item.name, disabledCards.value.issueTypes));
-    issuePriorities.value = issuePriorities.value.filter((item) => !isObsolete(item.name, disabledCards.value.issuePriorities));
+    issuePriorities.value = issuePriorities.value.filter(
+        (item) => !isObsolete(item.name, disabledCards.value.issuePriorities)
+    );
     issueStates.value = issueStates.value.filter((item) => !isObsolete(item.name, disabledCards.value.issueStates));
-    assignmentTypes.value = assignmentTypes.value.filter((item) => !isObsolete(item.name, disabledCards.value.assignmentTypes));
-    relationTypes.value = relationTypes.value.filter((item) => !isObsolete(item.name, disabledCards.value.relationTypes));
-    templateFieldSpecifications.value = templateFieldSpecifications.value.filter((item) =>
-        !isObsolete(item.name, disabledCards.value.templateFieldSpecifications)
+    assignmentTypes.value = assignmentTypes.value.filter(
+        (item) => !isObsolete(item.name, disabledCards.value.assignmentTypes)
+    );
+    relationTypes.value = relationTypes.value.filter(
+        (item) => !isObsolete(item.name, disabledCards.value.relationTypes)
+    );
+    templateFieldSpecifications.value = templateFieldSpecifications.value.filter(
+        (item) => !isObsolete(item.name, disabledCards.value.templateFieldSpecifications)
     );
     deleteObsoleteCards();
 }
 
 function pushDisabledCards(templateNode: NodeReturnType<"getIssueTemplateFields", "IssueTemplate">) {
-    disabledCards.value.issueTypes.push(...templateNode.issueTypes.nodes.map((t) => ({ entry: t.name, fromTemplate: templateNode.id })));
-    disabledCards.value.issuePriorities.push(...templateNode.issuePriorities.nodes.map((t) => ({ entry: t.name, fromTemplate: templateNode.id })));
-    disabledCards.value.issueStates.push(...templateNode.issueStates.nodes.map((t) => ({ entry: t.name, fromTemplate: templateNode.id })));
-    disabledCards.value.assignmentTypes.push(...templateNode.assignmentTypes.nodes.map((t) => ({ entry: t.name, fromTemplate: templateNode.id })));
-    disabledCards.value.relationTypes.push(...templateNode.relationTypes.nodes.map((t) => ({ entry: t.name, fromTemplate: templateNode.id })));
-    disabledCards.value.templateFieldSpecifications.push(...templateNode.templateFieldSpecifications.map((t) => ({ entry: t.name, fromTemplate: templateNode.id })));
+    disabledCards.value.issueTypes.push(
+        ...templateNode.issueTypes.nodes.map((t) => ({ entry: t.name, fromTemplate: templateNode.id }))
+    );
+    disabledCards.value.issuePriorities.push(
+        ...templateNode.issuePriorities.nodes.map((t) => ({ entry: t.name, fromTemplate: templateNode.id }))
+    );
+    disabledCards.value.issueStates.push(
+        ...templateNode.issueStates.nodes.map((t) => ({ entry: t.name, fromTemplate: templateNode.id }))
+    );
+    disabledCards.value.assignmentTypes.push(
+        ...templateNode.assignmentTypes.nodes.map((t) => ({ entry: t.name, fromTemplate: templateNode.id }))
+    );
+    disabledCards.value.relationTypes.push(
+        ...templateNode.relationTypes.nodes.map((t) => ({ entry: t.name, fromTemplate: templateNode.id }))
+    );
+    disabledCards.value.templateFieldSpecifications.push(
+        ...templateNode.templateFieldSpecifications.map((t) => ({ entry: t.name, fromTemplate: templateNode.id }))
+    );
 }
 
 function deleteObsoleteCards() {
-    const fromTemplates = [...new Set(Object.values(disabledCards.value).flat().map((entry) => entry.fromTemplate))];
-    for(const fromTemplate of fromTemplates){
-        if(!selectedTemplates.value.includes(fromTemplate)){
-            disabledCards.value.issueTypes = disabledCards.value.issueTypes.filter((entry) => entry.fromTemplate !== fromTemplate);
-            disabledCards.value.issuePriorities = disabledCards.value.issuePriorities.filter((entry) => entry.fromTemplate !== fromTemplate);
-            disabledCards.value.issueStates = disabledCards.value.issueStates.filter((entry) => entry.fromTemplate !== fromTemplate);
-            disabledCards.value.assignmentTypes = disabledCards.value.assignmentTypes.filter((entry) => entry.fromTemplate !== fromTemplate);
-            disabledCards.value.relationTypes = disabledCards.value.relationTypes.filter((entry) => entry.fromTemplate !== fromTemplate);
-            disabledCards.value.templateFieldSpecifications = disabledCards.value.templateFieldSpecifications.filter((entry) => entry.fromTemplate !== fromTemplate);
+    const fromTemplates = [
+        ...new Set(
+            Object.values(disabledCards.value)
+                .flat()
+                .map((entry) => entry.fromTemplate)
+        )
+    ];
+    for (const fromTemplate of fromTemplates) {
+        if (!selectedTemplates.value.includes(fromTemplate)) {
+            disabledCards.value.issueTypes = disabledCards.value.issueTypes.filter(
+                (entry) => entry.fromTemplate !== fromTemplate
+            );
+            disabledCards.value.issuePriorities = disabledCards.value.issuePriorities.filter(
+                (entry) => entry.fromTemplate !== fromTemplate
+            );
+            disabledCards.value.issueStates = disabledCards.value.issueStates.filter(
+                (entry) => entry.fromTemplate !== fromTemplate
+            );
+            disabledCards.value.assignmentTypes = disabledCards.value.assignmentTypes.filter(
+                (entry) => entry.fromTemplate !== fromTemplate
+            );
+            disabledCards.value.relationTypes = disabledCards.value.relationTypes.filter(
+                (entry) => entry.fromTemplate !== fromTemplate
+            );
+            disabledCards.value.templateFieldSpecifications = disabledCards.value.templateFieldSpecifications.filter(
+                (entry) => entry.fromTemplate !== fromTemplate
+            );
         }
     }
 }
-
-
 
 function createIssueTypeInput(previousName: string, newName: string, description: string, iconPath: string) {
     if (newName.trim().length === 0 && previousName.trim().length !== 0) {
@@ -1226,7 +1303,7 @@ function next() {
             validate();
             return;
         }
-        if(isInheritanceConflict.value){
+        if (isInheritanceConflict.value) {
             return;
         }
     }

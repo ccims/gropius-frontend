@@ -5,7 +5,11 @@
                 No assignment types defined
             </div>
             <div v-else class="attribute-list">
-                <div v-for="assignmentType in issueTemplate.assignmentTypes.nodes" :key="assignmentType.name" class="attribute-item">
+                <div
+                    v-for="assignmentType in issueTemplate.assignmentTypes.nodes"
+                    :key="assignmentType.name"
+                    class="attribute-item"
+                >
                     <div class="attribute-header">
                         <span class="attribute-name">{{ assignmentType.name }}</span>
                     </div>
@@ -21,7 +25,11 @@
                 No relation types defined
             </div>
             <div v-else class="attribute-list">
-                <div v-for="relationType in issueTemplate.relationTypes.nodes" :key="relationType.name" class="attribute-item">
+                <div
+                    v-for="relationType in issueTemplate.relationTypes.nodes"
+                    :key="relationType.name"
+                    class="attribute-item"
+                >
                     <div class="attribute-header">
                         <span class="attribute-name">{{ relationType.name }}</span>
                         <v-icon icon="mdi-arrow-right" size="small" class="mx-2" />

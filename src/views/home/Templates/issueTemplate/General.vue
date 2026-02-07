@@ -46,7 +46,7 @@ const issueTemplate = computedAsync(
 <style scoped lang="scss">
 .field-group {
     margin-bottom: 16px;
-    
+
     &:last-child {
         margin-bottom: 0;
     }

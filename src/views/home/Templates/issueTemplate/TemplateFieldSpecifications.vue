@@ -5,7 +5,11 @@
                 No template field specifications defined
             </div>
             <div v-else class="attribute-list">
-                <div v-for="field in issueTemplate.templateFieldSpecifications" :key="field.name" class="attribute-item">
+                <div
+                    v-for="field in issueTemplate.templateFieldSpecifications"
+                    :key="field.name"
+                    class="attribute-item"
+                >
                     <div class="attribute-header">
                         <span class="attribute-name">{{ field.name }}</span>
                     </div>
@@ -48,7 +52,7 @@ const issueTemplate = computedAsync(
 );
 
 function formatValue(value: any): string {
-    if (typeof value === 'object') {
+    if (typeof value === "object") {
         return JSON.stringify(value, null, 2);
     }
     return String(value);

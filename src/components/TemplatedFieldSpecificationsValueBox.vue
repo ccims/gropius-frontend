@@ -363,12 +363,15 @@ function getIconForNode(node: Node): string {
     }
 }
 
-function addChild(type: "primitive" | "enum" | "container" | "list" | "map" | "property", primitiveKind: PrimitiveType = "string") {
+function addChild(
+    type: "primitive" | "enum" | "container" | "list" | "map" | "property",
+    primitiveKind: PrimitiveType = "string"
+) {
     const modelValue = props.modelValue ?? {};
-    
+
     let newName;
-    if(type === "property"){
-         newName = "properties";
+    if (type === "property") {
+        newName = "properties";
     } else {
         newName = "newName";
         let counter = 1;
@@ -491,11 +494,14 @@ function updateChildValue(name: string, newValue: any) {
     emit("update:modelValue", modelValue);
 }
 
-function addPropertyChild(type: "primitive" | "enum" | "container" | "list" | "map" | "property", primitiveKind: PrimitiveType = "string") {
+function addPropertyChild(
+    type: "primitive" | "enum" | "container" | "list" | "map" | "property",
+    primitiveKind: PrimitiveType = "string"
+) {
     const properties = props.modelValue?.properties ?? {};
     let newName;
-    if(type === "property"){
-         newName = "properties";
+    if (type === "property") {
+        newName = "properties";
     } else {
         newName = "newName";
         let counter = 1;

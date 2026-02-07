@@ -22,7 +22,11 @@
                 No issue priorities defined
             </div>
             <div v-else class="attribute-list">
-                <div v-for="priority in issueTemplate.issuePriorities.nodes" :key="priority.name" class="attribute-item">
+                <div
+                    v-for="priority in issueTemplate.issuePriorities.nodes"
+                    :key="priority.name"
+                    class="attribute-item"
+                >
                     <div class="attribute-header">
                         <SvgWrapper :path="priority.iconPath" class="mr-2" />
                         <span class="attribute-name">{{ priority.name }}</span>
@@ -44,7 +48,7 @@
                     <div class="attribute-header">
                         <span class="attribute-name">{{ state.name }}</span>
                         <v-chip size="x-small" class="ml-2" :color="state.isOpen ? 'success' : 'error'" variant="tonal">
-                            {{ state.isOpen ? 'Open' : 'Closed' }}
+                            {{ state.isOpen ? "Open" : "Closed" }}
                         </v-chip>
                     </div>
                     <div v-if="state.description" class="attribute-description text-medium-emphasis">
