@@ -1,5 +1,5 @@
 <template>
-    <v-card variant="outlined" class="my-4">
+    <v-card variant="outlined" class="my-4" :class="{ 'opacity-60': props.editable === false }">
         <div v-if="!isExpanded" class="d-flex align-center justify-space-between">
             <slot name="previewLeft" />
 
@@ -12,10 +12,10 @@
             <slot name="previewRight" />
 
             <div class="d-flex align-center flex-shrink-0 ms-2">
-                <IconButton @click="emit('expand')">
+                <IconButton :disabled="!props.editable" @click="emit('expand')">
                     <v-icon>mdi-pencil</v-icon>
                 </IconButton>
-                <IconButton color="error" class="me-1" @click="emit('delete')">
+                <IconButton :disabled="!props.editable" color="error" class="me-1" @click="emit('delete')">
                     <v-icon>mdi-delete</v-icon>
                 </IconButton>
             </div>
@@ -61,13 +61,19 @@ type ExpandedKey = {
     type: string;
 } | null;
 
-const props = defineProps<{
-    name: string;
-    description?: string;
-    expandedCardKey: ExpandedKey;
-    type: string;
-    nameErrorMessage?: string;
-}>();
+const props = withDefaults(
+    defineProps<{
+        name: string;
+        description?: string;
+        expandedCardKey: ExpandedKey;
+        type: string;
+        nameErrorMessage?: string;
+        editable?: boolean;
+    }>(),
+    {
+        editable: true,
+    }
+);
 
 const emit = defineEmits<{
     (e: "expand"): void;
@@ -77,7 +83,7 @@ const emit = defineEmits<{
 }>();
 
 const isExpanded = computed(
-    () => props.expandedCardKey?.type === props.type && props.expandedCardKey?.nameID === props.name
+    () => props.editable && props.expandedCardKey?.type === props.type && props.expandedCardKey?.nameID === props.name
 );
 
 const localName = ref(props.name);

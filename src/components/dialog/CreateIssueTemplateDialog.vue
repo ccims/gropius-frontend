@@ -26,7 +26,10 @@
                                 />
                             </v-col>
                             <v-col cols="6">
-                                <IssueTemplatesAutocomplete v-model="selectedTemplates"> </IssueTemplatesAutocomplete>
+                                <IssueTemplatesAutocomplete
+                                    v-model="selectedTemplates"
+                                    :error-messages="templateInheritanceErrorMessage"
+                                />
                             </v-col>
                         </v-row>
                         <v-textarea
@@ -62,26 +65,27 @@
                                     >+ Add Issue Type
                                 </v-btn>
                                 <ExpandableCard
-                                    v-for="IssueTypeInput in issueTypes"
-                                    :key="IssueTypeInput.name"
-                                    :name="IssueTypeInput.name"
-                                    :description="IssueTypeInput.description"
+                                    v-for="IssueType in issueTypes"
+                                    :key="IssueType.name"
+                                    :name="IssueType.name"
+                                    :description="IssueType.description"
                                     :expandedCardKey="expandedCardKey"
                                     type="type"
                                     :nameErrorMessage="nameErrorMessage"
+                                    :editable="!disabledCards.issueTypes.some((entry) => entry.entry === IssueType.name)"
                                     @expand="
                                         () => {
-                                            expandedCardKey = { nameID: IssueTypeInput.name, type: 'type' };
+                                            expandedCardKey = { nameID: IssueType.name, type: 'type' };
                                             selectedIcon =
-                                                iconList.find((icon) => icon.iconPath === IssueTypeInput.iconPath) ??
+                                                iconList.find((icon) => icon.iconPath === IssueType.iconPath) ??
                                                 null;
-                                            currentEditedName = IssueTypeInput.name;
-                                            currentEditedDescription = IssueTypeInput.description;
+                                            currentEditedName = IssueType.name;
+                                            currentEditedDescription = IssueType.description;
                                             nameErrorMessage = '';
                                         }
                                     "
                                     @cancel="cancelCreateCard()"
-                                    @delete="deleteIssueTypeInputByName(IssueTypeInput.name)"
+                                    @delete="deleteIssueTypeInputByName(IssueType.name)"
                                     @confirm="
                                         ({ name, description }) => {
                                             if (!name) {
@@ -89,7 +93,7 @@
                                                 return;
                                             }
                                             createIssueTypeInput(
-                                                IssueTypeInput.name,
+                                                IssueType.name,
                                                 name,
                                                 description,
                                                 selectedIcon?.iconPath ?? ''
@@ -99,11 +103,14 @@
                                 >
                                     <template #previewLeft>
                                         <div class="border rounded d-flex align-center mx-2 my-1">
-                                            <SvgWrapper :path="IssueTypeInput.iconPath" />
+                                            <SvgWrapper :path="IssueType.iconPath" />
                                         </div>
                                     </template>
 
                                     <template #extra>
+                                    <div v-if="expandedCardKey?.nameID === IssueType.name">
+
+                                        
                                         <div class="d-flex align-center justify-center">
                                             <v-tabs v-model="activeTab" density="compact" class="flex-grow-1">
                                                 <v-tab value="select" class="flex-grow-1">Select Icon</v-tab>
@@ -195,6 +202,7 @@
                                                 </div>
                                             </v-window-item>
                                         </v-window>
+                                    </div>
                                     </template>
                                 </ExpandableCard>
                             </v-col>
@@ -220,6 +228,7 @@
                                     :expandedCardKey="expandedCardKey"
                                     type="priority"
                                     :nameErrorMessage="nameErrorMessage"
+                                    :editable="!disabledCards.issuePriorities.some((entry) => entry.entry === issuePriority.name)"
                                     @expand="
                                         () => {
                                             expandedCardKey = { nameID: issuePriority.name, type: 'priority' };
@@ -395,6 +404,7 @@
                                     :expandedCardKey="expandedCardKey"
                                     type="state"
                                     :nameErrorMessage="nameErrorMessage"
+                                    :editable="!disabledCards.issueStates.some((entry) => entry.entry === issueState.name)"
                                     @expand="
                                         () => {
                                             expandedCardKey = { nameID: issueState.name, type: 'state' };
@@ -461,6 +471,7 @@
                                     :expandedCardKey="expandedCardKey"
                                     type="assignment"
                                     :nameErrorMessage="nameErrorMessage"
+                                    :editable="!disabledCards.assignmentTypes.some((entry) => entry.entry === assignmentType.name)"
                                     @expand="
                                         () => {
                                             expandedCardKey = { nameID: assignmentType.name, type: 'assignment' };
@@ -511,6 +522,7 @@
                                     :expandedCardKey="expandedCardKey"
                                     type="relation"
                                     :nameErrorMessage="nameErrorMessage"
+                                    :editable="!disabledCards.relationTypes.some((entry) => entry.entry === relationType.name)"
                                     @expand="
                                         () => {
                                             expandedCardKey = { nameID: relationType.name, type: 'relation' };
@@ -585,6 +597,7 @@
                             :expandedCardKey="expandedCardKey"
                             type="templateFieldSpecification"
                             :nameErrorMessage="nameErrorMessage"
+                            :editable="!disabledCards.templateFieldSpecifications.some((entry) => entry.entry === specifications.name)"
                             @expand="
                                 () => {
                                     expandedCardKey = {
@@ -672,8 +685,6 @@ import {
     type JsonFieldInput
 } from "@/graphql/generated";
 
-//import type { TemplatedFieldSpecification } from "../TemplatedFieldSpecificationsValueBox.vue";
-
 const createIssueTemplateDialog = ref(false);
 const step = ref(1);
 const stepLabels = [
@@ -720,8 +731,15 @@ watch(templateName, async (newName) => {
 });
 
 const selectedTemplates = ref<string[]>([]);
+
 async function loadTemplate(id: string) {
     return await client.getIssueTemplateFields({ id });
+}
+
+async function getTemplateName(id: string) {
+    const template = await client.getIssueTemplate({ id });
+    const templateNode = template.node as NodeReturnType<"getIssueTemplate", "IssueTemplate">;
+    return templateNode.name;
 }
 
 const expandedCardKey = ref<{
@@ -798,23 +816,146 @@ const issueStates = ref<IssueStateInput[]>([]);
 const assignmentTypes = ref<AssignmentTypeInput[]>([]);
 const relationTypes = ref<IssueRelationTypeInput[]>([]);
 const templateFieldSpecifications = ref<JsonFieldInput[]>([]);
-function handleTemplateInheritance() {
-    loadTemplate(selectedTemplates.value[0])
-        .then((template) => {
-            if (!template?.node) return;
-            const templateNode = template.node as NodeReturnType<"getIssueTemplateFields", "IssueTemplate">;
-            console.log(templateNode);
-            issueTypes.value = templateNode.issueTypes.nodes;
-            issueStates.value = templateNode.issueStates.nodes;
-            issuePriorities.value = templateNode.issuePriorities.nodes;
-            assignmentTypes.value = templateNode.assignmentTypes.nodes;
-            relationTypes.value = templateNode.relationTypes.nodes;
-            templateFieldSpecifications.value = templateNode.templateFieldSpecifications;
-        })
-        .catch((e) => {
+
+type InheritedEntry = {
+    entry: string;
+    fromTemplate: string;
+};
+
+const disabledCards = ref<Record<string, InheritedEntry[]>>(
+    {
+        issueTypes: [],
+        issuePriorities: [],
+        issueStates: [],
+        assignmentTypes: [],
+        relationTypes: [],
+        templateFieldSpecifications: []
+    }
+);
+
+const templateInheritanceErrorMessage = ref<string>("");
+const isInheritanceConflict = ref<boolean>(false);
+
+async function handleTemplateInheritance() {
+    deleteObsoleteAttributes();
+    for (const templateId of selectedTemplates.value) {
+        try {
+            const template = await loadTemplate(templateId);
+            if (template?.node) {
+                const templateNode = template.node as NodeReturnType<"getIssueTemplateFields", "IssueTemplate">;
+                await handleInheritanceConflicts(templateNode);
+                if(templateInheritanceErrorMessage.value) {
+                    isInheritanceConflict.value = true;
+                    return;
+                }
+                
+            }
+        } catch (e) {
             console.error(e);
-        });
+        }
+    }
+    deleteObsoleteAttributes();
+    isInheritanceConflict.value = false;
 }
+
+watch(selectedTemplates, async () => {
+    await handleTemplateInheritance();
+});
+
+async function handleInheritanceConflicts(templateNode: NodeReturnType<"getIssueTemplateFields", "IssueTemplate">) {
+
+    for(const issueType of disabledCards.value.issueTypes){
+        if(templateNode.id !== issueType.fromTemplate && templateNode.issueTypes.nodes.some(t=>t.name===issueType.entry)){
+            templateInheritanceErrorMessage.value = `${templateNode.name} is in conflict with ${await getTemplateName(issueType.fromTemplate)}`;
+            return;
+        }
+    }
+    for(const issuePriority of disabledCards.value.issuePriorities){
+        if(templateNode.id !== issuePriority.fromTemplate && templateNode.issuePriorities.nodes.some(t=>t.name===issuePriority.entry)){
+            templateInheritanceErrorMessage.value = `${templateNode.name} is in conflict with ${await getTemplateName(issuePriority.fromTemplate)}`;
+            return;
+        }
+    }
+    for(const issueState of disabledCards.value.issueStates){
+        if(templateNode.id !== issueState.fromTemplate && templateNode.issueStates.nodes.some(t=>t.name===issueState.entry)){
+            templateInheritanceErrorMessage.value = `${templateNode.name} is in conflict with ${await getTemplateName(issueState.fromTemplate)}`;
+            return;
+        }
+    }
+    for(const assignmentType of disabledCards.value.assignmentTypes){
+        if(templateNode.id !== assignmentType.fromTemplate && templateNode.assignmentTypes.nodes.some(t=>t.name===assignmentType.entry)){
+            templateInheritanceErrorMessage.value = `${templateNode.name} is in conflict with ${await getTemplateName(assignmentType.fromTemplate)}`;
+            return;
+        }
+    }
+    for(const relationType of disabledCards.value.relationTypes){
+        if(templateNode.id !== relationType.fromTemplate && templateNode.relationTypes.nodes.some(t=>t.name===relationType.entry)){
+            templateInheritanceErrorMessage.value = `${templateNode.name} is in conflict with ${await getTemplateName(relationType.fromTemplate)}`;
+            return;
+        }
+    }
+    for(const templateFieldSpecification of disabledCards.value.templateFieldSpecifications){
+        if(templateNode.id !== templateFieldSpecification.fromTemplate && templateNode.templateFieldSpecifications.some(t=>t.name===templateFieldSpecification.entry)){
+            templateInheritanceErrorMessage.value = `${templateNode.name} is in conflict with ${await getTemplateName(templateFieldSpecification.fromTemplate)}`;
+            return;
+        }
+    }
+    templateInheritanceErrorMessage.value = "";
+    pushAttributes(templateNode);
+    pushDisabledCards(templateNode);
+}
+
+function pushAttributes(templateNode: NodeReturnType<"getIssueTemplateFields", "IssueTemplate">) {
+    issueTypes.value.push(...templateNode.issueTypes.nodes.filter(t => !issueTypes.value.some(e => e.name === t.name)));
+    issueStates.value.push(...templateNode.issueStates.nodes.filter(t => !issueStates.value.some(e => e.name === t.name)));
+    issuePriorities.value.push(...templateNode.issuePriorities.nodes.filter(t => !issuePriorities.value.some(e => e.name === t.name)));
+    assignmentTypes.value.push(...templateNode.assignmentTypes.nodes.filter(t => !assignmentTypes.value.some(e => e.name === t.name)));
+    relationTypes.value.push(...templateNode.relationTypes.nodes.filter(t => !relationTypes.value.some(e => e.name === t.name)));
+    templateFieldSpecifications.value.push(...templateNode.templateFieldSpecifications.filter(t => !templateFieldSpecifications.value.some(e => e.name === t.name)));
+}
+
+function deleteObsoleteAttributes() {
+    const isObsolete = (name: string, entries: InheritedEntry[]) => {
+        const records = entries.filter((e) => e.entry === name);
+        if (records.length === 0) return false;
+        return records.every((e) => !selectedTemplates.value.includes(e.fromTemplate));
+    };
+
+    issueTypes.value = issueTypes.value.filter((item) => !isObsolete(item.name, disabledCards.value.issueTypes));
+    issuePriorities.value = issuePriorities.value.filter((item) => !isObsolete(item.name, disabledCards.value.issuePriorities));
+    issueStates.value = issueStates.value.filter((item) => !isObsolete(item.name, disabledCards.value.issueStates));
+    assignmentTypes.value = assignmentTypes.value.filter((item) => !isObsolete(item.name, disabledCards.value.assignmentTypes));
+    relationTypes.value = relationTypes.value.filter((item) => !isObsolete(item.name, disabledCards.value.relationTypes));
+    templateFieldSpecifications.value = templateFieldSpecifications.value.filter((item) =>
+        !isObsolete(item.name, disabledCards.value.templateFieldSpecifications)
+    );
+    deleteObsoleteCards();
+}
+
+function pushDisabledCards(templateNode: NodeReturnType<"getIssueTemplateFields", "IssueTemplate">) {
+    disabledCards.value.issueTypes.push(...templateNode.issueTypes.nodes.map((t) => ({ entry: t.name, fromTemplate: templateNode.id })));
+    disabledCards.value.issuePriorities.push(...templateNode.issuePriorities.nodes.map((t) => ({ entry: t.name, fromTemplate: templateNode.id })));
+    disabledCards.value.issueStates.push(...templateNode.issueStates.nodes.map((t) => ({ entry: t.name, fromTemplate: templateNode.id })));
+    disabledCards.value.assignmentTypes.push(...templateNode.assignmentTypes.nodes.map((t) => ({ entry: t.name, fromTemplate: templateNode.id })));
+    disabledCards.value.relationTypes.push(...templateNode.relationTypes.nodes.map((t) => ({ entry: t.name, fromTemplate: templateNode.id })));
+    disabledCards.value.templateFieldSpecifications.push(...templateNode.templateFieldSpecifications.map((t) => ({ entry: t.name, fromTemplate: templateNode.id })));
+}
+
+function deleteObsoleteCards() {
+    const fromTemplates = [...new Set(Object.values(disabledCards.value).flat().map((entry) => entry.fromTemplate))];
+    for(const fromTemplate of fromTemplates){
+        if(!selectedTemplates.value.includes(fromTemplate)){
+            disabledCards.value.issueTypes = disabledCards.value.issueTypes.filter((entry) => entry.fromTemplate !== fromTemplate);
+            disabledCards.value.issuePriorities = disabledCards.value.issuePriorities.filter((entry) => entry.fromTemplate !== fromTemplate);
+            disabledCards.value.issueStates = disabledCards.value.issueStates.filter((entry) => entry.fromTemplate !== fromTemplate);
+            disabledCards.value.assignmentTypes = disabledCards.value.assignmentTypes.filter((entry) => entry.fromTemplate !== fromTemplate);
+            disabledCards.value.relationTypes = disabledCards.value.relationTypes.filter((entry) => entry.fromTemplate !== fromTemplate);
+            disabledCards.value.templateFieldSpecifications = disabledCards.value.templateFieldSpecifications.filter((entry) => entry.fromTemplate !== fromTemplate);
+        }
+    }
+}
+
+
 
 function createIssueTypeInput(previousName: string, newName: string, description: string, iconPath: string) {
     if (newName.trim().length === 0 && previousName.trim().length !== 0) {
@@ -835,7 +976,12 @@ function createIssueTypeInput(previousName: string, newName: string, description
     deleteIssueTypeInputByName(previousName);
     issueTypes.value.push({ name: newName, description: description, iconPath: iconPath });
 
-    issueTypes.value.sort((a, b) => a.name.localeCompare(b.name));
+    issueTypes.value.sort((a, b) => {
+        const aDisabled = disabledCards.value.issueTypes.some((entry) => entry.entry === a.name);
+        const bDisabled = disabledCards.value.issueTypes.some((entry) => entry.entry === b.name);
+        if (aDisabled !== bDisabled) return aDisabled ? 1 : -1;
+        return a.name.localeCompare(b.name);
+    });
     expandedCardKey.value = null;
     selectedIcon.value = null;
     currentEditedName.value = "";
@@ -876,7 +1022,12 @@ function createIssuePriority(
     deleteIssuePriorityByName(previousName);
     issuePriorities.value.push({ name: newName, description, value, iconPath });
 
-    issuePriorities.value.sort((a, b) => a.name.localeCompare(b.name));
+    issuePriorities.value.sort((a, b) => {
+        const aDisabled = disabledCards.value.issuePriorities.some((entry) => entry.entry === a.name);
+        const bDisabled = disabledCards.value.issuePriorities.some((entry) => entry.entry === b.name);
+        if (aDisabled !== bDisabled) return aDisabled ? 1 : -1;
+        return a.name.localeCompare(b.name);
+    });
     expandedCardKey.value = null;
     currentEditedName.value = "";
     currentEditedDescription.value = "";
@@ -904,7 +1055,12 @@ function createIssueState(previousName: string, newName: string, description: st
     deleteIssueStateByName(previousName);
     issueStates.value.push({ name: newName, description, isOpen });
 
-    issueStates.value.sort((a, b) => a.name.localeCompare(b.name));
+    issueStates.value.sort((a, b) => {
+        const aDisabled = disabledCards.value.issueStates.some((entry) => entry.entry === a.name);
+        const bDisabled = disabledCards.value.issueStates.some((entry) => entry.entry === b.name);
+        if (aDisabled !== bDisabled) return aDisabled ? 1 : -1;
+        return a.name.localeCompare(b.name);
+    });
     expandedCardKey.value = null;
     currentEditedName.value = "";
     currentEditedDescription.value = "";
@@ -932,7 +1088,12 @@ function createAssignmentType(previousName: string, newName: string, description
     deleteAssignmentTypeByName(previousName);
     assignmentTypes.value.push({ name: newName, description });
 
-    assignmentTypes.value.sort((a, b) => a.name.localeCompare(b.name));
+    assignmentTypes.value.sort((a, b) => {
+        const aDisabled = disabledCards.value.assignmentTypes.some((entry) => entry.entry === a.name);
+        const bDisabled = disabledCards.value.assignmentTypes.some((entry) => entry.entry === b.name);
+        if (aDisabled !== bDisabled) return aDisabled ? 1 : -1;
+        return a.name.localeCompare(b.name);
+    });
     expandedCardKey.value = null;
     currentEditedName.value = "";
     currentEditedDescription.value = "";
@@ -966,7 +1127,12 @@ function createRelationType(previousName: string, newName: string, inverseName: 
     deleteRelationTypeByName(previousName);
     relationTypes.value.push({ name: newName, inverseName, description });
 
-    relationTypes.value.sort((a, b) => a.name.localeCompare(b.name));
+    relationTypes.value.sort((a, b) => {
+        const aDisabled = disabledCards.value.relationTypes.some((entry) => entry.entry === a.name);
+        const bDisabled = disabledCards.value.relationTypes.some((entry) => entry.entry === b.name);
+        if (aDisabled !== bDisabled) return aDisabled ? 1 : -1;
+        return a.name.localeCompare(b.name);
+    });
     expandedCardKey.value = null;
     currentEditedName.value = "";
     currentEditedDescription.value = "";
@@ -1003,8 +1169,12 @@ function createTemplateFieldSpecification(previousName: string, newName: string,
         value: value
     });
 
-    templateFieldSpecifications.value.sort((a, b) => a.name.localeCompare(b.name));
-
+    templateFieldSpecifications.value.sort((a, b) => {
+        const aDisabled = disabledCards.value.templateFieldSpecifications.some((entry) => entry.entry === a.name);
+        const bDisabled = disabledCards.value.templateFieldSpecifications.some((entry) => entry.entry === b.name);
+        if (aDisabled !== bDisabled) return aDisabled ? 1 : -1;
+        return a.name.localeCompare(b.name);
+    });
     expandedCardKey.value = null;
     currentEditedName.value = "";
     currentEditedDescription.value = "";
@@ -1013,37 +1183,6 @@ function createTemplateFieldSpecification(previousName: string, newName: string,
 function deleteTemplateFieldSpecificationByName(nameToDelete: string) {
     templateFieldSpecifications.value = templateFieldSpecifications.value.filter((s) => s.name !== nameToDelete);
 }
-
-/*
-function createTemplateFieldSpecificationEnumEntry(previousName: string, newName: string) {
-  if (newName.trim().length === 0 && previousName.trim().length !== 0) {
-    nameErrorMessage.value = "Name is required";
-    return;
-  }
-
-  if (previousName.trim().toLowerCase() !== newName.trim().toLowerCase()) {
-    if (
-      templateFieldSpecificationEnumEntries.value.some(
-        (item) => item.trim().toLowerCase() === newName.trim().toLowerCase()
-      )
-    ) {
-      nameErrorMessage.value = "Name already exists";
-      return;
-    } else {
-      nameErrorMessage.value = "";
-    }
-  }
-
-  deleteTemplateFieldSpecificationEnumEntryByName(previousName);
-
-  templateFieldSpecificationEnumEntries.value.push(newName);
-
-  templateFieldSpecificationEnumEntries.value.sort((a, b) => a.localeCompare(b));
-
-  expandedCardKey.value = null;
-  currentEditedName.value = "";
-}
-  */
 
 function cancelCreateCard() {
     expandedCardKey.value = null;
@@ -1056,7 +1195,7 @@ function cancelCreateCard() {
     deleteIssueStateByName("");
     deleteAssignmentTypeByName("");
     deleteRelationTypeByName("");
-    //deleteTemplateFieldSpecificationByName("");
+    deleteTemplateFieldSpecificationByName("");
 }
 
 function createIssueTemplate() {
@@ -1083,11 +1222,11 @@ onEvent("create-issue-template", () => {
 
 function next() {
     if (step.value === 1) {
-        console.log("Template values:");
-        console.log(selectedTemplates.value[0]);
-        handleTemplateInheritance();
         if (!meta.value.valid) {
             validate();
+            return;
+        }
+        if(isInheritanceConflict.value){
             return;
         }
     }

@@ -1,5 +1,5 @@
 <template>
-    <div :class="['node-wrapper', { 'container-node': node?.type === 'container' }]">
+    <div :class="['node-wrapper', { 'container-node': node?.type === 'container' || node?.type === 'property' }]">
         <template v-if="node?.type === 'primitive'">
             <div class="mr-10">
                 <v-select
@@ -70,6 +70,10 @@
                                 <template v-slot:prepend><v-icon size="small">mdi-code-braces</v-icon></template>
                                 <v-list-item-title>Map</v-list-item-title>
                             </v-list-item>
+                            <v-list-item @click="changeListElementType('property')">
+                                <template v-slot:prepend><v-icon size="small">mdi-cog-outline</v-icon></template>
+                                <v-list-item-title>Property</v-list-item-title>
+                            </v-list-item>
                         </v-list>
                     </v-menu>
                 </div>
@@ -119,6 +123,10 @@
                                 <template v-slot:prepend><v-icon size="small">mdi-code-braces</v-icon></template>
                                 <v-list-item-title>Map</v-list-item-title>
                             </v-list-item>
+                            <v-list-item @click="changeMapValueType('property')">
+                                <template v-slot:prepend><v-icon size="small">mdi-cog-outline</v-icon></template>
+                                <v-list-item-title>Property</v-list-item-title>
+                            </v-list-item>
                         </v-list>
                     </v-menu>
                 </div>
@@ -141,6 +149,7 @@
                     :key="childEntry.name"
                     :content="childEntry.name"
                     :prepend-icon="getIconForNode(childEntry.node)"
+                    :editable="childEntry.node.type !== 'property'"
                     @confirm="(payload) => renameChild(childEntry.name, payload.content)"
                     @delete="removeChild(childEntry.name)"
                 >
@@ -185,6 +194,75 @@
                             <template v-slot:prepend><v-icon size="small">mdi-code-braces</v-icon></template>
                             <v-list-item-title>Map</v-list-item-title>
                         </v-list-item>
+                        <v-list-item @click="addChild('property')">
+                            <template v-slot:prepend><v-icon size="small">mdi-cog-outline</v-icon></template>
+                            <v-list-item-title>Property</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
+            </div>
+        </template>
+
+        <template v-else-if="node?.type === 'property'">
+            <div
+                v-for="childEntry in node.children"
+                :key="childEntry.name"
+                :class="['mb-4', { 'd-flex align-center': childEntry.node.type === 'primitive' }]"
+            >
+                <EditableCard
+                    class="flex-grow-1"
+                    :key="childEntry.name"
+                    :content="childEntry.name"
+                    :prepend-icon="getIconForNode(childEntry.node)"
+                    :editable="childEntry.node.type !== 'property'"
+                    @confirm="(payload) => renamePropertyChild(childEntry.name, payload.content)"
+                    @delete="removePropertyChild(childEntry.name)"
+                >
+                </EditableCard>
+
+                <TemplatedFieldSpecificationsValueBox
+                    :rawNode="childEntry.node"
+                    :model-value="modelValue.properties[childEntry.name]"
+                    @update:model-value="(newValue) => updatePropertyChildValue(childEntry.name, newValue)"
+                />
+            </div>
+
+            <div class="add-child-trigger">
+                <v-menu>
+                    <template v-slot:activator="{ props }">
+                        <IconButton
+                            v-bind="props"
+                            variant="elevated"
+                            icon="mdi-plus"
+                            size="small"
+                            color="primary"
+                        ></IconButton>
+                    </template>
+                    <v-list density="compact">
+                        <v-list-item @click="addPropertyChild('primitive')">
+                            <template v-slot:prepend><v-icon size="small">mdi-cube-outline</v-icon></template>
+                            <v-list-item-title>Primitive</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item @click="addPropertyChild('enum')">
+                            <template v-slot:prepend><v-icon size="small">mdi-list-status</v-icon></template>
+                            <v-list-item-title>Enum</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item @click="addPropertyChild('container')">
+                            <template v-slot:prepend><v-icon size="small">mdi-folder-outline</v-icon></template>
+                            <v-list-item-title>Container</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item @click="addPropertyChild('list')">
+                            <template v-slot:prepend><v-icon size="small">mdi-format-list-bulleted</v-icon></template>
+                            <v-list-item-title>List</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item @click="addPropertyChild('map')">
+                            <template v-slot:prepend><v-icon size="small">mdi-code-braces</v-icon></template>
+                            <v-list-item-title>Map</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item @click="addPropertyChild('property')">
+                            <template v-slot:prepend><v-icon size="small">mdi-cog-outline</v-icon></template>
+                            <v-list-item-title>Property</v-list-item-title>
+                        </v-list-item>
                     </v-list>
                 </v-menu>
             </div>
@@ -225,6 +303,11 @@ interface ContainerNode {
     children: { name: string; node: Node }[];
 }
 
+interface PropertyNode {
+    type: "property";
+    children: { name: string; node: Node }[];
+}
+
 interface ListNode {
     type: "list";
     elementType: Node;
@@ -235,7 +318,7 @@ interface MapNode {
     valueType: Node;
 }
 
-type Node = PrimitiveNode | EnumNode | ContainerNode | ListNode | MapNode;
+type Node = PrimitiveNode | EnumNode | ContainerNode | PropertyNode | ListNode | MapNode;
 
 const props = defineProps<{
     modelValue?: any;
@@ -265,6 +348,8 @@ function getIconForNode(node: Node): string {
     switch (node.type) {
         case "container":
             return "mdi-folder-outline";
+        case "property":
+            return "mdi-cog-outline";
         case "enum":
             return "mdi-list-status";
         case "primitive":
@@ -278,12 +363,18 @@ function getIconForNode(node: Node): string {
     }
 }
 
-function addChild(type: "primitive" | "enum" | "container" | "list" | "map", primitiveKind: PrimitiveType = "string") {
+function addChild(type: "primitive" | "enum" | "container" | "list" | "map" | "property", primitiveKind: PrimitiveType = "string") {
     const modelValue = props.modelValue ?? {};
-    let newName = "newItem";
-    let counter = 1;
-    while (modelValue[newName]) {
-        newName = `newItem${counter++}`;
+    
+    let newName;
+    if(type === "property"){
+         newName = "properties";
+    } else {
+        newName = "newName";
+        let counter = 1;
+        while (modelValue[newName]) {
+            newName = `newItem${counter++}`;
+        }
     }
 
     let newValue: any = {};
@@ -297,6 +388,8 @@ function addChild(type: "primitive" | "enum" | "container" | "list" | "map", pri
         newValue = { elements: { type: "string" } };
     } else if (type === "map") {
         newValue = { values: { type: "string" } };
+    } else if (type === "property") {
+        newValue = { properties: {} };
     }
 
     emit("update:modelValue", { ...modelValue, [newName]: newValue });
@@ -332,6 +425,8 @@ function getNodeTypeLabel(node: Node): string {
             return "Enum";
         case "container":
             return "Container";
+        case "property":
+            return "Property";
         case "list":
             return "List";
         case "map":
@@ -341,7 +436,7 @@ function getNodeTypeLabel(node: Node): string {
     }
 }
 
-function createDefaultValueForType(type: "primitive" | "enum" | "container" | "list" | "map"): any {
+function createDefaultValueForType(type: "primitive" | "enum" | "container" | "list" | "map" | "property"): any {
     switch (type) {
         case "primitive":
             return { type: "string" };
@@ -353,10 +448,12 @@ function createDefaultValueForType(type: "primitive" | "enum" | "container" | "l
             return { elements: { type: "string" } };
         case "map":
             return { values: { type: "string" } };
+        case "property":
+            return { properties: {} };
     }
 }
 
-function changeListElementType(type: "primitive" | "enum" | "container" | "list" | "map") {
+function changeListElementType(type: "primitive" | "enum" | "container" | "list" | "map" | "property") {
     emit("update:modelValue", { ...props.modelValue, elements: createDefaultValueForType(type) });
 }
 
@@ -364,7 +461,7 @@ function updateListElementValue(newValue: any) {
     emit("update:modelValue", { ...props.modelValue, elements: newValue });
 }
 
-function changeMapValueType(type: "primitive" | "enum" | "container" | "list" | "map") {
+function changeMapValueType(type: "primitive" | "enum" | "container" | "list" | "map" | "property") {
     emit("update:modelValue", { ...props.modelValue, values: createDefaultValueForType(type) });
 }
 
@@ -394,6 +491,59 @@ function updateChildValue(name: string, newValue: any) {
     emit("update:modelValue", modelValue);
 }
 
+function addPropertyChild(type: "primitive" | "enum" | "container" | "list" | "map" | "property", primitiveKind: PrimitiveType = "string") {
+    const properties = props.modelValue?.properties ?? {};
+    let newName;
+    if(type === "property"){
+         newName = "properties";
+    } else {
+        newName = "newName";
+        let counter = 1;
+        while (properties[newName]) {
+            newName = `newItem${counter++}`;
+        }
+    }
+
+    let newValue: any = {};
+    if (type === "primitive") {
+        newValue = { type: primitiveKind };
+    } else if (type === "enum") {
+        newValue = { enum: [] };
+    } else if (type === "container") {
+        newValue = {};
+    } else if (type === "list") {
+        newValue = { elements: { type: "string" } };
+    } else if (type === "map") {
+        newValue = { values: { type: "string" } };
+    } else if (type === "property") {
+        newValue = { properties: {} };
+    }
+
+    emit("update:modelValue", { ...props.modelValue, properties: { ...properties, [newName]: newValue } });
+}
+
+function renamePropertyChild(oldName: string, newName: string) {
+    if (oldName === newName || !newName) return;
+    const properties = { ...props.modelValue.properties };
+    if (properties[newName] !== undefined) return;
+
+    properties[newName] = properties[oldName];
+    delete properties[oldName];
+    emit("update:modelValue", { ...props.modelValue, properties });
+}
+
+function removePropertyChild(name: string) {
+    const properties = { ...props.modelValue.properties };
+    delete properties[name];
+    emit("update:modelValue", { ...props.modelValue, properties });
+}
+
+function updatePropertyChildValue(name: string, newValue: any) {
+    const properties = { ...props.modelValue.properties };
+    properties[name] = newValue;
+    emit("update:modelValue", { ...props.modelValue, properties });
+}
+
 const node = computed(() => {
     let processedNode: Node;
     if (props.rawNode?.type) {
@@ -402,13 +552,14 @@ const node = computed(() => {
         processedNode = processNode(props.rawNode);
     }
 
-    if (processedNode.type === "container") {
+    if (processedNode.type === "container" || processedNode.type === "property") {
         const typeWeights: Record<string, number> = {
             primitive: 0,
             enum: 1,
             list: 2,
             map: 3,
-            container: 4
+            container: 4,
+            property: 5
         };
         processedNode.children.sort((a, b) => typeWeights[a.node.type] - typeWeights[b.node.type]);
     }
@@ -444,6 +595,34 @@ function processNode(rawNode: any): Node {
         };
     }
 
+    if ("properties" in rawNode) {
+        const propertyChildren = Object.entries(rawNode.properties)
+            .filter(([key]) => key !== "nullable" && key !== "__typename")
+            .map(([key, value]) => {
+                return {
+                    name: key,
+                    node: processNode(value)
+                };
+            });
+
+        propertyChildren.sort((a, b) => {
+            const typeWeights: Record<string, number> = {
+                primitive: 0,
+                enum: 1,
+                list: 2,
+                map: 3,
+                container: 4,
+                property: 5
+            };
+            return typeWeights[a.node.type] - typeWeights[b.node.type];
+        });
+
+        return {
+            type: "property",
+            children: propertyChildren
+        };
+    }
+
     const children = Object.entries(rawNode)
         .filter(([key]) => key !== "nullable" && key !== "__typename")
         .map(([key, value]) => {
@@ -459,7 +638,8 @@ function processNode(rawNode: any): Node {
             enum: 1,
             list: 2,
             map: 3,
-            container: 4
+            container: 4,
+            property: 5
         };
         return typeWeights[a.node.type] - typeWeights[b.node.type];
     });

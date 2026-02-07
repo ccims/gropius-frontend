@@ -64,7 +64,50 @@ const routes: RouteRecordRaw[] = [
                         component: () => import("../views/home/Templates/IssueTemplates.vue")
                     }
                 ]
+            }
+        ]
+    },
+    {
+        path: "/templates/issue/:issueTemplate",
+        component: () => import("../views/home/Templates/issueTemplate/Root.vue"),
+        children: [
+            {
+                path: "",
+                name: "issue-template",
+                redirect: { name: "issue-template-details-general" }
             },
+            {
+                path: "details",
+                component: () => import("../views/RouterOnly.vue"),
+                children: [
+                    {
+                        path: "",
+                        name: "issue-template-details-general",
+                        component: () => import("../views/home/Templates/issueTemplate/General.vue")
+                    },
+                    {
+                        path: "issue-attributes",
+                        name: "issue-template-details-issue-attributes",
+                        component: () => import("../views/home/Templates/issueTemplate/IssueAttributes.vue")
+                    },
+                    {
+                        path: "linkage-attributes",
+                        name: "issue-template-details-linkage-attributes",
+                        component: () => import("../views/home/Templates/issueTemplate/LinkageAttributes.vue")
+                    },
+                    {
+                        path: "field-specifications",
+                        name: "issue-template-details-field-specifications",
+                        component: () => import("../views/home/Templates/issueTemplate/TemplateFieldSpecifications.vue")
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        path: "/",
+        component: () => import("../views/home/Root.vue"),
+        children: [
             {
                 path: "admin",
                 name: "admin",

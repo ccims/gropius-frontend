@@ -70,9 +70,9 @@ function selectTemplate(template: IdObject) {
 
 function templateRoute(template: IdObject): RouteLocationRaw {
     return {
-        name: "templates-issue",
+        name: "issue-template",
         params: {
-            trackable: template.id
+            issueTemplate: template.id
         }
     };
 }
