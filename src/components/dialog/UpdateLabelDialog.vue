@@ -17,11 +17,11 @@
 <script lang="ts" setup>
 import { graphql } from "@/gql";
 import { requestThrow } from "@/gql/client";
-import { PropType } from "vue";
+import type { PropType } from "vue";
 import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
-import LabelDialogContent, { Label } from "./LabelDialogContent.vue";
+import LabelDialogContent, { type Label } from "./LabelDialogContent.vue";
 import { computed } from "vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import { useCachedRef } from "@/util/useCachedRef";
 
 const updateLabelMutation = graphql(`

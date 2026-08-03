@@ -15,20 +15,20 @@
 </template>
 <script lang="ts" setup>
 import PermissionList, {
-    CreatePermissionFunctionInput,
-    UpdatePermissionFunctionInput
+    type CreatePermissionFunctionInput,
+    type UpdatePermissionFunctionInput
 } from "@/components/PermissionList.vue";
 import ImportIMSPermissionDialog from "@/components/dialog/ImportIMSPermissionDialog.vue";
 import { queryNode, request, requestThrow } from "@/gql/client";
 import { graphql } from "@/gql";
 import {
     ImsPermissionEntry,
-    ImsPermissionOrder,
+    type ImsPermissionOrder,
     ImsPermissionOrderField,
-    DefaultImsPermissionInfoFragment
+    type DefaultImsPermissionInfoFragment
 } from "@/gql/graphql";
 import { ItemManager } from "@/util/itemManager";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import { computed, useTemplateRef } from "vue";
 import { useRoute } from "vue-router";
 

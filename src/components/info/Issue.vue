@@ -14,11 +14,11 @@
     </div>
 </template>
 <script setup lang="ts">
-import { DefaultIssueInfoFragment } from "@/gql/graphql";
-import { PropType, computed } from "vue";
+import type { DefaultIssueInfoFragment } from "@/gql/graphql";
+import { type PropType, computed } from "vue";
 import IssueIcon from "../IssueIcon.vue";
 import Trackable from "./Trackable.vue";
-import { RouteLocationRaw } from "vue-router";
+import type { RouteLocationRaw } from "vue-router";
 import CustomRouterLink from "../CustomRouterLink.vue";
 
 const props = defineProps({

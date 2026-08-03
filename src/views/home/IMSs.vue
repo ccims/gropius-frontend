@@ -34,11 +34,11 @@
 import PaginatedList from "@/components/PaginatedList.vue";
 import { request, requestThrow } from "@/gql/client";
 import { graphql } from "@/gql";
-import { RouteLocationRaw, useRouter } from "vue-router";
+import { type RouteLocationRaw, useRouter } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
 import CreateIMSDialog from "@/components/dialog/CreateIMSDialog.vue";
-import { IdObject } from "@/util/types";
-import { ImsFilterInput, ImsOrder, ImsListItemInfoFragment } from "@/gql/graphql";
+import type { IdObject } from "@/util/types";
+import type { ImsFilterInput, ImsOrder, ImsListItemInfoFragment } from "@/gql/graphql";
 import { ImsOrderField } from "@/gql/graphql";
 import SyncSelfAllowedSwitch from "@/components/input/SyncSelfAllowedSwitch.vue";
 import { ItemManager } from "@/util/itemManager";

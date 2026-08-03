@@ -1,5 +1,5 @@
 import { Bounds } from "sprotty-protocol";
-import { Element } from "./element.js";
+import type { Element } from "./element.js";
 
 export interface Root extends Element {
     type: typeof Root.TYPE;

@@ -55,14 +55,14 @@
 <script setup lang="ts" generic="T">
 import { queryNode, request } from "@/gql/client";
 import { graphql } from "@/gql";
-import { PropType, computed, ref, watch } from "vue";
+import { type PropType, computed, ref, watch } from "vue";
 import PaginatedList from "../PaginatedList.vue";
-import { DefaultUserInfoFragment, GropiusUserOrder, GropiusUserOrderField } from "@/gql/graphql";
+import { type DefaultUserInfoFragment, type GropiusUserOrder, GropiusUserOrderField } from "@/gql/graphql";
 import User from "../info/User.vue";
 import ConfirmationDialog from "./ConfirmationDialog.vue";
 import GropiusUserAutocomplete from "../input/GropiusUserAutocomplete.vue";
-import { IdObject } from "@/util/types";
-import { UpdatePermissionFunction } from "../PermissionList.vue";
+import type { IdObject } from "@/util/types";
+import type { UpdatePermissionFunction } from "../PermissionList.vue";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import { ItemManager } from "@/util/itemManager";
 

@@ -17,11 +17,11 @@
 import { graphql } from "@/gql";
 import { requestThrow } from "@/gql/client";
 import { onEvent } from "@/util/eventBus";
-import { computed, PropType, ref } from "vue";
+import { computed, type PropType, ref } from "vue";
 import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
-import ViewDialogContent, { View } from "./ViewDialogContent.vue";
-import { IdObject } from "@/util/types";
-import { CreateViewInput } from "@/gql/graphql";
+import ViewDialogContent, { type View } from "./ViewDialogContent.vue";
+import type { IdObject } from "@/util/types";
+import type { CreateViewInput } from "@/gql/graphql";
 
 const createViewMutation = graphql(`
     mutation createView($input: CreateViewInput!) {

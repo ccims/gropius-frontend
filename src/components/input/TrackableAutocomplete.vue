@@ -16,11 +16,11 @@
 <script setup lang="ts">
 import { graphql } from "@/gql";
 import { requestThrow } from "@/gql/client";
-import { DefaultTrackableInfoFragment, TrackableFilterInput } from "@/gql/graphql";
+import type { DefaultTrackableInfoFragment, TrackableFilterInput } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
-import { PropType } from "vue";
+import type { PropType } from "vue";
 import { affectedByIssueIcon } from "@/util/affectedByIssueUtils";
 
 const searchTrackablesQuery = graphql(`

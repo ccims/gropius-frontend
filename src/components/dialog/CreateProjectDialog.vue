@@ -44,7 +44,7 @@ import { fieldConfig } from "@/util/vuetifyFormConfig";
 import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
 import { toTypedSchema } from "@vee-validate/yup";
 import ConfirmationDialog from "./ConfirmationDialog.vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 
 const createProjectMutation = graphql(`
     mutation createProject($input: CreateProjectInput!) {

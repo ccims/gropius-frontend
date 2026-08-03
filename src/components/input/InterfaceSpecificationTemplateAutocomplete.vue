@@ -13,14 +13,14 @@
 <script setup lang="ts">
 import { graphql } from "@/gql";
 import { requestThrow } from "@/gql/client";
-import {
+import type {
     DefaultInterfaceSpecificationTemplateInfoFragment,
     InterfaceSpecificationTemplateFilterInput
 } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
-import { PropType } from "vue";
+import type { PropType } from "vue";
 
 const searchInterfaceSpecificationTemplatesQuery = graphql(`
     query searchInterfaceSpecificationTemplates(

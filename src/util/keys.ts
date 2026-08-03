@@ -1,8 +1,8 @@
-import { Emitter } from "mitt";
-import { InjectionKey, Ref } from "vue";
-import { Events } from "./eventBus";
-import { GetIssueQuery, GetProjectQuery, GetComponentQuery } from "@/gql/graphql";
-import { NodeReturnType } from "@/gql/client";
+import type { Emitter } from "mitt";
+import type { InjectionKey, Ref } from "vue";
+import type { Events } from "./eventBus";
+import type { GetIssueQuery, GetProjectQuery, GetComponentQuery } from "@/gql/graphql";
+import type { NodeReturnType } from "@/gql/client";
 
 export const eventBusKey: InjectionKey<Emitter<Events>> = Symbol("eventBus");
 

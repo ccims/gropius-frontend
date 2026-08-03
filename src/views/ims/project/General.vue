@@ -32,7 +32,7 @@ import InputWrapper from "@/components/input/InputWrapper.vue";
 import TemplatedFieldsDetailCompartment from "@/components/TemplatedFieldsDetailCompartment.vue";
 import { queryNodeThrow, requestThrow } from "@/gql/client";
 import { graphql } from "@/gql";
-import { UpdateImsProjectInput } from "@/gql/graphql";
+import type { UpdateImsProjectInput } from "@/gql/graphql";
 import { eventBusKey } from "@/util/keys";
 import { computedAsync } from "@vueuse/core";
 import { computed, inject } from "vue";

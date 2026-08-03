@@ -23,11 +23,11 @@
 <script setup lang="ts">
 import { requestThrow, queryNodeThrow } from "@/gql/client";
 import { graphql } from "@/gql";
-import { DefaultComponentPermissionInfoFragment, DefaultTrackableInfoFragment } from "@/gql/graphql";
+import type { DefaultComponentPermissionInfoFragment, DefaultTrackableInfoFragment } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
-import { PropType } from "vue";
+import type { PropType } from "vue";
 
 const props = defineProps({
     componentPermission: {

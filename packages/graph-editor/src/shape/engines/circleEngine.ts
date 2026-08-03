@@ -1,6 +1,6 @@
 import { Bounds } from "sprotty-protocol";
-import { ShapeStyle, StrokeStyle } from "../../gropiusModel.js";
-import { Shape } from "../shape.js";
+import { type ShapeStyle, StrokeStyle } from "../../gropiusModel.js";
+import type { Shape } from "../shape.js";
 import { EllipseEngine } from "./ellipseEngine.js";
 import { ShapeEngine } from "./shapeEngine.js";
 

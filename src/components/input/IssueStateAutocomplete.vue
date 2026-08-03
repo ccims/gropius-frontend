@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import { requestThrow, queryNodeThrow } from "@/gql/client";
 import { graphql } from "@/gql";
-import { DefaultIssueStateInfoFragment } from "@/gql/graphql";
+import type { DefaultIssueStateInfoFragment } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";

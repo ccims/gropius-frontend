@@ -8,8 +8,8 @@
     </span>
 </template>
 <script setup lang="ts">
-import { DefaultIssueTypeInfoFragment } from "@/gql/graphql";
-import { PropType } from "vue";
+import type { DefaultIssueTypeInfoFragment } from "@/gql/graphql";
+import type { PropType } from "vue";
 import IssueTypeIcon from "../IssueTypeIcon.vue";
 
 defineProps({

@@ -38,15 +38,15 @@ import PaginatedList from "@/components/PaginatedList.vue";
 import { request, requestThrow } from "@/gql/client";
 import { graphql } from "@/gql";
 import {
-    ComponentFilterInput,
-    ComponentOrder,
+    type ComponentFilterInput,
+    type ComponentOrder,
     ComponentOrderField,
-    ComponentListItemInfoFragment
+    type ComponentListItemInfoFragment
 } from "@/gql/graphql";
-import { RouteLocationRaw, useRouter } from "vue-router";
+import { type RouteLocationRaw, useRouter } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
 import CreateComponentDialog from "@/components/dialog/CreateComponentDialog.vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import { ItemManager } from "@/util/itemManager";
 import FilterDropdown from "@/components/input/FilterDropdown.vue";
 import { useFilterOption } from "@/util/useFilterOption";

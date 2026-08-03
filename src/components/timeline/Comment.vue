@@ -191,8 +191,8 @@
 <script setup lang="ts">
 import { graphql } from "@/gql";
 import { requestThrow } from "@/gql/client";
-import { computed, inject, PropType, ref } from "vue";
-import TimelineItemBase, { TimelineItemType } from "./TimelineItemBase.vue";
+import { computed, inject, type PropType, ref } from "vue";
+import TimelineItemBase, { type TimelineItemType } from "./TimelineItemBase.vue";
 import User from "@/components/info/User.vue";
 import RelativeTimeWrapper from "../RelativeTimeWrapper.vue";
 import Markdown from "@/components/Markdown.vue";
@@ -201,7 +201,7 @@ import ConfirmationDialog from "@/components/dialog/ConfirmationDialog.vue";
 import { markdownToText } from "@/util/markdownToText";
 import { useRouter } from "vue-router";
 import { issueKey } from "@/util/keys";
-import { CommentTimelineInfoFragment } from "@/gql/graphql";
+import type { CommentTimelineInfoFragment } from "@/gql/graphql";
 
 const updateBodyMutation = graphql(`
     mutation updateBodyForTimeline($id: ID!, $body: String!) {
@@ -254,8 +254,7 @@ const deleteIssueCommentMutation = graphql(`
 `);
 
 export type Comment = (
-    | Omit<TimelineItemType<"IssueComment">, "createdBy">
-    | Omit<TimelineItemType<"Body">, "createdBy">
+    Omit<TimelineItemType<"IssueComment">, "createdBy"> | Omit<TimelineItemType<"Body">, "createdBy">
 ) &
     Partial<Pick<TimelineItemType<"IssueComment">, "createdBy">>;
 

@@ -23,11 +23,11 @@
 <script setup lang="ts">
 import { graphql } from "@/gql";
 import { queryNodeThrow, requestThrow } from "@/gql/client";
-import { DefaultLabelInfoFragment, DefaultTrackableInfoFragment } from "@/gql/graphql";
+import type { DefaultLabelInfoFragment, DefaultTrackableInfoFragment } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
-import { PropType } from "vue";
+import type { PropType } from "vue";
 
 const searchTrackableLabelsQuery = graphql(`
     query searchTrackableLabels($trackable: ID!, $query: String!, $count: Int!) {

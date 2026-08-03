@@ -1,7 +1,7 @@
 import { inject, injectable } from "inversify";
-import { IView, IViewArgs, RenderingContext, svg, TYPES, ViewerOptions } from "sprotty";
+import { type IView, type IViewArgs, type RenderingContext, svg, TYPES, type ViewerOptions } from "sprotty";
 import { SRoot } from "../smodel/sRoot.js";
-import { VNode } from "snabbdom";
+import type { VNode } from "snabbdom";
 import { SContextMenu } from "../smodel/sContextMenu.js";
 
 @injectable()

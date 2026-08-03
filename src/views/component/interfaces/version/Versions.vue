@@ -44,15 +44,15 @@ import PaginatedList from "@/components/PaginatedList.vue";
 import { request, queryNode } from "@/gql/client";
 import { graphql } from "@/gql";
 import {
-    InterfaceSpecificationVersionOrder,
+    type InterfaceSpecificationVersionOrder,
     InterfaceSpecificationVersionOrderField,
-    InterfaceSpecificationVersionListItemInfoFragment
+    type InterfaceSpecificationVersionListItemInfoFragment
 } from "@/gql/graphql";
-import { RouteLocationRaw, useRoute, useRouter } from "vue-router";
+import { type RouteLocationRaw, useRoute, useRouter } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
 import { computed } from "vue";
 import CreateInterfaceSpecificationVersionDialog from "@/components/dialog/CreateInterfaceSpecificationVersionDialog.vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import { ItemManager } from "@/util/itemManager";
 
 type InterfaceSpecificationVersion = InterfaceSpecificationVersionListItemInfoFragment;

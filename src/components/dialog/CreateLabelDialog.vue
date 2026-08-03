@@ -19,8 +19,8 @@ import { requestThrow } from "@/gql/client";
 import { onEvent } from "@/util/eventBus";
 import { ref, watch } from "vue";
 import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
-import LabelDialogContent, { Label } from "./LabelDialogContent.vue";
-import { DefaultLabelInfoFragment } from "@/gql/graphql";
+import LabelDialogContent, { type Label } from "./LabelDialogContent.vue";
+import type { DefaultLabelInfoFragment } from "@/gql/graphql";
 
 const createLabelMutation = graphql(`
     mutation createLabel($input: CreateLabelInput!) {

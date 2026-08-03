@@ -15,8 +15,8 @@
 </template>
 <script lang="ts" setup>
 import PermissionList, {
-    CreatePermissionFunctionInput,
-    UpdatePermissionFunctionInput
+    type CreatePermissionFunctionInput,
+    type UpdatePermissionFunctionInput
 } from "@/components/PermissionList.vue";
 import ImportProjectPermissionDialog from "@/components/dialog/ImportProjectPermissionDialog.vue";
 import { request, queryNode } from "@/gql/client";
@@ -24,10 +24,10 @@ import { graphql } from "@/gql";
 import {
     ProjectPermissionEntry,
     ProjectPermissionOrderField,
-    DefaultProjectPermissionInfoFragment,
-    ProjectPermissionOrder
+    type DefaultProjectPermissionInfoFragment,
+    type ProjectPermissionOrder
 } from "@/gql/graphql";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import { computed, useTemplateRef } from "vue";
 import { useRoute } from "vue-router";
 import { ItemManager } from "@/util/itemManager";

@@ -41,9 +41,14 @@
 import { request } from "@/gql/client";
 import { graphql } from "@/gql";
 import { computed } from "vue";
-import { RouteLocationRaw, useRoute, useRouter } from "vue-router";
+import { type RouteLocationRaw, useRoute, useRouter } from "vue-router";
 import PaginatedList from "@/components/PaginatedList.vue";
-import { IssueFilterInput, IssueOrder, IssueOrderField, ParticipatingIssueListItemInfoFragment } from "@/gql/graphql";
+import {
+    type IssueFilterInput,
+    type IssueOrder,
+    IssueOrderField,
+    type ParticipatingIssueListItemInfoFragment
+} from "@/gql/graphql";
 import IssueListItem from "@/components/IssueListItem.vue";
 import IssueStateSegmentedButton from "@/components/input/IssueStateSegmentedButton.vue";
 import { useAppStore } from "@/store/app";

@@ -41,7 +41,7 @@
 import DetailCompartment from "@/components/DetailCompartment.vue";
 import InputWrapper from "@/components/input/InputWrapper.vue";
 import TemplatedFieldsDetailCompartment from "@/components/TemplatedFieldsDetailCompartment.vue";
-import { UpdateInterfaceSpecificationVersionInput } from "@/gql/graphql";
+import type { UpdateInterfaceSpecificationVersionInput } from "@/gql/graphql";
 import { eventBusKey, trackableKey } from "@/util/keys";
 import { computedAsync } from "@vueuse/core";
 import { computed, inject } from "vue";

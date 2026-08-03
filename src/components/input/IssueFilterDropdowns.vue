@@ -110,11 +110,15 @@ import { queryNodeThrow, requestThrow } from "@/gql/client";
 import FilterDropdown from "@/components/input/FilterDropdown.vue";
 import IssueTypeIcon from "@/components/IssueTypeIcon.vue";
 import User from "@/components/info/User.vue";
-import { computed, PropType, ref, watch } from "vue";
+import { computed, type PropType, ref, watch } from "vue";
 import { ItemManager } from "@/util/itemManager";
-import { DetailedAffectedByIssueInfoFragment, IssueListItemInfoFragment, IssueOrderField } from "@/gql/graphql";
+import {
+    type DetailedAffectedByIssueInfoFragment,
+    type IssueListItemInfoFragment,
+    IssueOrderField
+} from "@/gql/graphql";
 import { useFilterOption } from "@/util/useFilterOption";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import { useAppStore } from "@/store/app";
 import {
     affectedByIssueDescription,

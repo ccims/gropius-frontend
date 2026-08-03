@@ -23,11 +23,11 @@
 <script setup lang="ts">
 import { graphql } from "@/gql";
 import { queryNodeThrow, requestThrow } from "@/gql/client";
-import { DefaultProjectPermissionInfoFragment, DefaultTrackableInfoFragment } from "@/gql/graphql";
+import type { DefaultProjectPermissionInfoFragment, DefaultTrackableInfoFragment } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
-import { PropType } from "vue";
+import type { PropType } from "vue";
 
 const searchProjectPermissionsQuery = graphql(`
     query searchProjectPermissions($project: ID!, $query: String!, $count: Int!) {

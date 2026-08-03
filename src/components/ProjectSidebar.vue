@@ -87,25 +87,25 @@
     </v-slide-x-reverse-transition>
 </template>
 <script setup lang="ts">
-import { PropType, computed, ref, watch, watchEffect } from "vue";
+import { type PropType, computed, ref, watch, watchEffect } from "vue";
 import PaginatedList from "@/components/PaginatedList.vue";
 import {
-    GraphAggregatedIssueInfoFragment,
-    GraphComponentVersionInfoFragment,
-    GraphRelationPartnerInfoFragment,
-    IssueFilterInput,
-    IssueListItemInfoFragment,
-    IssueOrder,
+    type GraphAggregatedIssueInfoFragment,
+    type GraphComponentVersionInfoFragment,
+    type GraphRelationPartnerInfoFragment,
+    type IssueFilterInput,
+    type IssueListItemInfoFragment,
+    type IssueOrder,
     IssueOrderField,
-    GraphInfoFragment
+    type GraphInfoFragment
 } from "@/gql/graphql";
-import { SelectedElement } from "@gropius/graph-editor";
-import { ContextMenuData } from "./GraphEditor.vue";
+import type { SelectedElement } from "@gropius/graph-editor";
+import type { ContextMenuData } from "./GraphEditor.vue";
 import { request, queryNode } from "@/gql/client";
 import { graphql } from "@/gql";
 import IssueListItem from "@/components/IssueListItem.vue";
-import { IdObject } from "@/util/types";
-import { RouteLocationRaw } from "vue-router";
+import type { IdObject } from "@/util/types";
+import type { RouteLocationRaw } from "vue-router";
 import { ItemManager } from "@/util/itemManager";
 import IssueFilterDropdowns from "@/components/input/IssueFilterDropdowns.vue";
 import { useTemplateRef } from "vue";

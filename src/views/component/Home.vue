@@ -52,10 +52,10 @@
 <script lang="ts" setup>
 import CustomList from "@/components/CustomList.vue";
 import IssueListItem from "@/components/IssueListItem.vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import { computedAsync } from "@vueuse/core";
 import { computed } from "vue";
-import { RouteLocationRaw, useRoute } from "vue-router";
+import { type RouteLocationRaw, useRoute } from "vue-router";
 import { graphql } from "@/gql";
 import { queryNodeThrow } from "@/gql/client";
 import { withErrorMessage } from "@/util/withErrorMessage";

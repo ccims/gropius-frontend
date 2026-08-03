@@ -8,7 +8,7 @@
 <script setup lang="ts">
 import { graphql } from "@/gql";
 import { queryNodeThrow, requestThrow } from "@/gql/client";
-import { DefaultViewInfoFragment } from "@/gql/graphql";
+import type { DefaultViewInfoFragment } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";

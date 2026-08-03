@@ -29,10 +29,10 @@ import { onEvent } from "@/util/eventBus";
 import { ref } from "vue";
 import ImportDialogContent from "./ImportDialogContent.vue";
 import ExternalIMSPermissionAutocomplete from "../input/ExternalIMSPermissionAutocomplete.vue";
-import { DefaultImsPermissionInfoFragment } from "@/gql/graphql";
+import type { DefaultImsPermissionInfoFragment } from "@/gql/graphql";
 import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
 import Permission from "../info/Permission.vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 
 const addIMSPermissionToIMSMutation = graphql(`
     mutation addIMSPermissionToIMS($ims: ID!, $imsPermission: ID!) {

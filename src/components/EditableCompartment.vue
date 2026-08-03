@@ -52,7 +52,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import ConfirmationDialog from "./dialog/ConfirmationDialog.vue";
-import { VSheet } from "vuetify/lib/components/index.mjs";
+import { VSheet } from "vuetify/components";
 
 const props = defineProps({
     name: {

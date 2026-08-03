@@ -86,10 +86,10 @@
 </template>
 <script setup lang="ts">
 import { useLocalStorage } from "@vueuse/core";
-import { PropType } from "vue";
-import { RouteLocationRaw } from "vue-router";
+import type { PropType } from "vue";
+import type { RouteLocationRaw } from "vue-router";
 import { useTheme } from "vuetify";
-import SideBar, { SideBarItem } from "./SideBar.vue";
+import SideBar, { type SideBarItem } from "./SideBar.vue";
 import ErrorSnackbar from "./ErrorSnackbar.vue";
 import { useAppStore } from "@/store/app";
 import AccountCard from "./AccountCard.vue";

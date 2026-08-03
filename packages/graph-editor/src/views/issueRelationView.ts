@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
-import { VNode } from "snabbdom";
-import { IView, RenderingContext, svg } from "sprotty";
+import type { VNode } from "snabbdom";
+import { type IView, type RenderingContext, svg } from "sprotty";
 import { SIssueRelation } from "../smodel/sIssueRelation.js";
 import { SIssueAffected } from "../smodel/sIssueAffected.js";
 import { Math2D } from "../line/math.js";

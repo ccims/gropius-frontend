@@ -1,4 +1,4 @@
-import { Action } from "sprotty-protocol";
+import type { Action } from "sprotty-protocol";
 
 export interface ConnectAction extends Action {
     kind: typeof ConnectAction.KIND;

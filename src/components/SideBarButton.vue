@@ -24,8 +24,8 @@
     </router-link>
 </template>
 <script setup lang="ts">
-import { PropType } from "vue";
-import { RouteLocationRaw } from "vue-router";
+import type { PropType } from "vue";
+import type { RouteLocationRaw } from "vue-router";
 
 const props = defineProps({
     icon: {
@@ -78,6 +78,13 @@ function chooseActive(isActive: boolean, isExactActive: boolean): boolean {
 </script>
 <style scoped lang="scss">
 @use "vuetify/settings" as *;
+
+.sidebar-button {
+    // Vuetify 4's reset no longer strips native button styling
+    padding: 0;
+    background-color: transparent;
+    border-style: none;
+}
 
 .icon-container {
     overflow: hidden;

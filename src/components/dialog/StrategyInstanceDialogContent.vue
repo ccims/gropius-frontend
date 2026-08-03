@@ -82,8 +82,8 @@
 <script lang="ts" setup>
 import { computedAsync } from "@vueuse/core";
 import ConfirmationDialog from "./ConfirmationDialog.vue";
-import { PropType, computed, ref, watch } from "vue";
-import { Schema } from "jtd";
+import { type PropType, computed, ref, watch } from "vue";
+import type { Schema } from "jtd";
 import axios from "axios";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import MetaForm from "../input/schema/MetaForm.vue";

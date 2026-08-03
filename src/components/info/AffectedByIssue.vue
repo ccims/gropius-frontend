@@ -7,11 +7,11 @@
     </v-chip>
 </template>
 <script setup lang="ts">
-import { DefaultAffectedByIssueInfoFragment } from "@/gql/graphql";
+import type { DefaultAffectedByIssueInfoFragment } from "@/gql/graphql";
 import { affectedByIssueName, affectedByIssueIcon, affectedByIssueDescription } from "@/util/affectedByIssueUtils";
 import { computed } from "vue";
-import { PropType } from "vue";
-import { RouteLocationRaw } from "vue-router";
+import type { PropType } from "vue";
+import type { RouteLocationRaw } from "vue-router";
 
 const props = defineProps({
     affectedEntity: {

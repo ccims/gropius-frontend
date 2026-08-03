@@ -56,7 +56,7 @@ import ImportLabelDialog from "@/components/dialog/ImportLabelDialog.vue";
 import UpdateLabelDialog from "@/components/dialog/UpdateLabelDialog.vue";
 import { queryNode, request, requestThrow } from "@/gql/client";
 import { graphql } from "@/gql";
-import { LabelOrder, LabelOrderField, DefaultLabelInfoFragment } from "@/gql/graphql";
+import { type LabelOrder, LabelOrderField, type DefaultLabelInfoFragment } from "@/gql/graphql";
 import { ItemManager } from "@/util/itemManager";
 import { trackableKey } from "@/util/keys";
 import { inject } from "vue";

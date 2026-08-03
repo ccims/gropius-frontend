@@ -29,10 +29,10 @@ import { onEvent } from "@/util/eventBus";
 import { ref } from "vue";
 import ImportDialogContent from "./ImportDialogContent.vue";
 import ExternalComponentPermissionAutocomplete from "../input/ExternalComponentPermissionAutocomplete.vue";
-import { DefaultComponentPermissionInfoFragment } from "@/gql/graphql";
+import type { DefaultComponentPermissionInfoFragment } from "@/gql/graphql";
 import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
 import Permission from "../info/Permission.vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 
 const addComponentPermissionToComponentMutation = graphql(`
     mutation addComponentPermissionToComponent($component: ID!, $componentPermission: ID!) {

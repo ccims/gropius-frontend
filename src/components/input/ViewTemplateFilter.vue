@@ -15,7 +15,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { computed, PropType, ref } from "vue";
+import { computed, type PropType, ref } from "vue";
 
 const props = defineProps({
     templates: {

@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import { graphql } from "@/gql";
 import { queryNodeThrow, requestThrow } from "@/gql/client";
-import { DefaultIssueTypeInfoFragment } from "@/gql/graphql";
+import type { DefaultIssueTypeInfoFragment } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import IssueTypeIcon from "../IssueTypeIcon.vue";

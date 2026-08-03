@@ -20,7 +20,7 @@
     </DetailCompartment>
 </template>
 <script lang="ts" setup>
-import { computed, PropType } from "vue";
+import { computed, type PropType } from "vue";
 import DetailCompartment from "./DetailCompartment.vue";
 import InputWrapper from "./input/InputWrapper.vue";
 import MetaForm from "./input/schema/MetaForm.vue";

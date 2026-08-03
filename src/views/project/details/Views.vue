@@ -69,7 +69,7 @@
 import PaginatedList from "@/components/PaginatedList.vue";
 import { requestThrow, queryNodeThrow } from "@/gql/client";
 import { graphql } from "@/gql";
-import { ViewOrder, ViewOrderField, DefaultViewInfoFragment } from "@/gql/graphql";
+import { type ViewOrder, ViewOrderField, type DefaultViewInfoFragment } from "@/gql/graphql";
 import { useRoute } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
 import { computed, inject, ref } from "vue";

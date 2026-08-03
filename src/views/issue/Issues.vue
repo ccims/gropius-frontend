@@ -27,16 +27,16 @@
 </template>
 <script lang="ts" setup>
 import { computed, useTemplateRef } from "vue";
-import { RouteLocationRaw, useRoute, useRouter } from "vue-router";
+import { type RouteLocationRaw, useRoute, useRouter } from "vue-router";
 import PaginatedList from "@/components/PaginatedList.vue";
 import IssueListItem from "@/components/IssueListItem.vue";
 import IssueStateSegmentedButton from "@/components/input/IssueStateSegmentedButton.vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import IssueDialogs from "@/components/IssueDialogs.vue";
 import { issueSortFields } from "@/util/issueSortFields";
 import { ItemManager } from "@/util/itemManager";
 import IssueFilterDropdowns from "@/components/input/IssueFilterDropdowns.vue";
-import { IssueListItemInfoFragment, IssueOrderField, IssueOrder, IssueFilterInput } from "@/gql/graphql";
+import { type IssueListItemInfoFragment, IssueOrderField, type IssueOrder, type IssueFilterInput } from "@/gql/graphql";
 import { request, queryNode } from "@/gql/client";
 import { graphql } from "@/gql";
 

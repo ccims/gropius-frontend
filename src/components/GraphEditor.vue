@@ -66,15 +66,15 @@
 <script setup lang="ts">
 import "reflect-metadata";
 import {
-    Graph,
-    GraphLayout,
+    type Graph,
+    type GraphLayout,
     GraphModelSource,
-    SelectedElement,
+    type SelectedElement,
     createContainer,
-    CreateRelationContext
+    type CreateRelationContext
 } from "@gropius/graph-editor";
 import { TYPES } from "sprotty";
-import { PropType, onMounted, shallowRef, watch, ref, computed } from "vue";
+import { type PropType, onMounted, shallowRef, watch, ref, computed } from "vue";
 import { v4 as uuidv4 } from "uuid";
 
 export type ContextMenuData =

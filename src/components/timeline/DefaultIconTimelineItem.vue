@@ -9,10 +9,10 @@
     </IconTimelineItem>
 </template>
 <script setup lang="ts">
-import { PropType } from "vue";
+import type { PropType } from "vue";
 import IconTimelineItem from "./IconTimelineItem.vue";
 import User from "@/components/info/User.vue";
-import { TimelineItemType } from "./TimelineItemBase.vue";
+import type { TimelineItemType } from "./TimelineItemBase.vue";
 import RelativeTimeWrapper from "../RelativeTimeWrapper.vue";
 
 defineProps({

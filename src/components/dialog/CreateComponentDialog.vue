@@ -78,12 +78,12 @@ import { queryNodeThrow, requestThrow } from "@/gql/client";
 import { graphql } from "@/gql";
 import { toTypedSchema } from "@vee-validate/yup";
 import ComponentTemplateAutocomplete from "../input/ComponentTemplateAutocomplete.vue";
-import TemplatedFieldsInput, { Field } from "../input/schema/TemplatedFieldsInput.vue";
+import TemplatedFieldsInput, { type Field } from "../input/schema/TemplatedFieldsInput.vue";
 import { computedAsync } from "@vueuse/core";
 import { generateDefaultData } from "../input/schema/generateDefaultData";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import VersionedTemplatedNodeDialogContent from "./VersionedTemplatedNodeDialogContent.vue";
-import { ComponentVersionInput } from "@/gql/graphql";
+import type { ComponentVersionInput } from "@/gql/graphql";
 
 const props = defineProps({
     initialName: {

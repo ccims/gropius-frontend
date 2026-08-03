@@ -14,10 +14,10 @@
 </template>
 <script setup lang="ts">
 import { useAppStore } from "@/store/app";
-import { PropType } from "vue";
+import type { PropType } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
-import { CurrentUserInfoFragment } from "@/gql/graphql";
+import type { CurrentUserInfoFragment } from "@/gql/graphql";
 
 defineProps({
     user: {

@@ -40,10 +40,10 @@
 </template>
 <script lang="ts" setup>
 import { TokenScope } from "@/util/oauth";
-import { computed, PropType, ref } from "vue";
+import { computed, type PropType, ref } from "vue";
 import ConfirmationDialog from "./ConfirmationDialog.vue";
 import GropiusUserModelAutocomplete from "../input/GropiusUserModelAutocomplete.vue";
-import { DefaultUserInfoFragment } from "@/gql/graphql";
+import type { DefaultUserInfoFragment } from "@/gql/graphql";
 
 export interface AuthClientInput {
     name?: string;

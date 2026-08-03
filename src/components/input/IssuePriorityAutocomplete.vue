@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { graphql } from "@/gql";
 import { queryNodeThrow, requestThrow } from "@/gql/client";
-import { DefaultIssuePriorityInfoFragment } from "@/gql/graphql";
+import type { DefaultIssuePriorityInfoFragment } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";

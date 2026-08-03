@@ -51,18 +51,18 @@
 <script lang="ts" setup>
 import CustomList from "@/components/CustomList.vue";
 import ListItem from "@/components/ListItem.vue";
-import { AuthClientInput } from "@/components/dialog/AuthClientDialogContent.vue";
-import AuthClientSecretsDialog, { AuthClientWithSecrets } from "@/components/dialog/AuthClientSecretsDialog.vue";
+import type { AuthClientInput } from "@/components/dialog/AuthClientDialogContent.vue";
+import AuthClientSecretsDialog, { type AuthClientWithSecrets } from "@/components/dialog/AuthClientSecretsDialog.vue";
 import ConfirmationDialog from "@/components/dialog/ConfirmationDialog.vue";
 import CopyTextDialog from "@/components/dialog/CopyTextDialog.vue";
 import CreateAuthClientDialog from "@/components/dialog/CreateAuthClientDialog.vue";
 import UpdateAuthClientDialog from "@/components/dialog/UpdateAuthClientDialog.vue";
 import { queryNodeThrow } from "@/gql/client";
 import { graphql } from "@/gql";
-import { DefaultUserInfoFragment } from "@/gql/graphql";
+import type { DefaultUserInfoFragment } from "@/gql/graphql";
 import { useAppStore } from "@/store/app";
 import { TokenScope } from "@/util/oauth";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import { computedAsync } from "@vueuse/core";
 import axios from "axios";

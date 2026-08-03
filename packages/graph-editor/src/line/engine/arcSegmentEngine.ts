@@ -2,7 +2,7 @@ import { Math2D } from "../math.js";
 import { Point } from "sprotty-protocol";
 import { ArcSegment } from "../model/arcSegment.js";
 import { projectPointOnConic } from "./conicProjection.js";
-import { NearestPointResult, SegmentEngine } from "./segmentEngine.js";
+import { type NearestPointResult, SegmentEngine } from "./segmentEngine.js";
 
 /**
  * Segment engine for ArcSegment

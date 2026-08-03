@@ -54,8 +54,8 @@
     </ListItem>
 </template>
 <script lang="ts" setup>
-import { IssueListItemInfoFragment, ParticipatingIssueListItemInfoFragment } from "@/gql/graphql";
-import { PropType, computed } from "vue";
+import type { IssueListItemInfoFragment, ParticipatingIssueListItemInfoFragment } from "@/gql/graphql";
+import { type PropType, computed } from "vue";
 import UserStack from "./UserStack.vue";
 import IssueIcon from "./IssueIcon.vue";
 import ListItem from "./ListItem.vue";

@@ -1,23 +1,23 @@
 import { useAppStore } from "@/store/app";
-import { GraphQLClient, RequestMiddleware } from "graphql-request";
-import { TypedDocumentNode } from "@graphql-typed-document-node/core";
-import { DocumentNode } from "graphql/language";
+import { GraphQLClient, type RequestMiddleware } from "graphql-request";
+import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
+import type { DocumentNode } from "graphql/language";
 import { pushErrorMessage } from "@/util/withErrorMessage";
 
 export function useClient() {
     const store = useAppStore();
 
     const requestMiddleware: RequestMiddleware = async (request) => {
-        return {
-            ...request,
-            headers: {
-                ...request.headers,
-                Authorization: `Bearer ${await store.getAccessToken()}`
-            }
-        };
+        // request.headers is a Headers instance in graphql-request 7; spreading it into an
+        // object literal yields {} and drops Content-Type, which the API rejects.
+        const headers = new Headers(request.headers);
+        headers.set("Authorization", `Bearer ${await store.getAccessToken()}`);
+        return { ...request, headers };
     };
 
-    return new GraphQLClient("/api/graphql", {
+    // graphql-request 7 resolves the endpoint with `new URL(url)`, which rejects a bare path,
+    // so the origin has to be applied here rather than left to fetch.
+    return new GraphQLClient(new URL("/api/graphql", window.location.origin).toString(), {
         requestMiddleware
     });
 }

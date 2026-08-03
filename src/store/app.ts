@@ -6,7 +6,7 @@ import { pushErrorMessage, withErrorMessage } from "@/util/withErrorMessage";
 import { Mutex } from "async-mutex";
 import { shallowRef } from "vue";
 import { TokenScope } from "@/util/oauth";
-import { BaseLegalInformationInfoFragment, CurrentUserInfoFragment } from "@/gql/graphql";
+import type { BaseLegalInformationInfoFragment, CurrentUserInfoFragment } from "@/gql/graphql";
 import { request, requestThrow } from "@/gql/client";
 import { graphql } from "@/gql";
 

@@ -16,11 +16,11 @@
 <script lang="ts" setup>
 import { graphql } from "@/gql";
 import { requestThrow } from "@/gql/client";
-import { PropType } from "vue";
+import type { PropType } from "vue";
 import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
-import LegalInformationDialogContent, { LegalInformation } from "./LegalInformationDialogContent.vue";
+import LegalInformationDialogContent, { type LegalInformation } from "./LegalInformationDialogContent.vue";
 import { computed } from "vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import { useCachedRef } from "@/util/useCachedRef";
 
 const updateLegalInformationMutation = graphql(`

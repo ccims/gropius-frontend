@@ -5,7 +5,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { onMounted, ref } from "vue";
-import { GraphiQL, GraphiQLProps } from "graphiql";
+import { GraphiQL, type GraphiQLProps } from "graphiql";
 import { explorerPlugin } from "@graphiql/plugin-explorer";
 import { createGraphiQLFetcher } from "@graphiql/toolkit";
 import "graphiql/style.css";

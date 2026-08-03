@@ -42,12 +42,16 @@
 </template>
 <script lang="ts" setup>
 import PaginatedList from "@/components/PaginatedList.vue";
-import { ComponentVersionOrder, ComponentVersionOrderField, ComponentVersionListItemInfoFragment } from "@/gql/graphql";
-import { RouteLocationRaw, useRoute, useRouter } from "vue-router";
+import {
+    type ComponentVersionOrder,
+    ComponentVersionOrderField,
+    type ComponentVersionListItemInfoFragment
+} from "@/gql/graphql";
+import { type RouteLocationRaw, useRoute, useRouter } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
 import { computed } from "vue";
 import CreateComponentVersionDialog from "@/components/dialog/CreateComponentVersionDialog.vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import { ItemManager } from "@/util/itemManager";
 import { queryNode, request } from "@/gql/client";
 import { graphql } from "@/gql";

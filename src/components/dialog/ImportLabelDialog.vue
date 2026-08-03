@@ -30,9 +30,9 @@ import { ref } from "vue";
 import ImportDialogContent from "./ImportDialogContent.vue";
 import ExternalLabelAutocomplete from "../input/ExternalLabelAutocomplete.vue";
 import Label from "../info/Label.vue";
-import { DefaultLabelInfoFragment } from "@/gql/graphql";
+import type { DefaultLabelInfoFragment } from "@/gql/graphql";
 import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 
 const addLabelToTrackableMutation = graphql(`
     mutation addLabelToTrackable($trackable: ID!, $label: ID!) {

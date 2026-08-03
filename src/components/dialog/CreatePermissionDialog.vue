@@ -73,20 +73,20 @@
     </v-dialog>
 </template>
 <script setup lang="ts" generic="T extends string">
-import { Ref, ref } from "vue";
+import { type Ref, ref } from "vue";
 import ConfirmationDialog from "./ConfirmationDialog.vue";
 import { computed } from "vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import { onEvent } from "@/util/eventBus";
-import { PropType } from "vue";
-import { CreatePermissionFunction } from "../PermissionList.vue";
+import type { PropType } from "vue";
+import type { CreatePermissionFunction } from "../PermissionList.vue";
 import { toTypedSchema } from "@vee-validate/yup";
 import * as yup from "yup";
 import { useForm } from "vee-validate";
 import { fieldConfig } from "@/util/vuetifyFormConfig";
 import { watch } from "vue";
 import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
-import { DefaultUserInfoFragment } from "@/gql/graphql";
+import type { DefaultUserInfoFragment } from "@/gql/graphql";
 import GropiusUserAutocomplete from "../input/GropiusUserAutocomplete.vue";
 import User from "../info/User.vue";
 import PermissionEntryCheckboxGrid from "../input/PermissionEntryCheckboxGrid.vue";

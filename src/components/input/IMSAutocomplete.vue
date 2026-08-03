@@ -8,11 +8,11 @@
 <script setup lang="ts">
 import { graphql } from "@/gql";
 import { requestThrow } from "@/gql/client";
-import { DefaultImsInfoFragment, ImsFilterInput } from "@/gql/graphql";
+import type { DefaultImsInfoFragment, ImsFilterInput } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
-import { PropType } from "vue";
+import type { PropType } from "vue";
 
 const searchIMSsQuery = graphql(`
     query searchIMSs($query: String!, $count: Int!, $filter: IMSFilterInput) {

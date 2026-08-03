@@ -67,7 +67,7 @@ import { graphql } from "@/gql";
 import { queryNodeThrow, requestThrow } from "@/gql/client";
 import { toTypedSchema } from "@vee-validate/yup";
 import ConfirmationDialog from "./ConfirmationDialog.vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import InterfaceSpecificationVersionModelAutocomplete from "../input/InterfaceSpecificationVersionModelAutocomplete.vue";
 import InterfaceSpecificationAutocomplete from "../input/InterfaceSpecificationAutocomplete.vue";
 import { computedAsync } from "@vueuse/core";

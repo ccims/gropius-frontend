@@ -1,7 +1,7 @@
-import { Action, Point } from "sprotty-protocol";
-import { RelationPath, RelationPathSegment } from "../../smodel/relationPath.js";
-import { BaseSegment, MoveHandler } from "./moveHandler.js";
-import { RelationLayout } from "../../gropiusModel.js";
+import { type Action, Point } from "sprotty-protocol";
+import { RelationPath, type RelationPathSegment } from "../../smodel/relationPath.js";
+import { type BaseSegment, MoveHandler } from "./moveHandler.js";
+import type { RelationLayout } from "../../gropiusModel.js";
 import { SegmentLayout } from "../../line/model/segmentLayout.js";
 import { Line } from "../../line/model/line.js";
 import { UpdateLayoutAction } from "./updateLayoutAction.js";

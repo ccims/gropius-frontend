@@ -440,15 +440,15 @@ import RelativeTimeWrapper from "@/components/RelativeTimeWrapper.vue";
 import { provide } from "vue";
 import TimelineBreak from "@/components/timeline/TimelineBreak.vue";
 import { useAppStore } from "@/store/app";
-import Comment, { Comment as CommentType } from "@/components/timeline/Comment.vue";
-import { TimelineItemType } from "@/components/timeline/TimelineItemBase.vue";
+import Comment, { type Comment as CommentType } from "@/components/timeline/Comment.vue";
+import type { TimelineItemType } from "@/components/timeline/TimelineItemBase.vue";
 import { nextTick } from "vue";
 import EditableCompartment from "@/components/EditableCompartment.vue";
 import Label from "@/components/info/Label.vue";
 import IssueState from "@/components/info/IssueState.vue";
 import IssueType from "@/components/info/IssueType.vue";
 import IssuePriority from "@/components/info/IssuePriority.vue";
-import {
+import type {
     AssignmentTimelineInfoFragment,
     DefaultAffectedByIssueInfoFragment,
     DefaultIssueInfoFragment,

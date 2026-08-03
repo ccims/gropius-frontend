@@ -29,10 +29,10 @@ import { onEvent } from "@/util/eventBus";
 import { ref } from "vue";
 import ImportDialogContent from "./ImportDialogContent.vue";
 import ExternalProjectPermissionAutocomplete from "../input/ExternalProjectPermissionAutocomplete.vue";
-import { DefaultProjectPermissionInfoFragment } from "@/gql/graphql";
+import type { DefaultProjectPermissionInfoFragment } from "@/gql/graphql";
 import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
 import Permission from "../info/Permission.vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 
 const addProjectPermissionToProjectMutation = graphql(`
     mutation addProjectPermissionToProject($project: ID!, $projectPermission: ID!) {

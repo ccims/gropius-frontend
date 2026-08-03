@@ -18,8 +18,8 @@ import { requestThrow } from "@/gql/client";
 import { onEvent } from "@/util/eventBus";
 import { ref } from "vue";
 import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
-import LegalInformationDialogContent, { LegalInformation } from "./LegalInformationDialogContent.vue";
-import { DefaultLegalInformationInfoFragment } from "@/gql/graphql";
+import LegalInformationDialogContent, { type LegalInformation } from "./LegalInformationDialogContent.vue";
+import type { DefaultLegalInformationInfoFragment } from "@/gql/graphql";
 
 const createLegalInformationMutation = graphql(`
     mutation createLegalInformation($input: CreateLegalInformationInput!) {

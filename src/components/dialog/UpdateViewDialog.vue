@@ -17,11 +17,11 @@
 <script lang="ts" setup>
 import { graphql } from "@/gql";
 import { requestThrow } from "@/gql/client";
-import { PropType } from "vue";
+import type { PropType } from "vue";
 import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
-import ViewDialogContent, { View } from "./ViewDialogContent.vue";
+import ViewDialogContent, { type View } from "./ViewDialogContent.vue";
 import { computed } from "vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import { useCachedRef } from "@/util/useCachedRef";
 
 const updateViewMutation = graphql(`

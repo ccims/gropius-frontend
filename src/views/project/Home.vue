@@ -167,9 +167,9 @@
     />
 </template>
 <script lang="ts" setup>
-import { NodeReturnType, queryNodeThrow, requestThrow } from "@/gql/client";
+import { type NodeReturnType, queryNodeThrow, requestThrow } from "@/gql/client";
 import { graphql } from "@/gql";
-import {
+import type {
     GetProjectGraphQuery,
     GraphComponentVersionInfoFragment,
     GraphRelationPartnerInfoFragment,
@@ -180,21 +180,21 @@ import {
     UpdateViewInput
 } from "@/gql/graphql";
 import { computedAsync } from "@vueuse/core";
-import GraphEditor, { ContextMenuData } from "@/components/GraphEditor.vue";
+import GraphEditor, { type ContextMenuData } from "@/components/GraphEditor.vue";
 import {
-    ComponentVersion,
-    CreateRelationContext,
-    FillStyle,
-    Graph,
-    GraphLayout,
-    Interface,
-    IssueRelation,
-    IssueType,
+    type ComponentVersion,
+    type CreateRelationContext,
+    type FillStyle,
+    type Graph,
+    type GraphLayout,
+    type Interface,
+    type IssueRelation,
+    type IssueType,
     LayoutEngine,
-    Relation,
-    RelationStyle,
-    SelectedElement,
-    ShapeStyle,
+    type Relation,
+    type RelationStyle,
+    type SelectedElement,
+    type ShapeStyle,
     StrokeStyle
 } from "@gropius/graph-editor";
 import { computed, inject, ref, watch } from "vue";
@@ -204,7 +204,7 @@ import FilterChip from "@/components/input/FilterChip.vue";
 import ComponentVersionAutocomplete from "@/components/input/ComponentVersionAutocomplete.vue";
 import { eventBusKey } from "@/util/keys";
 import RelationTemplateAutocomplete from "@/components/input/RelationTemplateAutocomplete.vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import ProjectSidebar from "@/components/ProjectSidebar.vue";
 import ViewAutocomplete from "@/components/input/ViewAutocomplete.vue";
 import CreateViewDialog from "@/components/dialog/CreateViewDialog.vue";

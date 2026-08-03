@@ -18,7 +18,7 @@ import { queryNodeThrow } from "@/gql/client";
 import { graphql } from "@/gql";
 import { computedAsync } from "@vueuse/core";
 import { computed, inject, ref, shallowRef } from "vue";
-import { RouteLocationRaw, useRoute } from "vue-router";
+import { type RouteLocationRaw, useRoute } from "vue-router";
 import { eventBusKey } from "@/util/keys";
 import { onEvent } from "@/util/eventBus";
 import BaseLayoutWithError from "@/components/BaseLayoutWithError.vue";

@@ -15,10 +15,10 @@
 <script setup lang="ts">
 import { graphql } from "@/gql";
 import { requestThrow } from "@/gql/client";
-import { DefaultUserInfoFragment, GropiusUserFilterInput } from "@/gql/graphql";
+import type { DefaultUserInfoFragment, GropiusUserFilterInput } from "@/gql/graphql";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import User from "../info/User.vue";
-import { PropType } from "vue";
+import type { PropType } from "vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
 import { withErrorMessage } from "@/util/withErrorMessage";
 

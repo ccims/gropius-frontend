@@ -42,7 +42,11 @@ import CreateLegalInformationDialog from "@/components/dialog/CreateLegalInforma
 import UpdateLegalInformationDialog from "@/components/dialog/UpdateLegalInformationDialog.vue";
 import { request, requestThrow } from "@/gql/client";
 import { graphql } from "@/gql";
-import { LegalInformationOrder, LegalInformationOrderField, DefaultLegalInformationInfoFragment } from "@/gql/graphql";
+import {
+    type LegalInformationOrder,
+    LegalInformationOrderField,
+    type DefaultLegalInformationInfoFragment
+} from "@/gql/graphql";
 import { useAppStore } from "@/store/app";
 import { ItemManager } from "@/util/itemManager";
 import { ref, watch } from "vue";

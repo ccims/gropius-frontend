@@ -77,12 +77,12 @@ import { queryNodeThrow, requestThrow } from "@/gql/client";
 import { graphql } from "@/gql";
 import { toTypedSchema } from "@vee-validate/yup";
 import IssueIcon from "../IssueIcon.vue";
-import { DefaultIssueIconInfoFragment } from "@/gql/graphql";
+import type { DefaultIssueIconInfoFragment } from "@/gql/graphql";
 import TemplatedNodeDialogContent from "./TemplatedNodeDialogContent.vue";
-import TemplatedFieldsInputVue, { Field } from "../input/schema/TemplatedFieldsInput.vue";
+import TemplatedFieldsInputVue, { type Field } from "../input/schema/TemplatedFieldsInput.vue";
 import { computedAsync } from "@vueuse/core";
 import { generateDefaultData } from "../input/schema/generateDefaultData";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 
 const createIssueDialog = ref(false);
 const typePath = ref<string | undefined>(undefined);

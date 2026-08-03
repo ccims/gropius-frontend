@@ -27,10 +27,10 @@
 import PaginatedList from "@/components/PaginatedList.vue";
 import { queryNode, request } from "@/gql/client";
 import { graphql } from "@/gql";
-import { RouteLocationRaw, useRoute, useRouter } from "vue-router";
+import { type RouteLocationRaw, useRoute, useRouter } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
-import { IdObject } from "@/util/types";
-import { DefaultImsProjectInfoFragment, ImsProjectOrder, ImsProjectOrderField } from "@/gql/graphql";
+import type { IdObject } from "@/util/types";
+import { type DefaultImsProjectInfoFragment, type ImsProjectOrder, ImsProjectOrderField } from "@/gql/graphql";
 import SyncSelfAllowedSwitch from "@/components/input/SyncSelfAllowedSwitch.vue";
 import { computed } from "vue";
 import CreateIMSProjectDialog from "@/components/dialog/CreateIMSProjectDialog.vue";

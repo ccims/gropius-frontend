@@ -30,9 +30,9 @@ import { ref } from "vue";
 import ImportDialogContent from "./ImportDialogContent.vue";
 import ExternalIssueAutocomplete from "../input/ExternalIssueAutocomplete.vue";
 import Issue from "../info/Issue.vue";
-import { DefaultIssueInfoFragment } from "@/gql/graphql";
+import type { DefaultIssueInfoFragment } from "@/gql/graphql";
 import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 
 const addIssueToTrackableMutation = graphql(`
     mutation addIssueToTrackableForImport($issue: ID!, $trackable: ID!) {

@@ -47,7 +47,7 @@
 import DetailCompartment from "@/components/DetailCompartment.vue";
 import InputWrapper from "@/components/input/InputWrapper.vue";
 import ViewAutocomplete from "@/components/input/ViewAutocomplete.vue";
-import { UpdateProjectInput } from "@/gql/graphql";
+import type { UpdateProjectInput } from "@/gql/graphql";
 import { eventBusKey } from "@/util/keys";
 import { computedAsync } from "@vueuse/core";
 import { computed, inject } from "vue";

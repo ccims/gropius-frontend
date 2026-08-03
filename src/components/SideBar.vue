@@ -30,9 +30,9 @@
     </div>
 </template>
 <script setup lang="ts">
-import { PropType } from "vue";
+import type { PropType } from "vue";
 import SideBarButton from "./SideBarButton.vue";
-import { RouteLocationRaw } from "vue-router";
+import type { RouteLocationRaw } from "vue-router";
 
 export interface BaseSideBarItem {
     color?: string;

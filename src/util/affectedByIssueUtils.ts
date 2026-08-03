@@ -1,4 +1,4 @@
-import { DefaultAffectedByIssueInfoFragment, DetailedAffectedByIssueInfoFragment } from "@/gql/graphql";
+import type { DefaultAffectedByIssueInfoFragment, DetailedAffectedByIssueInfoFragment } from "@/gql/graphql";
 
 export function affectedByIssueName(entity: DefaultAffectedByIssueInfoFragment): string {
     switch (entity.__typename) {

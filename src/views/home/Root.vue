@@ -12,9 +12,9 @@
 </template>
 
 <script lang="ts" setup>
-import BaseLayout, { TabSegment } from "@/components/BaseLayout.vue";
+import BaseLayout, { type TabSegment } from "@/components/BaseLayout.vue";
 import { useAppStore } from "@/store/app";
-import { Events } from "@/util/eventBus";
+import type { Events } from "@/util/eventBus";
 import { eventBusKey } from "@/util/keys";
 import { computed, inject } from "vue";
 import { useRoute } from "vue-router";

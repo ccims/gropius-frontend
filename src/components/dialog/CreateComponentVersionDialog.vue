@@ -44,10 +44,10 @@ import { queryNode, request, requestThrow, queryNodeThrow } from "@/gql/client";
 import { graphql } from "@/gql";
 import { toTypedSchema } from "@vee-validate/yup";
 import TemplatedNodeDialogContent from "./TemplatedNodeDialogContent.vue";
-import TemplatedFieldsInput, { Field } from "../input/schema/TemplatedFieldsInput.vue";
+import TemplatedFieldsInput, { type Field } from "../input/schema/TemplatedFieldsInput.vue";
 import { computedAsync } from "@vueuse/core";
 import { generateDefaultData } from "../input/schema/generateDefaultData";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 
 const createComponentVersionDialog = ref(false);
 const [blockWithErrorMessage, submitDisabled] = useBlockingWithErrorMessage();

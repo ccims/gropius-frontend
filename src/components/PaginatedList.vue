@@ -53,13 +53,13 @@
 </template>
 <script setup lang="ts" generic="T, S extends string, K extends string">
 import { watch } from "vue";
-import { Ref, onMounted } from "vue";
-import { PropType, ref } from "vue";
-import { RouteLocationRaw, useRoute, useRouter } from "vue-router";
+import { type Ref, onMounted } from "vue";
+import { type PropType, ref } from "vue";
+import { type RouteLocationRaw, useRoute, useRouter } from "vue-router";
 import CustomList from "./CustomList.vue";
 import { computed } from "vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
-import { WritableComputedRef } from "vue";
+import type { WritableComputedRef } from "vue";
 import { OrderDirection } from "@/gql/graphql";
 import { ItemManager } from "@/util/itemManager";
 

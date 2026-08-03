@@ -27,11 +27,11 @@
 import PaginatedList from "@/components/PaginatedList.vue";
 import { request } from "@/gql/client";
 import { graphql } from "@/gql";
-import { ProjectOrderField, ProjectOrder, ProjectListItemInfoFragment } from "@/gql/graphql";
-import { RouteLocationRaw, useRouter } from "vue-router";
+import { ProjectOrderField, type ProjectOrder, type ProjectListItemInfoFragment } from "@/gql/graphql";
+import { type RouteLocationRaw, useRouter } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
 import CreateProjectDialog from "@/components/dialog/CreateProjectDialog.vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import { ItemManager } from "@/util/itemManager";
 
 const getProjectListQuery = graphql(`

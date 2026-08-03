@@ -39,13 +39,13 @@
 import PaginatedList from "@/components/PaginatedList.vue";
 import { queryNode, request, requestThrow } from "@/gql/client";
 import { graphql } from "@/gql";
-import { RouteLocationRaw, useRoute, useRouter } from "vue-router";
+import { type RouteLocationRaw, useRoute, useRouter } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import {
-    DefaultImsProjectInfoFragment,
-    ImsProjectFilterInput,
-    ImsProjectOrder,
+    type DefaultImsProjectInfoFragment,
+    type ImsProjectFilterInput,
+    type ImsProjectOrder,
     ImsProjectOrderField
 } from "@/gql/graphql";
 import SyncSelfAllowedSwitch from "@/components/input/SyncSelfAllowedSwitch.vue";

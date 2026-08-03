@@ -114,12 +114,12 @@ import PaginatedList from "@/components/PaginatedList.vue";
 import { queryNode, queryNodeThrow, request, requestThrow } from "@/gql/client";
 import { graphql } from "@/gql";
 import {
-    DefaultInterfaceDefinitionInfoFragment,
-    InterfaceDefinitionFilterInput,
-    InterfaceDefinitionOrder,
+    type DefaultInterfaceDefinitionInfoFragment,
+    type InterfaceDefinitionFilterInput,
+    type InterfaceDefinitionOrder,
     InterfaceDefinitionOrderField,
-    InterfaceSpecificationFilterInput,
-    InterfaceSpecificationVersionFilterInput
+    type InterfaceSpecificationFilterInput,
+    type InterfaceSpecificationVersionFilterInput
 } from "@/gql/graphql";
 import { useRoute } from "vue-router";
 import ListItem from "@/components/ListItem.vue";

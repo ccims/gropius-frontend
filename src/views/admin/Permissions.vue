@@ -13,18 +13,18 @@
 <script lang="ts" setup>
 import { ItemManager } from "@/util/itemManager";
 import PermissionList, {
-    CreatePermissionFunctionInput,
-    UpdatePermissionFunctionInput
+    type CreatePermissionFunctionInput,
+    type UpdatePermissionFunctionInput
 } from "@/components/PermissionList.vue";
 import { request, requestThrow } from "@/gql/client";
 import { graphql } from "@/gql";
 import {
     PermissionEntry,
     GlobalPermissionOrderField,
-    DefaultGlobalPermissionInfoFragment,
-    GlobalPermissionOrder
+    type DefaultGlobalPermissionInfoFragment,
+    type GlobalPermissionOrder
 } from "@/gql/graphql";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import { computed, useTemplateRef } from "vue";
 import { useRoute } from "vue-router";
 

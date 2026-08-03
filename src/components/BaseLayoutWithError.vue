@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { PropType } from "vue";
-import BaseLayout, { TabSegment, TitleSegment } from "@/components/BaseLayout.vue";
-import { SideBarItem } from "@/components/SideBar.vue";
+import type { PropType } from "vue";
+import BaseLayout, { type TabSegment, type TitleSegment } from "@/components/BaseLayout.vue";
+import type { SideBarItem } from "@/components/SideBar.vue";
 
 const props = defineProps({
     titleSegments: {

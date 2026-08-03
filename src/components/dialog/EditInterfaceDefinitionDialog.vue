@@ -53,7 +53,7 @@ import { queryNodeThrow } from "@/gql/client";
 import { useCachedRef } from "@/util/useCachedRef";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import { computedAsync } from "@vueuse/core";
-import { computed, PropType, ref } from "vue";
+import { computed, type PropType, ref } from "vue";
 import ConfirmationDialog from "./ConfirmationDialog.vue";
 
 const getInterfaceSpecificationVisibilityInfoQuery = graphql(`

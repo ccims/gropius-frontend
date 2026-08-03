@@ -1,7 +1,7 @@
 import { ShapeEngine } from "./engines/shapeEngine.js";
-import { Shape as GropiusShape, ShapeStyle } from "../gropiusModel.js";
+import type { Shape as GropiusShape, ShapeStyle } from "../gropiusModel.js";
 import { Bounds } from "sprotty-protocol";
-import { Shape } from "./shape.js";
+import type { Shape } from "./shape.js";
 import { EllipseEngine } from "./engines/ellipseEngine.js";
 import { CircleEngine } from "./engines/circleEngine.js";
 import { RectEngine } from "./engines/rectEngine.js";
