@@ -4,13 +4,13 @@
             v-if="issue.incomingRelations.totalCount > 0"
             fill="rgb(var(--v-theme-issue-incoming))"
             points="3 11 3 21 10 16"
-            transform="scale(3.125)"
+            transform="scale(0.75)"
         ></polygon>
         <polygon
             v-if="issue.outgoingRelations.totalCount > 0"
             fill="rgb(var(--v-theme-issue-outgoing))"
             points="24 11 24 21 31 16"
-            transform="scale(3.125)"
+            transform="scale(0.75)"
         ></polygon>
     </IssueTypeIcon>
 </template>

@@ -22,11 +22,11 @@ import ImportProjectPermissionDialog from "@/components/dialog/ImportProjectPerm
 import { request, queryNode } from "@/gql/client";
 import { graphql } from "@/gql";
 import {
-    ProjectPermissionEntry,
-    ProjectPermissionOrderField,
+    type ProjectPermissionOrderField,
     type DefaultProjectPermissionInfoFragment,
     type ProjectPermissionOrder
 } from "@/gql/graphql";
+import { ProjectPermissionEntry } from "@/gql/enums";
 import type { IdObject } from "@/util/types";
 import { computed, useTemplateRef } from "vue";
 import { useRoute } from "vue-router";

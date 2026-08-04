@@ -964,7 +964,7 @@ async function removeAssignmentType(assignment: AssignmentTimelineInfoFragment) 
         return res.changeAssignmentType.assignmentTypeChangedEvent;
     }, "Error updating assignment type");
     addTimelineItem(event);
-    assignment.type = undefined;
+    assignment.type = null;
     editedAssignmentTypes.value[assignment.id] = false;
 }
 
@@ -1023,7 +1023,7 @@ async function removeRelationType(relation: OutgoingRelationTimelineInfoFragment
         return res.changeIssueRelationType.outgoingRelationTypeChangedEvent;
     }, "Error updating issue relation type");
     addTimelineItem(event);
-    relation.type = undefined;
+    relation.type = null;
     editedRelationTypes.value[relation.id] = false;
 }
 

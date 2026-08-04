@@ -44,7 +44,7 @@ import { request, requestThrow } from "@/gql/client";
 import { graphql } from "@/gql";
 import {
     type LegalInformationOrder,
-    LegalInformationOrderField,
+    type LegalInformationOrderField,
     type DefaultLegalInformationInfoFragment
 } from "@/gql/graphql";
 import { useAppStore } from "@/store/app";
@@ -86,8 +86,8 @@ const store = useAppStore();
 const legalInformationToUpdate = ref<LegalInformation>();
 const modifiedLegalInformation = ref<string[]>([]);
 
-const sortFields = {
-    Priority: LegalInformationOrderField.Priority
+const sortFields: Record<string, LegalInformationOrderField | LegalInformationOrderField[]> = {
+    Priority: "PRIORITY"
 };
 
 class LegalInformationItemManager extends ItemManager<LegalInformation, LegalInformationOrderField> {

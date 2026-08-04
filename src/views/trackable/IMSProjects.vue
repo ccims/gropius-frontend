@@ -46,7 +46,7 @@ import {
     type DefaultImsProjectInfoFragment,
     type ImsProjectFilterInput,
     type ImsProjectOrder,
-    ImsProjectOrderField
+    type ImsProjectOrderField
 } from "@/gql/graphql";
 import SyncSelfAllowedSwitch from "@/components/input/SyncSelfAllowedSwitch.vue";
 import { computed } from "vue";
@@ -101,10 +101,10 @@ const route = useRoute();
 
 const trackable = computed(() => route.params.trackable as string);
 
-const sortFields = {
-    Name: ImsProjectOrderField.Name,
-    IMS: [ImsProjectOrderField.ImsName, ImsProjectOrderField.ImsId],
-    "[Default]": ImsProjectOrderField.Id
+const sortFields: Record<string, ImsProjectOrderField | ImsProjectOrderField[]> = {
+    Name: "NAME",
+    IMS: ["IMS_NAME", "IMS_ID"],
+    "[Default]": "ID"
 };
 
 const templateIds = useFilterOption("template", true);

@@ -25,11 +25,11 @@ import ImportComponentPermissionDialog from "@/components/dialog/ImportComponent
 import { request, queryNode, requestThrow } from "@/gql/client";
 import { graphql } from "@/gql";
 import {
-    ComponentPermissionEntry,
     type ComponentPermissionOrder,
-    ComponentPermissionOrderField,
+    type ComponentPermissionOrderField,
     type DefaultComponentPermissionInfoFragment
 } from "@/gql/graphql";
+import { ComponentPermissionEntry } from "@/gql/enums";
 import { ItemManager } from "@/util/itemManager";
 import type { IdObject } from "@/util/types";
 import { computed, useTemplateRef } from "vue";

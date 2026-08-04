@@ -109,7 +109,7 @@ const defaultView = computed({
             if (value == undefined) {
                 projectValue.defaultView = null;
             } else {
-                projectValue.defaultView = { id: value };
+                projectValue.defaultView = { __typename: "View", id: value };
             }
         }
     }

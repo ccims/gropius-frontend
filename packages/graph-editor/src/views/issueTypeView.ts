@@ -49,7 +49,7 @@ export class IssueTypeView implements IView {
                 "g",
                 {
                     attrs: {
-                        transform: `translate(6, 4) scale(0.3)`
+                        transform: `translate(6, 4) scale(1.25)`
                     }
                 },
                 icon

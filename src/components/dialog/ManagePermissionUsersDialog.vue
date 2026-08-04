@@ -57,7 +57,7 @@ import { queryNode, request } from "@/gql/client";
 import { graphql } from "@/gql";
 import { type PropType, computed, ref, watch } from "vue";
 import PaginatedList from "../PaginatedList.vue";
-import { type DefaultUserInfoFragment, type GropiusUserOrder, GropiusUserOrderField } from "@/gql/graphql";
+import { type DefaultUserInfoFragment, type GropiusUserOrder, type GropiusUserOrderField } from "@/gql/graphql";
 import User from "../info/User.vue";
 import ConfirmationDialog from "./ConfirmationDialog.vue";
 import GropiusUserAutocomplete from "../input/GropiusUserAutocomplete.vue";
@@ -166,10 +166,10 @@ async function updateAllUsers(checked: boolean | null) {
     emit("updated-permission");
 }
 
-const sortFields = {
-    Username: GropiusUserOrderField.Username,
-    "Display name": GropiusUserOrderField.DisplayName,
-    "[Default]": GropiusUserOrderField.Id
+const sortFields: Record<string, GropiusUserOrderField | GropiusUserOrderField[]> = {
+    Username: "USERNAME",
+    "Display name": "DISPLAY_NAME",
+    "[Default]": "ID"
 };
 
 class UserItemManager extends ItemManager<DefaultUserInfoFragment, GropiusUserOrderField> {

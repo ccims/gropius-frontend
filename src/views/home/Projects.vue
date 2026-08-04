@@ -27,7 +27,7 @@
 import PaginatedList from "@/components/PaginatedList.vue";
 import { request } from "@/gql/client";
 import { graphql } from "@/gql";
-import { ProjectOrderField, type ProjectOrder, type ProjectListItemInfoFragment } from "@/gql/graphql";
+import { type ProjectOrderField, type ProjectOrder, type ProjectListItemInfoFragment } from "@/gql/graphql";
 import { type RouteLocationRaw, useRouter } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
 import CreateProjectDialog from "@/components/dialog/CreateProjectDialog.vue";
@@ -57,9 +57,9 @@ type Project = ProjectListItemInfoFragment;
 
 const router = useRouter();
 
-const sortFields = {
-    Name: ProjectOrderField.Name,
-    "[Default]": ProjectOrderField.Id
+const sortFields: Record<string, ProjectOrderField | ProjectOrderField[]> = {
+    Name: "NAME",
+    "[Default]": "ID"
 };
 
 class ProjectItemManager extends ItemManager<Project, ProjectOrderField> {

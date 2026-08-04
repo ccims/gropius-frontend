@@ -1,4 +1,4 @@
-import { OrderDirection } from "@/gql/graphql";
+import { type OrderDirection } from "@/gql/graphql";
 import { ref, type Ref } from "vue";
 
 export abstract class ItemManager<I, J> {

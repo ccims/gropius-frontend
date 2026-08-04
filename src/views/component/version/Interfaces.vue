@@ -117,7 +117,7 @@ import {
     type DefaultInterfaceDefinitionInfoFragment,
     type InterfaceDefinitionFilterInput,
     type InterfaceDefinitionOrder,
-    InterfaceDefinitionOrderField,
+    type InterfaceDefinitionOrderField,
     type InterfaceSpecificationFilterInput,
     type InterfaceSpecificationVersionFilterInput
 } from "@/gql/graphql";
@@ -271,9 +271,9 @@ const trackable = inject(trackableKey);
 const modifiedIds = ref<string[]>([]);
 const interfaceDefinitionToUpdate = ref<InterfaceDefinition | undefined>();
 
-const sortFields = {
-    Version: InterfaceDefinitionOrderField.InterfaceSpecificationVersionVersion,
-    "[Default]": InterfaceDefinitionOrderField.Id
+const sortFields: Record<string, InterfaceDefinitionOrderField | InterfaceDefinitionOrderField[]> = {
+    Version: "INTERFACE_SPECIFICATION_VERSION_VERSION",
+    "[Default]": "ID"
 };
 
 const interfaceSpecificationIds = useFilterOption("interfacespecification", true);

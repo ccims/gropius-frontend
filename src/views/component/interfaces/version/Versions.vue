@@ -45,7 +45,7 @@ import { request, queryNode } from "@/gql/client";
 import { graphql } from "@/gql";
 import {
     type InterfaceSpecificationVersionOrder,
-    InterfaceSpecificationVersionOrderField,
+    type InterfaceSpecificationVersionOrderField,
     type InterfaceSpecificationVersionListItemInfoFragment
 } from "@/gql/graphql";
 import { type RouteLocationRaw, useRoute, useRouter } from "vue-router";
@@ -93,10 +93,11 @@ const router = useRouter();
 const route = useRoute();
 const interfaceSpecificationId = computed(() => route.params.interfaceSpecification as string);
 
-const sortFields = {
-    Version: InterfaceSpecificationVersionOrderField.Version,
-    "[Default]": InterfaceSpecificationVersionOrderField.Id
-};
+const sortFields: Record<string, InterfaceSpecificationVersionOrderField | InterfaceSpecificationVersionOrderField[]> =
+    {
+        Version: "VERSION",
+        "[Default]": "ID"
+    };
 
 class InterfaceSpecificationItemManager extends ItemManager<
     InterfaceSpecificationVersion,

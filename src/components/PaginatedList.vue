@@ -60,7 +60,6 @@ import CustomList from "./CustomList.vue";
 import { computed } from "vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
 import type { WritableComputedRef } from "vue";
-import { OrderDirection } from "@/gql/graphql";
 import { ItemManager } from "@/util/itemManager";
 
 const props = defineProps({
@@ -172,7 +171,7 @@ async function updateItems(resetPage: boolean) {
         transformedSearchQuery.value,
         sortFieldsWithId.map((field) => ({
             field,
-            direction: sortAscending.value ? OrderDirection.Asc : OrderDirection.Desc
+            direction: sortAscending.value ? "ASC" : "DESC"
         })),
         props.itemCount,
         currentPage.value - 1

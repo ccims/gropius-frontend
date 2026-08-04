@@ -44,7 +44,7 @@
 import PaginatedList from "@/components/PaginatedList.vue";
 import {
     type ComponentVersionOrder,
-    ComponentVersionOrderField,
+    type ComponentVersionOrderField,
     type ComponentVersionListItemInfoFragment
 } from "@/gql/graphql";
 import { type RouteLocationRaw, useRoute, useRouter } from "vue-router";
@@ -85,9 +85,9 @@ const router = useRouter();
 const route = useRoute();
 const trackableId = computed(() => route.params.trackable as string);
 
-const sortFields = {
-    Version: ComponentVersionOrderField.Version,
-    "[Default]": ComponentVersionOrderField.Id
+const sortFields: Record<string, ComponentVersionOrderField | ComponentVersionOrderField[]> = {
+    Version: "VERSION",
+    "[Default]": "ID"
 };
 
 class ComponentVersionItemManager extends ItemManager<ComponentVersion, ComponentVersionOrderField> {

@@ -115,7 +115,7 @@ import { ItemManager } from "@/util/itemManager";
 import {
     type DetailedAffectedByIssueInfoFragment,
     type IssueListItemInfoFragment,
-    IssueOrderField
+    type IssueOrderField
 } from "@/gql/graphql";
 import { useFilterOption } from "@/util/useFilterOption";
 import type { IdObject } from "@/util/types";

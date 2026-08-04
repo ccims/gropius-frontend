@@ -87,6 +87,9 @@ function chooseActive(isActive: boolean, isExactActive: boolean): boolean {
 }
 
 .icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
     width: 56px;
     height: 32px;

@@ -8,3 +8,52 @@ fragment DefaultIssueTemplateInfo on IssueTemplate {
     }
 }
 
+fragment IssueTemplateFields on IssueTemplate {
+    id
+    name
+    description
+    extends {
+        nodes {
+            id
+        }
+    }
+    issueTypes {
+        nodes {
+            name
+            description
+            iconPath
+        }
+    }
+    issuePriorities {
+        nodes {
+            name
+            description
+            value
+            iconPath
+        }
+    }
+    issueStates {
+        nodes {
+            name
+            description
+            isOpen
+        }
+    }
+    assignmentTypes {
+        nodes {
+            name
+            description
+        }
+    }
+    relationTypes {
+        nodes {
+            name
+            description
+            inverseName
+        }
+    }
+    templateFieldSpecifications {
+        name
+        value
+    }
+}

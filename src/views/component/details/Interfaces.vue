@@ -41,7 +41,7 @@ import {
     type InterfaceSpecificationFilterInput,
     type InterfaceSpecificationListItemInfoFragment,
     type InterfaceSpecificationOrder,
-    InterfaceSpecificationOrderField
+    type InterfaceSpecificationOrderField
 } from "@/gql/graphql";
 import { type RouteLocationRaw, useRoute, useRouter } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
@@ -126,10 +126,10 @@ const componentTemplateInfo = computedAsync(
     { shallow: false }
 );
 
-const sortFields = {
-    Name: InterfaceSpecificationOrderField.Name,
-    Template: [InterfaceSpecificationOrderField.TemplateName, InterfaceSpecificationOrderField.TemplateId],
-    "[Default]": InterfaceSpecificationOrderField.Id
+const sortFields: Record<string, InterfaceSpecificationOrderField | InterfaceSpecificationOrderField[]> = {
+    Name: "NAME",
+    Template: ["TEMPLATE_NAME", "TEMPLATE_ID"],
+    "[Default]": "ID"
 };
 
 const templateIds = useFilterOption("template", true);

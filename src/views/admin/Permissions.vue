@@ -19,11 +19,11 @@ import PermissionList, {
 import { request, requestThrow } from "@/gql/client";
 import { graphql } from "@/gql";
 import {
-    PermissionEntry,
-    GlobalPermissionOrderField,
+    type GlobalPermissionOrderField,
     type DefaultGlobalPermissionInfoFragment,
     type GlobalPermissionOrder
 } from "@/gql/graphql";
+import { PermissionEntry } from "@/gql/enums";
 import type { IdObject } from "@/util/types";
 import { computed, useTemplateRef } from "vue";
 import { useRoute } from "vue-router";

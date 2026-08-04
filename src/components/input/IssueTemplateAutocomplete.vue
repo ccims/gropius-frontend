@@ -1,5 +1,10 @@
 <template>
-    <FetchingAutocomplete mode="model" :fetch="searchIssueTemplates" label="Template" item-title="name">
+    <FetchingAutocomplete
+        :mode="multiple ? 'model-multiple' : 'model'"
+        :fetch="searchIssueTemplates"
+        :label="label"
+        item-title="name"
+    >
         <template #item="{ props, item }">
             <v-list-item :title="item.raw.name" :subtitle="item.raw.description" v-bind="props"> </v-list-item>
         </template>
@@ -30,6 +35,19 @@ const firstIssueTemplatesQuery = graphql(`
         }
     }
 `);
+
+defineProps({
+    multiple: {
+        type: Boolean,
+        required: false,
+        default: false
+    },
+    label: {
+        type: String,
+        required: false,
+        default: "Template"
+    }
+});
 
 async function searchIssueTemplates(filter: string, count: number): Promise<DefaultIssueTemplateInfoFragment[]> {
     return await withErrorMessage(async () => {
