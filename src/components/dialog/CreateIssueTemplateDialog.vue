@@ -98,7 +98,7 @@
                                     "
                                 >
                                     <template #previewLeft>
-                                        <div class="border rounded d-flex align-center mr-2">
+                                        <div class="d-flex align-center mr-2">
                                             <SvgWrapper :path="IssueType.iconPath" />
                                         </div>
                                     </template>
@@ -168,12 +168,12 @@
                                     "
                                 >
                                     <template #previewLeft>
-                                        <div class="border rounded d-flex align-center mr-2">
+                                        <div class="d-flex align-center mr-2">
                                             <SvgWrapper :path="issuePriority.iconPath" />
                                         </div>
                                     </template>
                                     <template #previewRight>
-                                        <div class="border rounded d-flex align-center mr-2">
+                                        <div class="d-flex align-center mr-2">
                                             <span class="text-h6 mx-1">
                                                 {{
                                                     issuePriority.value.toString().length > 3
@@ -252,6 +252,12 @@
                                     <template #previewLeft>
                                         <div class="mr-2">
                                             <v-icon :color="issueState.isOpen ? 'success' : 'error'">mdi-circle</v-icon>
+                                        </div>
+                                    </template>
+
+                                    <template #details>
+                                        <div class="text-body-2 text-medium-emphasis">
+                                            Issues in this state count as {{ issueState.isOpen ? "open" : "closed" }}
                                         </div>
                                     </template>
 
@@ -381,6 +387,12 @@
                                         }
                                     "
                                 >
+                                    <template #details>
+                                        <div class="text-body-2 text-medium-emphasis">
+                                            Inverse name: {{ relationType.inverseName || "not set" }}
+                                        </div>
+                                    </template>
+
                                     <template #extra>
                                         <v-text-field
                                             v-model="relationType.inverseName"
@@ -399,65 +411,10 @@
                 </template>
 
                 <template v-slot:item.4>
-                    <v-form v-model="formIssueStatesValid">
-                        <v-btn
-                            variant="tonal"
-                            block
-                            prepend-icon="mdi-form-textbox"
-                            @click="
-                                () => {
-                                    createTemplateFieldSpecification('', '', { type: 'string' });
-                                    expandedCardKey = { nameID: '', type: 'templateFieldSpecification' };
-                                }
-                            "
-                            >Add Template Field Specification
-                        </v-btn>
-                        <ExpandableCard
-                            v-for="specifications in templateFieldSpecifications"
-                            :key="specifications.name"
-                            :name="specifications.name"
-                            :expandedCardKey="expandedCardKey"
-                            type="templateFieldSpecification"
-                            v-model:nameErrorMessage="nameErrorMessage"
-                            :editable="
-                                !disabledCards.templateFieldSpecifications.some(
-                                    (entry) => entry.entry === specifications.name
-                                )
-                            "
-                            @expand="
-                                () => {
-                                    expandedCardKey = {
-                                        nameID: specifications.name,
-                                        type: 'templateFieldSpecification'
-                                    };
-                                    currentEditedName = specifications.name;
-                                    currentEditedTemplatedValue = specifications.value;
-                                    nameErrorMessage = '';
-                                }
-                            "
-                            @cancel="
-                                () => {
-                                    cancelCreateCard();
-                                    specifications.name = currentEditedName;
-                                    specifications.value = currentEditedTemplatedValue;
-                                }
-                            "
-                            @delete="deleteTemplateFieldSpecificationByName(specifications.name)"
-                            @confirm="
-                                ({ name }) => {
-                                    if (!name) {
-                                        nameErrorMessage = 'Name is required';
-                                        return;
-                                    }
-                                    createTemplateFieldSpecification(specifications.name, name, specifications.value);
-                                }
-                            "
-                        >
-                            <template #extra>
-                                <TemplatedFieldSpecificationsValueBox v-model="specifications.value" />
-                            </template>
-                        </ExpandableCard>
-                    </v-form>
+                    <TemplateFieldSpecificationsInput
+                        v-model="templateFieldSpecifications"
+                        :inherited-names="inheritedFieldSpecificationNames"
+                    />
                 </template>
             </v-stepper>
 
@@ -500,7 +457,7 @@ import ConfirmationDialog from "./ConfirmationDialog.vue";
 import IssueTemplateAutocomplete from "../input/IssueTemplateAutocomplete.vue";
 import IconPicker from "../input/IconPicker.vue";
 import ExpandableCard from "../ExpandableCard.vue";
-import TemplatedFieldSpecificationsValueBox from "../TemplatedFieldSpecificationsValueBox.vue";
+import TemplateFieldSpecificationsInput from "../input/TemplateFieldSpecificationsInput.vue";
 
 import SvgWrapper from "../SvgWrapper.vue";
 
@@ -573,11 +530,6 @@ const stepLabels = [
 const formGeneralValid = ref(false);
 const formissueTypesValid = ref(true);
 const formIssuePrioritiesValid = ref(true);
-const formIssueStatesValid = ref(true);
-const formAssignmentTypeValid = ref(true);
-const formRelationTypeValid = ref(true);
-const formVersionTemplatesValid = ref(true);
-const formTemplateFieldsValid = ref(true);
 
 const schema = yup.object({
     templateName: yup.string().required("Name is required"),
@@ -634,8 +586,6 @@ const currentEditedIsOpen = ref<boolean>(false);
 const currentEditedInverseName = ref<string>("");
 const inverseNameErrorMessage = ref<string>("");
 
-const currentEditedTemplatedValue = ref<JsonFieldInput["value"]>();
-
 const selectedIconPath = ref("");
 
 const issueTypes = ref<IssueTypeInput[]>([]);
@@ -658,6 +608,10 @@ const disabledCards = ref<Record<string, InheritedEntry[]>>({
     relationTypes: [],
     templateFieldSpecifications: []
 });
+
+const inheritedFieldSpecificationNames = computed(() =>
+    disabledCards.value.templateFieldSpecifications.map((entry) => entry.entry)
+);
 
 const templateInheritanceErrorMessage = ref<string>("");
 const isInheritanceConflict = ref<boolean>(false);
@@ -1031,47 +985,6 @@ function deleteRelationTypeByName(nameToDelete: string) {
     relationTypes.value = relationTypes.value.filter((s) => s.name !== nameToDelete);
 }
 
-function createTemplateFieldSpecification(previousName: string, newName: string, value: JsonFieldInput["value"]) {
-    if (newName.trim().length === 0 && previousName.trim().length !== 0) {
-        nameErrorMessage.value = "Name is required";
-        return;
-    }
-
-    if (previousName.trim().toLowerCase() !== newName.trim().toLowerCase()) {
-        if (
-            templateFieldSpecifications.value.some(
-                (item) => item.name.trim().toLowerCase() === newName.trim().toLowerCase()
-            )
-        ) {
-            nameErrorMessage.value = "Name already exists";
-            return;
-        } else {
-            nameErrorMessage.value = "";
-        }
-    }
-
-    deleteTemplateFieldSpecificationByName(previousName);
-
-    templateFieldSpecifications.value.push({
-        name: newName,
-        value: value
-    });
-
-    templateFieldSpecifications.value.sort((a, b) => {
-        const aDisabled = disabledCards.value.templateFieldSpecifications.some((entry) => entry.entry === a.name);
-        const bDisabled = disabledCards.value.templateFieldSpecifications.some((entry) => entry.entry === b.name);
-        if (aDisabled !== bDisabled) return aDisabled ? 1 : -1;
-        return a.name.localeCompare(b.name);
-    });
-    expandedCardKey.value = null;
-    currentEditedName.value = "";
-    currentEditedDescription.value = "";
-}
-
-function deleteTemplateFieldSpecificationByName(nameToDelete: string) {
-    templateFieldSpecifications.value = templateFieldSpecifications.value.filter((s) => s.name !== nameToDelete);
-}
-
 function cancelCreateCard() {
     expandedCardKey.value = null;
     nameErrorMessage.value = "";
@@ -1083,7 +996,6 @@ function cancelCreateCard() {
     deleteIssueStateByName("");
     deleteAssignmentTypeByName("");
     deleteRelationTypeByName("");
-    deleteTemplateFieldSpecificationByName("");
 }
 
 // the backend already copies the extended templates' entries over, submitting them again duplicates them

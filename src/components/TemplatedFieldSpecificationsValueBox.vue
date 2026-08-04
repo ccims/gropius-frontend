@@ -35,7 +35,7 @@
                 @confirm="(payload) => updateEnumEntry(index, payload.content)"
                 @delete="removeEnumEntry(index)"
             />
-            <v-btn prepend-icon="mdi-plus" variant="text" size="small" @click="addEnumEntry">Add Enum Entry</v-btn>
+            <v-btn prepend-icon="mdi-plus" variant="text" size="small" @click="addEnumEntry">Add option</v-btn>
         </div>
 
         <div v-else-if="node.type === 'list'" class="nested">
@@ -64,7 +64,7 @@
                 @update:name="(value) => renameProperty(child.name, value)"
                 @delete="removeProperty(child.name)"
             />
-            <v-btn prepend-icon="mdi-plus" variant="text" size="small" @click="addProperty">Add Property</v-btn>
+            <v-btn prepend-icon="mdi-plus" variant="text" size="small" @click="addProperty">Add field</v-btn>
         </div>
     </div>
 </template>
@@ -72,6 +72,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import EditableCard from "./EditableCard.vue";
+import { templateFieldTypeOptions } from "@/util/templateFieldSpecifications";
 
 // the backend validates specifications as JSON Type Definition: https://jsontypedef.com/docs/jtd-in-5-minutes/
 const primitiveTypes = [
@@ -138,21 +139,16 @@ const emit = defineEmits<{
     (e: "delete"): void;
 }>();
 
-const formIcons: Record<Form | "type", string> = {
-    type: "mdi-cube-outline",
-    enum: "mdi-list-status",
-    elements: "mdi-format-list-bulleted",
-    values: "mdi-code-braces",
-    properties: "mdi-folder-outline"
-};
-
-const typeItems = [
-    ...primitiveTypes.map((kind) => ({ title: kind, value: kind, props: { prependIcon: formIcons.type } })),
-    { title: "Enum", value: "enum", props: { prependIcon: formIcons.enum } },
-    { title: "List", value: "elements", props: { prependIcon: formIcons.elements } },
-    { title: "Map", value: "values", props: { prependIcon: formIcons.values } },
-    { title: "Object", value: "properties", props: { prependIcon: formIcons.properties } }
-];
+// the names, icons and explanations are shared with the read only views of a specification
+const typeItems = templateFieldTypeOptions.map((option) => ({
+    title: option.info.label,
+    value: option.value,
+    props: {
+        prependIcon: option.info.icon,
+        // several types share a name, like the whole numbers, the subtitle is what tells them apart
+        subtitle: `${option.info.technical} · ${option.info.hint}`
+    }
+}));
 
 const node = computed(() => processNode(props.modelValue));
 

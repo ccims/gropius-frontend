@@ -1,6 +1,75 @@
 // Composables
 import { onAnyEnter, onLoginEnter } from "@/router/navigationGuards";
-import { type RouteRecordRaw, createRouter, createWebHistory } from "vue-router";
+import { templateRouteParam, type TemplateKind } from "@/util/templates";
+import { type RouteComponent, type RouteRecordRaw, createRouter, createWebHistory } from "vue-router";
+
+/**
+ * The list route of the templates of one kind.
+ */
+function templateListRoute(kind: TemplateKind, path: string): RouteRecordRaw {
+    return {
+        path,
+        name: `templates-${kind}`,
+        component: () => import("../views/home/Templates/Templates.vue"),
+        props: { kind }
+    };
+}
+
+/**
+ * The details routes of the templates of one kind.
+ * Every kind has a general, a field specifications and a danger page, `pages` are the ones specific
+ * to the kind, including the pages of its sub templates.
+ */
+function templateDetailsRoutes(kind: TemplateKind, pages: RouteRecordRaw[]): RouteRecordRaw {
+    const detailsRoute = (page: string, component: () => Promise<RouteComponent>): RouteRecordRaw => ({
+        path: page,
+        name: `${kind}-template-details-${page}`,
+        component,
+        props: { kind }
+    });
+    return {
+        path: `/templates/${kind}/:${templateRouteParam}`,
+        component: () => import("../views/home/Templates/TemplateRoot.vue"),
+        props: { kind },
+        children: [
+            {
+                path: "",
+                name: `${kind}-template`,
+                redirect: { name: `${kind}-template-details-general` }
+            },
+            {
+                path: "details",
+                component: () => import("../views/RouterOnly.vue"),
+                children: [
+                    {
+                        path: "",
+                        name: `${kind}-template-details-general`,
+                        component: () => import("../views/home/Templates/TemplateGeneral.vue"),
+                        props: { kind }
+                    },
+                    ...pages,
+                    detailsRoute(
+                        "field-specifications",
+                        () => import("../views/home/Templates/TemplateFieldSpecifications.vue")
+                    ),
+                    detailsRoute("danger", () => import("../views/home/Templates/TemplateDanger.vue"))
+                ]
+            }
+        ]
+    };
+}
+
+/**
+ * A details route showing the sub template of a template.
+ */
+function subTemplateRoute(kind: TemplateKind, page: string, subTemplate: string): RouteRecordRaw {
+    return {
+        path: page,
+        name: `${kind}-template-details-${page}`,
+        component: () => import("../views/home/Templates/SubTemplateDetails.vue"),
+        props: { subTemplate }
+    };
+}
 
 const routes: RouteRecordRaw[] = [
     {
@@ -38,31 +107,11 @@ const routes: RouteRecordRaw[] = [
                 name: "templates",
                 component: () => import("../views/RouterOnly.vue"),
                 children: [
-                    {
-                        path: "",
-                        name: "templates-issue",
-                        component: () => import("../views/home/Templates/IssueTemplates.vue")
-                    },
-                    {
-                        path: "component",
-                        name: "templates-component",
-                        component: () => import("../views/home/Templates/IssueTemplates.vue")
-                    },
-                    {
-                        path: "artefact",
-                        name: "templates-artefact",
-                        component: () => import("../views/home/Templates/IssueTemplates.vue")
-                    },
-                    {
-                        path: "interface-specification",
-                        name: "templates-interface-specification",
-                        component: () => import("../views/home/Templates/IssueTemplates.vue")
-                    },
-                    {
-                        path: "relation",
-                        name: "templates-relation",
-                        component: () => import("../views/home/Templates/IssueTemplates.vue")
-                    }
+                    templateListRoute("issue", ""),
+                    templateListRoute("component", "component"),
+                    templateListRoute("artefact", "artefact"),
+                    templateListRoute("interface-specification", "interface-specification"),
+                    templateListRoute("relation", "relation")
                 ]
             },
             {
@@ -99,48 +148,48 @@ const routes: RouteRecordRaw[] = [
             }
         ]
     },
-    {
-        path: "/templates/issue/:issueTemplate",
-        component: () => import("../views/home/Templates/issueTemplate/Root.vue"),
-        children: [
-            {
-                path: "",
-                name: "issue-template",
-                redirect: { name: "issue-template-details-general" }
-            },
-            {
-                path: "details",
-                component: () => import("../views/RouterOnly.vue"),
-                children: [
-                    {
-                        path: "",
-                        name: "issue-template-details-general",
-                        component: () => import("../views/home/Templates/issueTemplate/General.vue")
-                    },
-                    {
-                        path: "issue-attributes",
-                        name: "issue-template-details-issue-attributes",
-                        component: () => import("../views/home/Templates/issueTemplate/IssueAttributes.vue")
-                    },
-                    {
-                        path: "linkage-attributes",
-                        name: "issue-template-details-linkage-attributes",
-                        component: () => import("../views/home/Templates/issueTemplate/LinkageAttributes.vue")
-                    },
-                    {
-                        path: "field-specifications",
-                        name: "issue-template-details-field-specifications",
-                        component: () => import("../views/home/Templates/issueTemplate/TemplateFieldSpecifications.vue")
-                    },
-                    {
-                        path: "danger",
-                        name: "issue-template-details-danger",
-                        component: () => import("../views/home/Templates/issueTemplate/Danger.vue")
-                    }
-                ]
-            }
-        ]
-    },
+    templateDetailsRoutes("issue", [
+        {
+            path: "issue-attributes",
+            name: "issue-template-details-issue-attributes",
+            component: () => import("../views/home/Templates/issueTemplate/IssueAttributes.vue")
+        },
+        {
+            path: "linkage-attributes",
+            name: "issue-template-details-linkage-attributes",
+            component: () => import("../views/home/Templates/issueTemplate/LinkageAttributes.vue")
+        }
+    ]),
+    templateDetailsRoutes("component", [
+        {
+            path: "interface-specifications",
+            name: "component-template-details-interface-specifications",
+            component: () => import("../views/home/Templates/componentTemplate/InterfaceSpecifications.vue")
+        },
+        {
+            path: "dependency-types",
+            name: "component-template-details-dependency-types",
+            component: () => import("../views/home/Templates/componentTemplate/DependencyTypes.vue")
+        },
+        subTemplateRoute("component", "component-version", "componentVersion")
+    ]),
+    templateDetailsRoutes("interface-specification", [
+        {
+            path: "components",
+            name: "interface-specification-template-details-components",
+            component: () => import("../views/home/Templates/interfaceSpecificationTemplate/Components.vue")
+        },
+        subTemplateRoute("interface-specification", "interface-specification-version", "interfaceSpecificationVersion"),
+        subTemplateRoute("interface-specification", "interface-part", "interfacePart")
+    ]),
+    templateDetailsRoutes("relation", [
+        {
+            path: "relation-conditions",
+            name: "relation-template-details-relation-conditions",
+            component: () => import("../views/home/Templates/relationTemplate/RelationConditions.vue")
+        }
+    ]),
+    templateDetailsRoutes("artefact", []),
     {
         path: "/components/:trackable",
         component: () => import("../views/component/Root.vue"),

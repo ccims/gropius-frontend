@@ -1,0 +1,24 @@
+fragment AutocompleteTemplateInfo on Template {
+    id
+    name
+    description
+}
+
+fragment SubTemplateDetailsInfo on SubTemplate {
+    id
+    name
+    description
+    templateFieldSpecifications {
+        name
+        value
+    }
+}
+
+fragment TemplateListInfo on Template {
+    id
+    name
+    description
+    templateFieldSpecifications {
+        name
+    }
+}

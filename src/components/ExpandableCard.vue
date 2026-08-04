@@ -5,23 +5,46 @@
         class="my-4"
         :class="{ 'opacity-60': props.editable === false }"
     >
-        <div v-if="!isExpanded" class="d-flex align-center justify-space-between pa-2">
-            <slot name="previewLeft" />
+        <div v-if="!isExpanded">
+            <div class="d-flex align-center justify-space-between pa-2">
+                <slot name="previewLeft" />
 
-            <div class="d-flex align-center flex-grow-1 overflow-hidden">
-                <v-list-item-title>{{ props.name }}</v-list-item-title>
+                <div class="d-flex align-center flex-grow-1 overflow-hidden">
+                    <v-list-item-title>{{ props.name }}</v-list-item-title>
+                </div>
+
+                <slot name="previewRight" />
+
+                <div class="d-flex align-center flex-shrink-0 ms-2">
+                    <!--
+                        The details are readable without opening the editor, which the card may not
+                        even allow. No tooltip on purpose: a dialog holds dozens of these cards and
+                        every tooltip is an overlay that has to be built while hovering over them.
+                    -->
+                    <IconButton
+                        v-if="hasDetails"
+                        :aria-label="detailsOpen ? 'Hide details' : 'Show details'"
+                        @click="detailsOpen = !detailsOpen"
+                    >
+                        <v-icon>{{ detailsOpen ? "mdi-chevron-up" : "mdi-chevron-down" }}</v-icon>
+                    </IconButton>
+                    <!-- entries that cannot be changed, like inherited ones, only offer their details -->
+                    <IconButton v-if="props.editable" @click="emit('expand')">
+                        <v-icon>mdi-pencil</v-icon>
+                    </IconButton>
+                    <IconButton v-if="props.editable" @click="emit('delete')">
+                        <v-icon>mdi-close</v-icon>
+                    </IconButton>
+                </div>
             </div>
-
-            <slot name="previewRight" />
-
-            <div class="d-flex align-center flex-shrink-0 ms-2">
-                <IconButton :disabled="!props.editable" @click="emit('expand')">
-                    <v-icon>mdi-pencil</v-icon>
-                </IconButton>
-                <IconButton :disabled="!props.editable" @click="emit('delete')">
-                    <v-icon>mdi-close</v-icon>
-                </IconButton>
-            </div>
+            <Transition name="details">
+                <div v-if="detailsOpen" class="details px-3 pb-3">
+                    <div v-if="props.description" class="text-body-2 text-medium-emphasis mb-2">
+                        {{ props.description }}
+                    </div>
+                    <slot name="details" />
+                </div>
+            </Transition>
         </div>
 
         <div v-else class="pa-3">
@@ -60,7 +83,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, useSlots } from "vue";
 
 type ExpandedKey = {
     nameID: string;
@@ -93,6 +116,10 @@ const isExpanded = computed(
     () => props.editable && props.expandedCardKey?.type === props.type && props.expandedCardKey?.nameID === props.name
 );
 
+const slots = useSlots();
+const detailsOpen = ref(false);
+const hasDetails = computed(() => !!props.description || slots.details != undefined);
+
 const localName = ref(props.name);
 const localDescription = ref(props.description ?? "");
 
@@ -110,3 +137,32 @@ watch(
     }
 );
 </script>
+
+<style scoped>
+/*
+ * The card takes its full height in one go and only the details fade and slide in. Opacity and
+ * transform are compositor properties, so nothing is laid out again while the animation runs, which
+ * an animated height would do for the whole dialog on every frame.
+ */
+.details-enter-active {
+    transition:
+        opacity 0.15s ease,
+        transform 0.15s ease;
+    will-change: opacity, transform;
+}
+
+.details-enter-from {
+    opacity: 0;
+    transform: translateY(-8px);
+}
+
+/*
+ * Closing is not animated: the space can only be freed once the element is gone, so a fade out would
+ * hold the space open and then let everything below jump at the very end.
+ */
+
+/* keeps the layout of the details to themselves, so opening one card does not reflow the others */
+.details {
+    contain: layout;
+}
+</style>

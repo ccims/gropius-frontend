@@ -16,6 +16,7 @@ import BaseLayout, { type TabSegment } from "@/components/BaseLayout.vue";
 import { useAppStore } from "@/store/app";
 import type { Events } from "@/util/eventBus";
 import { eventBusKey } from "@/util/keys";
+import { templateKindInfos, templateKinds } from "@/util/templates";
 import { computed, inject } from "vue";
 import { useRoute } from "vue-router";
 
@@ -67,36 +68,6 @@ const rightSidebarItems = computed(() => {
                 disabled = !(store.user?.canCreateIMSs ?? false);
                 break;
             }
-            case "templates-issue": {
-                name = "issue template";
-                eventName = "create-issue-template";
-                disabled = !(store.user?.canCreateTemplates ?? false);
-                break;
-            }
-            case "templates-artefact": {
-                name = "artefact template";
-                eventName = "create-artefact-template";
-                disabled = !(store.user?.canCreateTemplates ?? false);
-                break;
-            }
-            case "templates-component": {
-                name = "component template";
-                eventName = "create-component-template";
-                disabled = !(store.user?.canCreateTemplates ?? false);
-                break;
-            }
-            case "templates-interface-specification": {
-                name = "interface specification template";
-                eventName = "create-interface-specification-template";
-                disabled = !(store.user?.canCreateTemplates ?? false);
-                break;
-            }
-            case "templates-relation": {
-                name = "relation template";
-                eventName = "create-relation-template";
-                disabled = !(store.user?.canCreateTemplates ?? false);
-                break;
-            }
             case "admin-permissions": {
                 name = "permission";
                 eventName = "create-permission";
@@ -122,7 +93,13 @@ const rightSidebarItems = computed(() => {
                 break;
             }
             default: {
-                throw new Error("Unknown route");
+                const kind = templateKinds.find((kind) => route.name == `templates-${kind}`);
+                if (kind == undefined) {
+                    throw new Error("Unknown route");
+                }
+                name = `${templateKindInfos[kind].name} template`;
+                eventName = `create-${kind}-template`;
+                disabled = !(store.user?.canCreateTemplates ?? false);
             }
         }
         return [
@@ -144,38 +121,12 @@ const rightSidebarItems = computed(() => {
 const leftSidebarItems = computed(() => {
     if (route.name?.toString().startsWith("templates")) {
         return [
-            [
-                {
-                    icon: "$issue",
-                    name: "Issue",
-                    color: "secondary",
-                    to: { name: "templates-issue" }
-                },
-                {
-                    icon: "mdi-file-document",
-                    name: "Artefact",
-                    color: "secondary",
-                    to: { name: "templates-artefact" }
-                },
-                {
-                    icon: "$component",
-                    name: "Component",
-                    color: "secondary",
-                    to: { name: "templates-component" }
-                },
-                {
-                    icon: "$interface",
-                    name: "Interface",
-                    color: "secondary",
-                    to: { name: "templates-interface-specification" }
-                },
-                {
-                    icon: "mdi-link-variant",
-                    name: "Relation",
-                    color: "secondary",
-                    to: { name: "templates-relation" }
-                }
-            ]
+            templateKinds.map((kind) => ({
+                icon: templateKindInfos[kind].icon,
+                name: templateKindInfos[kind].sidebarName,
+                color: "secondary",
+                to: { name: `templates-${kind}` }
+            }))
         ];
     }
 

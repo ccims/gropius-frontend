@@ -470,6 +470,21 @@ export type ArtefactTemplateListFilterInput = {
     none?: ArtefactTemplateFilterInput | null | undefined;
 };
 
+/** Defines the order of a ArtefactTemplate list */
+export type ArtefactTemplateOrder = {
+    /** The direction to order by, defaults to ASC */
+    direction?: OrderDirection | null | undefined;
+    /** The field to order by, defaults to ID */
+    field?: ArtefactTemplateOrderField | null | undefined;
+};
+
+/** Fields a list of ArtefactTemplate can be sorted by */
+export type ArtefactTemplateOrderField =
+    /** Order by id */
+    | "ID"
+    /** Order by name */
+    | "NAME";
+
 /** Filter used to filter Assignment */
 export type AssignmentFilterInput = {
     /** Connects all subformulas via and */
@@ -1061,6 +1076,21 @@ export type ComponentTemplateListFilterInput = {
     none?: ComponentTemplateFilterInput | null | undefined;
 };
 
+/** Defines the order of a ComponentTemplate list */
+export type ComponentTemplateOrder = {
+    /** The direction to order by, defaults to ASC */
+    direction?: OrderDirection | null | undefined;
+    /** The field to order by, defaults to ID */
+    field?: ComponentTemplateOrderField | null | undefined;
+};
+
+/** Fields a list of ComponentTemplate can be sorted by */
+export type ComponentTemplateOrderField =
+    /** Order by id */
+    | "ID"
+    /** Order by name */
+    | "NAME";
+
 /** Filter used to filter ComponentVersion */
 export type ComponentVersionFilterInput = {
     /** Filter by affectingIssues */
@@ -1154,6 +1184,24 @@ export type ComponentVersionTemplateFilterInput = {
     or?: Array<ComponentVersionTemplateFilterInput> | null | undefined;
 };
 
+/** Input for the createArtefactTemplate mutation */
+export type CreateArtefactTemplateInput = {
+    /** The description of the NamedNode */
+    description: string;
+    /** IDs of Templates the created template extends. Must be templates of the same type. */
+    extends?: Array<string> | null | undefined;
+    /** If true, this template is abstract and cannot be used for new entities. */
+    isAbstract: boolean;
+    /** The name of the NamedNode, must not be blank */
+    name: string;
+    /**
+     * Additional initial templateFieldSpecifications, should be a JSON schema JSON.
+     *         Must be disjoint with templateFieldSpecifications of templates this template extends.
+     *
+     */
+    templateFieldSpecifications?: Array<JsonFieldInput> | null | undefined;
+};
+
 /** Input for the createComponent mutation */
 export type CreateComponentInput = {
     /** The description of the NamedNode */
@@ -1186,6 +1234,36 @@ export type CreateComponentPermissionInput = {
     nodesWithPermission: Array<string>;
     /** Ids of GropiusUsers this BasePermission affects */
     users: Array<string>;
+};
+
+/** Input for the createComponentTemplate mutation */
+export type CreateComponentTemplateInput = {
+    /** SubTemplate for all ComponentVersions of a Component with the created Template */
+    componentVersionTemplate: SubTemplateInput;
+    /** The description of the NamedNode */
+    description: string;
+    /** IDs of Templates the created template extends. Must be templates of the same type. */
+    extends?: Array<string> | null | undefined;
+    /** Style of the fill */
+    fill?: FillStyleInput | null | undefined;
+    /** Set of all types IntraComponentDependencySpecifications of Components with the created Template can have */
+    intraComponentDependencySpecificationTypes: Array<IntraComponentDependencySpecificationTypeInput>;
+    /** If true, this template is abstract and cannot be used for new entities. */
+    isAbstract: boolean;
+    /** The name of the NamedNode, must not be blank */
+    name: string;
+    /** The corner radius of the shape, ignored for circle/ellipse */
+    shapeRadius?: number | null | undefined;
+    /** The type of the shape */
+    shapeType: ShapeType;
+    /** Style of the stroke */
+    stroke?: StrokeStyleInput | null | undefined;
+    /**
+     * Additional initial templateFieldSpecifications, should be a JSON schema JSON.
+     *         Must be disjoint with templateFieldSpecifications of templates this template extends.
+     *
+     */
+    templateFieldSpecifications?: Array<JsonFieldInput> | null | undefined;
 };
 
 /** Input for the createComponentVersion mutation */
@@ -1270,6 +1348,40 @@ export type CreateInterfaceSpecificationInput = {
     templatedFields: Array<JsonFieldInput>;
     /** Initial versions of the InterfaceSpecification */
     versions?: Array<InterfaceSpecificationVersionInput> | null | undefined;
+};
+
+/** Input for the createInterfaceSpecificationTemplate mutation */
+export type CreateInterfaceSpecificationTemplateInput = {
+    /** The IDs of Templates of Components InterfaceSpecifications with the created template can be invisible on */
+    canBeInvisibleOnComponents: Array<string>;
+    /** The IDs of Templates of Components InterfaceSpecifications with the created template can be visible on */
+    canBeVisibleOnComponents: Array<string>;
+    /** The description of the NamedNode */
+    description: string;
+    /** IDs of Templates the created template extends. Must be templates of the same type. */
+    extends?: Array<string> | null | undefined;
+    /** Style of the fill */
+    fill?: FillStyleInput | null | undefined;
+    /** SubTemplate for all InterfaceParts of a InterfaceSpecification with the created Template */
+    interfacePartTemplate: SubTemplateInput;
+    /** SubTemplate for all InterfaceSpecificationVersions of a InterfaceSpecification with the created Template */
+    interfaceSpecificationVersionTemplate: SubTemplateInput;
+    /** If true, this template is abstract and cannot be used for new entities. */
+    isAbstract: boolean;
+    /** The name of the NamedNode, must not be blank */
+    name: string;
+    /** The corner radius of the shape, ignored for circle/ellipse */
+    shapeRadius?: number | null | undefined;
+    /** The type of the shape */
+    shapeType: ShapeType;
+    /** Style of the stroke */
+    stroke?: StrokeStyleInput | null | undefined;
+    /**
+     * Additional initial templateFieldSpecifications, should be a JSON schema JSON.
+     *         Must be disjoint with templateFieldSpecifications of templates this template extends.
+     *
+     */
+    templateFieldSpecifications?: Array<JsonFieldInput> | null | undefined;
 };
 
 /** Input for the createInterfaceSpecificationVersion mutation */
@@ -1380,6 +1492,30 @@ export type CreateProjectPermissionInput = {
     users: Array<string>;
 };
 
+/** Input for the createRelationTemplate mutation */
+export type CreateRelationTemplateInput = {
+    /** The description of the NamedNode */
+    description: string;
+    /** IDs of Templates the created template extends. Must be templates of the same type. */
+    extends?: Array<string> | null | undefined;
+    /** If true, this template is abstract and cannot be used for new entities. */
+    isAbstract: boolean;
+    /** The type of the marker at the end of the relation. */
+    markerType: MarkerType;
+    /** The name of the NamedNode, must not be blank */
+    name: string;
+    /** Defines which Relations can use the created Template, at least one RelationCondition has to match (logical OR) */
+    relationConditions: Array<RelationConditionInput>;
+    /** Style of the stroke */
+    stroke?: StrokeStyleInput | null | undefined;
+    /**
+     * Additional initial templateFieldSpecifications, should be a JSON schema JSON.
+     *         Must be disjoint with templateFieldSpecifications of templates this template extends.
+     *
+     */
+    templateFieldSpecifications?: Array<JsonFieldInput> | null | undefined;
+};
+
 /** Input for the createView mutation */
 export type CreateViewInput = {
     /** The description of the NamedNode */
@@ -1410,6 +1546,12 @@ export type DateTimeFilterInput = {
     lt?: any;
     /** Matches values which are lesser than or equal to the provided value */
     lte?: any;
+};
+
+/** Input to create a FillStyle */
+export type FillStyleInput = {
+    /** The color of the fill */
+    color: string;
 };
 
 /** Filter which can be used to filter for Nodes with a specific Float field */
@@ -2103,6 +2245,24 @@ export type InterfaceSpecificationDerivationConditionFilterInput = {
     partOf?: RelationConditionFilterInput | null | undefined;
 };
 
+/** Input to create a InterfaceSpecificationDerivationCondition */
+export type InterfaceSpecificationDerivationConditionInput = {
+    /** The ids of the InterfaceSpecifications this can derive */
+    derivableInterfaceSpecifications: Array<string>;
+    /** If true, invisible derived InterfaceSpecifications are derived */
+    derivesInvisibleDerived: boolean;
+    /** If true, invisible self-defined InterfaceSpecifications are derived */
+    derivesInvisibleSelfDefined: boolean;
+    /** If true, visible derived InterfaceSpecifications are derived */
+    derivesVisibleDerived: boolean;
+    /** If true, visible self-defined InterfaceSpecifications are derived */
+    derivesVisibleSelfDefined: boolean;
+    /** If true InterfaceSpecifications are invisible derived */
+    isInvisibleDerived: boolean;
+    /** If true InterfaceSpecifications are visible derived */
+    isVisibleDerived: boolean;
+};
+
 /** Used to filter by a connection-based property. Fields are joined by AND */
 export type InterfaceSpecificationDerivationConditionListFilterInput = {
     /** Filters for nodes where all of the related nodes match this filter */
@@ -2227,6 +2387,21 @@ export type InterfaceSpecificationTemplateListFilterInput = {
     /** Filters for nodes where none of the related nodes match this filter */
     none?: InterfaceSpecificationTemplateFilterInput | null | undefined;
 };
+
+/** Defines the order of a InterfaceSpecificationTemplate list */
+export type InterfaceSpecificationTemplateOrder = {
+    /** The direction to order by, defaults to ASC */
+    direction?: OrderDirection | null | undefined;
+    /** The field to order by, defaults to ID */
+    field?: InterfaceSpecificationTemplateOrderField | null | undefined;
+};
+
+/** Fields a list of InterfaceSpecificationTemplate can be sorted by */
+export type InterfaceSpecificationTemplateOrderField =
+    /** Order by id */
+    | "ID"
+    /** Order by name */
+    | "NAME";
 
 /** Filter used to filter InterfaceSpecificationVersion */
 export type InterfaceSpecificationVersionFilterInput = {
@@ -2395,6 +2570,14 @@ export type IntraComponentDependencySpecificationTypeFilterInput = {
     or?: Array<IntraComponentDependencySpecificationTypeFilterInput> | null | undefined;
     /** Filter by partOf */
     partOf?: ComponentTemplateListFilterInput | null | undefined;
+};
+
+/** Input to create an IntraComponentDependencySpecificationType */
+export type IntraComponentDependencySpecificationTypeInput = {
+    /** The description of the NamedNode */
+    description: string;
+    /** The name of the NamedNode, must not be blank */
+    name: string;
 };
 
 /** Used to filter by a connection-based property. Fields are joined by AND */
@@ -3509,6 +3692,16 @@ export type RelationConditionFilterInput = {
     to?: RelationPartnerTemplateListFilterInput | null | undefined;
 };
 
+/** Input to create a RelationCondition */
+export type RelationConditionInput = {
+    /** IDs of Templates of allowed start RelationPartners */
+    from: Array<string>;
+    /** Defines which InterfaceSpecifications are derived via the relation */
+    interfaceSpecificationDerivationConditions: Array<InterfaceSpecificationDerivationConditionInput>;
+    /** IDs of Templates of allowed end RelationPartners */
+    to: Array<string>;
+};
+
 /** Used to filter by a connection-based property. Fields are joined by AND */
 export type RelationConditionListFilterInput = {
     /** Filters for nodes where all of the related nodes match this filter */
@@ -3726,6 +3919,21 @@ export type RelationTemplateListFilterInput = {
     /** Filters for nodes where none of the related nodes match this filter */
     none?: RelationTemplateFilterInput | null | undefined;
 };
+
+/** Defines the order of a RelationTemplate list */
+export type RelationTemplateOrder = {
+    /** The direction to order by, defaults to ASC */
+    direction?: OrderDirection | null | undefined;
+    /** The field to order by, defaults to ID */
+    field?: RelationTemplateOrderField | null | undefined;
+};
+
+/** Fields a list of RelationTemplate can be sorted by */
+export type RelationTemplateOrderField =
+    /** Order by id */
+    | "ID"
+    /** Order by name */
+    | "NAME";
 
 /** Filter used to filter RelationTypeChangedEvent */
 export type RelationTypeChangedEventFilterInput = {
@@ -4126,6 +4334,28 @@ export type StringFilterInput = {
     matches?: string | null | undefined;
     /** Matches Strings which start with the provided value */
     startsWith?: string | null | undefined;
+};
+
+/** Input to create a StrokeStyle */
+export type StrokeStyleInput = {
+    /** The color of the stroke */
+    color?: string | null | undefined;
+    /** The dash pattern of the stroke */
+    dash?: Array<number> | null | undefined;
+};
+
+/** Input to create a SubTemplate */
+export type SubTemplateInput = {
+    /** The description of the NamedNode */
+    description: string;
+    /** The name of the NamedNode, must not be blank */
+    name: string;
+    /**
+     * Additional initial templateFieldSpecifications, should be a JSON schema JSON.
+     *         Must be disjoint with templateFieldSpecifications of templates this template extends.
+     *
+     */
+    templateFieldSpecifications?: Array<JsonFieldInput> | null | undefined;
 };
 
 /** Filter used to filter SyncPermissionTarget */
@@ -4537,6 +4767,16 @@ export type TypeMappingInput = {
     oldType: string;
 };
 
+/** Input for the updateArtefactTemplate mutation */
+export type UpdateArtefactTemplateInput = {
+    /** The description of the NamedNode */
+    description?: string | null | undefined;
+    /** The id of the node to update */
+    id: string;
+    /** The new name of the NamedNode, must not be empty */
+    name?: string | null | undefined;
+};
+
 /** Input for the updateAssignmentType mutation */
 export type UpdateAssignmentTypeInput = {
     /** The description of the NamedNode */
@@ -4606,6 +4846,24 @@ export type UpdateComponentPermissionInput = {
     removedUsers?: Array<string> | null | undefined;
 };
 
+/** Input for the updateComponentTemplate mutation */
+export type UpdateComponentTemplateInput = {
+    /** The description of the NamedNode */
+    description?: string | null | undefined;
+    /** Style of the fill, null removes the fill */
+    fill?: FillStyleInput | null | undefined;
+    /** The id of the node to update */
+    id: string;
+    /** The new name of the NamedNode, must not be empty */
+    name?: string | null | undefined;
+    /** The corner radius of the shape, ignored for circle/ellipse */
+    shapeRadius?: number | null | undefined;
+    /** The type of the shape */
+    shapeType?: ShapeType | null | undefined;
+    /** Style of the stroke, null removes the stroke */
+    stroke?: StrokeStyleInput | null | undefined;
+};
+
 /** Input for the updateComponentVersion mutation */
 export type UpdateComponentVersionInput = {
     /** The id of the node to update */
@@ -4616,6 +4874,16 @@ export type UpdateComponentVersionInput = {
     templatedFields?: Array<JsonFieldInput> | null | undefined;
     /** New version of the ComponentVersion */
     version?: string | null | undefined;
+};
+
+/** Input for the updateComponentVersionTemplate mutation */
+export type UpdateComponentVersionTemplateInput = {
+    /** The description of the NamedNode */
+    description?: string | null | undefined;
+    /** The id of the node to update */
+    id: string;
+    /** The new name of the NamedNode, must not be empty */
+    name?: string | null | undefined;
 };
 
 /** Input for the updateGlobalPermission mutation */
@@ -4690,6 +4958,16 @@ export type UpdateImsProjectInput = {
     templatedFields?: Array<JsonFieldInput> | null | undefined;
 };
 
+/** Input for the updateInterfacePartTemplate mutation */
+export type UpdateInterfacePartTemplateInput = {
+    /** The description of the NamedNode */
+    description?: string | null | undefined;
+    /** The id of the node to update */
+    id: string;
+    /** The new name of the NamedNode, must not be empty */
+    name?: string | null | undefined;
+};
+
 /** Input for the updateInterfaceSpecification mutation */
 export type UpdateInterfaceSpecificationInput = {
     /** The description of the NamedNode */
@@ -4723,6 +5001,24 @@ export type UpdateInterfaceSpecificationInput = {
     templatedFields?: Array<JsonFieldInput> | null | undefined;
 };
 
+/** Input for the updateInterfaceSpecificationTemplate mutation */
+export type UpdateInterfaceSpecificationTemplateInput = {
+    /** The description of the NamedNode */
+    description?: string | null | undefined;
+    /** Style of the fill, null removes the fill */
+    fill?: FillStyleInput | null | undefined;
+    /** The id of the node to update */
+    id: string;
+    /** The new name of the NamedNode, must not be empty */
+    name?: string | null | undefined;
+    /** The corner radius of the shape, ignored for circle/ellipse */
+    shapeRadius?: number | null | undefined;
+    /** The type of the shape */
+    shapeType?: ShapeType | null | undefined;
+    /** Style of the stroke, null removes the stroke */
+    stroke?: StrokeStyleInput | null | undefined;
+};
+
 /** Input for the updateInterfaceSpecificationVersion mutation */
 export type UpdateInterfaceSpecificationVersionInput = {
     /** The id of the node to update */
@@ -4733,6 +5029,26 @@ export type UpdateInterfaceSpecificationVersionInput = {
     templatedFields?: Array<JsonFieldInput> | null | undefined;
     /** New version of the InterfaceSpecificationVersion */
     version?: string | null | undefined;
+};
+
+/** Input for the updateInterfaceSpecificationVersionTemplate mutation */
+export type UpdateInterfaceSpecificationVersionTemplateInput = {
+    /** The description of the NamedNode */
+    description?: string | null | undefined;
+    /** The id of the node to update */
+    id: string;
+    /** The new name of the NamedNode, must not be empty */
+    name?: string | null | undefined;
+};
+
+/** Input for the updateIntraComponentDependencySpecificationType mutation */
+export type UpdateIntraComponentDependencySpecificationTypeInput = {
+    /** The description of the NamedNode */
+    description?: string | null | undefined;
+    /** The id of the node to update */
+    id: string;
+    /** The new name of the NamedNode, must not be empty */
+    name?: string | null | undefined;
 };
 
 /** Input for the updateIssuePriority mutation */
@@ -4877,6 +5193,20 @@ export type UpdateRelationPartnerLayoutInput = {
     layout?: RelationPartnerLayoutInput | null | undefined;
     /** The id of the RelationPartner of which to update the layout */
     relationPartner: string;
+};
+
+/** Input for the updateRelationTemplate mutation */
+export type UpdateRelationTemplateInput = {
+    /** The description of the NamedNode */
+    description?: string | null | undefined;
+    /** The id of the node to update */
+    id: string;
+    /** The type of the marker at the end of the relation */
+    markerType?: MarkerType | null | undefined;
+    /** The new name of the NamedNode, must not be empty */
+    name?: string | null | undefined;
+    /** Style of the stroke, null removes the stroke */
+    stroke?: StrokeStyleInput | null | undefined;
 };
 
 /** Input for the updateSyncPermissions mutation */
@@ -5522,6 +5852,114 @@ export type GetFilteredIssueListForProjectSidebarQuery = {
     }>;
 };
 
+export type GetTemplateDeprecationStatusQueryVariables = Exact<{
+    id: string;
+}>;
+
+export type GetTemplateDeprecationStatusQuery = {
+    __typename: "Query";
+    node:
+        | { __typename: "AddedAffectedEntityEvent"; id: string }
+        | { __typename: "AddedArtefactEvent"; id: string }
+        | { __typename: "AddedLabelEvent"; id: string }
+        | { __typename: "AddedToPinnedIssuesEvent"; id: string }
+        | { __typename: "AddedToTrackableEvent"; id: string }
+        | { __typename: "AggregatedIssue"; id: string }
+        | { __typename: "AggregatedIssueRelation"; id: string }
+        | { __typename: "Artefact"; id: string }
+        | { __typename: "ArtefactTemplate"; isDeprecated: boolean; id: string }
+        | { __typename: "Assignment"; id: string }
+        | { __typename: "AssignmentType"; id: string }
+        | { __typename: "AssignmentTypeChangedEvent"; id: string }
+        | { __typename: "Body"; id: string }
+        | { __typename: "Component"; id: string }
+        | { __typename: "ComponentPermission"; id: string }
+        | { __typename: "ComponentTemplate"; isDeprecated: boolean; id: string }
+        | { __typename: "ComponentVersion"; id: string }
+        | { __typename: "ComponentVersionTemplate"; id: string }
+        | { __typename: "FillStyle"; id: string }
+        | { __typename: "GlobalPermission"; id: string }
+        | { __typename: "GropiusUser"; id: string }
+        | { __typename: "IMS"; id: string }
+        | { __typename: "IMSIssue"; id: string }
+        | { __typename: "IMSIssueTemplate"; id: string }
+        | { __typename: "IMSPermission"; id: string }
+        | { __typename: "IMSProject"; id: string }
+        | { __typename: "IMSProjectTemplate"; id: string }
+        | { __typename: "IMSTemplate"; isDeprecated: boolean; id: string }
+        | { __typename: "IMSUser"; id: string }
+        | { __typename: "IMSUserTemplate"; id: string }
+        | { __typename: "IncomingRelationTypeChangedEvent"; id: string }
+        | { __typename: "Interface"; id: string }
+        | { __typename: "InterfaceDefinition"; id: string }
+        | { __typename: "InterfacePart"; id: string }
+        | { __typename: "InterfacePartTemplate"; id: string }
+        | { __typename: "InterfaceSpecification"; id: string }
+        | { __typename: "InterfaceSpecificationDerivationCondition"; id: string }
+        | { __typename: "InterfaceSpecificationTemplate"; isDeprecated: boolean; id: string }
+        | { __typename: "InterfaceSpecificationVersion"; id: string }
+        | { __typename: "InterfaceSpecificationVersionTemplate"; id: string }
+        | { __typename: "IntraComponentDependencyParticipant"; id: string }
+        | { __typename: "IntraComponentDependencySpecification"; id: string }
+        | { __typename: "IntraComponentDependencySpecificationType"; id: string }
+        | { __typename: "Issue"; id: string }
+        | { __typename: "IssueComment"; id: string }
+        | { __typename: "IssuePriority"; id: string }
+        | { __typename: "IssueRelation"; id: string }
+        | { __typename: "IssueRelationType"; id: string }
+        | { __typename: "IssueState"; id: string }
+        | { __typename: "IssueTemplate"; isDeprecated: boolean; id: string }
+        | { __typename: "IssueType"; id: string }
+        | { __typename: "Label"; id: string }
+        | { __typename: "LegalInformation"; id: string }
+        | { __typename: "OutgoingRelationTypeChangedEvent"; id: string }
+        | { __typename: "PriorityChangedEvent"; id: string }
+        | { __typename: "Project"; id: string }
+        | { __typename: "ProjectPermission"; id: string }
+        | { __typename: "RelatedByIssueEvent"; id: string }
+        | { __typename: "Relation"; id: string }
+        | { __typename: "RelationCondition"; id: string }
+        | { __typename: "RelationLayout"; id: string }
+        | { __typename: "RelationPartnerLayout"; id: string }
+        | { __typename: "RelationTemplate"; isDeprecated: boolean; id: string }
+        | { __typename: "RemovedAffectedEntityEvent"; id: string }
+        | { __typename: "RemovedArtefactEvent"; id: string }
+        | { __typename: "RemovedAssignmentEvent"; id: string }
+        | { __typename: "RemovedFromPinnedIssuesEvent"; id: string }
+        | { __typename: "RemovedFromTrackableEvent"; id: string }
+        | { __typename: "RemovedIncomingRelationEvent"; id: string }
+        | { __typename: "RemovedLabelEvent"; id: string }
+        | { __typename: "RemovedOutgoingRelationEvent"; id: string }
+        | { __typename: "RemovedTemplatedFieldEvent"; id: string }
+        | { __typename: "StateChangedEvent"; id: string }
+        | { __typename: "StrokeStyle"; id: string }
+        | { __typename: "TemplateChangedEvent"; id: string }
+        | { __typename: "TemplatedFieldChangedEvent"; id: string }
+        | { __typename: "TitleChangedEvent"; id: string }
+        | { __typename: "TypeChangedEvent"; id: string }
+        | { __typename: "View"; id: string }
+        | null;
+};
+
+export type UpdateTemplateDeprecationStatusMutationVariables = Exact<{
+    id: string;
+    isDeprecated: boolean;
+}>;
+
+export type UpdateTemplateDeprecationStatusMutation = {
+    __typename: "Mutation";
+    updateTemplateDeprecationStatus: {
+        __typename: "UpdateTemplateDeprecationStatusPayload";
+        template:
+            | { __typename: "ArtefactTemplate"; id: string; isDeprecated: boolean }
+            | { __typename: "ComponentTemplate"; id: string; isDeprecated: boolean }
+            | { __typename: "IMSTemplate"; id: string; isDeprecated: boolean }
+            | { __typename: "InterfaceSpecificationTemplate"; id: string; isDeprecated: boolean }
+            | { __typename: "IssueTemplate"; id: string; isDeprecated: boolean }
+            | { __typename: "RelationTemplate"; id: string; isDeprecated: boolean };
+    };
+};
+
 export type GetInterfaceSpecificationVisibilityInfoQueryVariables = Exact<{
     id: string;
     componentTemplate: string;
@@ -5627,6 +6065,18 @@ export type AddInterfaceSpecificationVersionToComponentVersionMutation = {
     __typename: "Mutation";
     addInterfaceSpecificationVersionToComponentVersion: {
         __typename: "AddInterfaceSpecificationVersionToComponentVersionPayload";
+    };
+};
+
+export type CreateArtefactTemplateMutationVariables = Exact<{
+    input: CreateArtefactTemplateInput;
+}>;
+
+export type CreateArtefactTemplateMutation = {
+    __typename: "Mutation";
+    createArtefactTemplate: {
+        __typename: "CreateArtefactTemplatePayload";
+        artefactTemplate: { __typename: "ArtefactTemplate"; id: string };
     };
 };
 
@@ -5743,6 +6193,18 @@ export type CreateComponentFromDialogMutation = {
                 nodes: Array<{ __typename: "ComponentVersion"; id: string }>;
             };
         };
+    };
+};
+
+export type CreateComponentTemplateMutationVariables = Exact<{
+    input: CreateComponentTemplateInput;
+}>;
+
+export type CreateComponentTemplateMutation = {
+    __typename: "Mutation";
+    createComponentTemplate: {
+        __typename: "CreateComponentTemplatePayload";
+        componentTemplate: { __typename: "ComponentTemplate"; id: string };
     };
 };
 
@@ -6182,6 +6644,18 @@ export type CreateInterfaceSpecificationFromDialogMutation = {
                 nodes: Array<{ __typename: "InterfaceSpecificationVersion"; id: string }>;
             };
         };
+    };
+};
+
+export type CreateInterfaceSpecificationTemplateMutationVariables = Exact<{
+    input: CreateInterfaceSpecificationTemplateInput;
+}>;
+
+export type CreateInterfaceSpecificationTemplateMutation = {
+    __typename: "Mutation";
+    createInterfaceSpecificationTemplate: {
+        __typename: "CreateInterfaceSpecificationTemplatePayload";
+        interfaceSpecificationTemplate: { __typename: "InterfaceSpecificationTemplate"; id: string };
     };
 };
 
@@ -6679,6 +7153,137 @@ export type CreateProjectMutation = {
     createProject: { __typename: "CreateProjectPayload"; project: { __typename: "Project"; id: string } };
 };
 
+export type CreateRelationTemplateMutationVariables = Exact<{
+    input: CreateRelationTemplateInput;
+}>;
+
+export type CreateRelationTemplateMutation = {
+    __typename: "Mutation";
+    createRelationTemplate: {
+        __typename: "CreateRelationTemplatePayload";
+        relationTemplate: { __typename: "RelationTemplate"; id: string };
+    };
+};
+
+export type GetExtendedTemplateQueryVariables = Exact<{
+    id: string;
+}>;
+
+export type GetExtendedTemplateQuery = {
+    __typename: "Query";
+    node:
+        | { __typename: "AddedAffectedEntityEvent"; id: string }
+        | { __typename: "AddedArtefactEvent"; id: string }
+        | { __typename: "AddedLabelEvent"; id: string }
+        | { __typename: "AddedToPinnedIssuesEvent"; id: string }
+        | { __typename: "AddedToTrackableEvent"; id: string }
+        | { __typename: "AggregatedIssue"; id: string }
+        | { __typename: "AggregatedIssueRelation"; id: string }
+        | { __typename: "Artefact"; id: string }
+        | {
+              __typename: "ArtefactTemplate";
+              name: string;
+              id: string;
+              templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+          }
+        | { __typename: "Assignment"; id: string }
+        | { __typename: "AssignmentType"; id: string }
+        | { __typename: "AssignmentTypeChangedEvent"; id: string }
+        | { __typename: "Body"; id: string }
+        | { __typename: "Component"; id: string }
+        | { __typename: "ComponentPermission"; id: string }
+        | {
+              __typename: "ComponentTemplate";
+              name: string;
+              id: string;
+              templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+          }
+        | { __typename: "ComponentVersion"; id: string }
+        | { __typename: "ComponentVersionTemplate"; id: string }
+        | { __typename: "FillStyle"; id: string }
+        | { __typename: "GlobalPermission"; id: string }
+        | { __typename: "GropiusUser"; id: string }
+        | { __typename: "IMS"; id: string }
+        | { __typename: "IMSIssue"; id: string }
+        | { __typename: "IMSIssueTemplate"; id: string }
+        | { __typename: "IMSPermission"; id: string }
+        | { __typename: "IMSProject"; id: string }
+        | { __typename: "IMSProjectTemplate"; id: string }
+        | {
+              __typename: "IMSTemplate";
+              name: string;
+              id: string;
+              templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+          }
+        | { __typename: "IMSUser"; id: string }
+        | { __typename: "IMSUserTemplate"; id: string }
+        | { __typename: "IncomingRelationTypeChangedEvent"; id: string }
+        | { __typename: "Interface"; id: string }
+        | { __typename: "InterfaceDefinition"; id: string }
+        | { __typename: "InterfacePart"; id: string }
+        | { __typename: "InterfacePartTemplate"; id: string }
+        | { __typename: "InterfaceSpecification"; id: string }
+        | { __typename: "InterfaceSpecificationDerivationCondition"; id: string }
+        | {
+              __typename: "InterfaceSpecificationTemplate";
+              name: string;
+              id: string;
+              templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+          }
+        | { __typename: "InterfaceSpecificationVersion"; id: string }
+        | { __typename: "InterfaceSpecificationVersionTemplate"; id: string }
+        | { __typename: "IntraComponentDependencyParticipant"; id: string }
+        | { __typename: "IntraComponentDependencySpecification"; id: string }
+        | { __typename: "IntraComponentDependencySpecificationType"; id: string }
+        | { __typename: "Issue"; id: string }
+        | { __typename: "IssueComment"; id: string }
+        | { __typename: "IssuePriority"; id: string }
+        | { __typename: "IssueRelation"; id: string }
+        | { __typename: "IssueRelationType"; id: string }
+        | { __typename: "IssueState"; id: string }
+        | {
+              __typename: "IssueTemplate";
+              name: string;
+              id: string;
+              templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+          }
+        | { __typename: "IssueType"; id: string }
+        | { __typename: "Label"; id: string }
+        | { __typename: "LegalInformation"; id: string }
+        | { __typename: "OutgoingRelationTypeChangedEvent"; id: string }
+        | { __typename: "PriorityChangedEvent"; id: string }
+        | { __typename: "Project"; id: string }
+        | { __typename: "ProjectPermission"; id: string }
+        | { __typename: "RelatedByIssueEvent"; id: string }
+        | { __typename: "Relation"; id: string }
+        | { __typename: "RelationCondition"; id: string }
+        | { __typename: "RelationLayout"; id: string }
+        | { __typename: "RelationPartnerLayout"; id: string }
+        | {
+              __typename: "RelationTemplate";
+              name: string;
+              id: string;
+              templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+          }
+        | { __typename: "RemovedAffectedEntityEvent"; id: string }
+        | { __typename: "RemovedArtefactEvent"; id: string }
+        | { __typename: "RemovedAssignmentEvent"; id: string }
+        | { __typename: "RemovedFromPinnedIssuesEvent"; id: string }
+        | { __typename: "RemovedFromTrackableEvent"; id: string }
+        | { __typename: "RemovedIncomingRelationEvent"; id: string }
+        | { __typename: "RemovedLabelEvent"; id: string }
+        | { __typename: "RemovedOutgoingRelationEvent"; id: string }
+        | { __typename: "RemovedTemplatedFieldEvent"; id: string }
+        | { __typename: "StateChangedEvent"; id: string }
+        | { __typename: "StrokeStyle"; id: string }
+        | { __typename: "TemplateChangedEvent"; id: string }
+        | { __typename: "TemplatedFieldChangedEvent"; id: string }
+        | { __typename: "TitleChangedEvent"; id: string }
+        | { __typename: "TypeChangedEvent"; id: string }
+        | { __typename: "View"; id: string }
+        | null;
+};
+
 export type CreateViewMutationVariables = Exact<{
     input: CreateViewInput;
 }>;
@@ -6968,6 +7573,21 @@ export type UpdateIssueRelationTypeMutation = {
     updateIssueRelationType: {
         __typename: "UpdateIssueRelationTypePayload";
         issueRelationType: { __typename: "IssueRelationType"; id: string };
+    };
+};
+
+export type UpdateIntraComponentDependencySpecificationTypeMutationVariables = Exact<{
+    input: UpdateIntraComponentDependencySpecificationTypeInput;
+}>;
+
+export type UpdateIntraComponentDependencySpecificationTypeMutation = {
+    __typename: "Mutation";
+    updateIntraComponentDependencySpecificationType: {
+        __typename: "UpdateIntraComponentDependencySpecificationTypePayload";
+        intraComponentDependencySpecificationType: {
+            __typename: "IntraComponentDependencySpecificationType";
+            id: string;
+        };
     };
 };
 
@@ -12132,6 +12752,168 @@ type DefaultSyncPermissionTargetInfo_ImsProject_Fragment = {
 export type DefaultSyncPermissionTargetInfoFragment =
     DefaultSyncPermissionTargetInfo_Ims_Fragment | DefaultSyncPermissionTargetInfo_ImsProject_Fragment;
 
+type AutocompleteTemplateInfo_ArtefactTemplate_Fragment = {
+    __typename: "ArtefactTemplate";
+    id: string;
+    name: string;
+    description: string;
+};
+
+type AutocompleteTemplateInfo_ComponentTemplate_Fragment = {
+    __typename: "ComponentTemplate";
+    id: string;
+    name: string;
+    description: string;
+};
+
+type AutocompleteTemplateInfo_ImsTemplate_Fragment = {
+    __typename: "IMSTemplate";
+    id: string;
+    name: string;
+    description: string;
+};
+
+type AutocompleteTemplateInfo_InterfaceSpecificationTemplate_Fragment = {
+    __typename: "InterfaceSpecificationTemplate";
+    id: string;
+    name: string;
+    description: string;
+};
+
+type AutocompleteTemplateInfo_IssueTemplate_Fragment = {
+    __typename: "IssueTemplate";
+    id: string;
+    name: string;
+    description: string;
+};
+
+type AutocompleteTemplateInfo_RelationTemplate_Fragment = {
+    __typename: "RelationTemplate";
+    id: string;
+    name: string;
+    description: string;
+};
+
+export type AutocompleteTemplateInfoFragment =
+    | AutocompleteTemplateInfo_ArtefactTemplate_Fragment
+    | AutocompleteTemplateInfo_ComponentTemplate_Fragment
+    | AutocompleteTemplateInfo_ImsTemplate_Fragment
+    | AutocompleteTemplateInfo_InterfaceSpecificationTemplate_Fragment
+    | AutocompleteTemplateInfo_IssueTemplate_Fragment
+    | AutocompleteTemplateInfo_RelationTemplate_Fragment;
+
+type SubTemplateDetailsInfo_ComponentVersionTemplate_Fragment = {
+    __typename: "ComponentVersionTemplate";
+    id: string;
+    name: string;
+    description: string;
+    templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+};
+
+type SubTemplateDetailsInfo_ImsIssueTemplate_Fragment = {
+    __typename: "IMSIssueTemplate";
+    id: string;
+    name: string;
+    description: string;
+    templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+};
+
+type SubTemplateDetailsInfo_ImsProjectTemplate_Fragment = {
+    __typename: "IMSProjectTemplate";
+    id: string;
+    name: string;
+    description: string;
+    templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+};
+
+type SubTemplateDetailsInfo_ImsUserTemplate_Fragment = {
+    __typename: "IMSUserTemplate";
+    id: string;
+    name: string;
+    description: string;
+    templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+};
+
+type SubTemplateDetailsInfo_InterfacePartTemplate_Fragment = {
+    __typename: "InterfacePartTemplate";
+    id: string;
+    name: string;
+    description: string;
+    templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+};
+
+type SubTemplateDetailsInfo_InterfaceSpecificationVersionTemplate_Fragment = {
+    __typename: "InterfaceSpecificationVersionTemplate";
+    id: string;
+    name: string;
+    description: string;
+    templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+};
+
+export type SubTemplateDetailsInfoFragment =
+    | SubTemplateDetailsInfo_ComponentVersionTemplate_Fragment
+    | SubTemplateDetailsInfo_ImsIssueTemplate_Fragment
+    | SubTemplateDetailsInfo_ImsProjectTemplate_Fragment
+    | SubTemplateDetailsInfo_ImsUserTemplate_Fragment
+    | SubTemplateDetailsInfo_InterfacePartTemplate_Fragment
+    | SubTemplateDetailsInfo_InterfaceSpecificationVersionTemplate_Fragment;
+
+type TemplateListInfo_ArtefactTemplate_Fragment = {
+    __typename: "ArtefactTemplate";
+    id: string;
+    name: string;
+    description: string;
+    templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string }>;
+};
+
+type TemplateListInfo_ComponentTemplate_Fragment = {
+    __typename: "ComponentTemplate";
+    id: string;
+    name: string;
+    description: string;
+    templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string }>;
+};
+
+type TemplateListInfo_ImsTemplate_Fragment = {
+    __typename: "IMSTemplate";
+    id: string;
+    name: string;
+    description: string;
+    templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string }>;
+};
+
+type TemplateListInfo_InterfaceSpecificationTemplate_Fragment = {
+    __typename: "InterfaceSpecificationTemplate";
+    id: string;
+    name: string;
+    description: string;
+    templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string }>;
+};
+
+type TemplateListInfo_IssueTemplate_Fragment = {
+    __typename: "IssueTemplate";
+    id: string;
+    name: string;
+    description: string;
+    templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string }>;
+};
+
+type TemplateListInfo_RelationTemplate_Fragment = {
+    __typename: "RelationTemplate";
+    id: string;
+    name: string;
+    description: string;
+    templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string }>;
+};
+
+export type TemplateListInfoFragment =
+    | TemplateListInfo_ArtefactTemplate_Fragment
+    | TemplateListInfo_ComponentTemplate_Fragment
+    | TemplateListInfo_ImsTemplate_Fragment
+    | TemplateListInfo_InterfaceSpecificationTemplate_Fragment
+    | TemplateListInfo_IssueTemplate_Fragment
+    | TemplateListInfo_RelationTemplate_Fragment;
+
 type DefaultTimelineItemInfo_AddedAffectedEntityEvent_Fragment = {
     __typename: "AddedAffectedEntityEvent";
     id: string;
@@ -14146,6 +14928,291 @@ export type LegalInformationQuery = {
     legalInformation: {
         __typename: "LegalInformationConnection";
         nodes: Array<{ __typename: "LegalInformation"; id: string; label: string; priority: number }>;
+    };
+};
+
+export type GetIssueTemplateListQueryVariables = Exact<{
+    orderBy: Array<IssueTemplateOrder> | IssueTemplateOrder;
+    count: number;
+    skip: number;
+    isDeprecated: boolean;
+}>;
+
+export type GetIssueTemplateListQuery = {
+    __typename: "Query";
+    issueTemplates: {
+        __typename: "IssueTemplateConnection";
+        totalCount: number;
+        nodes: Array<{
+            __typename: "IssueTemplate";
+            id: string;
+            name: string;
+            description: string;
+            templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string }>;
+        }>;
+    };
+};
+
+export type GetFilteredIssueTemplateListQueryVariables = Exact<{
+    query: string;
+    count: number;
+    isDeprecated: boolean;
+}>;
+
+export type GetFilteredIssueTemplateListQuery = {
+    __typename: "Query";
+    searchIssueTemplates: Array<{
+        __typename: "IssueTemplate";
+        id: string;
+        name: string;
+        description: string;
+        templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string }>;
+    }>;
+};
+
+export type GetComponentTemplateListQueryVariables = Exact<{
+    orderBy: Array<ComponentTemplateOrder> | ComponentTemplateOrder;
+    count: number;
+    skip: number;
+    isDeprecated: boolean;
+}>;
+
+export type GetComponentTemplateListQuery = {
+    __typename: "Query";
+    componentTemplates: {
+        __typename: "ComponentTemplateConnection";
+        totalCount: number;
+        nodes: Array<{
+            __typename: "ComponentTemplate";
+            id: string;
+            name: string;
+            description: string;
+            templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string }>;
+        }>;
+    };
+};
+
+export type GetFilteredComponentTemplateListQueryVariables = Exact<{
+    query: string;
+    count: number;
+    isDeprecated: boolean;
+}>;
+
+export type GetFilteredComponentTemplateListQuery = {
+    __typename: "Query";
+    searchComponentTemplates: Array<{
+        __typename: "ComponentTemplate";
+        id: string;
+        name: string;
+        description: string;
+        templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string }>;
+    }>;
+};
+
+export type GetInterfaceSpecificationTemplateListQueryVariables = Exact<{
+    orderBy: Array<InterfaceSpecificationTemplateOrder> | InterfaceSpecificationTemplateOrder;
+    count: number;
+    skip: number;
+    isDeprecated: boolean;
+}>;
+
+export type GetInterfaceSpecificationTemplateListQuery = {
+    __typename: "Query";
+    interfaceSpecificationTemplates: {
+        __typename: "InterfaceSpecificationTemplateConnection";
+        totalCount: number;
+        nodes: Array<{
+            __typename: "InterfaceSpecificationTemplate";
+            id: string;
+            name: string;
+            description: string;
+            templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string }>;
+        }>;
+    };
+};
+
+export type GetFilteredInterfaceSpecificationTemplateListQueryVariables = Exact<{
+    query: string;
+    count: number;
+    isDeprecated: boolean;
+}>;
+
+export type GetFilteredInterfaceSpecificationTemplateListQuery = {
+    __typename: "Query";
+    searchInterfaceSpecificationTemplates: Array<{
+        __typename: "InterfaceSpecificationTemplate";
+        id: string;
+        name: string;
+        description: string;
+        templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string }>;
+    }>;
+};
+
+export type GetRelationTemplateListQueryVariables = Exact<{
+    orderBy: Array<RelationTemplateOrder> | RelationTemplateOrder;
+    count: number;
+    skip: number;
+    isDeprecated: boolean;
+}>;
+
+export type GetRelationTemplateListQuery = {
+    __typename: "Query";
+    relationTemplates: {
+        __typename: "RelationTemplateConnection";
+        totalCount: number;
+        nodes: Array<{
+            __typename: "RelationTemplate";
+            id: string;
+            name: string;
+            description: string;
+            templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string }>;
+        }>;
+    };
+};
+
+export type GetFilteredRelationTemplateListQueryVariables = Exact<{
+    query: string;
+    count: number;
+    isDeprecated: boolean;
+}>;
+
+export type GetFilteredRelationTemplateListQuery = {
+    __typename: "Query";
+    searchRelationTemplates: Array<{
+        __typename: "RelationTemplate";
+        id: string;
+        name: string;
+        description: string;
+        templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string }>;
+    }>;
+};
+
+export type GetArtefactTemplateListQueryVariables = Exact<{
+    orderBy: Array<ArtefactTemplateOrder> | ArtefactTemplateOrder;
+    count: number;
+    skip: number;
+    isDeprecated: boolean;
+    name: string;
+}>;
+
+export type GetArtefactTemplateListQuery = {
+    __typename: "Query";
+    artefactTemplates: {
+        __typename: "ArtefactTemplateConnection";
+        totalCount: number;
+        nodes: Array<{
+            __typename: "ArtefactTemplate";
+            id: string;
+            name: string;
+            description: string;
+            templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string }>;
+        }>;
+    };
+};
+
+export type SearchIssueTemplatesForListQueryVariables = Exact<{
+    query: string;
+    count: number;
+}>;
+
+export type SearchIssueTemplatesForListQuery = {
+    __typename: "Query";
+    searchIssueTemplates: Array<{ __typename: "IssueTemplate"; id: string; name: string; description: string }>;
+};
+
+export type FirstIssueTemplatesForListQueryVariables = Exact<{
+    count: number;
+}>;
+
+export type FirstIssueTemplatesForListQuery = {
+    __typename: "Query";
+    issueTemplates: {
+        __typename: "IssueTemplateConnection";
+        nodes: Array<{ __typename: "IssueTemplate"; id: string; name: string; description: string }>;
+    };
+};
+
+export type SearchComponentTemplatesForListQueryVariables = Exact<{
+    query: string;
+    count: number;
+}>;
+
+export type SearchComponentTemplatesForListQuery = {
+    __typename: "Query";
+    searchComponentTemplates: Array<{ __typename: "ComponentTemplate"; id: string; name: string; description: string }>;
+};
+
+export type FirstComponentTemplatesForListQueryVariables = Exact<{
+    count: number;
+}>;
+
+export type FirstComponentTemplatesForListQuery = {
+    __typename: "Query";
+    componentTemplates: {
+        __typename: "ComponentTemplateConnection";
+        nodes: Array<{ __typename: "ComponentTemplate"; id: string; name: string; description: string }>;
+    };
+};
+
+export type SearchInterfaceSpecificationTemplatesForListQueryVariables = Exact<{
+    query: string;
+    count: number;
+}>;
+
+export type SearchInterfaceSpecificationTemplatesForListQuery = {
+    __typename: "Query";
+    searchInterfaceSpecificationTemplates: Array<{
+        __typename: "InterfaceSpecificationTemplate";
+        id: string;
+        name: string;
+        description: string;
+    }>;
+};
+
+export type FirstInterfaceSpecificationTemplatesForListQueryVariables = Exact<{
+    count: number;
+}>;
+
+export type FirstInterfaceSpecificationTemplatesForListQuery = {
+    __typename: "Query";
+    interfaceSpecificationTemplates: {
+        __typename: "InterfaceSpecificationTemplateConnection";
+        nodes: Array<{ __typename: "InterfaceSpecificationTemplate"; id: string; name: string; description: string }>;
+    };
+};
+
+export type SearchRelationTemplatesForListQueryVariables = Exact<{
+    query: string;
+    count: number;
+}>;
+
+export type SearchRelationTemplatesForListQuery = {
+    __typename: "Query";
+    searchRelationTemplates: Array<{ __typename: "RelationTemplate"; id: string; name: string; description: string }>;
+};
+
+export type FirstRelationTemplatesForListQueryVariables = Exact<{
+    count: number;
+}>;
+
+export type FirstRelationTemplatesForListQuery = {
+    __typename: "Query";
+    relationTemplates: {
+        __typename: "RelationTemplateConnection";
+        nodes: Array<{ __typename: "RelationTemplate"; id: string; name: string; description: string }>;
+    };
+};
+
+export type ArtefactTemplatesForListQueryVariables = Exact<{
+    name: string;
+    count: number;
+}>;
+
+export type ArtefactTemplatesForListQuery = {
+    __typename: "Query";
+    artefactTemplates: {
+        __typename: "ArtefactTemplateConnection";
+        nodes: Array<{ __typename: "ArtefactTemplate"; id: string; name: string; description: string }>;
     };
 };
 
@@ -16625,50 +17692,11 @@ export type GetFilteredProjectListQuery = {
     }>;
 };
 
-export type GetIssueTemplateListQueryVariables = Exact<{
-    orderBy: Array<IssueTemplateOrder> | IssueTemplateOrder;
-    count: number;
-    skip: number;
-    isDeprecated: boolean;
-}>;
-
-export type GetIssueTemplateListQuery = {
-    __typename: "Query";
-    issueTemplates: {
-        __typename: "IssueTemplateConnection";
-        totalCount: number;
-        nodes: Array<{
-            __typename: "IssueTemplate";
-            id: string;
-            name: string;
-            description: string;
-            templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
-        }>;
-    };
-};
-
-export type GetFilteredIssueTemplateListQueryVariables = Exact<{
-    query: string;
-    count: number;
-    isDeprecated: boolean;
-}>;
-
-export type GetFilteredIssueTemplateListQuery = {
-    __typename: "Query";
-    searchIssueTemplates: Array<{
-        __typename: "IssueTemplate";
-        id: string;
-        name: string;
-        description: string;
-        templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
-    }>;
-};
-
-export type GetIssueTemplateDeprecationStatusQueryVariables = Exact<{
+export type GetComponentVersionTemplateQueryVariables = Exact<{
     id: string;
 }>;
 
-export type GetIssueTemplateDeprecationStatusQuery = {
+export type GetComponentVersionTemplateQuery = {
     __typename: "Query";
     node:
         | { __typename: "AddedAffectedEntityEvent"; id: string }
@@ -16686,7 +17714,17 @@ export type GetIssueTemplateDeprecationStatusQuery = {
         | { __typename: "Body"; id: string }
         | { __typename: "Component"; id: string }
         | { __typename: "ComponentPermission"; id: string }
-        | { __typename: "ComponentTemplate"; id: string }
+        | {
+              __typename: "ComponentTemplate";
+              id: string;
+              componentVersionTemplate: {
+                  __typename: "ComponentVersionTemplate";
+                  id: string;
+                  name: string;
+                  description: string;
+                  templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+              };
+          }
         | { __typename: "ComponentVersion"; id: string }
         | { __typename: "ComponentVersionTemplate"; id: string }
         | { __typename: "FillStyle"; id: string }
@@ -16720,7 +17758,7 @@ export type GetIssueTemplateDeprecationStatusQuery = {
         | { __typename: "IssueRelation"; id: string }
         | { __typename: "IssueRelationType"; id: string }
         | { __typename: "IssueState"; id: string }
-        | { __typename: "IssueTemplate"; isDeprecated: boolean; id: string }
+        | { __typename: "IssueTemplate"; id: string }
         | { __typename: "IssueType"; id: string }
         | { __typename: "Label"; id: string }
         | { __typename: "LegalInformation"; id: string }
@@ -16753,30 +17791,11 @@ export type GetIssueTemplateDeprecationStatusQuery = {
         | null;
 };
 
-export type UpdateIssueTemplateDeprecationStatusMutationVariables = Exact<{
-    id: string;
-    isDeprecated: boolean;
-}>;
-
-export type UpdateIssueTemplateDeprecationStatusMutation = {
-    __typename: "Mutation";
-    updateTemplateDeprecationStatus: {
-        __typename: "UpdateTemplateDeprecationStatusPayload";
-        template:
-            | { __typename: "ArtefactTemplate"; id: string; isDeprecated: boolean }
-            | { __typename: "ComponentTemplate"; id: string; isDeprecated: boolean }
-            | { __typename: "IMSTemplate"; id: string; isDeprecated: boolean }
-            | { __typename: "InterfaceSpecificationTemplate"; id: string; isDeprecated: boolean }
-            | { __typename: "IssueTemplate"; id: string; isDeprecated: boolean }
-            | { __typename: "RelationTemplate"; id: string; isDeprecated: boolean };
-    };
-};
-
-export type GetIssueTemplateGeneralDetailsQueryVariables = Exact<{
+export type GetInterfaceSpecificationVersionTemplateQueryVariables = Exact<{
     id: string;
 }>;
 
-export type GetIssueTemplateGeneralDetailsQuery = {
+export type GetInterfaceSpecificationVersionTemplateQuery = {
     __typename: "Query";
     node:
         | { __typename: "AddedAffectedEntityEvent"; id: string }
@@ -16816,7 +17835,398 @@ export type GetIssueTemplateGeneralDetailsQuery = {
         | { __typename: "InterfacePartTemplate"; id: string }
         | { __typename: "InterfaceSpecification"; id: string }
         | { __typename: "InterfaceSpecificationDerivationCondition"; id: string }
-        | { __typename: "InterfaceSpecificationTemplate"; id: string }
+        | {
+              __typename: "InterfaceSpecificationTemplate";
+              id: string;
+              interfaceSpecificationVersionTemplate: {
+                  __typename: "InterfaceSpecificationVersionTemplate";
+                  id: string;
+                  name: string;
+                  description: string;
+                  templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+              };
+          }
+        | { __typename: "InterfaceSpecificationVersion"; id: string }
+        | { __typename: "InterfaceSpecificationVersionTemplate"; id: string }
+        | { __typename: "IntraComponentDependencyParticipant"; id: string }
+        | { __typename: "IntraComponentDependencySpecification"; id: string }
+        | { __typename: "IntraComponentDependencySpecificationType"; id: string }
+        | { __typename: "Issue"; id: string }
+        | { __typename: "IssueComment"; id: string }
+        | { __typename: "IssuePriority"; id: string }
+        | { __typename: "IssueRelation"; id: string }
+        | { __typename: "IssueRelationType"; id: string }
+        | { __typename: "IssueState"; id: string }
+        | { __typename: "IssueTemplate"; id: string }
+        | { __typename: "IssueType"; id: string }
+        | { __typename: "Label"; id: string }
+        | { __typename: "LegalInformation"; id: string }
+        | { __typename: "OutgoingRelationTypeChangedEvent"; id: string }
+        | { __typename: "PriorityChangedEvent"; id: string }
+        | { __typename: "Project"; id: string }
+        | { __typename: "ProjectPermission"; id: string }
+        | { __typename: "RelatedByIssueEvent"; id: string }
+        | { __typename: "Relation"; id: string }
+        | { __typename: "RelationCondition"; id: string }
+        | { __typename: "RelationLayout"; id: string }
+        | { __typename: "RelationPartnerLayout"; id: string }
+        | { __typename: "RelationTemplate"; id: string }
+        | { __typename: "RemovedAffectedEntityEvent"; id: string }
+        | { __typename: "RemovedArtefactEvent"; id: string }
+        | { __typename: "RemovedAssignmentEvent"; id: string }
+        | { __typename: "RemovedFromPinnedIssuesEvent"; id: string }
+        | { __typename: "RemovedFromTrackableEvent"; id: string }
+        | { __typename: "RemovedIncomingRelationEvent"; id: string }
+        | { __typename: "RemovedLabelEvent"; id: string }
+        | { __typename: "RemovedOutgoingRelationEvent"; id: string }
+        | { __typename: "RemovedTemplatedFieldEvent"; id: string }
+        | { __typename: "StateChangedEvent"; id: string }
+        | { __typename: "StrokeStyle"; id: string }
+        | { __typename: "TemplateChangedEvent"; id: string }
+        | { __typename: "TemplatedFieldChangedEvent"; id: string }
+        | { __typename: "TitleChangedEvent"; id: string }
+        | { __typename: "TypeChangedEvent"; id: string }
+        | { __typename: "View"; id: string }
+        | null;
+};
+
+export type GetInterfacePartTemplateQueryVariables = Exact<{
+    id: string;
+}>;
+
+export type GetInterfacePartTemplateQuery = {
+    __typename: "Query";
+    node:
+        | { __typename: "AddedAffectedEntityEvent"; id: string }
+        | { __typename: "AddedArtefactEvent"; id: string }
+        | { __typename: "AddedLabelEvent"; id: string }
+        | { __typename: "AddedToPinnedIssuesEvent"; id: string }
+        | { __typename: "AddedToTrackableEvent"; id: string }
+        | { __typename: "AggregatedIssue"; id: string }
+        | { __typename: "AggregatedIssueRelation"; id: string }
+        | { __typename: "Artefact"; id: string }
+        | { __typename: "ArtefactTemplate"; id: string }
+        | { __typename: "Assignment"; id: string }
+        | { __typename: "AssignmentType"; id: string }
+        | { __typename: "AssignmentTypeChangedEvent"; id: string }
+        | { __typename: "Body"; id: string }
+        | { __typename: "Component"; id: string }
+        | { __typename: "ComponentPermission"; id: string }
+        | { __typename: "ComponentTemplate"; id: string }
+        | { __typename: "ComponentVersion"; id: string }
+        | { __typename: "ComponentVersionTemplate"; id: string }
+        | { __typename: "FillStyle"; id: string }
+        | { __typename: "GlobalPermission"; id: string }
+        | { __typename: "GropiusUser"; id: string }
+        | { __typename: "IMS"; id: string }
+        | { __typename: "IMSIssue"; id: string }
+        | { __typename: "IMSIssueTemplate"; id: string }
+        | { __typename: "IMSPermission"; id: string }
+        | { __typename: "IMSProject"; id: string }
+        | { __typename: "IMSProjectTemplate"; id: string }
+        | { __typename: "IMSTemplate"; id: string }
+        | { __typename: "IMSUser"; id: string }
+        | { __typename: "IMSUserTemplate"; id: string }
+        | { __typename: "IncomingRelationTypeChangedEvent"; id: string }
+        | { __typename: "Interface"; id: string }
+        | { __typename: "InterfaceDefinition"; id: string }
+        | { __typename: "InterfacePart"; id: string }
+        | { __typename: "InterfacePartTemplate"; id: string }
+        | { __typename: "InterfaceSpecification"; id: string }
+        | { __typename: "InterfaceSpecificationDerivationCondition"; id: string }
+        | {
+              __typename: "InterfaceSpecificationTemplate";
+              id: string;
+              interfacePartTemplate: {
+                  __typename: "InterfacePartTemplate";
+                  id: string;
+                  name: string;
+                  description: string;
+                  templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+              };
+          }
+        | { __typename: "InterfaceSpecificationVersion"; id: string }
+        | { __typename: "InterfaceSpecificationVersionTemplate"; id: string }
+        | { __typename: "IntraComponentDependencyParticipant"; id: string }
+        | { __typename: "IntraComponentDependencySpecification"; id: string }
+        | { __typename: "IntraComponentDependencySpecificationType"; id: string }
+        | { __typename: "Issue"; id: string }
+        | { __typename: "IssueComment"; id: string }
+        | { __typename: "IssuePriority"; id: string }
+        | { __typename: "IssueRelation"; id: string }
+        | { __typename: "IssueRelationType"; id: string }
+        | { __typename: "IssueState"; id: string }
+        | { __typename: "IssueTemplate"; id: string }
+        | { __typename: "IssueType"; id: string }
+        | { __typename: "Label"; id: string }
+        | { __typename: "LegalInformation"; id: string }
+        | { __typename: "OutgoingRelationTypeChangedEvent"; id: string }
+        | { __typename: "PriorityChangedEvent"; id: string }
+        | { __typename: "Project"; id: string }
+        | { __typename: "ProjectPermission"; id: string }
+        | { __typename: "RelatedByIssueEvent"; id: string }
+        | { __typename: "Relation"; id: string }
+        | { __typename: "RelationCondition"; id: string }
+        | { __typename: "RelationLayout"; id: string }
+        | { __typename: "RelationPartnerLayout"; id: string }
+        | { __typename: "RelationTemplate"; id: string }
+        | { __typename: "RemovedAffectedEntityEvent"; id: string }
+        | { __typename: "RemovedArtefactEvent"; id: string }
+        | { __typename: "RemovedAssignmentEvent"; id: string }
+        | { __typename: "RemovedFromPinnedIssuesEvent"; id: string }
+        | { __typename: "RemovedFromTrackableEvent"; id: string }
+        | { __typename: "RemovedIncomingRelationEvent"; id: string }
+        | { __typename: "RemovedLabelEvent"; id: string }
+        | { __typename: "RemovedOutgoingRelationEvent"; id: string }
+        | { __typename: "RemovedTemplatedFieldEvent"; id: string }
+        | { __typename: "StateChangedEvent"; id: string }
+        | { __typename: "StrokeStyle"; id: string }
+        | { __typename: "TemplateChangedEvent"; id: string }
+        | { __typename: "TemplatedFieldChangedEvent"; id: string }
+        | { __typename: "TitleChangedEvent"; id: string }
+        | { __typename: "TypeChangedEvent"; id: string }
+        | { __typename: "View"; id: string }
+        | null;
+};
+
+export type UpdateComponentVersionTemplateMutationVariables = Exact<{
+    input: UpdateComponentVersionTemplateInput;
+}>;
+
+export type UpdateComponentVersionTemplateMutation = {
+    __typename: "Mutation";
+    updateComponentVersionTemplate: {
+        __typename: "UpdateComponentVersionTemplatePayload";
+        componentVersionTemplate: { __typename: "ComponentVersionTemplate"; id: string };
+    };
+};
+
+export type UpdateInterfaceSpecificationVersionTemplateMutationVariables = Exact<{
+    input: UpdateInterfaceSpecificationVersionTemplateInput;
+}>;
+
+export type UpdateInterfaceSpecificationVersionTemplateMutation = {
+    __typename: "Mutation";
+    updateInterfaceSpecificationVersionTemplate: {
+        __typename: "UpdateInterfaceSpecificationVersionTemplatePayload";
+        interfaceSpecificationVersionTemplate: { __typename: "InterfaceSpecificationVersionTemplate"; id: string };
+    };
+};
+
+export type UpdateInterfacePartTemplateMutationVariables = Exact<{
+    input: UpdateInterfacePartTemplateInput;
+}>;
+
+export type UpdateInterfacePartTemplateMutation = {
+    __typename: "Mutation";
+    updateInterfacePartTemplate: {
+        __typename: "UpdateInterfacePartTemplatePayload";
+        interfacePartTemplate: { __typename: "InterfacePartTemplate"; id: string };
+    };
+};
+
+export type GetTemplateFieldSpecificationsQueryVariables = Exact<{
+    id: string;
+}>;
+
+export type GetTemplateFieldSpecificationsQuery = {
+    __typename: "Query";
+    node:
+        | { __typename: "AddedAffectedEntityEvent"; id: string }
+        | { __typename: "AddedArtefactEvent"; id: string }
+        | { __typename: "AddedLabelEvent"; id: string }
+        | { __typename: "AddedToPinnedIssuesEvent"; id: string }
+        | { __typename: "AddedToTrackableEvent"; id: string }
+        | { __typename: "AggregatedIssue"; id: string }
+        | { __typename: "AggregatedIssueRelation"; id: string }
+        | { __typename: "Artefact"; id: string }
+        | {
+              __typename: "ArtefactTemplate";
+              id: string;
+              templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+          }
+        | { __typename: "Assignment"; id: string }
+        | { __typename: "AssignmentType"; id: string }
+        | { __typename: "AssignmentTypeChangedEvent"; id: string }
+        | { __typename: "Body"; id: string }
+        | { __typename: "Component"; id: string }
+        | { __typename: "ComponentPermission"; id: string }
+        | {
+              __typename: "ComponentTemplate";
+              id: string;
+              templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+          }
+        | { __typename: "ComponentVersion"; id: string }
+        | {
+              __typename: "ComponentVersionTemplate";
+              id: string;
+              templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+          }
+        | { __typename: "FillStyle"; id: string }
+        | { __typename: "GlobalPermission"; id: string }
+        | { __typename: "GropiusUser"; id: string }
+        | { __typename: "IMS"; id: string }
+        | { __typename: "IMSIssue"; id: string }
+        | {
+              __typename: "IMSIssueTemplate";
+              id: string;
+              templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+          }
+        | { __typename: "IMSPermission"; id: string }
+        | { __typename: "IMSProject"; id: string }
+        | {
+              __typename: "IMSProjectTemplate";
+              id: string;
+              templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+          }
+        | {
+              __typename: "IMSTemplate";
+              id: string;
+              templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+          }
+        | { __typename: "IMSUser"; id: string }
+        | {
+              __typename: "IMSUserTemplate";
+              id: string;
+              templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+          }
+        | { __typename: "IncomingRelationTypeChangedEvent"; id: string }
+        | { __typename: "Interface"; id: string }
+        | { __typename: "InterfaceDefinition"; id: string }
+        | { __typename: "InterfacePart"; id: string }
+        | {
+              __typename: "InterfacePartTemplate";
+              id: string;
+              templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+          }
+        | { __typename: "InterfaceSpecification"; id: string }
+        | { __typename: "InterfaceSpecificationDerivationCondition"; id: string }
+        | {
+              __typename: "InterfaceSpecificationTemplate";
+              id: string;
+              templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+          }
+        | { __typename: "InterfaceSpecificationVersion"; id: string }
+        | {
+              __typename: "InterfaceSpecificationVersionTemplate";
+              id: string;
+              templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+          }
+        | { __typename: "IntraComponentDependencyParticipant"; id: string }
+        | { __typename: "IntraComponentDependencySpecification"; id: string }
+        | { __typename: "IntraComponentDependencySpecificationType"; id: string }
+        | { __typename: "Issue"; id: string }
+        | { __typename: "IssueComment"; id: string }
+        | { __typename: "IssuePriority"; id: string }
+        | { __typename: "IssueRelation"; id: string }
+        | { __typename: "IssueRelationType"; id: string }
+        | { __typename: "IssueState"; id: string }
+        | {
+              __typename: "IssueTemplate";
+              id: string;
+              templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+          }
+        | { __typename: "IssueType"; id: string }
+        | { __typename: "Label"; id: string }
+        | { __typename: "LegalInformation"; id: string }
+        | { __typename: "OutgoingRelationTypeChangedEvent"; id: string }
+        | { __typename: "PriorityChangedEvent"; id: string }
+        | { __typename: "Project"; id: string }
+        | { __typename: "ProjectPermission"; id: string }
+        | { __typename: "RelatedByIssueEvent"; id: string }
+        | { __typename: "Relation"; id: string }
+        | { __typename: "RelationCondition"; id: string }
+        | { __typename: "RelationLayout"; id: string }
+        | { __typename: "RelationPartnerLayout"; id: string }
+        | {
+              __typename: "RelationTemplate";
+              id: string;
+              templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+          }
+        | { __typename: "RemovedAffectedEntityEvent"; id: string }
+        | { __typename: "RemovedArtefactEvent"; id: string }
+        | { __typename: "RemovedAssignmentEvent"; id: string }
+        | { __typename: "RemovedFromPinnedIssuesEvent"; id: string }
+        | { __typename: "RemovedFromTrackableEvent"; id: string }
+        | { __typename: "RemovedIncomingRelationEvent"; id: string }
+        | { __typename: "RemovedLabelEvent"; id: string }
+        | { __typename: "RemovedOutgoingRelationEvent"; id: string }
+        | { __typename: "RemovedTemplatedFieldEvent"; id: string }
+        | { __typename: "StateChangedEvent"; id: string }
+        | { __typename: "StrokeStyle"; id: string }
+        | { __typename: "TemplateChangedEvent"; id: string }
+        | { __typename: "TemplatedFieldChangedEvent"; id: string }
+        | { __typename: "TitleChangedEvent"; id: string }
+        | { __typename: "TypeChangedEvent"; id: string }
+        | { __typename: "View"; id: string }
+        | null;
+};
+
+export type GetTemplateGeneralDetailsQueryVariables = Exact<{
+    id: string;
+}>;
+
+export type GetTemplateGeneralDetailsQuery = {
+    __typename: "Query";
+    node:
+        | { __typename: "AddedAffectedEntityEvent"; id: string }
+        | { __typename: "AddedArtefactEvent"; id: string }
+        | { __typename: "AddedLabelEvent"; id: string }
+        | { __typename: "AddedToPinnedIssuesEvent"; id: string }
+        | { __typename: "AddedToTrackableEvent"; id: string }
+        | { __typename: "AggregatedIssue"; id: string }
+        | { __typename: "AggregatedIssueRelation"; id: string }
+        | { __typename: "Artefact"; id: string }
+        | { __typename: "ArtefactTemplate"; name: string; description: string; isDeprecated: boolean; id: string }
+        | { __typename: "Assignment"; id: string }
+        | { __typename: "AssignmentType"; id: string }
+        | { __typename: "AssignmentTypeChangedEvent"; id: string }
+        | { __typename: "Body"; id: string }
+        | { __typename: "Component"; id: string }
+        | { __typename: "ComponentPermission"; id: string }
+        | {
+              __typename: "ComponentTemplate";
+              name: string;
+              description: string;
+              isDeprecated: boolean;
+              shapeType: ShapeType;
+              shapeRadius: number | null;
+              id: string;
+              fill: { __typename: "FillStyle"; color: string } | null;
+              stroke: { __typename: "StrokeStyle"; color: string | null; dash: Array<number> | null } | null;
+          }
+        | { __typename: "ComponentVersion"; id: string }
+        | { __typename: "ComponentVersionTemplate"; id: string }
+        | { __typename: "FillStyle"; id: string }
+        | { __typename: "GlobalPermission"; id: string }
+        | { __typename: "GropiusUser"; id: string }
+        | { __typename: "IMS"; id: string }
+        | { __typename: "IMSIssue"; id: string }
+        | { __typename: "IMSIssueTemplate"; id: string }
+        | { __typename: "IMSPermission"; id: string }
+        | { __typename: "IMSProject"; id: string }
+        | { __typename: "IMSProjectTemplate"; id: string }
+        | { __typename: "IMSTemplate"; name: string; description: string; isDeprecated: boolean; id: string }
+        | { __typename: "IMSUser"; id: string }
+        | { __typename: "IMSUserTemplate"; id: string }
+        | { __typename: "IncomingRelationTypeChangedEvent"; id: string }
+        | { __typename: "Interface"; id: string }
+        | { __typename: "InterfaceDefinition"; id: string }
+        | { __typename: "InterfacePart"; id: string }
+        | { __typename: "InterfacePartTemplate"; id: string }
+        | { __typename: "InterfaceSpecification"; id: string }
+        | { __typename: "InterfaceSpecificationDerivationCondition"; id: string }
+        | {
+              __typename: "InterfaceSpecificationTemplate";
+              name: string;
+              description: string;
+              isDeprecated: boolean;
+              shapeType: ShapeType;
+              shapeRadius: number | null;
+              id: string;
+              fill: { __typename: "FillStyle"; color: string } | null;
+              stroke: { __typename: "StrokeStyle"; color: string | null; dash: Array<number> | null } | null;
+          }
         | { __typename: "InterfaceSpecificationVersion"; id: string }
         | { __typename: "InterfaceSpecificationVersionTemplate"; id: string }
         | { __typename: "IntraComponentDependencyParticipant"; id: string }
@@ -16841,7 +18251,15 @@ export type GetIssueTemplateGeneralDetailsQuery = {
         | { __typename: "RelationCondition"; id: string }
         | { __typename: "RelationLayout"; id: string }
         | { __typename: "RelationPartnerLayout"; id: string }
-        | { __typename: "RelationTemplate"; id: string }
+        | {
+              __typename: "RelationTemplate";
+              name: string;
+              description: string;
+              isDeprecated: boolean;
+              markerType: MarkerType;
+              id: string;
+              stroke: { __typename: "StrokeStyle"; color: string | null; dash: Array<number> | null } | null;
+          }
         | { __typename: "RemovedAffectedEntityEvent"; id: string }
         | { __typename: "RemovedArtefactEvent"; id: string }
         | { __typename: "RemovedAssignmentEvent"; id: string }
@@ -16871,6 +18289,455 @@ export type UpdateIssueTemplateMutation = {
         __typename: "UpdateIssueTemplatePayload";
         issueTemplate: { __typename: "IssueTemplate"; id: string };
     };
+};
+
+export type UpdateArtefactTemplateMutationVariables = Exact<{
+    input: UpdateArtefactTemplateInput;
+}>;
+
+export type UpdateArtefactTemplateMutation = {
+    __typename: "Mutation";
+    updateArtefactTemplate: {
+        __typename: "UpdateArtefactTemplatePayload";
+        artefactTemplate: { __typename: "ArtefactTemplate"; id: string };
+    };
+};
+
+export type UpdateComponentTemplateMutationVariables = Exact<{
+    input: UpdateComponentTemplateInput;
+}>;
+
+export type UpdateComponentTemplateMutation = {
+    __typename: "Mutation";
+    updateComponentTemplate: {
+        __typename: "UpdateComponentTemplatePayload";
+        componentTemplate: { __typename: "ComponentTemplate"; id: string };
+    };
+};
+
+export type UpdateInterfaceSpecificationTemplateMutationVariables = Exact<{
+    input: UpdateInterfaceSpecificationTemplateInput;
+}>;
+
+export type UpdateInterfaceSpecificationTemplateMutation = {
+    __typename: "Mutation";
+    updateInterfaceSpecificationTemplate: {
+        __typename: "UpdateInterfaceSpecificationTemplatePayload";
+        interfaceSpecificationTemplate: { __typename: "InterfaceSpecificationTemplate"; id: string };
+    };
+};
+
+export type UpdateRelationTemplateMutationVariables = Exact<{
+    input: UpdateRelationTemplateInput;
+}>;
+
+export type UpdateRelationTemplateMutation = {
+    __typename: "Mutation";
+    updateRelationTemplate: {
+        __typename: "UpdateRelationTemplatePayload";
+        relationTemplate: { __typename: "RelationTemplate"; id: string };
+    };
+};
+
+export type GetTemplateNameQueryVariables = Exact<{
+    id: string;
+}>;
+
+export type GetTemplateNameQuery = {
+    __typename: "Query";
+    node:
+        | { __typename: "AddedAffectedEntityEvent"; id: string }
+        | { __typename: "AddedArtefactEvent"; id: string }
+        | { __typename: "AddedLabelEvent"; id: string }
+        | { __typename: "AddedToPinnedIssuesEvent"; id: string }
+        | { __typename: "AddedToTrackableEvent"; id: string }
+        | { __typename: "AggregatedIssue"; id: string }
+        | { __typename: "AggregatedIssueRelation"; id: string }
+        | { __typename: "Artefact"; id: string }
+        | { __typename: "ArtefactTemplate"; name: string; id: string }
+        | { __typename: "Assignment"; id: string }
+        | { __typename: "AssignmentType"; id: string }
+        | { __typename: "AssignmentTypeChangedEvent"; id: string }
+        | { __typename: "Body"; id: string }
+        | { __typename: "Component"; id: string }
+        | { __typename: "ComponentPermission"; id: string }
+        | { __typename: "ComponentTemplate"; name: string; id: string }
+        | { __typename: "ComponentVersion"; id: string }
+        | { __typename: "ComponentVersionTemplate"; id: string }
+        | { __typename: "FillStyle"; id: string }
+        | { __typename: "GlobalPermission"; id: string }
+        | { __typename: "GropiusUser"; id: string }
+        | { __typename: "IMS"; id: string }
+        | { __typename: "IMSIssue"; id: string }
+        | { __typename: "IMSIssueTemplate"; id: string }
+        | { __typename: "IMSPermission"; id: string }
+        | { __typename: "IMSProject"; id: string }
+        | { __typename: "IMSProjectTemplate"; id: string }
+        | { __typename: "IMSTemplate"; name: string; id: string }
+        | { __typename: "IMSUser"; id: string }
+        | { __typename: "IMSUserTemplate"; id: string }
+        | { __typename: "IncomingRelationTypeChangedEvent"; id: string }
+        | { __typename: "Interface"; id: string }
+        | { __typename: "InterfaceDefinition"; id: string }
+        | { __typename: "InterfacePart"; id: string }
+        | { __typename: "InterfacePartTemplate"; id: string }
+        | { __typename: "InterfaceSpecification"; id: string }
+        | { __typename: "InterfaceSpecificationDerivationCondition"; id: string }
+        | { __typename: "InterfaceSpecificationTemplate"; name: string; id: string }
+        | { __typename: "InterfaceSpecificationVersion"; id: string }
+        | { __typename: "InterfaceSpecificationVersionTemplate"; id: string }
+        | { __typename: "IntraComponentDependencyParticipant"; id: string }
+        | { __typename: "IntraComponentDependencySpecification"; id: string }
+        | { __typename: "IntraComponentDependencySpecificationType"; id: string }
+        | { __typename: "Issue"; id: string }
+        | { __typename: "IssueComment"; id: string }
+        | { __typename: "IssuePriority"; id: string }
+        | { __typename: "IssueRelation"; id: string }
+        | { __typename: "IssueRelationType"; id: string }
+        | { __typename: "IssueState"; id: string }
+        | { __typename: "IssueTemplate"; name: string; id: string }
+        | { __typename: "IssueType"; id: string }
+        | { __typename: "Label"; id: string }
+        | { __typename: "LegalInformation"; id: string }
+        | { __typename: "OutgoingRelationTypeChangedEvent"; id: string }
+        | { __typename: "PriorityChangedEvent"; id: string }
+        | { __typename: "Project"; id: string }
+        | { __typename: "ProjectPermission"; id: string }
+        | { __typename: "RelatedByIssueEvent"; id: string }
+        | { __typename: "Relation"; id: string }
+        | { __typename: "RelationCondition"; id: string }
+        | { __typename: "RelationLayout"; id: string }
+        | { __typename: "RelationPartnerLayout"; id: string }
+        | { __typename: "RelationTemplate"; name: string; id: string }
+        | { __typename: "RemovedAffectedEntityEvent"; id: string }
+        | { __typename: "RemovedArtefactEvent"; id: string }
+        | { __typename: "RemovedAssignmentEvent"; id: string }
+        | { __typename: "RemovedFromPinnedIssuesEvent"; id: string }
+        | { __typename: "RemovedFromTrackableEvent"; id: string }
+        | { __typename: "RemovedIncomingRelationEvent"; id: string }
+        | { __typename: "RemovedLabelEvent"; id: string }
+        | { __typename: "RemovedOutgoingRelationEvent"; id: string }
+        | { __typename: "RemovedTemplatedFieldEvent"; id: string }
+        | { __typename: "StateChangedEvent"; id: string }
+        | { __typename: "StrokeStyle"; id: string }
+        | { __typename: "TemplateChangedEvent"; id: string }
+        | { __typename: "TemplatedFieldChangedEvent"; id: string }
+        | { __typename: "TitleChangedEvent"; id: string }
+        | { __typename: "TypeChangedEvent"; id: string }
+        | { __typename: "View"; id: string }
+        | null;
+};
+
+export type GetComponentTemplateDependencyTypesQueryVariables = Exact<{
+    id: string;
+}>;
+
+export type GetComponentTemplateDependencyTypesQuery = {
+    __typename: "Query";
+    node:
+        | { __typename: "AddedAffectedEntityEvent"; id: string }
+        | { __typename: "AddedArtefactEvent"; id: string }
+        | { __typename: "AddedLabelEvent"; id: string }
+        | { __typename: "AddedToPinnedIssuesEvent"; id: string }
+        | { __typename: "AddedToTrackableEvent"; id: string }
+        | { __typename: "AggregatedIssue"; id: string }
+        | { __typename: "AggregatedIssueRelation"; id: string }
+        | { __typename: "Artefact"; id: string }
+        | { __typename: "ArtefactTemplate"; id: string }
+        | { __typename: "Assignment"; id: string }
+        | { __typename: "AssignmentType"; id: string }
+        | { __typename: "AssignmentTypeChangedEvent"; id: string }
+        | { __typename: "Body"; id: string }
+        | { __typename: "Component"; id: string }
+        | { __typename: "ComponentPermission"; id: string }
+        | {
+              __typename: "ComponentTemplate";
+              id: string;
+              intraComponentDependencySpecificationTypes: {
+                  __typename: "IntraComponentDependencySpecificationTypeConnection";
+                  nodes: Array<{
+                      __typename: "IntraComponentDependencySpecificationType";
+                      id: string;
+                      name: string;
+                      description: string;
+                      partOf: { __typename: "ComponentTemplateConnection"; totalCount: number };
+                  }>;
+              };
+          }
+        | { __typename: "ComponentVersion"; id: string }
+        | { __typename: "ComponentVersionTemplate"; id: string }
+        | { __typename: "FillStyle"; id: string }
+        | { __typename: "GlobalPermission"; id: string }
+        | { __typename: "GropiusUser"; id: string }
+        | { __typename: "IMS"; id: string }
+        | { __typename: "IMSIssue"; id: string }
+        | { __typename: "IMSIssueTemplate"; id: string }
+        | { __typename: "IMSPermission"; id: string }
+        | { __typename: "IMSProject"; id: string }
+        | { __typename: "IMSProjectTemplate"; id: string }
+        | { __typename: "IMSTemplate"; id: string }
+        | { __typename: "IMSUser"; id: string }
+        | { __typename: "IMSUserTemplate"; id: string }
+        | { __typename: "IncomingRelationTypeChangedEvent"; id: string }
+        | { __typename: "Interface"; id: string }
+        | { __typename: "InterfaceDefinition"; id: string }
+        | { __typename: "InterfacePart"; id: string }
+        | { __typename: "InterfacePartTemplate"; id: string }
+        | { __typename: "InterfaceSpecification"; id: string }
+        | { __typename: "InterfaceSpecificationDerivationCondition"; id: string }
+        | { __typename: "InterfaceSpecificationTemplate"; id: string }
+        | { __typename: "InterfaceSpecificationVersion"; id: string }
+        | { __typename: "InterfaceSpecificationVersionTemplate"; id: string }
+        | { __typename: "IntraComponentDependencyParticipant"; id: string }
+        | { __typename: "IntraComponentDependencySpecification"; id: string }
+        | { __typename: "IntraComponentDependencySpecificationType"; id: string }
+        | { __typename: "Issue"; id: string }
+        | { __typename: "IssueComment"; id: string }
+        | { __typename: "IssuePriority"; id: string }
+        | { __typename: "IssueRelation"; id: string }
+        | { __typename: "IssueRelationType"; id: string }
+        | { __typename: "IssueState"; id: string }
+        | { __typename: "IssueTemplate"; id: string }
+        | { __typename: "IssueType"; id: string }
+        | { __typename: "Label"; id: string }
+        | { __typename: "LegalInformation"; id: string }
+        | { __typename: "OutgoingRelationTypeChangedEvent"; id: string }
+        | { __typename: "PriorityChangedEvent"; id: string }
+        | { __typename: "Project"; id: string }
+        | { __typename: "ProjectPermission"; id: string }
+        | { __typename: "RelatedByIssueEvent"; id: string }
+        | { __typename: "Relation"; id: string }
+        | { __typename: "RelationCondition"; id: string }
+        | { __typename: "RelationLayout"; id: string }
+        | { __typename: "RelationPartnerLayout"; id: string }
+        | { __typename: "RelationTemplate"; id: string }
+        | { __typename: "RemovedAffectedEntityEvent"; id: string }
+        | { __typename: "RemovedArtefactEvent"; id: string }
+        | { __typename: "RemovedAssignmentEvent"; id: string }
+        | { __typename: "RemovedFromPinnedIssuesEvent"; id: string }
+        | { __typename: "RemovedFromTrackableEvent"; id: string }
+        | { __typename: "RemovedIncomingRelationEvent"; id: string }
+        | { __typename: "RemovedLabelEvent"; id: string }
+        | { __typename: "RemovedOutgoingRelationEvent"; id: string }
+        | { __typename: "RemovedTemplatedFieldEvent"; id: string }
+        | { __typename: "StateChangedEvent"; id: string }
+        | { __typename: "StrokeStyle"; id: string }
+        | { __typename: "TemplateChangedEvent"; id: string }
+        | { __typename: "TemplatedFieldChangedEvent"; id: string }
+        | { __typename: "TitleChangedEvent"; id: string }
+        | { __typename: "TypeChangedEvent"; id: string }
+        | { __typename: "View"; id: string }
+        | null;
+};
+
+export type GetComponentTemplateInterfaceSpecificationsQueryVariables = Exact<{
+    id: string;
+}>;
+
+export type GetComponentTemplateInterfaceSpecificationsQuery = {
+    __typename: "Query";
+    node:
+        | { __typename: "AddedAffectedEntityEvent"; id: string }
+        | { __typename: "AddedArtefactEvent"; id: string }
+        | { __typename: "AddedLabelEvent"; id: string }
+        | { __typename: "AddedToPinnedIssuesEvent"; id: string }
+        | { __typename: "AddedToTrackableEvent"; id: string }
+        | { __typename: "AggregatedIssue"; id: string }
+        | { __typename: "AggregatedIssueRelation"; id: string }
+        | { __typename: "Artefact"; id: string }
+        | { __typename: "ArtefactTemplate"; id: string }
+        | { __typename: "Assignment"; id: string }
+        | { __typename: "AssignmentType"; id: string }
+        | { __typename: "AssignmentTypeChangedEvent"; id: string }
+        | { __typename: "Body"; id: string }
+        | { __typename: "Component"; id: string }
+        | { __typename: "ComponentPermission"; id: string }
+        | {
+              __typename: "ComponentTemplate";
+              id: string;
+              possibleVisibleInterfaceSpecifications: {
+                  __typename: "InterfaceSpecificationTemplateConnection";
+                  nodes: Array<{
+                      __typename: "InterfaceSpecificationTemplate";
+                      id: string;
+                      name: string;
+                      description: string;
+                  }>;
+              };
+              possibleInvisibleInterfaceSpecifications: {
+                  __typename: "InterfaceSpecificationTemplateConnection";
+                  nodes: Array<{
+                      __typename: "InterfaceSpecificationTemplate";
+                      id: string;
+                      name: string;
+                      description: string;
+                  }>;
+              };
+          }
+        | { __typename: "ComponentVersion"; id: string }
+        | { __typename: "ComponentVersionTemplate"; id: string }
+        | { __typename: "FillStyle"; id: string }
+        | { __typename: "GlobalPermission"; id: string }
+        | { __typename: "GropiusUser"; id: string }
+        | { __typename: "IMS"; id: string }
+        | { __typename: "IMSIssue"; id: string }
+        | { __typename: "IMSIssueTemplate"; id: string }
+        | { __typename: "IMSPermission"; id: string }
+        | { __typename: "IMSProject"; id: string }
+        | { __typename: "IMSProjectTemplate"; id: string }
+        | { __typename: "IMSTemplate"; id: string }
+        | { __typename: "IMSUser"; id: string }
+        | { __typename: "IMSUserTemplate"; id: string }
+        | { __typename: "IncomingRelationTypeChangedEvent"; id: string }
+        | { __typename: "Interface"; id: string }
+        | { __typename: "InterfaceDefinition"; id: string }
+        | { __typename: "InterfacePart"; id: string }
+        | { __typename: "InterfacePartTemplate"; id: string }
+        | { __typename: "InterfaceSpecification"; id: string }
+        | { __typename: "InterfaceSpecificationDerivationCondition"; id: string }
+        | { __typename: "InterfaceSpecificationTemplate"; id: string }
+        | { __typename: "InterfaceSpecificationVersion"; id: string }
+        | { __typename: "InterfaceSpecificationVersionTemplate"; id: string }
+        | { __typename: "IntraComponentDependencyParticipant"; id: string }
+        | { __typename: "IntraComponentDependencySpecification"; id: string }
+        | { __typename: "IntraComponentDependencySpecificationType"; id: string }
+        | { __typename: "Issue"; id: string }
+        | { __typename: "IssueComment"; id: string }
+        | { __typename: "IssuePriority"; id: string }
+        | { __typename: "IssueRelation"; id: string }
+        | { __typename: "IssueRelationType"; id: string }
+        | { __typename: "IssueState"; id: string }
+        | { __typename: "IssueTemplate"; id: string }
+        | { __typename: "IssueType"; id: string }
+        | { __typename: "Label"; id: string }
+        | { __typename: "LegalInformation"; id: string }
+        | { __typename: "OutgoingRelationTypeChangedEvent"; id: string }
+        | { __typename: "PriorityChangedEvent"; id: string }
+        | { __typename: "Project"; id: string }
+        | { __typename: "ProjectPermission"; id: string }
+        | { __typename: "RelatedByIssueEvent"; id: string }
+        | { __typename: "Relation"; id: string }
+        | { __typename: "RelationCondition"; id: string }
+        | { __typename: "RelationLayout"; id: string }
+        | { __typename: "RelationPartnerLayout"; id: string }
+        | { __typename: "RelationTemplate"; id: string }
+        | { __typename: "RemovedAffectedEntityEvent"; id: string }
+        | { __typename: "RemovedArtefactEvent"; id: string }
+        | { __typename: "RemovedAssignmentEvent"; id: string }
+        | { __typename: "RemovedFromPinnedIssuesEvent"; id: string }
+        | { __typename: "RemovedFromTrackableEvent"; id: string }
+        | { __typename: "RemovedIncomingRelationEvent"; id: string }
+        | { __typename: "RemovedLabelEvent"; id: string }
+        | { __typename: "RemovedOutgoingRelationEvent"; id: string }
+        | { __typename: "RemovedTemplatedFieldEvent"; id: string }
+        | { __typename: "StateChangedEvent"; id: string }
+        | { __typename: "StrokeStyle"; id: string }
+        | { __typename: "TemplateChangedEvent"; id: string }
+        | { __typename: "TemplatedFieldChangedEvent"; id: string }
+        | { __typename: "TitleChangedEvent"; id: string }
+        | { __typename: "TypeChangedEvent"; id: string }
+        | { __typename: "View"; id: string }
+        | null;
+};
+
+export type GetInterfaceSpecificationTemplateComponentsQueryVariables = Exact<{
+    id: string;
+}>;
+
+export type GetInterfaceSpecificationTemplateComponentsQuery = {
+    __typename: "Query";
+    node:
+        | { __typename: "AddedAffectedEntityEvent"; id: string }
+        | { __typename: "AddedArtefactEvent"; id: string }
+        | { __typename: "AddedLabelEvent"; id: string }
+        | { __typename: "AddedToPinnedIssuesEvent"; id: string }
+        | { __typename: "AddedToTrackableEvent"; id: string }
+        | { __typename: "AggregatedIssue"; id: string }
+        | { __typename: "AggregatedIssueRelation"; id: string }
+        | { __typename: "Artefact"; id: string }
+        | { __typename: "ArtefactTemplate"; id: string }
+        | { __typename: "Assignment"; id: string }
+        | { __typename: "AssignmentType"; id: string }
+        | { __typename: "AssignmentTypeChangedEvent"; id: string }
+        | { __typename: "Body"; id: string }
+        | { __typename: "Component"; id: string }
+        | { __typename: "ComponentPermission"; id: string }
+        | { __typename: "ComponentTemplate"; id: string }
+        | { __typename: "ComponentVersion"; id: string }
+        | { __typename: "ComponentVersionTemplate"; id: string }
+        | { __typename: "FillStyle"; id: string }
+        | { __typename: "GlobalPermission"; id: string }
+        | { __typename: "GropiusUser"; id: string }
+        | { __typename: "IMS"; id: string }
+        | { __typename: "IMSIssue"; id: string }
+        | { __typename: "IMSIssueTemplate"; id: string }
+        | { __typename: "IMSPermission"; id: string }
+        | { __typename: "IMSProject"; id: string }
+        | { __typename: "IMSProjectTemplate"; id: string }
+        | { __typename: "IMSTemplate"; id: string }
+        | { __typename: "IMSUser"; id: string }
+        | { __typename: "IMSUserTemplate"; id: string }
+        | { __typename: "IncomingRelationTypeChangedEvent"; id: string }
+        | { __typename: "Interface"; id: string }
+        | { __typename: "InterfaceDefinition"; id: string }
+        | { __typename: "InterfacePart"; id: string }
+        | { __typename: "InterfacePartTemplate"; id: string }
+        | { __typename: "InterfaceSpecification"; id: string }
+        | { __typename: "InterfaceSpecificationDerivationCondition"; id: string }
+        | {
+              __typename: "InterfaceSpecificationTemplate";
+              id: string;
+              canBeVisibleOnComponents: {
+                  __typename: "ComponentTemplateConnection";
+                  nodes: Array<{ __typename: "ComponentTemplate"; id: string; name: string; description: string }>;
+              };
+              canBeInvisibleOnComponents: {
+                  __typename: "ComponentTemplateConnection";
+                  nodes: Array<{ __typename: "ComponentTemplate"; id: string; name: string; description: string }>;
+              };
+          }
+        | { __typename: "InterfaceSpecificationVersion"; id: string }
+        | { __typename: "InterfaceSpecificationVersionTemplate"; id: string }
+        | { __typename: "IntraComponentDependencyParticipant"; id: string }
+        | { __typename: "IntraComponentDependencySpecification"; id: string }
+        | { __typename: "IntraComponentDependencySpecificationType"; id: string }
+        | { __typename: "Issue"; id: string }
+        | { __typename: "IssueComment"; id: string }
+        | { __typename: "IssuePriority"; id: string }
+        | { __typename: "IssueRelation"; id: string }
+        | { __typename: "IssueRelationType"; id: string }
+        | { __typename: "IssueState"; id: string }
+        | { __typename: "IssueTemplate"; id: string }
+        | { __typename: "IssueType"; id: string }
+        | { __typename: "Label"; id: string }
+        | { __typename: "LegalInformation"; id: string }
+        | { __typename: "OutgoingRelationTypeChangedEvent"; id: string }
+        | { __typename: "PriorityChangedEvent"; id: string }
+        | { __typename: "Project"; id: string }
+        | { __typename: "ProjectPermission"; id: string }
+        | { __typename: "RelatedByIssueEvent"; id: string }
+        | { __typename: "Relation"; id: string }
+        | { __typename: "RelationCondition"; id: string }
+        | { __typename: "RelationLayout"; id: string }
+        | { __typename: "RelationPartnerLayout"; id: string }
+        | { __typename: "RelationTemplate"; id: string }
+        | { __typename: "RemovedAffectedEntityEvent"; id: string }
+        | { __typename: "RemovedArtefactEvent"; id: string }
+        | { __typename: "RemovedAssignmentEvent"; id: string }
+        | { __typename: "RemovedFromPinnedIssuesEvent"; id: string }
+        | { __typename: "RemovedFromTrackableEvent"; id: string }
+        | { __typename: "RemovedIncomingRelationEvent"; id: string }
+        | { __typename: "RemovedLabelEvent"; id: string }
+        | { __typename: "RemovedOutgoingRelationEvent"; id: string }
+        | { __typename: "RemovedTemplatedFieldEvent"; id: string }
+        | { __typename: "StateChangedEvent"; id: string }
+        | { __typename: "StrokeStyle"; id: string }
+        | { __typename: "TemplateChangedEvent"; id: string }
+        | { __typename: "TemplatedFieldChangedEvent"; id: string }
+        | { __typename: "TitleChangedEvent"; id: string }
+        | { __typename: "TypeChangedEvent"; id: string }
+        | { __typename: "View"; id: string }
+        | null;
 };
 
 export type GetIssueTemplateIssueAttributesQueryVariables = Exact<{
@@ -17112,11 +18979,11 @@ export type GetIssueTemplateLinkageAttributesQuery = {
         | null;
 };
 
-export type GetIssueTemplateQueryVariables = Exact<{
+export type GetRelationTemplateConditionsQueryVariables = Exact<{
     id: string;
 }>;
 
-export type GetIssueTemplateQuery = {
+export type GetRelationTemplateConditionsQuery = {
     __typename: "Query";
     node:
         | { __typename: "AddedAffectedEntityEvent"; id: string }
@@ -17168,7 +19035,7 @@ export type GetIssueTemplateQuery = {
         | { __typename: "IssueRelation"; id: string }
         | { __typename: "IssueRelationType"; id: string }
         | { __typename: "IssueState"; id: string }
-        | { __typename: "IssueTemplate"; name: string; description: string; id: string }
+        | { __typename: "IssueTemplate"; id: string }
         | { __typename: "IssueType"; id: string }
         | { __typename: "Label"; id: string }
         | { __typename: "LegalInformation"; id: string }
@@ -17181,100 +19048,63 @@ export type GetIssueTemplateQuery = {
         | { __typename: "RelationCondition"; id: string }
         | { __typename: "RelationLayout"; id: string }
         | { __typename: "RelationPartnerLayout"; id: string }
-        | { __typename: "RelationTemplate"; id: string }
-        | { __typename: "RemovedAffectedEntityEvent"; id: string }
-        | { __typename: "RemovedArtefactEvent"; id: string }
-        | { __typename: "RemovedAssignmentEvent"; id: string }
-        | { __typename: "RemovedFromPinnedIssuesEvent"; id: string }
-        | { __typename: "RemovedFromTrackableEvent"; id: string }
-        | { __typename: "RemovedIncomingRelationEvent"; id: string }
-        | { __typename: "RemovedLabelEvent"; id: string }
-        | { __typename: "RemovedOutgoingRelationEvent"; id: string }
-        | { __typename: "RemovedTemplatedFieldEvent"; id: string }
-        | { __typename: "StateChangedEvent"; id: string }
-        | { __typename: "StrokeStyle"; id: string }
-        | { __typename: "TemplateChangedEvent"; id: string }
-        | { __typename: "TemplatedFieldChangedEvent"; id: string }
-        | { __typename: "TitleChangedEvent"; id: string }
-        | { __typename: "TypeChangedEvent"; id: string }
-        | { __typename: "View"; id: string }
-        | null;
-};
-
-export type GetIssueTemplateFieldSpecificationsQueryVariables = Exact<{
-    id: string;
-}>;
-
-export type GetIssueTemplateFieldSpecificationsQuery = {
-    __typename: "Query";
-    node:
-        | { __typename: "AddedAffectedEntityEvent"; id: string }
-        | { __typename: "AddedArtefactEvent"; id: string }
-        | { __typename: "AddedLabelEvent"; id: string }
-        | { __typename: "AddedToPinnedIssuesEvent"; id: string }
-        | { __typename: "AddedToTrackableEvent"; id: string }
-        | { __typename: "AggregatedIssue"; id: string }
-        | { __typename: "AggregatedIssueRelation"; id: string }
-        | { __typename: "Artefact"; id: string }
-        | { __typename: "ArtefactTemplate"; id: string }
-        | { __typename: "Assignment"; id: string }
-        | { __typename: "AssignmentType"; id: string }
-        | { __typename: "AssignmentTypeChangedEvent"; id: string }
-        | { __typename: "Body"; id: string }
-        | { __typename: "Component"; id: string }
-        | { __typename: "ComponentPermission"; id: string }
-        | { __typename: "ComponentTemplate"; id: string }
-        | { __typename: "ComponentVersion"; id: string }
-        | { __typename: "ComponentVersionTemplate"; id: string }
-        | { __typename: "FillStyle"; id: string }
-        | { __typename: "GlobalPermission"; id: string }
-        | { __typename: "GropiusUser"; id: string }
-        | { __typename: "IMS"; id: string }
-        | { __typename: "IMSIssue"; id: string }
-        | { __typename: "IMSIssueTemplate"; id: string }
-        | { __typename: "IMSPermission"; id: string }
-        | { __typename: "IMSProject"; id: string }
-        | { __typename: "IMSProjectTemplate"; id: string }
-        | { __typename: "IMSTemplate"; id: string }
-        | { __typename: "IMSUser"; id: string }
-        | { __typename: "IMSUserTemplate"; id: string }
-        | { __typename: "IncomingRelationTypeChangedEvent"; id: string }
-        | { __typename: "Interface"; id: string }
-        | { __typename: "InterfaceDefinition"; id: string }
-        | { __typename: "InterfacePart"; id: string }
-        | { __typename: "InterfacePartTemplate"; id: string }
-        | { __typename: "InterfaceSpecification"; id: string }
-        | { __typename: "InterfaceSpecificationDerivationCondition"; id: string }
-        | { __typename: "InterfaceSpecificationTemplate"; id: string }
-        | { __typename: "InterfaceSpecificationVersion"; id: string }
-        | { __typename: "InterfaceSpecificationVersionTemplate"; id: string }
-        | { __typename: "IntraComponentDependencyParticipant"; id: string }
-        | { __typename: "IntraComponentDependencySpecification"; id: string }
-        | { __typename: "IntraComponentDependencySpecificationType"; id: string }
-        | { __typename: "Issue"; id: string }
-        | { __typename: "IssueComment"; id: string }
-        | { __typename: "IssuePriority"; id: string }
-        | { __typename: "IssueRelation"; id: string }
-        | { __typename: "IssueRelationType"; id: string }
-        | { __typename: "IssueState"; id: string }
         | {
-              __typename: "IssueTemplate";
+              __typename: "RelationTemplate";
               id: string;
-              templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+              relationConditions: {
+                  __typename: "RelationConditionConnection";
+                  nodes: Array<{
+                      __typename: "RelationCondition";
+                      id: string;
+                      from: {
+                          __typename: "RelationPartnerTemplateConnection";
+                          nodes: Array<
+                              | { __typename: "ComponentTemplate"; id: string; name: string; description: string }
+                              | {
+                                    __typename: "InterfaceSpecificationTemplate";
+                                    id: string;
+                                    name: string;
+                                    description: string;
+                                }
+                          >;
+                      };
+                      to: {
+                          __typename: "RelationPartnerTemplateConnection";
+                          nodes: Array<
+                              | { __typename: "ComponentTemplate"; id: string; name: string; description: string }
+                              | {
+                                    __typename: "InterfaceSpecificationTemplate";
+                                    id: string;
+                                    name: string;
+                                    description: string;
+                                }
+                          >;
+                      };
+                      interfaceSpecificationDerivationConditions: {
+                          __typename: "InterfaceSpecificationDerivationConditionConnection";
+                          nodes: Array<{
+                              __typename: "InterfaceSpecificationDerivationCondition";
+                              id: string;
+                              derivesVisibleSelfDefined: boolean;
+                              derivesInvisibleSelfDefined: boolean;
+                              derivesVisibleDerived: boolean;
+                              derivesInvisibleDerived: boolean;
+                              isVisibleDerived: boolean;
+                              isInvisibleDerived: boolean;
+                              derivableInterfaceSpecifications: {
+                                  __typename: "InterfaceSpecificationTemplateConnection";
+                                  nodes: Array<{
+                                      __typename: "InterfaceSpecificationTemplate";
+                                      id: string;
+                                      name: string;
+                                      description: string;
+                                  }>;
+                              };
+                          }>;
+                      };
+                  }>;
+              };
           }
-        | { __typename: "IssueType"; id: string }
-        | { __typename: "Label"; id: string }
-        | { __typename: "LegalInformation"; id: string }
-        | { __typename: "OutgoingRelationTypeChangedEvent"; id: string }
-        | { __typename: "PriorityChangedEvent"; id: string }
-        | { __typename: "Project"; id: string }
-        | { __typename: "ProjectPermission"; id: string }
-        | { __typename: "RelatedByIssueEvent"; id: string }
-        | { __typename: "Relation"; id: string }
-        | { __typename: "RelationCondition"; id: string }
-        | { __typename: "RelationLayout"; id: string }
-        | { __typename: "RelationPartnerLayout"; id: string }
-        | { __typename: "RelationTemplate"; id: string }
         | { __typename: "RemovedAffectedEntityEvent"; id: string }
         | { __typename: "RemovedArtefactEvent"; id: string }
         | { __typename: "RemovedAssignmentEvent"; id: string }
@@ -26519,6 +28349,86 @@ export const DefaultRelationTemplateInfoFragmentDoc = {
         }
     ]
 } as unknown as DocumentNode<DefaultRelationTemplateInfoFragment, unknown>;
+export const AutocompleteTemplateInfoFragmentDoc = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "AutocompleteTemplateInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Template" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<AutocompleteTemplateInfoFragment, unknown>;
+export const SubTemplateDetailsInfoFragmentDoc = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "SubTemplateDetailsInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "SubTemplate" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "templateFieldSpecifications" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } },
+                                { kind: "Field", name: { kind: "Name", value: "value" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<SubTemplateDetailsInfoFragment, unknown>;
+export const TemplateListInfoFragmentDoc = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "TemplateListInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Template" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "templateFieldSpecifications" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<TemplateListInfoFragment, unknown>;
 export const UserTimelineInfoFragmentDoc = {
     kind: "Document",
     definitions: [
@@ -35691,6 +37601,129 @@ export const GetFilteredIssueListForProjectSidebarDocument = {
     GetFilteredIssueListForProjectSidebarQuery,
     GetFilteredIssueListForProjectSidebarQueryVariables
 >;
+export const GetTemplateDeprecationStatusDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "getTemplateDeprecationStatus" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "node" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "id" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "id" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } },
+                                {
+                                    kind: "InlineFragment",
+                                    typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Template" } },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "isDeprecated" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<GetTemplateDeprecationStatusQuery, GetTemplateDeprecationStatusQueryVariables>;
+export const UpdateTemplateDeprecationStatusDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "mutation",
+            name: { kind: "Name", value: "updateTemplateDeprecationStatus" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "isDeprecated" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Boolean" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "updateTemplateDeprecationStatus" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "input" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "id" },
+                                            value: { kind: "Variable", name: { kind: "Name", value: "id" } }
+                                        },
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "isDeprecated" },
+                                            value: { kind: "Variable", name: { kind: "Name", value: "isDeprecated" } }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "template" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "isDeprecated" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<UpdateTemplateDeprecationStatusMutation, UpdateTemplateDeprecationStatusMutationVariables>;
 export const GetInterfaceSpecificationVisibilityInfoDocument = {
     kind: "Document",
     definitions: [
@@ -35911,6 +37944,60 @@ export const AddInterfaceSpecificationVersionToComponentVersionDocument = {
     AddInterfaceSpecificationVersionToComponentVersionMutation,
     AddInterfaceSpecificationVersionToComponentVersionMutationVariables
 >;
+export const CreateArtefactTemplateDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "mutation",
+            name: { kind: "Name", value: "createArtefactTemplate" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "input" } },
+                    type: {
+                        kind: "NonNullType",
+                        type: { kind: "NamedType", name: { kind: "Name", value: "CreateArtefactTemplateInput" } }
+                    }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "createArtefactTemplate" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "input" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "input" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "artefactTemplate" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<CreateArtefactTemplateMutation, CreateArtefactTemplateMutationVariables>;
 export const GetComponentTemplateForDialogDocument = {
     kind: "Document",
     definitions: [
@@ -36092,6 +38179,60 @@ export const CreateComponentFromDialogDocument = {
         }
     ]
 } as unknown as DocumentNode<CreateComponentFromDialogMutation, CreateComponentFromDialogMutationVariables>;
+export const CreateComponentTemplateDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "mutation",
+            name: { kind: "Name", value: "createComponentTemplate" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "input" } },
+                    type: {
+                        kind: "NonNullType",
+                        type: { kind: "NamedType", name: { kind: "Name", value: "CreateComponentTemplateInput" } }
+                    }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "createComponentTemplate" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "input" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "input" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "componentTemplate" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<CreateComponentTemplateMutation, CreateComponentTemplateMutationVariables>;
 export const GetComponentVersionTemplateForDialogDocument = {
     kind: "Document",
     definitions: [
@@ -36728,6 +38869,66 @@ export const CreateInterfaceSpecificationFromDialogDocument = {
 } as unknown as DocumentNode<
     CreateInterfaceSpecificationFromDialogMutation,
     CreateInterfaceSpecificationFromDialogMutationVariables
+>;
+export const CreateInterfaceSpecificationTemplateDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "mutation",
+            name: { kind: "Name", value: "createInterfaceSpecificationTemplate" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "input" } },
+                    type: {
+                        kind: "NonNullType",
+                        type: {
+                            kind: "NamedType",
+                            name: { kind: "Name", value: "CreateInterfaceSpecificationTemplateInput" }
+                        }
+                    }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "createInterfaceSpecificationTemplate" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "input" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "input" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "interfaceSpecificationTemplate" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<
+    CreateInterfaceSpecificationTemplateMutation,
+    CreateInterfaceSpecificationTemplateMutationVariables
 >;
 export const GetInterfaceSpecificationVersionTemplateForDialogDocument = {
     kind: "Document",
@@ -37671,6 +39872,124 @@ export const CreateProjectDocument = {
         }
     ]
 } as unknown as DocumentNode<CreateProjectMutation, CreateProjectMutationVariables>;
+export const CreateRelationTemplateDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "mutation",
+            name: { kind: "Name", value: "createRelationTemplate" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "input" } },
+                    type: {
+                        kind: "NonNullType",
+                        type: { kind: "NamedType", name: { kind: "Name", value: "CreateRelationTemplateInput" } }
+                    }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "createRelationTemplate" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "input" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "input" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "relationTemplate" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<CreateRelationTemplateMutation, CreateRelationTemplateMutationVariables>;
+export const GetExtendedTemplateDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "getExtendedTemplate" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "node" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "id" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "id" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } },
+                                {
+                                    kind: "InlineFragment",
+                                    typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Template" } },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "name" } },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "templateFieldSpecifications" },
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        { kind: "Field", name: { kind: "Name", value: "name" } },
+                                                        { kind: "Field", name: { kind: "Name", value: "value" } }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<GetExtendedTemplateQuery, GetExtendedTemplateQueryVariables>;
 export const CreateViewDocument = {
     kind: "Document",
     definitions: [
@@ -38676,6 +40995,66 @@ export const UpdateIssueRelationTypeDocument = {
         }
     ]
 } as unknown as DocumentNode<UpdateIssueRelationTypeMutation, UpdateIssueRelationTypeMutationVariables>;
+export const UpdateIntraComponentDependencySpecificationTypeDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "mutation",
+            name: { kind: "Name", value: "updateIntraComponentDependencySpecificationType" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "input" } },
+                    type: {
+                        kind: "NonNullType",
+                        type: {
+                            kind: "NamedType",
+                            name: { kind: "Name", value: "UpdateIntraComponentDependencySpecificationTypeInput" }
+                        }
+                    }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "updateIntraComponentDependencySpecificationType" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "input" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "input" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "intraComponentDependencySpecificationType" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<
+    UpdateIntraComponentDependencySpecificationTypeMutation,
+    UpdateIntraComponentDependencySpecificationTypeMutationVariables
+>;
 export const UpdateViewForDialogDocument = {
     kind: "Document",
     definitions: [
@@ -49681,6 +52060,2095 @@ export const LegalInformationDocument = {
         }
     ]
 } as unknown as DocumentNode<LegalInformationQuery, LegalInformationQueryVariables>;
+export const GetIssueTemplateListDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "getIssueTemplateList" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "orderBy" } },
+                    type: {
+                        kind: "NonNullType",
+                        type: {
+                            kind: "ListType",
+                            type: {
+                                kind: "NonNullType",
+                                type: { kind: "NamedType", name: { kind: "Name", value: "IssueTemplateOrder" } }
+                            }
+                        }
+                    }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "skip" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "isDeprecated" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Boolean" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueTemplates" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "orderBy" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "orderBy" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "first" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "skip" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "skip" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "filter" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "isDeprecated" },
+                                            value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                    {
+                                                        kind: "ObjectField",
+                                                        name: { kind: "Name", value: "eq" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "isDeprecated" }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "FragmentSpread",
+                                                name: { kind: "Name", value: "TemplateListInfo" }
+                                            }
+                                        ]
+                                    }
+                                },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "TemplateListInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Template" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "templateFieldSpecifications" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<GetIssueTemplateListQuery, GetIssueTemplateListQueryVariables>;
+export const GetFilteredIssueTemplateListDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "getFilteredIssueTemplateList" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "query" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "isDeprecated" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Boolean" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "searchIssueTemplates" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "query" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "query" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "first" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "filter" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "isDeprecated" },
+                                            value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                    {
+                                                        kind: "ObjectField",
+                                                        name: { kind: "Name", value: "eq" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "isDeprecated" }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "FragmentSpread", name: { kind: "Name", value: "TemplateListInfo" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "TemplateListInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Template" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "templateFieldSpecifications" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<GetFilteredIssueTemplateListQuery, GetFilteredIssueTemplateListQueryVariables>;
+export const GetComponentTemplateListDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "getComponentTemplateList" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "orderBy" } },
+                    type: {
+                        kind: "NonNullType",
+                        type: {
+                            kind: "ListType",
+                            type: {
+                                kind: "NonNullType",
+                                type: { kind: "NamedType", name: { kind: "Name", value: "ComponentTemplateOrder" } }
+                            }
+                        }
+                    }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "skip" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "isDeprecated" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Boolean" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "componentTemplates" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "orderBy" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "orderBy" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "first" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "skip" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "skip" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "filter" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "isDeprecated" },
+                                            value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                    {
+                                                        kind: "ObjectField",
+                                                        name: { kind: "Name", value: "eq" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "isDeprecated" }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "FragmentSpread",
+                                                name: { kind: "Name", value: "TemplateListInfo" }
+                                            }
+                                        ]
+                                    }
+                                },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "TemplateListInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Template" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "templateFieldSpecifications" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<GetComponentTemplateListQuery, GetComponentTemplateListQueryVariables>;
+export const GetFilteredComponentTemplateListDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "getFilteredComponentTemplateList" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "query" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "isDeprecated" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Boolean" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "searchComponentTemplates" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "query" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "query" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "first" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "filter" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "isDeprecated" },
+                                            value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                    {
+                                                        kind: "ObjectField",
+                                                        name: { kind: "Name", value: "eq" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "isDeprecated" }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "FragmentSpread", name: { kind: "Name", value: "TemplateListInfo" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "TemplateListInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Template" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "templateFieldSpecifications" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<GetFilteredComponentTemplateListQuery, GetFilteredComponentTemplateListQueryVariables>;
+export const GetInterfaceSpecificationTemplateListDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "getInterfaceSpecificationTemplateList" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "orderBy" } },
+                    type: {
+                        kind: "NonNullType",
+                        type: {
+                            kind: "ListType",
+                            type: {
+                                kind: "NonNullType",
+                                type: {
+                                    kind: "NamedType",
+                                    name: { kind: "Name", value: "InterfaceSpecificationTemplateOrder" }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "skip" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "isDeprecated" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Boolean" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "interfaceSpecificationTemplates" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "orderBy" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "orderBy" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "first" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "skip" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "skip" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "filter" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "isDeprecated" },
+                                            value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                    {
+                                                        kind: "ObjectField",
+                                                        name: { kind: "Name", value: "eq" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "isDeprecated" }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "FragmentSpread",
+                                                name: { kind: "Name", value: "TemplateListInfo" }
+                                            }
+                                        ]
+                                    }
+                                },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "TemplateListInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Template" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "templateFieldSpecifications" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<
+    GetInterfaceSpecificationTemplateListQuery,
+    GetInterfaceSpecificationTemplateListQueryVariables
+>;
+export const GetFilteredInterfaceSpecificationTemplateListDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "getFilteredInterfaceSpecificationTemplateList" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "query" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "isDeprecated" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Boolean" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "searchInterfaceSpecificationTemplates" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "query" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "query" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "first" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "filter" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "isDeprecated" },
+                                            value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                    {
+                                                        kind: "ObjectField",
+                                                        name: { kind: "Name", value: "eq" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "isDeprecated" }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "FragmentSpread", name: { kind: "Name", value: "TemplateListInfo" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "TemplateListInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Template" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "templateFieldSpecifications" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<
+    GetFilteredInterfaceSpecificationTemplateListQuery,
+    GetFilteredInterfaceSpecificationTemplateListQueryVariables
+>;
+export const GetRelationTemplateListDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "getRelationTemplateList" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "orderBy" } },
+                    type: {
+                        kind: "NonNullType",
+                        type: {
+                            kind: "ListType",
+                            type: {
+                                kind: "NonNullType",
+                                type: { kind: "NamedType", name: { kind: "Name", value: "RelationTemplateOrder" } }
+                            }
+                        }
+                    }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "skip" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "isDeprecated" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Boolean" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "relationTemplates" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "orderBy" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "orderBy" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "first" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "skip" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "skip" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "filter" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "isDeprecated" },
+                                            value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                    {
+                                                        kind: "ObjectField",
+                                                        name: { kind: "Name", value: "eq" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "isDeprecated" }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "FragmentSpread",
+                                                name: { kind: "Name", value: "TemplateListInfo" }
+                                            }
+                                        ]
+                                    }
+                                },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "TemplateListInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Template" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "templateFieldSpecifications" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<GetRelationTemplateListQuery, GetRelationTemplateListQueryVariables>;
+export const GetFilteredRelationTemplateListDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "getFilteredRelationTemplateList" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "query" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "isDeprecated" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Boolean" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "searchRelationTemplates" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "query" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "query" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "first" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "filter" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "isDeprecated" },
+                                            value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                    {
+                                                        kind: "ObjectField",
+                                                        name: { kind: "Name", value: "eq" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "isDeprecated" }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "FragmentSpread", name: { kind: "Name", value: "TemplateListInfo" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "TemplateListInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Template" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "templateFieldSpecifications" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<GetFilteredRelationTemplateListQuery, GetFilteredRelationTemplateListQueryVariables>;
+export const GetArtefactTemplateListDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "getArtefactTemplateList" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "orderBy" } },
+                    type: {
+                        kind: "NonNullType",
+                        type: {
+                            kind: "ListType",
+                            type: {
+                                kind: "NonNullType",
+                                type: { kind: "NamedType", name: { kind: "Name", value: "ArtefactTemplateOrder" } }
+                            }
+                        }
+                    }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "skip" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "isDeprecated" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Boolean" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "name" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "artefactTemplates" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "orderBy" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "orderBy" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "first" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "skip" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "skip" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "filter" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "isDeprecated" },
+                                            value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                    {
+                                                        kind: "ObjectField",
+                                                        name: { kind: "Name", value: "eq" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "isDeprecated" }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "name" },
+                                            value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                    {
+                                                        kind: "ObjectField",
+                                                        name: { kind: "Name", value: "contains" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "name" }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "FragmentSpread",
+                                                name: { kind: "Name", value: "TemplateListInfo" }
+                                            }
+                                        ]
+                                    }
+                                },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "TemplateListInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Template" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "templateFieldSpecifications" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<GetArtefactTemplateListQuery, GetArtefactTemplateListQueryVariables>;
+export const SearchIssueTemplatesForListDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "searchIssueTemplatesForList" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "query" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "searchIssueTemplates" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "query" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "query" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "first" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "filter" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "isDeprecated" },
+                                            value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                    {
+                                                        kind: "ObjectField",
+                                                        name: { kind: "Name", value: "eq" },
+                                                        value: { kind: "BooleanValue", value: false }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "FragmentSpread", name: { kind: "Name", value: "AutocompleteTemplateInfo" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "AutocompleteTemplateInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Template" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<SearchIssueTemplatesForListQuery, SearchIssueTemplatesForListQueryVariables>;
+export const FirstIssueTemplatesForListDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "firstIssueTemplatesForList" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueTemplates" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "first" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "orderBy" },
+                                value: {
+                                    kind: "ListValue",
+                                    values: [
+                                        {
+                                            kind: "ObjectValue",
+                                            fields: [
+                                                {
+                                                    kind: "ObjectField",
+                                                    name: { kind: "Name", value: "field" },
+                                                    value: { kind: "EnumValue", value: "NAME" }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "filter" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "isDeprecated" },
+                                            value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                    {
+                                                        kind: "ObjectField",
+                                                        name: { kind: "Name", value: "eq" },
+                                                        value: { kind: "BooleanValue", value: false }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "FragmentSpread",
+                                                name: { kind: "Name", value: "AutocompleteTemplateInfo" }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "AutocompleteTemplateInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Template" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<FirstIssueTemplatesForListQuery, FirstIssueTemplatesForListQueryVariables>;
+export const SearchComponentTemplatesForListDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "searchComponentTemplatesForList" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "query" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "searchComponentTemplates" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "query" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "query" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "first" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "filter" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "isDeprecated" },
+                                            value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                    {
+                                                        kind: "ObjectField",
+                                                        name: { kind: "Name", value: "eq" },
+                                                        value: { kind: "BooleanValue", value: false }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "FragmentSpread", name: { kind: "Name", value: "AutocompleteTemplateInfo" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "AutocompleteTemplateInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Template" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<SearchComponentTemplatesForListQuery, SearchComponentTemplatesForListQueryVariables>;
+export const FirstComponentTemplatesForListDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "firstComponentTemplatesForList" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "componentTemplates" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "first" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "orderBy" },
+                                value: {
+                                    kind: "ListValue",
+                                    values: [
+                                        {
+                                            kind: "ObjectValue",
+                                            fields: [
+                                                {
+                                                    kind: "ObjectField",
+                                                    name: { kind: "Name", value: "field" },
+                                                    value: { kind: "EnumValue", value: "NAME" }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "filter" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "isDeprecated" },
+                                            value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                    {
+                                                        kind: "ObjectField",
+                                                        name: { kind: "Name", value: "eq" },
+                                                        value: { kind: "BooleanValue", value: false }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "FragmentSpread",
+                                                name: { kind: "Name", value: "AutocompleteTemplateInfo" }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "AutocompleteTemplateInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Template" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<FirstComponentTemplatesForListQuery, FirstComponentTemplatesForListQueryVariables>;
+export const SearchInterfaceSpecificationTemplatesForListDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "searchInterfaceSpecificationTemplatesForList" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "query" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "searchInterfaceSpecificationTemplates" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "query" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "query" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "first" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "filter" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "isDeprecated" },
+                                            value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                    {
+                                                        kind: "ObjectField",
+                                                        name: { kind: "Name", value: "eq" },
+                                                        value: { kind: "BooleanValue", value: false }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "FragmentSpread", name: { kind: "Name", value: "AutocompleteTemplateInfo" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "AutocompleteTemplateInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Template" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<
+    SearchInterfaceSpecificationTemplatesForListQuery,
+    SearchInterfaceSpecificationTemplatesForListQueryVariables
+>;
+export const FirstInterfaceSpecificationTemplatesForListDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "firstInterfaceSpecificationTemplatesForList" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "interfaceSpecificationTemplates" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "first" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "orderBy" },
+                                value: {
+                                    kind: "ListValue",
+                                    values: [
+                                        {
+                                            kind: "ObjectValue",
+                                            fields: [
+                                                {
+                                                    kind: "ObjectField",
+                                                    name: { kind: "Name", value: "field" },
+                                                    value: { kind: "EnumValue", value: "NAME" }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "filter" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "isDeprecated" },
+                                            value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                    {
+                                                        kind: "ObjectField",
+                                                        name: { kind: "Name", value: "eq" },
+                                                        value: { kind: "BooleanValue", value: false }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "FragmentSpread",
+                                                name: { kind: "Name", value: "AutocompleteTemplateInfo" }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "AutocompleteTemplateInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Template" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<
+    FirstInterfaceSpecificationTemplatesForListQuery,
+    FirstInterfaceSpecificationTemplatesForListQueryVariables
+>;
+export const SearchRelationTemplatesForListDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "searchRelationTemplatesForList" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "query" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "searchRelationTemplates" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "query" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "query" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "first" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "filter" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "isDeprecated" },
+                                            value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                    {
+                                                        kind: "ObjectField",
+                                                        name: { kind: "Name", value: "eq" },
+                                                        value: { kind: "BooleanValue", value: false }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "FragmentSpread", name: { kind: "Name", value: "AutocompleteTemplateInfo" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "AutocompleteTemplateInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Template" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<SearchRelationTemplatesForListQuery, SearchRelationTemplatesForListQueryVariables>;
+export const FirstRelationTemplatesForListDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "firstRelationTemplatesForList" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "relationTemplates" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "first" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "orderBy" },
+                                value: {
+                                    kind: "ListValue",
+                                    values: [
+                                        {
+                                            kind: "ObjectValue",
+                                            fields: [
+                                                {
+                                                    kind: "ObjectField",
+                                                    name: { kind: "Name", value: "field" },
+                                                    value: { kind: "EnumValue", value: "NAME" }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "filter" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "isDeprecated" },
+                                            value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                    {
+                                                        kind: "ObjectField",
+                                                        name: { kind: "Name", value: "eq" },
+                                                        value: { kind: "BooleanValue", value: false }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "FragmentSpread",
+                                                name: { kind: "Name", value: "AutocompleteTemplateInfo" }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "AutocompleteTemplateInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Template" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<FirstRelationTemplatesForListQuery, FirstRelationTemplatesForListQueryVariables>;
+export const ArtefactTemplatesForListDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "artefactTemplatesForList" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "name" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "artefactTemplates" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "first" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "orderBy" },
+                                value: {
+                                    kind: "ListValue",
+                                    values: [
+                                        {
+                                            kind: "ObjectValue",
+                                            fields: [
+                                                {
+                                                    kind: "ObjectField",
+                                                    name: { kind: "Name", value: "field" },
+                                                    value: { kind: "EnumValue", value: "NAME" }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "filter" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "isDeprecated" },
+                                            value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                    {
+                                                        kind: "ObjectField",
+                                                        name: { kind: "Name", value: "eq" },
+                                                        value: { kind: "BooleanValue", value: false }
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "name" },
+                                            value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                    {
+                                                        kind: "ObjectField",
+                                                        name: { kind: "Name", value: "contains" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "name" }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "FragmentSpread",
+                                                name: { kind: "Name", value: "AutocompleteTemplateInfo" }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "AutocompleteTemplateInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Template" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<ArtefactTemplatesForListQuery, ArtefactTemplatesForListQueryVariables>;
 export const GetLegalInformationDocument = {
     kind: "Document",
     definitions: [
@@ -55965,262 +60433,13 @@ export const GetFilteredProjectListDocument = {
         }
     ]
 } as unknown as DocumentNode<GetFilteredProjectListQuery, GetFilteredProjectListQueryVariables>;
-export const GetIssueTemplateListDocument = {
+export const GetComponentVersionTemplateDocument = {
     kind: "Document",
     definitions: [
         {
             kind: "OperationDefinition",
             operation: "query",
-            name: { kind: "Name", value: "getIssueTemplateList" },
-            variableDefinitions: [
-                {
-                    kind: "VariableDefinition",
-                    variable: { kind: "Variable", name: { kind: "Name", value: "orderBy" } },
-                    type: {
-                        kind: "NonNullType",
-                        type: {
-                            kind: "ListType",
-                            type: {
-                                kind: "NonNullType",
-                                type: { kind: "NamedType", name: { kind: "Name", value: "IssueTemplateOrder" } }
-                            }
-                        }
-                    }
-                },
-                {
-                    kind: "VariableDefinition",
-                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
-                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
-                },
-                {
-                    kind: "VariableDefinition",
-                    variable: { kind: "Variable", name: { kind: "Name", value: "skip" } },
-                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
-                },
-                {
-                    kind: "VariableDefinition",
-                    variable: { kind: "Variable", name: { kind: "Name", value: "isDeprecated" } },
-                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Boolean" } } }
-                }
-            ],
-            selectionSet: {
-                kind: "SelectionSet",
-                selections: [
-                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "issueTemplates" },
-                        arguments: [
-                            {
-                                kind: "Argument",
-                                name: { kind: "Name", value: "orderBy" },
-                                value: { kind: "Variable", name: { kind: "Name", value: "orderBy" } }
-                            },
-                            {
-                                kind: "Argument",
-                                name: { kind: "Name", value: "first" },
-                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
-                            },
-                            {
-                                kind: "Argument",
-                                name: { kind: "Name", value: "skip" },
-                                value: { kind: "Variable", name: { kind: "Name", value: "skip" } }
-                            },
-                            {
-                                kind: "Argument",
-                                name: { kind: "Name", value: "filter" },
-                                value: {
-                                    kind: "ObjectValue",
-                                    fields: [
-                                        {
-                                            kind: "ObjectField",
-                                            name: { kind: "Name", value: "isDeprecated" },
-                                            value: {
-                                                kind: "ObjectValue",
-                                                fields: [
-                                                    {
-                                                        kind: "ObjectField",
-                                                        name: { kind: "Name", value: "eq" },
-                                                        value: {
-                                                            kind: "Variable",
-                                                            name: { kind: "Name", value: "isDeprecated" }
-                                                        }
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        ],
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "nodes" },
-                                    selectionSet: {
-                                        kind: "SelectionSet",
-                                        selections: [
-                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                            {
-                                                kind: "FragmentSpread",
-                                                name: { kind: "Name", value: "DefaultIssueTemplateInfo" }
-                                            }
-                                        ]
-                                    }
-                                },
-                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
-                            ]
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            kind: "FragmentDefinition",
-            name: { kind: "Name", value: "DefaultIssueTemplateInfo" },
-            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssueTemplate" } },
-            selectionSet: {
-                kind: "SelectionSet",
-                selections: [
-                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                    { kind: "Field", name: { kind: "Name", value: "id" } },
-                    { kind: "Field", name: { kind: "Name", value: "name" } },
-                    { kind: "Field", name: { kind: "Name", value: "description" } },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "templateFieldSpecifications" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "name" } },
-                                { kind: "Field", name: { kind: "Name", value: "value" } }
-                            ]
-                        }
-                    }
-                ]
-            }
-        }
-    ]
-} as unknown as DocumentNode<GetIssueTemplateListQuery, GetIssueTemplateListQueryVariables>;
-export const GetFilteredIssueTemplateListDocument = {
-    kind: "Document",
-    definitions: [
-        {
-            kind: "OperationDefinition",
-            operation: "query",
-            name: { kind: "Name", value: "getFilteredIssueTemplateList" },
-            variableDefinitions: [
-                {
-                    kind: "VariableDefinition",
-                    variable: { kind: "Variable", name: { kind: "Name", value: "query" } },
-                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } }
-                },
-                {
-                    kind: "VariableDefinition",
-                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
-                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
-                },
-                {
-                    kind: "VariableDefinition",
-                    variable: { kind: "Variable", name: { kind: "Name", value: "isDeprecated" } },
-                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Boolean" } } }
-                }
-            ],
-            selectionSet: {
-                kind: "SelectionSet",
-                selections: [
-                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "searchIssueTemplates" },
-                        arguments: [
-                            {
-                                kind: "Argument",
-                                name: { kind: "Name", value: "query" },
-                                value: { kind: "Variable", name: { kind: "Name", value: "query" } }
-                            },
-                            {
-                                kind: "Argument",
-                                name: { kind: "Name", value: "first" },
-                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
-                            },
-                            {
-                                kind: "Argument",
-                                name: { kind: "Name", value: "filter" },
-                                value: {
-                                    kind: "ObjectValue",
-                                    fields: [
-                                        {
-                                            kind: "ObjectField",
-                                            name: { kind: "Name", value: "isDeprecated" },
-                                            value: {
-                                                kind: "ObjectValue",
-                                                fields: [
-                                                    {
-                                                        kind: "ObjectField",
-                                                        name: { kind: "Name", value: "eq" },
-                                                        value: {
-                                                            kind: "Variable",
-                                                            name: { kind: "Name", value: "isDeprecated" }
-                                                        }
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        ],
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "FragmentSpread", name: { kind: "Name", value: "DefaultIssueTemplateInfo" } }
-                            ]
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            kind: "FragmentDefinition",
-            name: { kind: "Name", value: "DefaultIssueTemplateInfo" },
-            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssueTemplate" } },
-            selectionSet: {
-                kind: "SelectionSet",
-                selections: [
-                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                    { kind: "Field", name: { kind: "Name", value: "id" } },
-                    { kind: "Field", name: { kind: "Name", value: "name" } },
-                    { kind: "Field", name: { kind: "Name", value: "description" } },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "templateFieldSpecifications" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "name" } },
-                                { kind: "Field", name: { kind: "Name", value: "value" } }
-                            ]
-                        }
-                    }
-                ]
-            }
-        }
-    ]
-} as unknown as DocumentNode<GetFilteredIssueTemplateListQuery, GetFilteredIssueTemplateListQueryVariables>;
-export const GetIssueTemplateDeprecationStatusDocument = {
-    kind: "Document",
-    definitions: [
-        {
-            kind: "OperationDefinition",
-            operation: "query",
-            name: { kind: "Name", value: "getIssueTemplateDeprecationStatus" },
+            name: { kind: "Name", value: "getComponentVersionTemplate" },
             variableDefinitions: [
                 {
                     kind: "VariableDefinition",
@@ -56251,13 +60470,300 @@ export const GetIssueTemplateDeprecationStatusDocument = {
                                     kind: "InlineFragment",
                                     typeCondition: {
                                         kind: "NamedType",
-                                        name: { kind: "Name", value: "IssueTemplate" }
+                                        name: { kind: "Name", value: "ComponentTemplate" }
                                     },
                                     selectionSet: {
                                         kind: "SelectionSet",
                                         selections: [
                                             { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                            { kind: "Field", name: { kind: "Name", value: "isDeprecated" } }
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "componentVersionTemplate" },
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "FragmentSpread",
+                                                            name: { kind: "Name", value: "SubTemplateDetailsInfo" }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "SubTemplateDetailsInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "SubTemplate" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "templateFieldSpecifications" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } },
+                                { kind: "Field", name: { kind: "Name", value: "value" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<GetComponentVersionTemplateQuery, GetComponentVersionTemplateQueryVariables>;
+export const GetInterfaceSpecificationVersionTemplateDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "getInterfaceSpecificationVersionTemplate" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "node" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "id" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "id" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } },
+                                {
+                                    kind: "InlineFragment",
+                                    typeCondition: {
+                                        kind: "NamedType",
+                                        name: { kind: "Name", value: "InterfaceSpecificationTemplate" }
+                                    },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "interfaceSpecificationVersionTemplate" },
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "FragmentSpread",
+                                                            name: { kind: "Name", value: "SubTemplateDetailsInfo" }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "SubTemplateDetailsInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "SubTemplate" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "templateFieldSpecifications" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } },
+                                { kind: "Field", name: { kind: "Name", value: "value" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<
+    GetInterfaceSpecificationVersionTemplateQuery,
+    GetInterfaceSpecificationVersionTemplateQueryVariables
+>;
+export const GetInterfacePartTemplateDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "getInterfacePartTemplate" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "node" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "id" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "id" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } },
+                                {
+                                    kind: "InlineFragment",
+                                    typeCondition: {
+                                        kind: "NamedType",
+                                        name: { kind: "Name", value: "InterfaceSpecificationTemplate" }
+                                    },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "interfacePartTemplate" },
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "FragmentSpread",
+                                                            name: { kind: "Name", value: "SubTemplateDetailsInfo" }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "SubTemplateDetailsInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "SubTemplate" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "templateFieldSpecifications" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } },
+                                { kind: "Field", name: { kind: "Name", value: "value" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<GetInterfacePartTemplateQuery, GetInterfacePartTemplateQueryVariables>;
+export const UpdateComponentVersionTemplateDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "mutation",
+            name: { kind: "Name", value: "updateComponentVersionTemplate" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "input" } },
+                    type: {
+                        kind: "NonNullType",
+                        type: {
+                            kind: "NamedType",
+                            name: { kind: "Name", value: "UpdateComponentVersionTemplateInput" }
+                        }
+                    }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "updateComponentVersionTemplate" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "input" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "input" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "componentVersionTemplate" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } }
                                         ]
                                     }
                                 }
@@ -56268,24 +60774,25 @@ export const GetIssueTemplateDeprecationStatusDocument = {
             }
         }
     ]
-} as unknown as DocumentNode<GetIssueTemplateDeprecationStatusQuery, GetIssueTemplateDeprecationStatusQueryVariables>;
-export const UpdateIssueTemplateDeprecationStatusDocument = {
+} as unknown as DocumentNode<UpdateComponentVersionTemplateMutation, UpdateComponentVersionTemplateMutationVariables>;
+export const UpdateInterfaceSpecificationVersionTemplateDocument = {
     kind: "Document",
     definitions: [
         {
             kind: "OperationDefinition",
             operation: "mutation",
-            name: { kind: "Name", value: "updateIssueTemplateDeprecationStatus" },
+            name: { kind: "Name", value: "updateInterfaceSpecificationVersionTemplate" },
             variableDefinitions: [
                 {
                     kind: "VariableDefinition",
-                    variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
-                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
-                },
-                {
-                    kind: "VariableDefinition",
-                    variable: { kind: "Variable", name: { kind: "Name", value: "isDeprecated" } },
-                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Boolean" } } }
+                    variable: { kind: "Variable", name: { kind: "Name", value: "input" } },
+                    type: {
+                        kind: "NonNullType",
+                        type: {
+                            kind: "NamedType",
+                            name: { kind: "Name", value: "UpdateInterfaceSpecificationVersionTemplateInput" }
+                        }
+                    }
                 }
             ],
             selectionSet: {
@@ -56294,26 +60801,12 @@ export const UpdateIssueTemplateDeprecationStatusDocument = {
                     { kind: "Field", name: { kind: "Name", value: "__typename" } },
                     {
                         kind: "Field",
-                        name: { kind: "Name", value: "updateTemplateDeprecationStatus" },
+                        name: { kind: "Name", value: "updateInterfaceSpecificationVersionTemplate" },
                         arguments: [
                             {
                                 kind: "Argument",
                                 name: { kind: "Name", value: "input" },
-                                value: {
-                                    kind: "ObjectValue",
-                                    fields: [
-                                        {
-                                            kind: "ObjectField",
-                                            name: { kind: "Name", value: "id" },
-                                            value: { kind: "Variable", name: { kind: "Name", value: "id" } }
-                                        },
-                                        {
-                                            kind: "ObjectField",
-                                            name: { kind: "Name", value: "isDeprecated" },
-                                            value: { kind: "Variable", name: { kind: "Name", value: "isDeprecated" } }
-                                        }
-                                    ]
-                                }
+                                value: { kind: "Variable", name: { kind: "Name", value: "input" } }
                             }
                         ],
                         selectionSet: {
@@ -56322,13 +60815,12 @@ export const UpdateIssueTemplateDeprecationStatusDocument = {
                                 { kind: "Field", name: { kind: "Name", value: "__typename" } },
                                 {
                                     kind: "Field",
-                                    name: { kind: "Name", value: "template" },
+                                    name: { kind: "Name", value: "interfaceSpecificationVersionTemplate" },
                                     selectionSet: {
                                         kind: "SelectionSet",
                                         selections: [
                                             { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                            { kind: "Field", name: { kind: "Name", value: "id" } },
-                                            { kind: "Field", name: { kind: "Name", value: "isDeprecated" } }
+                                            { kind: "Field", name: { kind: "Name", value: "id" } }
                                         ]
                                     }
                                 }
@@ -56340,16 +60832,70 @@ export const UpdateIssueTemplateDeprecationStatusDocument = {
         }
     ]
 } as unknown as DocumentNode<
-    UpdateIssueTemplateDeprecationStatusMutation,
-    UpdateIssueTemplateDeprecationStatusMutationVariables
+    UpdateInterfaceSpecificationVersionTemplateMutation,
+    UpdateInterfaceSpecificationVersionTemplateMutationVariables
 >;
-export const GetIssueTemplateGeneralDetailsDocument = {
+export const UpdateInterfacePartTemplateDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "mutation",
+            name: { kind: "Name", value: "updateInterfacePartTemplate" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "input" } },
+                    type: {
+                        kind: "NonNullType",
+                        type: { kind: "NamedType", name: { kind: "Name", value: "UpdateInterfacePartTemplateInput" } }
+                    }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "updateInterfacePartTemplate" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "input" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "input" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "interfacePartTemplate" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<UpdateInterfacePartTemplateMutation, UpdateInterfacePartTemplateMutationVariables>;
+export const GetTemplateFieldSpecificationsDocument = {
     kind: "Document",
     definitions: [
         {
             kind: "OperationDefinition",
             operation: "query",
-            name: { kind: "Name", value: "getIssueTemplateGeneralDetails" },
+            name: { kind: "Name", value: "getTemplateFieldSpecifications" },
             variableDefinitions: [
                 {
                     kind: "VariableDefinition",
@@ -56378,17 +60924,23 @@ export const GetIssueTemplateGeneralDetailsDocument = {
                                 { kind: "Field", name: { kind: "Name", value: "id" } },
                                 {
                                     kind: "InlineFragment",
-                                    typeCondition: {
-                                        kind: "NamedType",
-                                        name: { kind: "Name", value: "IssueTemplate" }
-                                    },
+                                    typeCondition: { kind: "NamedType", name: { kind: "Name", value: "BaseTemplate" } },
                                     selectionSet: {
                                         kind: "SelectionSet",
                                         selections: [
                                             { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                            { kind: "Field", name: { kind: "Name", value: "name" } },
-                                            { kind: "Field", name: { kind: "Name", value: "description" } },
-                                            { kind: "Field", name: { kind: "Name", value: "isDeprecated" } }
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "templateFieldSpecifications" },
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        { kind: "Field", name: { kind: "Name", value: "name" } },
+                                                        { kind: "Field", name: { kind: "Name", value: "value" } }
+                                                    ]
+                                                }
+                                            }
                                         ]
                                     }
                                 }
@@ -56399,7 +60951,125 @@ export const GetIssueTemplateGeneralDetailsDocument = {
             }
         }
     ]
-} as unknown as DocumentNode<GetIssueTemplateGeneralDetailsQuery, GetIssueTemplateGeneralDetailsQueryVariables>;
+} as unknown as DocumentNode<GetTemplateFieldSpecificationsQuery, GetTemplateFieldSpecificationsQueryVariables>;
+export const GetTemplateGeneralDetailsDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "getTemplateGeneralDetails" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "node" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "id" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "id" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } },
+                                {
+                                    kind: "InlineFragment",
+                                    typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Template" } },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "name" } },
+                                            { kind: "Field", name: { kind: "Name", value: "description" } },
+                                            { kind: "Field", name: { kind: "Name", value: "isDeprecated" } }
+                                        ]
+                                    }
+                                },
+                                {
+                                    kind: "InlineFragment",
+                                    typeCondition: {
+                                        kind: "NamedType",
+                                        name: { kind: "Name", value: "RelationPartnerTemplate" }
+                                    },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "shapeType" } },
+                                            { kind: "Field", name: { kind: "Name", value: "shapeRadius" } },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "fill" },
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        { kind: "Field", name: { kind: "Name", value: "color" } }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "stroke" },
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        { kind: "Field", name: { kind: "Name", value: "color" } },
+                                                        { kind: "Field", name: { kind: "Name", value: "dash" } }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    kind: "InlineFragment",
+                                    typeCondition: {
+                                        kind: "NamedType",
+                                        name: { kind: "Name", value: "RelationTemplate" }
+                                    },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "markerType" } },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "stroke" },
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        { kind: "Field", name: { kind: "Name", value: "color" } },
+                                                        { kind: "Field", name: { kind: "Name", value: "dash" } }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<GetTemplateGeneralDetailsQuery, GetTemplateGeneralDetailsQueryVariables>;
 export const UpdateIssueTemplateDocument = {
     kind: "Document",
     definitions: [
@@ -56454,6 +61124,655 @@ export const UpdateIssueTemplateDocument = {
         }
     ]
 } as unknown as DocumentNode<UpdateIssueTemplateMutation, UpdateIssueTemplateMutationVariables>;
+export const UpdateArtefactTemplateDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "mutation",
+            name: { kind: "Name", value: "updateArtefactTemplate" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "input" } },
+                    type: {
+                        kind: "NonNullType",
+                        type: { kind: "NamedType", name: { kind: "Name", value: "UpdateArtefactTemplateInput" } }
+                    }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "updateArtefactTemplate" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "input" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "input" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "artefactTemplate" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<UpdateArtefactTemplateMutation, UpdateArtefactTemplateMutationVariables>;
+export const UpdateComponentTemplateDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "mutation",
+            name: { kind: "Name", value: "updateComponentTemplate" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "input" } },
+                    type: {
+                        kind: "NonNullType",
+                        type: { kind: "NamedType", name: { kind: "Name", value: "UpdateComponentTemplateInput" } }
+                    }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "updateComponentTemplate" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "input" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "input" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "componentTemplate" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<UpdateComponentTemplateMutation, UpdateComponentTemplateMutationVariables>;
+export const UpdateInterfaceSpecificationTemplateDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "mutation",
+            name: { kind: "Name", value: "updateInterfaceSpecificationTemplate" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "input" } },
+                    type: {
+                        kind: "NonNullType",
+                        type: {
+                            kind: "NamedType",
+                            name: { kind: "Name", value: "UpdateInterfaceSpecificationTemplateInput" }
+                        }
+                    }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "updateInterfaceSpecificationTemplate" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "input" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "input" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "interfaceSpecificationTemplate" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<
+    UpdateInterfaceSpecificationTemplateMutation,
+    UpdateInterfaceSpecificationTemplateMutationVariables
+>;
+export const UpdateRelationTemplateDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "mutation",
+            name: { kind: "Name", value: "updateRelationTemplate" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "input" } },
+                    type: {
+                        kind: "NonNullType",
+                        type: { kind: "NamedType", name: { kind: "Name", value: "UpdateRelationTemplateInput" } }
+                    }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "updateRelationTemplate" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "input" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "input" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "relationTemplate" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<UpdateRelationTemplateMutation, UpdateRelationTemplateMutationVariables>;
+export const GetTemplateNameDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "getTemplateName" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "node" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "id" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "id" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } },
+                                {
+                                    kind: "InlineFragment",
+                                    typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Template" } },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "name" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<GetTemplateNameQuery, GetTemplateNameQueryVariables>;
+export const GetComponentTemplateDependencyTypesDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "getComponentTemplateDependencyTypes" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "node" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "id" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "id" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } },
+                                {
+                                    kind: "InlineFragment",
+                                    typeCondition: {
+                                        kind: "NamedType",
+                                        name: { kind: "Name", value: "ComponentTemplate" }
+                                    },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "Field",
+                                                name: {
+                                                    kind: "Name",
+                                                    value: "intraComponentDependencySpecificationTypes"
+                                                },
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "nodes" },
+                                                            selectionSet: {
+                                                                kind: "SelectionSet",
+                                                                selections: [
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "__typename" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "id" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "name" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "description" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "partOf" },
+                                                                        selectionSet: {
+                                                                            kind: "SelectionSet",
+                                                                            selections: [
+                                                                                {
+                                                                                    kind: "Field",
+                                                                                    name: {
+                                                                                        kind: "Name",
+                                                                                        value: "__typename"
+                                                                                    }
+                                                                                },
+                                                                                {
+                                                                                    kind: "Field",
+                                                                                    name: {
+                                                                                        kind: "Name",
+                                                                                        value: "totalCount"
+                                                                                    }
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<
+    GetComponentTemplateDependencyTypesQuery,
+    GetComponentTemplateDependencyTypesQueryVariables
+>;
+export const GetComponentTemplateInterfaceSpecificationsDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "getComponentTemplateInterfaceSpecifications" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "node" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "id" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "id" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } },
+                                {
+                                    kind: "InlineFragment",
+                                    typeCondition: {
+                                        kind: "NamedType",
+                                        name: { kind: "Name", value: "ComponentTemplate" }
+                                    },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "possibleVisibleInterfaceSpecifications" },
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "nodes" },
+                                                            selectionSet: {
+                                                                kind: "SelectionSet",
+                                                                selections: [
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "__typename" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "id" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "name" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "description" }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                kind: "Field",
+                                                name: {
+                                                    kind: "Name",
+                                                    value: "possibleInvisibleInterfaceSpecifications"
+                                                },
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "nodes" },
+                                                            selectionSet: {
+                                                                kind: "SelectionSet",
+                                                                selections: [
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "__typename" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "id" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "name" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "description" }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<
+    GetComponentTemplateInterfaceSpecificationsQuery,
+    GetComponentTemplateInterfaceSpecificationsQueryVariables
+>;
+export const GetInterfaceSpecificationTemplateComponentsDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "getInterfaceSpecificationTemplateComponents" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "node" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "id" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "id" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } },
+                                {
+                                    kind: "InlineFragment",
+                                    typeCondition: {
+                                        kind: "NamedType",
+                                        name: { kind: "Name", value: "InterfaceSpecificationTemplate" }
+                                    },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "canBeVisibleOnComponents" },
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "nodes" },
+                                                            selectionSet: {
+                                                                kind: "SelectionSet",
+                                                                selections: [
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "__typename" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "id" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "name" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "description" }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "canBeInvisibleOnComponents" },
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "nodes" },
+                                                            selectionSet: {
+                                                                kind: "SelectionSet",
+                                                                selections: [
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "__typename" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "id" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "name" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "description" }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<
+    GetInterfaceSpecificationTemplateComponentsQuery,
+    GetInterfaceSpecificationTemplateComponentsQueryVariables
+>;
 export const GetIssueTemplateIssueAttributesDocument = {
     kind: "Document",
     definitions: [
@@ -56872,13 +62191,13 @@ export const GetIssueTemplateLinkageAttributesDocument = {
         }
     ]
 } as unknown as DocumentNode<GetIssueTemplateLinkageAttributesQuery, GetIssueTemplateLinkageAttributesQueryVariables>;
-export const GetIssueTemplateDocument = {
+export const GetRelationTemplateConditionsDocument = {
     kind: "Document",
     definitions: [
         {
             kind: "OperationDefinition",
             operation: "query",
-            name: { kind: "Name", value: "getIssueTemplate" },
+            name: { kind: "Name", value: "getRelationTemplateConditions" },
             variableDefinitions: [
                 {
                     kind: "VariableDefinition",
@@ -56909,63 +62228,7 @@ export const GetIssueTemplateDocument = {
                                     kind: "InlineFragment",
                                     typeCondition: {
                                         kind: "NamedType",
-                                        name: { kind: "Name", value: "IssueTemplate" }
-                                    },
-                                    selectionSet: {
-                                        kind: "SelectionSet",
-                                        selections: [
-                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                            { kind: "Field", name: { kind: "Name", value: "name" } },
-                                            { kind: "Field", name: { kind: "Name", value: "description" } }
-                                        ]
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                ]
-            }
-        }
-    ]
-} as unknown as DocumentNode<GetIssueTemplateQuery, GetIssueTemplateQueryVariables>;
-export const GetIssueTemplateFieldSpecificationsDocument = {
-    kind: "Document",
-    definitions: [
-        {
-            kind: "OperationDefinition",
-            operation: "query",
-            name: { kind: "Name", value: "getIssueTemplateFieldSpecifications" },
-            variableDefinitions: [
-                {
-                    kind: "VariableDefinition",
-                    variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
-                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
-                }
-            ],
-            selectionSet: {
-                kind: "SelectionSet",
-                selections: [
-                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "node" },
-                        arguments: [
-                            {
-                                kind: "Argument",
-                                name: { kind: "Name", value: "id" },
-                                value: { kind: "Variable", name: { kind: "Name", value: "id" } }
-                            }
-                        ],
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "id" } },
-                                {
-                                    kind: "InlineFragment",
-                                    typeCondition: {
-                                        kind: "NamedType",
-                                        name: { kind: "Name", value: "IssueTemplate" }
+                                        name: { kind: "Name", value: "RelationTemplate" }
                                     },
                                     selectionSet: {
                                         kind: "SelectionSet",
@@ -56973,13 +62236,288 @@ export const GetIssueTemplateFieldSpecificationsDocument = {
                                             { kind: "Field", name: { kind: "Name", value: "__typename" } },
                                             {
                                                 kind: "Field",
-                                                name: { kind: "Name", value: "templateFieldSpecifications" },
+                                                name: { kind: "Name", value: "relationConditions" },
                                                 selectionSet: {
                                                     kind: "SelectionSet",
                                                     selections: [
                                                         { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                                        { kind: "Field", name: { kind: "Name", value: "name" } },
-                                                        { kind: "Field", name: { kind: "Name", value: "value" } }
+                                                        {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "nodes" },
+                                                            selectionSet: {
+                                                                kind: "SelectionSet",
+                                                                selections: [
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "__typename" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "id" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "from" },
+                                                                        selectionSet: {
+                                                                            kind: "SelectionSet",
+                                                                            selections: [
+                                                                                {
+                                                                                    kind: "Field",
+                                                                                    name: {
+                                                                                        kind: "Name",
+                                                                                        value: "__typename"
+                                                                                    }
+                                                                                },
+                                                                                {
+                                                                                    kind: "Field",
+                                                                                    name: {
+                                                                                        kind: "Name",
+                                                                                        value: "nodes"
+                                                                                    },
+                                                                                    selectionSet: {
+                                                                                        kind: "SelectionSet",
+                                                                                        selections: [
+                                                                                            {
+                                                                                                kind: "Field",
+                                                                                                name: {
+                                                                                                    kind: "Name",
+                                                                                                    value: "__typename"
+                                                                                                }
+                                                                                            },
+                                                                                            {
+                                                                                                kind: "Field",
+                                                                                                name: {
+                                                                                                    kind: "Name",
+                                                                                                    value: "id"
+                                                                                                }
+                                                                                            },
+                                                                                            {
+                                                                                                kind: "Field",
+                                                                                                name: {
+                                                                                                    kind: "Name",
+                                                                                                    value: "name"
+                                                                                                }
+                                                                                            },
+                                                                                            {
+                                                                                                kind: "Field",
+                                                                                                name: {
+                                                                                                    kind: "Name",
+                                                                                                    value: "description"
+                                                                                                }
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "to" },
+                                                                        selectionSet: {
+                                                                            kind: "SelectionSet",
+                                                                            selections: [
+                                                                                {
+                                                                                    kind: "Field",
+                                                                                    name: {
+                                                                                        kind: "Name",
+                                                                                        value: "__typename"
+                                                                                    }
+                                                                                },
+                                                                                {
+                                                                                    kind: "Field",
+                                                                                    name: {
+                                                                                        kind: "Name",
+                                                                                        value: "nodes"
+                                                                                    },
+                                                                                    selectionSet: {
+                                                                                        kind: "SelectionSet",
+                                                                                        selections: [
+                                                                                            {
+                                                                                                kind: "Field",
+                                                                                                name: {
+                                                                                                    kind: "Name",
+                                                                                                    value: "__typename"
+                                                                                                }
+                                                                                            },
+                                                                                            {
+                                                                                                kind: "Field",
+                                                                                                name: {
+                                                                                                    kind: "Name",
+                                                                                                    value: "id"
+                                                                                                }
+                                                                                            },
+                                                                                            {
+                                                                                                kind: "Field",
+                                                                                                name: {
+                                                                                                    kind: "Name",
+                                                                                                    value: "name"
+                                                                                                }
+                                                                                            },
+                                                                                            {
+                                                                                                kind: "Field",
+                                                                                                name: {
+                                                                                                    kind: "Name",
+                                                                                                    value: "description"
+                                                                                                }
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: {
+                                                                            kind: "Name",
+                                                                            value: "interfaceSpecificationDerivationConditions"
+                                                                        },
+                                                                        selectionSet: {
+                                                                            kind: "SelectionSet",
+                                                                            selections: [
+                                                                                {
+                                                                                    kind: "Field",
+                                                                                    name: {
+                                                                                        kind: "Name",
+                                                                                        value: "__typename"
+                                                                                    }
+                                                                                },
+                                                                                {
+                                                                                    kind: "Field",
+                                                                                    name: {
+                                                                                        kind: "Name",
+                                                                                        value: "nodes"
+                                                                                    },
+                                                                                    selectionSet: {
+                                                                                        kind: "SelectionSet",
+                                                                                        selections: [
+                                                                                            {
+                                                                                                kind: "Field",
+                                                                                                name: {
+                                                                                                    kind: "Name",
+                                                                                                    value: "__typename"
+                                                                                                }
+                                                                                            },
+                                                                                            {
+                                                                                                kind: "Field",
+                                                                                                name: {
+                                                                                                    kind: "Name",
+                                                                                                    value: "id"
+                                                                                                }
+                                                                                            },
+                                                                                            {
+                                                                                                kind: "Field",
+                                                                                                name: {
+                                                                                                    kind: "Name",
+                                                                                                    value: "derivesVisibleSelfDefined"
+                                                                                                }
+                                                                                            },
+                                                                                            {
+                                                                                                kind: "Field",
+                                                                                                name: {
+                                                                                                    kind: "Name",
+                                                                                                    value: "derivesInvisibleSelfDefined"
+                                                                                                }
+                                                                                            },
+                                                                                            {
+                                                                                                kind: "Field",
+                                                                                                name: {
+                                                                                                    kind: "Name",
+                                                                                                    value: "derivesVisibleDerived"
+                                                                                                }
+                                                                                            },
+                                                                                            {
+                                                                                                kind: "Field",
+                                                                                                name: {
+                                                                                                    kind: "Name",
+                                                                                                    value: "derivesInvisibleDerived"
+                                                                                                }
+                                                                                            },
+                                                                                            {
+                                                                                                kind: "Field",
+                                                                                                name: {
+                                                                                                    kind: "Name",
+                                                                                                    value: "isVisibleDerived"
+                                                                                                }
+                                                                                            },
+                                                                                            {
+                                                                                                kind: "Field",
+                                                                                                name: {
+                                                                                                    kind: "Name",
+                                                                                                    value: "isInvisibleDerived"
+                                                                                                }
+                                                                                            },
+                                                                                            {
+                                                                                                kind: "Field",
+                                                                                                name: {
+                                                                                                    kind: "Name",
+                                                                                                    value: "derivableInterfaceSpecifications"
+                                                                                                },
+                                                                                                selectionSet: {
+                                                                                                    kind: "SelectionSet",
+                                                                                                    selections: [
+                                                                                                        {
+                                                                                                            kind: "Field",
+                                                                                                            name: {
+                                                                                                                kind: "Name",
+                                                                                                                value: "__typename"
+                                                                                                            }
+                                                                                                        },
+                                                                                                        {
+                                                                                                            kind: "Field",
+                                                                                                            name: {
+                                                                                                                kind: "Name",
+                                                                                                                value: "nodes"
+                                                                                                            },
+                                                                                                            selectionSet:
+                                                                                                                {
+                                                                                                                    kind: "SelectionSet",
+                                                                                                                    selections:
+                                                                                                                        [
+                                                                                                                            {
+                                                                                                                                kind: "Field",
+                                                                                                                                name: {
+                                                                                                                                    kind: "Name",
+                                                                                                                                    value: "__typename"
+                                                                                                                                }
+                                                                                                                            },
+                                                                                                                            {
+                                                                                                                                kind: "Field",
+                                                                                                                                name: {
+                                                                                                                                    kind: "Name",
+                                                                                                                                    value: "id"
+                                                                                                                                }
+                                                                                                                            },
+                                                                                                                            {
+                                                                                                                                kind: "Field",
+                                                                                                                                name: {
+                                                                                                                                    kind: "Name",
+                                                                                                                                    value: "name"
+                                                                                                                                }
+                                                                                                                            },
+                                                                                                                            {
+                                                                                                                                kind: "Field",
+                                                                                                                                name: {
+                                                                                                                                    kind: "Name",
+                                                                                                                                    value: "description"
+                                                                                                                                }
+                                                                                                                            }
+                                                                                                                        ]
+                                                                                                                }
+                                                                                                        }
+                                                                                                    ]
+                                                                                                }
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
                                                     ]
                                                 }
                                             }
@@ -56993,10 +62531,7 @@ export const GetIssueTemplateFieldSpecificationsDocument = {
             }
         }
     ]
-} as unknown as DocumentNode<
-    GetIssueTemplateFieldSpecificationsQuery,
-    GetIssueTemplateFieldSpecificationsQueryVariables
->;
+} as unknown as DocumentNode<GetRelationTemplateConditionsQuery, GetRelationTemplateConditionsQueryVariables>;
 export const GetImsDocument = {
     kind: "Document",
     definitions: [
