@@ -39,7 +39,7 @@ import ListItem from "@/components/ListItem.vue";
 import CreateIMSDialog from "@/components/dialog/CreateIMSDialog.vue";
 import type { IdObject } from "@/util/types";
 import type { ImsFilterInput, ImsOrder, ImsListItemInfoFragment } from "@/gql/graphql";
-import { ImsOrderField } from "@/gql/graphql";
+import { type ImsOrderField } from "@/gql/graphql";
 import SyncSelfAllowedSwitch from "@/components/input/SyncSelfAllowedSwitch.vue";
 import { ItemManager } from "@/util/itemManager";
 import { useFilterOption } from "@/util/useFilterOption";
@@ -78,10 +78,10 @@ type IMS = ImsListItemInfoFragment;
 
 const router = useRouter();
 
-const sortFields = {
-    Name: ImsOrderField.Name,
-    Template: [ImsOrderField.TemplateName, ImsOrderField.TemplateId],
-    "[Default]": ImsOrderField.Id
+const sortFields: Record<string, ImsOrderField | ImsOrderField[]> = {
+    Name: "NAME",
+    Template: ["TEMPLATE_NAME", "TEMPLATE_ID"],
+    "[Default]": "ID"
 };
 
 const templateIds = useFilterOption("template", true);

@@ -36,7 +36,12 @@ import IssueDialogs from "@/components/IssueDialogs.vue";
 import { issueSortFields } from "@/util/issueSortFields";
 import { ItemManager } from "@/util/itemManager";
 import IssueFilterDropdowns from "@/components/input/IssueFilterDropdowns.vue";
-import { type IssueListItemInfoFragment, IssueOrderField, type IssueOrder, type IssueFilterInput } from "@/gql/graphql";
+import {
+    type IssueListItemInfoFragment,
+    type IssueOrderField,
+    type IssueOrder,
+    type IssueFilterInput
+} from "@/gql/graphql";
 import { request, queryNode } from "@/gql/client";
 import { graphql } from "@/gql";
 

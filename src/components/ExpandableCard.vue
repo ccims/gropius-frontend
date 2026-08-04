@@ -1,12 +1,15 @@
 <template>
-    <v-card variant="outlined" class="my-4" :class="{ 'opacity-60': props.editable === false }">
-        <div v-if="!isExpanded" class="d-flex align-center justify-space-between">
+    <v-card
+        variant="flat"
+        color="surface-container-low"
+        class="my-4"
+        :class="{ 'opacity-60': props.editable === false }"
+    >
+        <div v-if="!isExpanded" class="d-flex align-center justify-space-between pa-2">
             <slot name="previewLeft" />
 
             <div class="d-flex align-center flex-grow-1 overflow-hidden">
-                <div class="text-h6 font-weight-medium ma-2 text-truncate">
-                    {{ props.name }}
-                </div>
+                <v-list-item-title>{{ props.name }}</v-list-item-title>
             </div>
 
             <slot name="previewRight" />
@@ -15,24 +18,24 @@
                 <IconButton :disabled="!props.editable" @click="emit('expand')">
                     <v-icon>mdi-pencil</v-icon>
                 </IconButton>
-                <IconButton :disabled="!props.editable" color="error" class="me-1" @click="emit('delete')">
-                    <v-icon>mdi-delete</v-icon>
+                <IconButton :disabled="!props.editable" @click="emit('delete')">
+                    <v-icon>mdi-close</v-icon>
                 </IconButton>
             </div>
         </div>
 
-        <div v-else class="mt-2">
+        <div v-else class="pa-3">
             <v-text-field
-                class="mx-2 mb-2"
+                class="mb-3"
                 label="Name"
                 v-model="localName"
                 density="compact"
-                :error="!!props.nameErrorMessage"
-                :error-messages="props.nameErrorMessage"
+                :error="!!nameErrorMessage"
+                :error-messages="nameErrorMessage"
             />
             <v-textarea
                 v-if="props.description !== undefined"
-                class="mx-2"
+                class="mb-3"
                 label="Description"
                 v-model="localDescription"
                 auto-grow
@@ -43,11 +46,14 @@
 
             <slot name="extra" />
 
-            <div class="d-flex justify-end ga-1">
-                <v-btn class="mb-2" @click="emit('cancel')">Cancel</v-btn>
-                <v-btn class="me-2" @click="emit('confirm', { name: localName, description: localDescription })">
+            <div class="d-flex justify-end ga-1 mt-3">
+                <DefaultButton variant="text" color="" @click="emit('cancel')">Cancel</DefaultButton>
+                <DefaultButton
+                    variant="text"
+                    @click="emit('confirm', { name: localName, description: localDescription })"
+                >
                     Confirm
-                </v-btn>
+                </DefaultButton>
             </div>
         </div>
     </v-card>
@@ -67,13 +73,14 @@ const props = withDefaults(
         description?: string;
         expandedCardKey: ExpandedKey;
         type: string;
-        nameErrorMessage?: string;
         editable?: boolean;
     }>(),
     {
         editable: true
     }
 );
+
+const nameErrorMessage = defineModel<string>("nameErrorMessage", { default: "" });
 
 const emit = defineEmits<{
     (e: "expand"): void;
@@ -88,6 +95,10 @@ const isExpanded = computed(
 
 const localName = ref(props.name);
 const localDescription = ref(props.description ?? "");
+
+watch(localName, () => {
+    nameErrorMessage.value = "";
+});
 
 watch(
     () => props.expandedCardKey,

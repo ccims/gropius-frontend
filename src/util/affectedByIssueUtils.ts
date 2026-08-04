@@ -88,6 +88,7 @@ export function expandSearchResult(items: DetailedAffectedByIssueInfoFragment[])
                             id: definition.visibleInterface.id,
                             __typename: "Interface",
                             interfaceDefinition: {
+                                __typename: "InterfaceDefinition",
                                 interfaceSpecificationVersion: mappedVersion
                             }
                         });
@@ -102,6 +103,7 @@ export function expandSearchResult(items: DetailedAffectedByIssueInfoFragment[])
                         id: definition.visibleInterface.id,
                         __typename: "Interface",
                         interfaceDefinition: {
+                            __typename: "InterfaceDefinition",
                             interfaceSpecificationVersion: item
                         }
                     });

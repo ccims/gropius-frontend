@@ -96,7 +96,7 @@ import {
     type IssueFilterInput,
     type IssueListItemInfoFragment,
     type IssueOrder,
-    IssueOrderField,
+    type IssueOrderField,
     type GraphInfoFragment
 } from "@/gql/graphql";
 import type { SelectedElement } from "@gropius/graph-editor";
@@ -281,8 +281,8 @@ watchEffect(() => {
     filterFromDropdown.value?.setSingleFilters({ type: issueFilter.value?.type?.id });
 });
 
-const sortFields = {
-    Updated: IssueOrderField.LastUpdatedAt
+const sortFields: Record<string, IssueOrderField | IssueOrderField[]> = {
+    Updated: "LAST_UPDATED_AT"
 };
 
 class IssueItemManager extends ItemManager<Issue, IssueOrderField> {

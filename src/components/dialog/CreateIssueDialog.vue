@@ -147,16 +147,21 @@ const [body, bodyProps] = defineField("body", fieldConfig);
 const icon = computed<DefaultIssueIconInfoFragment | undefined>(() => {
     if (typePath.value != undefined && isOpen.value != undefined) {
         return {
+            __typename: "Issue",
             type: {
+                __typename: "IssueType",
                 iconPath: typePath.value
             },
             state: {
+                __typename: "IssueState",
                 isOpen: isOpen.value
             },
             incomingRelations: {
+                __typename: "IssueRelationConnection",
                 totalCount: 0
             },
             outgoingRelations: {
+                __typename: "IssueRelationConnection",
                 totalCount: 0
             }
         };

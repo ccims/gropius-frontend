@@ -33,7 +33,8 @@ const tabs = computed(() => {
         { name: "IMSs", path: "/imss" },
         { name: "Templates", path: "/templates" }
     ];
-    if (store.user?.isAdmin) {
+    const user = store.user;
+    if (user?.__typename == "GropiusUser" && user.isAdmin) {
         tabs.push({ name: "Admin", path: "/admin" });
     }
     return tabs;

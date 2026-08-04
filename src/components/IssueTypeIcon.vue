@@ -1,5 +1,5 @@
 <template>
-    <svg viewBox="0 0 100 100" preserve-aspect-ratio="">
+    <svg viewBox="0 0 24 24">
         <path :d="path" :fill="fill" />
         <slot></slot>
     </svg>

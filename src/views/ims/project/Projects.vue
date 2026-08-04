@@ -30,7 +30,7 @@ import { graphql } from "@/gql";
 import { type RouteLocationRaw, useRoute, useRouter } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
 import type { IdObject } from "@/util/types";
-import { type DefaultImsProjectInfoFragment, type ImsProjectOrder, ImsProjectOrderField } from "@/gql/graphql";
+import { type DefaultImsProjectInfoFragment, type ImsProjectOrder, type ImsProjectOrderField } from "@/gql/graphql";
 import SyncSelfAllowedSwitch from "@/components/input/SyncSelfAllowedSwitch.vue";
 import { computed } from "vue";
 import CreateIMSProjectDialog from "@/components/dialog/CreateIMSProjectDialog.vue";
@@ -67,9 +67,9 @@ const route = useRoute();
 
 const ims = computed(() => route.params.ims as string);
 
-const sortFields = {
-    Name: ImsProjectOrderField.Name,
-    "[Default]": ImsProjectOrderField.Id
+const sortFields: Record<string, ImsProjectOrderField | ImsProjectOrderField[]> = {
+    Name: "NAME",
+    "[Default]": "ID"
 };
 
 class IMSProjectItemManager extends ItemManager<IMSProject, ImsProjectOrderField> {

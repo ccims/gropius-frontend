@@ -1,6 +1,6 @@
 <template>
     <v-dialog v-model="createIssueTemplateDialog" persistent width="auto">
-        <v-card color="surface-elevated-3" rounded="lger" class="pa-3" elevation="0">
+        <v-card color="surface-elevated-3" rounded="lger" class="pa-3 create-issue-template-dialog" elevation="0">
             <v-card-title class="pl-4">Create Issue Template</v-card-title>
             <v-stepper
                 class="d-flex flex-column"
@@ -29,6 +29,7 @@
                                 <IssueTemplateAutocomplete
                                     v-model="selectedTemplates"
                                     multiple
+                                    label="Extended Templates"
                                     :error-messages="templateInheritanceErrorMessage"
                                 />
                             </v-col>
@@ -53,17 +54,16 @@
                         <v-row>
                             <v-col cols="4">
                                 <v-btn
-                                    variant="outlined"
+                                    variant="tonal"
                                     block
-                                    color="primary"
-                                    class="bg-white text-primary rounded-sm px-4 py-2"
+                                    prepend-icon="$issue"
                                     @click="
                                         () => {
                                             createIssueTypeInput('', '', '', '');
                                             expandedCardKey = { nameID: '', type: 'type' };
                                         }
                                     "
-                                    >+ Add Issue Type
+                                    >Add Issue Type
                                 </v-btn>
                                 <ExpandableCard
                                     v-for="IssueType in issueTypes"
@@ -72,15 +72,14 @@
                                     :description="IssueType.description"
                                     :expandedCardKey="expandedCardKey"
                                     type="type"
-                                    :nameErrorMessage="nameErrorMessage"
+                                    v-model:nameErrorMessage="nameErrorMessage"
                                     :editable="
                                         !disabledCards.issueTypes.some((entry) => entry.entry === IssueType.name)
                                     "
                                     @expand="
                                         () => {
                                             expandedCardKey = { nameID: IssueType.name, type: 'type' };
-                                            selectedIcon =
-                                                iconList.find((icon) => icon.iconPath === IssueType.iconPath) ?? null;
+                                            selectedIconPath = IssueType.iconPath;
                                             currentEditedName = IssueType.name;
                                             currentEditedDescription = IssueType.description;
                                             nameErrorMessage = '';
@@ -94,131 +93,33 @@
                                                 nameErrorMessage = 'Name is required';
                                                 return;
                                             }
-                                            createIssueTypeInput(
-                                                IssueType.name,
-                                                name,
-                                                description,
-                                                selectedIcon?.iconPath ?? ''
-                                            );
+                                            createIssueTypeInput(IssueType.name, name, description, selectedIconPath);
                                         }
                                     "
                                 >
                                     <template #previewLeft>
-                                        <div class="border rounded d-flex align-center mx-2 my-1">
+                                        <div class="border rounded d-flex align-center mr-2">
                                             <SvgWrapper :path="IssueType.iconPath" />
                                         </div>
                                     </template>
 
                                     <template #extra>
-                                        <div v-if="expandedCardKey?.nameID === IssueType.name">
-                                            <div class="d-flex align-center justify-center">
-                                                <v-tabs v-model="activeTab" density="compact" class="flex-grow-1">
-                                                    <v-tab value="select" class="flex-grow-1">Select Icon</v-tab>
-                                                    <v-tab value="add" class="flex-grow-1">Add Icon</v-tab>
-                                                </v-tabs>
-                                            </div>
-
-                                            <v-window v-model="activeTab">
-                                                <v-window-item value="select">
-                                                    <v-text-field
-                                                        v-model="iconSearch"
-                                                        label="Search"
-                                                        density="compact"
-                                                        hide-details
-                                                        rounded
-                                                        class="mb-2"
-                                                        prepend-inner-icon="mdi-magnify"
-                                                        clearable
-                                                    >
-                                                    </v-text-field>
-
-                                                    <div class="icon-container mx-n2" v-if="activeTab === 'select'">
-                                                        <v-lazy
-                                                            v-for="icon in filteredIcons"
-                                                            :key="icon.name"
-                                                            min-height="48"
-                                                            transition="fade-transition"
-                                                        >
-                                                            <IconButton
-                                                                color=""
-                                                                class="icon-wrapper"
-                                                                :class="{ selected: selectedIcon?.name === icon.name }"
-                                                                @click="selectIcon(icon)"
-                                                            >
-                                                                <SvgWrapper :path="icon.iconPath" />
-                                                                <v-tooltip activator="parent" location="top">
-                                                                    {{ icon.name }}
-                                                                </v-tooltip>
-                                                            </IconButton>
-                                                        </v-lazy>
-                                                    </div>
-                                                </v-window-item>
-
-                                                <v-window-item value="add">
-                                                    <div class="d-flex flex-column" v-if="activeTab === 'add'">
-                                                        <v-text-field
-                                                            v-model="newIcon.name"
-                                                            label="Icon Name"
-                                                            density="compact"
-                                                            hide-details
-                                                            class="mb-6"
-                                                        />
-
-                                                        <v-text-field
-                                                            v-model="newIcon.iconPath"
-                                                            label="SVG Path (24x24)"
-                                                            density="compact"
-                                                            hide-details
-                                                            class="scroll-x mb-4"
-                                                            clearable
-                                                            @click:clear="clearNewIconPath"
-                                                        />
-
-                                                        <div class="d-flex align-center">
-                                                            <span class="mr-2">Preview:</span>
-                                                            <div
-                                                                class="preview-box border rounded mr-2 d-flex align-center justify-center"
-                                                            >
-                                                                <SvgWrapper :path="newIcon.iconPath" />
-                                                            </div>
-
-                                                            <v-btn
-                                                                color="primary"
-                                                                size="small"
-                                                                :disabled="
-                                                                    !newIcon.name ||
-                                                                    !newIcon.iconPath ||
-                                                                    !allowedPathElements
-                                                                "
-                                                                @click="confirmAddIcon"
-                                                            >
-                                                                Add
-                                                            </v-btn>
-                                                        </div>
-
-                                                        <div class="text-warning text-caption">
-                                                            Expected: 24x24, fill color, no stroke
-                                                        </div>
-                                                    </div>
-                                                </v-window-item>
-                                            </v-window>
-                                        </div>
+                                        <IconPicker v-model="selectedIconPath" />
                                     </template>
                                 </ExpandableCard>
                             </v-col>
                             <v-col cols="4">
                                 <v-btn
-                                    variant="outlined"
+                                    variant="tonal"
                                     block
-                                    color="primary"
-                                    class="bg-white text-primary rounded-sm px-4 py-2"
+                                    prepend-icon="mdi-priority-high"
                                     @click="
                                         () => {
                                             createIssuePriority('', '', '', 0, '');
                                             expandedCardKey = { nameID: '', type: 'priority' };
                                         }
                                     "
-                                    >+ Add Issue Priority
+                                    >Add Issue Priority
                                 </v-btn>
                                 <ExpandableCard
                                     v-for="issuePriority in issuePriorities"
@@ -227,7 +128,7 @@
                                     :description="issuePriority.description"
                                     :expandedCardKey="expandedCardKey"
                                     type="priority"
-                                    :nameErrorMessage="nameErrorMessage"
+                                    v-model:nameErrorMessage="nameErrorMessage"
                                     :editable="
                                         !disabledCards.issuePriorities.some(
                                             (entry) => entry.entry === issuePriority.name
@@ -236,6 +137,7 @@
                                     @expand="
                                         () => {
                                             expandedCardKey = { nameID: issuePriority.name, type: 'priority' };
+                                            selectedIconPath = issuePriority.iconPath;
                                             currentEditedName = issuePriority.name;
                                             currentEditedDescription = issuePriority.description;
                                             currentEditedValue = issuePriority.value;
@@ -260,18 +162,18 @@
                                                 name,
                                                 description,
                                                 issuePriority.value,
-                                                selectedIcon?.iconPath ?? ''
+                                                selectedIconPath
                                             );
                                         }
                                     "
                                 >
                                     <template #previewLeft>
-                                        <div class="border rounded d-flex align-center mx-2 my-1">
+                                        <div class="border rounded d-flex align-center mr-2">
                                             <SvgWrapper :path="issuePriority.iconPath" />
                                         </div>
                                     </template>
                                     <template #previewRight>
-                                        <div class="border rounded d-flex align-center mr-4 my-1">
+                                        <div class="border rounded d-flex align-center mr-2">
                                             <span class="text-h6 mx-1">
                                                 {{
                                                     issuePriority.value.toString().length > 3
@@ -287,118 +189,28 @@
                                             v-model="issuePriority.value"
                                             :precision="null"
                                             label="Value"
-                                            class="mx-2 mb-2"
+                                            class="mb-2"
                                             density="compact"
                                             :error="!!valueErrorMessage"
                                             :error-messages="valueErrorMessage"
+                                            @update:model-value="valueErrorMessage = ''"
                                         />
-                                        <div class="d-flex align-center justify-center">
-                                            <v-tabs v-model="activeTab" density="compact" class="flex-grow-1">
-                                                <v-tab value="select" class="flex-grow-1">Select Icon</v-tab>
-                                                <v-tab value="add" class="flex-grow-1">Add Icon</v-tab>
-                                            </v-tabs>
-                                        </div>
-
-                                        <v-window v-model="activeTab">
-                                            <v-window-item value="select">
-                                                <v-text-field
-                                                    v-model="iconSearch"
-                                                    label="Search"
-                                                    density="compact"
-                                                    hide-details
-                                                    rounded
-                                                    class="mb-2"
-                                                    prepend-inner-icon="mdi-magnify"
-                                                    clearable
-                                                >
-                                                </v-text-field>
-
-                                                <div class="icon-container mx-n2" v-if="activeTab === 'select'">
-                                                    <v-lazy
-                                                        v-for="icon in filteredIcons"
-                                                        :key="icon.name"
-                                                        min-height="48"
-                                                        transition="fade-transition"
-                                                    >
-                                                        <IconButton
-                                                            color=""
-                                                            class="icon-wrapper"
-                                                            :class="{ selected: selectedIcon?.name === icon.name }"
-                                                            @click="selectIcon(icon)"
-                                                        >
-                                                            <SvgWrapper :path="icon.iconPath" />
-                                                            <v-tooltip activator="parent" location="top">
-                                                                {{ icon.name }}
-                                                            </v-tooltip>
-                                                        </IconButton>
-                                                    </v-lazy>
-                                                </div>
-                                            </v-window-item>
-
-                                            <v-window-item value="add">
-                                                <div class="d-flex flex-column" v-if="activeTab === 'add'">
-                                                    <v-text-field
-                                                        v-model="newIcon.name"
-                                                        label="Icon Name"
-                                                        density="compact"
-                                                        hide-details
-                                                        class="mb-6"
-                                                    />
-
-                                                    <v-text-field
-                                                        v-model="newIcon.iconPath"
-                                                        label="SVG Path (24x24)"
-                                                        density="compact"
-                                                        hide-details
-                                                        class="scroll-x mb-4"
-                                                        clearable
-                                                        @click:clear="clearNewIconPath"
-                                                    />
-
-                                                    <div class="d-flex align-center">
-                                                        <span class="mr-2">Preview:</span>
-                                                        <div
-                                                            class="preview-box border rounded mr-2 d-flex align-center justify-center"
-                                                        >
-                                                            <SvgWrapper :path="newIcon.iconPath" />
-                                                        </div>
-
-                                                        <v-btn
-                                                            color="primary"
-                                                            size="small"
-                                                            :disabled="
-                                                                !newIcon.name ||
-                                                                !newIcon.iconPath ||
-                                                                !allowedPathElements
-                                                            "
-                                                            @click="confirmAddIcon"
-                                                        >
-                                                            Add
-                                                        </v-btn>
-                                                    </div>
-
-                                                    <div class="text-warning text-caption">
-                                                        Expected: 24x24, fill color, no stroke
-                                                    </div>
-                                                </div>
-                                            </v-window-item>
-                                        </v-window>
+                                        <IconPicker v-model="selectedIconPath" />
                                     </template>
                                 </ExpandableCard>
                             </v-col>
                             <v-col cols="4">
                                 <v-btn
-                                    variant="outlined"
+                                    variant="tonal"
                                     block
-                                    color="primary"
-                                    class="bg-white text-primary rounded-sm px-4 py-2"
+                                    prepend-icon="mdi-circle"
                                     @click="
                                         () => {
                                             createIssueState('', '', '', true);
                                             expandedCardKey = { nameID: '', type: 'state' };
                                         }
                                     "
-                                    >+ Add Issue State
+                                    >Add Issue State
                                 </v-btn>
                                 <ExpandableCard
                                     v-for="issueState in issueStates"
@@ -407,7 +219,7 @@
                                     :description="issueState.description"
                                     :expandedCardKey="expandedCardKey"
                                     type="state"
-                                    :nameErrorMessage="nameErrorMessage"
+                                    v-model:nameErrorMessage="nameErrorMessage"
                                     :editable="
                                         !disabledCards.issueStates.some((entry) => entry.entry === issueState.name)
                                     "
@@ -438,7 +250,7 @@
                                     "
                                 >
                                     <template #previewLeft>
-                                        <div class="mx-2">
+                                        <div class="mr-2">
                                             <v-icon :color="issueState.isOpen ? 'success' : 'error'">mdi-circle</v-icon>
                                         </div>
                                     </template>
@@ -457,17 +269,16 @@
                         <v-row>
                             <v-col cols="6">
                                 <v-btn
-                                    variant="outlined"
+                                    variant="tonal"
                                     block
-                                    color="primary"
-                                    class="bg-white text-primary rounded-sm px-4 py-2"
+                                    prepend-icon="mdi-account"
                                     @click="
                                         () => {
                                             createAssignmentType('', '', '');
                                             expandedCardKey = { nameID: '', type: 'assignment' };
                                         }
                                     "
-                                    >+ Add Assignment Type
+                                    >Add Assignment Type
                                 </v-btn>
                                 <ExpandableCard
                                     v-for="assignmentType in assignmentTypes"
@@ -476,7 +287,7 @@
                                     :description="assignmentType.description"
                                     :expandedCardKey="expandedCardKey"
                                     type="assignment"
-                                    :nameErrorMessage="nameErrorMessage"
+                                    v-model:nameErrorMessage="nameErrorMessage"
                                     :editable="
                                         !disabledCards.assignmentTypes.some(
                                             (entry) => entry.entry === assignmentType.name
@@ -512,17 +323,16 @@
                             </v-col>
                             <v-col cols="6">
                                 <v-btn
-                                    variant="outlined"
+                                    variant="tonal"
                                     block
-                                    color="primary"
-                                    class="bg-white text-primary rounded-sm px-4 py-2"
+                                    prepend-icon="mdi-arrow-right"
                                     @click="
                                         () => {
                                             createRelationType('', '', '', '');
                                             expandedCardKey = { nameID: '', type: 'relation' };
                                         }
                                     "
-                                    >+ Add Relation Type
+                                    >Add Relation Type
                                 </v-btn>
                                 <ExpandableCard
                                     v-for="relationType in relationTypes"
@@ -531,7 +341,7 @@
                                     :description="relationType.description"
                                     :expandedCardKey="expandedCardKey"
                                     type="relation"
-                                    :nameErrorMessage="nameErrorMessage"
+                                    v-model:nameErrorMessage="nameErrorMessage"
                                     :editable="
                                         !disabledCards.relationTypes.some((entry) => entry.entry === relationType.name)
                                     "
@@ -575,10 +385,11 @@
                                         <v-text-field
                                             v-model="relationType.inverseName"
                                             label="Inverse Name"
-                                            class="mx-2 mb-2"
+                                            class="mb-2"
                                             density="compact"
                                             :error="!!inverseNameErrorMessage"
                                             :error-messages="inverseNameErrorMessage"
+                                            @update:model-value="inverseNameErrorMessage = ''"
                                         />
                                     </template>
                                 </ExpandableCard>
@@ -590,17 +401,16 @@
                 <template v-slot:item.4>
                     <v-form v-model="formIssueStatesValid">
                         <v-btn
-                            variant="outlined"
+                            variant="tonal"
                             block
-                            color="primary"
-                            class="bg-white text-primary rounded-sm px-4 py-2"
+                            prepend-icon="mdi-form-textbox"
                             @click="
                                 () => {
-                                    createTemplateFieldSpecification('', '', {});
+                                    createTemplateFieldSpecification('', '', { type: 'string' });
                                     expandedCardKey = { nameID: '', type: 'templateFieldSpecification' };
                                 }
                             "
-                            >+ Add Template Field Specification
+                            >Add Template Field Specification
                         </v-btn>
                         <ExpandableCard
                             v-for="specifications in templateFieldSpecifications"
@@ -608,7 +418,7 @@
                             :name="specifications.name"
                             :expandedCardKey="expandedCardKey"
                             type="templateFieldSpecification"
-                            :nameErrorMessage="nameErrorMessage"
+                            v-model:nameErrorMessage="nameErrorMessage"
                             :editable="
                                 !disabledCards.templateFieldSpecifications.some(
                                     (entry) => entry.entry === specifications.name
@@ -644,11 +454,7 @@
                             "
                         >
                             <template #extra>
-                                <TemplatedFieldSpecificationsValueBox
-                                    v-model="specifications.value"
-                                    :rawNode="specifications.value"
-                                >
-                                </TemplatedFieldSpecificationsValueBox>
+                                <TemplatedFieldSpecificationsValueBox v-model="specifications.value" />
                             </template>
                         </ExpandableCard>
                     </v-form>
@@ -656,7 +462,7 @@
             </v-stepper>
 
             <v-card-actions>
-                <DefaultButton variant="text" :disabled="step === 1" @click="previous">Previous</DefaultButton>
+                <DefaultButton variant="text" color="" :disabled="step === 1" @click="previous">Previous</DefaultButton>
                 <v-spacer />
                 <DefaultButton variant="text" color="" @click="!isDirty && cancelCreateIssueTemplate()">
                     Cancel
@@ -692,10 +498,10 @@ import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
 import { computed } from "vue";
 import ConfirmationDialog from "./ConfirmationDialog.vue";
 import IssueTemplateAutocomplete from "../input/IssueTemplateAutocomplete.vue";
+import IconPicker from "../input/IconPicker.vue";
 import ExpandableCard from "../ExpandableCard.vue";
 import TemplatedFieldSpecificationsValueBox from "../TemplatedFieldSpecificationsValueBox.vue";
 
-import { iconList as baseIconList } from "../icons";
 import SvgWrapper from "../SvgWrapper.vue";
 
 import type {
@@ -830,54 +636,7 @@ const inverseNameErrorMessage = ref<string>("");
 
 const currentEditedTemplatedValue = ref<JsonFieldInput["value"]>();
 
-type Icon = {
-    name: string;
-    iconPath: string;
-};
-
-const iconList = ref<Icon[]>([...baseIconList]);
-
-const newIcon = ref<Icon>({ name: "", iconPath: "" });
-const activeTab = ref("select");
-const selectedIcon = ref<Icon | null>(null);
-
-function selectIcon(icon: Icon) {
-    selectedIcon.value = icon;
-}
-
-const iconSearch = ref("");
-
-const filteredIcons = computed(() => {
-    if (!iconSearch.value) return iconList.value;
-    return iconList.value.filter((icon) => icon.name.toLowerCase().includes(iconSearch.value.toLowerCase()));
-});
-
-function clearNewIconPath() {
-    newIcon.value.iconPath = "";
-}
-
-const allowedPathElements = ref<boolean>(false);
-const originalAllowedPathElements = (path: string) => /^[MmLlHhVvCcSsQqTtAaZz0-9 ,."\-]+$/g.test(path);
-
-watch(
-    () => newIcon.value.iconPath,
-    (newPath) => (allowedPathElements.value = originalAllowedPathElements(newPath))
-);
-
-function confirmAddIcon() {
-    if (newIcon.value.name && newIcon.value.iconPath && allowedPathElements) {
-        const newEntry = {
-            name: newIcon.value.name,
-            iconPath: newIcon.value.iconPath.trim().replace(/\"/g, "")
-        };
-
-        iconList.value.unshift(newEntry);
-        selectedIcon.value = newEntry;
-        iconSearch.value = "";
-        newIcon.value = { name: "", iconPath: "" };
-        activeTab.value = "select";
-    }
-}
+const selectedIconPath = ref("");
 
 const issueTypes = ref<IssueTypeInput[]>([]);
 const issuePriorities = ref<IssuePriorityInput[]>([]);
@@ -1111,7 +870,7 @@ function createIssueTypeInput(previousName: string, newName: string, description
         return a.name.localeCompare(b.name);
     });
     expandedCardKey.value = null;
-    selectedIcon.value = null;
+    selectedIconPath.value = "";
     currentEditedName.value = "";
     currentEditedDescription.value = "";
 }
@@ -1157,6 +916,7 @@ function createIssuePriority(
         return a.name.localeCompare(b.name);
     });
     expandedCardKey.value = null;
+    selectedIconPath.value = "";
     currentEditedName.value = "";
     currentEditedDescription.value = "";
     currentEditedValue.value = 0;
@@ -1326,11 +1086,7 @@ function cancelCreateCard() {
     deleteTemplateFieldSpecificationByName("");
 }
 
-/**
- * The backend copies everything defined on the extended templates onto the new template, so only the
- * entries that were added here may be submitted - inherited ones would end up duplicated (and are
- * rejected outright for templateFieldSpecifications, which must be disjoint).
- */
+// the backend already copies the extended templates' entries over, submitting them again duplicates them
 function withoutInherited<T extends { name: string }>(entries: T[], inherited: InheritedEntry[]): T[] {
     return entries.filter((entry) => !inherited.some((e) => e.entry === entry.name));
 }
@@ -1343,6 +1099,7 @@ async function createIssueTemplate() {
                 name: templateName.value,
                 description: templateDescription.value ?? "",
                 extends: selectedTemplates.value,
+                isAbstract: false,
                 issueTypes: withoutInherited(issueTypes.value, inherited.issueTypes),
                 issuePriorities: withoutInherited(issuePriorities.value, inherited.issuePriorities),
                 issueStates: withoutInherited(issueStates.value, inherited.issueStates),
@@ -1369,6 +1126,7 @@ onEvent("create-issue-template", () => {
     assignmentTypes.value = [];
     relationTypes.value = [];
     templateFieldSpecifications.value = [];
+    selectedIconPath.value = "";
     disabledCards.value = {
         issueTypes: [],
         issuePriorities: [],
@@ -1414,44 +1172,20 @@ const isDirty = computed(() => {
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@use "@/styles/settings.scss";
+
+.create-issue-template-dialog {
+    width: min(1000px, calc(100vw - 3 * settings.$side-bar-width));
+}
+
+// the global stepper window inset from App.vue must not apply to the icon picker's nested window
+.create-issue-template-dialog :deep(.v-stepper .v-window:not(.v-stepper-window)) {
+    margin: 0;
+    padding: 0;
+}
+
 .pa-3 {
     padding: 1rem;
-}
-
-.icon-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-
-    max-width: 260px;
-    max-height: 200px;
-    overflow-y: auto;
-
-    border: 1px solid rgba(var(--v-theme-on-surface), 0.6);
-    border-radius: 8px;
-    padding: 8px;
-    background-color: rgb(var(--v-theme-elevation));
-}
-
-.icon-wrapper {
-    width: 48px;
-    height: 48px;
-    cursor: pointer;
-    border: 1px solid transparent;
-    padding: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.icon-wrapper:hover {
-    border-color: rgb(var(--v-theme-primary));
-    background-color: rgba(var(--v-theme-primary), 0.05);
-}
-
-.icon-wrapper.selected {
-    border-color: rgb(var(--v-theme-primary));
-    background-color: rgba(var(--v-theme-primary), 0.2);
 }
 </style>

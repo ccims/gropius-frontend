@@ -22,11 +22,11 @@ import ImportIMSPermissionDialog from "@/components/dialog/ImportIMSPermissionDi
 import { queryNode, request, requestThrow } from "@/gql/client";
 import { graphql } from "@/gql";
 import {
-    ImsPermissionEntry,
     type ImsPermissionOrder,
-    ImsPermissionOrderField,
+    type ImsPermissionOrderField,
     type DefaultImsPermissionInfoFragment
 } from "@/gql/graphql";
+import { ImsPermissionEntry } from "@/gql/enums";
 import { ItemManager } from "@/util/itemManager";
 import type { IdObject } from "@/util/types";
 import { computed, useTemplateRef } from "vue";

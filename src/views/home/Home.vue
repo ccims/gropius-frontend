@@ -46,7 +46,7 @@ import PaginatedList from "@/components/PaginatedList.vue";
 import {
     type IssueFilterInput,
     type IssueOrder,
-    IssueOrderField,
+    type IssueOrderField,
     type ParticipatingIssueListItemInfoFragment
 } from "@/gql/graphql";
 import IssueListItem from "@/components/IssueListItem.vue";

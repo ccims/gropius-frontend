@@ -1,5 +1,5 @@
 <template>
-    <v-card :variant="props.variant ?? 'outlined'" :color="props.color" class="my-2 me-10">
+    <v-card :variant="props.variant ?? 'flat'" :color="props.color ?? 'surface-container-low'" class="my-2 me-10">
         <div v-if="!editMode" class="d-flex align-center justify-space-between">
             <div class="d-flex align-center flex-grow-1 overflow-hidden">
                 <v-icon v-if="props.prependIcon" class="ms-2" size="small">{{ props.prependIcon }}</v-icon>
@@ -11,34 +11,35 @@
                 <IconButton v-if="props.editable" @click="toggleEditMode">
                     <v-icon>mdi-pencil</v-icon>
                 </IconButton>
-                <IconButton color="error" class="me-1" @click="emit('delete')">
-                    <v-icon>mdi-delete</v-icon>
+                <IconButton class="me-1" @click="emit('delete')">
+                    <v-icon>mdi-close</v-icon>
                 </IconButton>
             </div>
         </div>
         <div v-else class="d-flex align-center">
             <v-text-field v-model="localContent" class="ma-2" hide-details density="compact" />
-            <div class="d-flex justify-end">
-                <v-btn
+            <div class="d-flex justify-end me-1">
+                <DefaultButton
                     v-if="props.editable"
-                    class="me-1"
+                    variant="text"
+                    color=""
                     @click="
                         () => {
                             toggleEditMode();
                             localContent = props.content;
                         }
                     "
-                    >Cancel</v-btn
+                    >Cancel</DefaultButton
                 >
-                <v-btn
-                    class="mx-1"
+                <DefaultButton
+                    variant="text"
                     @click="
                         () => {
                             emit('confirm', { content: localContent });
                             toggleEditMode();
                         }
                     "
-                    >Confirm</v-btn
+                    >Confirm</DefaultButton
                 >
             </div>
         </div>

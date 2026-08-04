@@ -175,7 +175,6 @@ import type {
     GraphRelationPartnerInfoFragment,
     GraphRelationPartnerTemplateInfoFragment,
     GraphRelationTemplateInfoFragment,
-    Point,
     RelationTemplateFilterInput,
     UpdateViewInput
 } from "@/gql/graphql";
@@ -893,6 +892,12 @@ async function deleteRelation(relation: string) {
     graphVersionCounter.value++;
 }
 
+// only the selected fields of the schema Point are generated, this is the shape the layout math needs
+interface Point {
+    x: number;
+    y: number;
+}
+
 interface LayoutUpdate {
     relationLayouts: NonNullable<UpdateViewInput["relationLayouts"]>;
     relationPartnerLayouts: NonNullable<UpdateViewInput["relationPartnerLayouts"]>;
@@ -993,9 +998,9 @@ async function updateLayoutOrView() {
                     filterByTemplate
                 }
             });
-            currentView.value!.filterByTemplate.nodes = componentTemplates.value.filter((template) =>
-                componentTemplateFilter.value.has(template.id)
-            );
+            currentView.value!.filterByTemplate.nodes = componentTemplates.value
+                .filter((template) => componentTemplateFilter.value.has(template.id))
+                .map((template) => ({ __typename: "ComponentTemplate" as const, id: template.id }));
         }, "Error updating view");
     } else {
         await withErrorMessage(async () => {
@@ -1014,8 +1019,8 @@ const cachedNewLayout = ref<Partial<LayoutUpdate>>();
 
 function createView() {
     cachedNewLayout.value = computeLayoutDiff({
-        relationLayouts: { nodes: [] },
-        relationPartnerLayouts: { nodes: [] }
+        relationLayouts: { __typename: "RelationLayoutConnection", nodes: [] },
+        relationPartnerLayouts: { __typename: "RelationPartnerLayoutConnection", nodes: [] }
     });
     eventBus?.emit("create-view");
 }

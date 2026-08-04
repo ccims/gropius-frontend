@@ -69,7 +69,7 @@
 import PaginatedList from "@/components/PaginatedList.vue";
 import { requestThrow, queryNodeThrow } from "@/gql/client";
 import { graphql } from "@/gql";
-import { type ViewOrder, ViewOrderField, type DefaultViewInfoFragment } from "@/gql/graphql";
+import { type ViewOrder, type ViewOrderField, type DefaultViewInfoFragment } from "@/gql/graphql";
 import { useRoute } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
 import { computed, inject, ref } from "vue";
@@ -177,9 +177,9 @@ const viewToUpdate = ref<
     | undefined
 >();
 
-const sortFields = {
-    Name: ViewOrderField.Name,
-    "[Default]": ViewOrderField.Id
+const sortFields: Record<string, ViewOrderField | ViewOrderField[]> = {
+    Name: "NAME",
+    "[Default]": "ID"
 };
 
 const templateIds = useFilterOption("template", true);

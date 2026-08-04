@@ -131,6 +131,11 @@ const routes: RouteRecordRaw[] = [
                         path: "field-specifications",
                         name: "issue-template-details-field-specifications",
                         component: () => import("../views/home/Templates/issueTemplate/TemplateFieldSpecifications.vue")
+                    },
+                    {
+                        path: "danger",
+                        name: "issue-template-details-danger",
+                        component: () => import("../views/home/Templates/issueTemplate/Danger.vue")
                     }
                 ]
             }

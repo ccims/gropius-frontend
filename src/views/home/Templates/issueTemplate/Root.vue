@@ -22,6 +22,7 @@ import { computed, ref, shallowRef } from "vue";
 import { type RouteLocationRaw, useRoute } from "vue-router";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import { onEvent } from "@/util/eventBus";
+import { useAppStore } from "@/store/app";
 
 const getIssueTemplateQuery = graphql(`
     query getIssueTemplate($id: ID!) {
@@ -37,6 +38,7 @@ const getIssueTemplateQuery = graphql(`
 `);
 
 const route = useRoute();
+const store = useAppStore();
 const issueTemplateId = computed(() => route.params.issueTemplate as string);
 
 const titleSegmentDependency = ref(0);
@@ -101,9 +103,18 @@ const leftSidebarItems = computed(() => {
             },
             {
                 icon: "mdi-form-textbox",
-                name: "Field Specifications",
+                name: "Field Specs",
                 color: "secondary",
                 to: issueTemplatePath("issue-template-details-field-specifications")
+            }
+        ],
+        [
+            {
+                icon: "mdi-alert",
+                name: "Danger",
+                color: "error",
+                to: issueTemplatePath("issue-template-details-danger"),
+                disabled: !(store.user?.canCreateTemplates ?? false)
             }
         ]
     ];

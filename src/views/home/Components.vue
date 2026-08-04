@@ -40,7 +40,7 @@ import { graphql } from "@/gql";
 import {
     type ComponentFilterInput,
     type ComponentOrder,
-    ComponentOrderField,
+    type ComponentOrderField,
     type ComponentListItemInfoFragment
 } from "@/gql/graphql";
 import { type RouteLocationRaw, useRouter } from "vue-router";
@@ -84,10 +84,10 @@ type Component = ComponentListItemInfoFragment;
 
 const router = useRouter();
 
-const sortFields = {
-    Name: ComponentOrderField.Name,
-    Template: [ComponentOrderField.TemplateName, ComponentOrderField.TemplateId],
-    "[Default]": ComponentOrderField.Id
+const sortFields: Record<string, ComponentOrderField | ComponentOrderField[]> = {
+    Name: "NAME",
+    Template: ["TEMPLATE_NAME", "TEMPLATE_ID"],
+    "[Default]": "ID"
 };
 
 const templateIds = useFilterOption("template", true);

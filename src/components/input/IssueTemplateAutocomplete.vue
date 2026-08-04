@@ -2,7 +2,7 @@
     <FetchingAutocomplete
         :mode="multiple ? 'model-multiple' : 'model'"
         :fetch="searchIssueTemplates"
-        label="Template"
+        :label="label"
         item-title="name"
     >
         <template #item="{ props, item }">
@@ -41,6 +41,11 @@ defineProps({
         type: Boolean,
         required: false,
         default: false
+    },
+    label: {
+        type: String,
+        required: false,
+        default: "Template"
     }
 });
 
