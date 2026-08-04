@@ -1,141 +1,3 @@
-query searchAffectedByIssues($query: String!, $count: Int!, $trackable: ID!, $sublistCount: Int) {
-    searchAffectedByIssues(query: $query, first: $count, filter: { relatedTo: $trackable }) {
-        ...DefaultAffectedByIssueInfo
-        ... on Component {
-            versions(first: $sublistCount) {
-                nodes {
-                    id
-                    version
-                }
-            }
-        }
-        ... on InterfaceSpecification {
-            versions(first: $sublistCount) {
-                nodes {
-                    id
-                    version
-                    interfaceDefinitions(
-                        first: $sublistCount
-                        filter: { visibleInterface: {}, componentVersion: { component: { id: { eq: $trackable } } } }
-                    ) {
-                        nodes {
-                            visibleInterface {
-                                id
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        ... on InterfaceSpecificationVersion {
-            interfaceDefinitions(
-                first: $sublistCount
-                filter: { visibleInterface: {}, componentVersion: { component: { id: { eq: $trackable } } } }
-            ) {
-                nodes {
-                    visibleInterface {
-                        id
-                    }
-                }
-            }
-        }
-    }
-}
-
-query searchAffectedByIssuesWithoutTrackable($query: String!, $count: Int!, $sublistCount: Int) {
-    searchAffectedByIssues(query: $query, first: $count) {
-        ...DefaultAffectedByIssueInfo
-        ... on Component {
-            versions(first: $sublistCount) {
-                nodes {
-                    id
-                    version
-                }
-            }
-        }
-        ... on InterfaceSpecification {
-            versions(first: $sublistCount) {
-                nodes {
-                    id
-                    version
-                    interfaceDefinitions(
-                        first: $sublistCount
-                        filter: { visibleInterface: {} }
-                    ) {
-                        nodes {
-                            visibleInterface {
-                                id
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        ... on InterfaceSpecificationVersion {
-            interfaceDefinitions(
-                first: $sublistCount
-                filter: { visibleInterface: {} }
-            ) {
-                nodes {
-                    visibleInterface {
-                        id
-                    }
-                }
-            }
-        }
-    }
-}
-
-query firstAffectedByIssues($trackable: ID!, $count: Int!, $sublistCount: Int!) {
-    node(id: $trackable) {
-        ... on Trackable {
-            affectedEntities(first: $count) {
-                nodes {
-                    ...DefaultAffectedByIssueInfo
-                    ... on Component {
-                        versions(first: $sublistCount) {
-                            nodes {
-                                id
-                                version
-                            }
-                        }
-                    }
-                    ... on InterfaceSpecification {
-                        versions(first: $sublistCount) {
-                            nodes {
-                                id
-                                version
-                                interfaceDefinitions(
-                                    first: $sublistCount
-                                    filter: { visibleInterface: {}, componentVersion: { component: { id: { eq: $trackable } } } }
-                                ) {
-                                    nodes {
-                                        visibleInterface {
-                                            id
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    ... on InterfaceSpecificationVersion {
-                        interfaceDefinitions(
-                            first: $sublistCount
-                            filter: { visibleInterface: {}, componentVersion: { component: { id: { eq: $trackable } } } }
-                        ) {
-                            nodes {
-                                visibleInterface {
-                                    id
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
 fragment DefaultAffectedByIssueInfo on AffectedByIssue {
     id
     ... on Named {
@@ -170,18 +32,44 @@ fragment DefaultAffectedByIssueInfo on AffectedByIssue {
     __typename
 }
 
-mutation addAffectedEntityToIssue($issue: ID!, $affectedEntity: ID!) {
-    addAffectedEntityToIssue(input: { issue: $issue, affectedEntity: $affectedEntity }) {
-        addedAffectedEntityEvent {
-            ...AddedAffectedEntityEventTimelineInfo
+fragment DetailedAffectedByIssueInfo on AffectedByIssue {
+    ...DefaultAffectedByIssueInfo
+    ... on Component {
+        versions(first: $sublistCount) {
+            nodes {
+                id
+                version
+            }
         }
     }
-}
-
-mutation removeAffectedEntityFromIssue($issue: ID!, $affectedEntity: ID!) {
-    removeAffectedEntityFromIssue(input: { issue: $issue, affectedEntity: $affectedEntity }) {
-        removedAffectedEntityEvent {
-            ...RemovedAffectedEntityEventTimelineInfo
+    ... on InterfaceSpecification {
+        versions(first: $sublistCount) {
+            nodes {
+                id
+                version
+                interfaceDefinitions(
+                    first: $sublistCount
+                    filter: { visibleInterface: {}, componentVersion: { component: { id: { eq: $trackable } } } }
+                ) {
+                    nodes {
+                        visibleInterface {
+                            id
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ... on InterfaceSpecificationVersion {
+        interfaceDefinitions(
+            first: $sublistCount
+            filter: { visibleInterface: {}, componentVersion: { component: { id: { eq: $trackable } } } }
+        ) {
+            nodes {
+                visibleInterface {
+                    id
+                }
+            }
         }
     }
 }

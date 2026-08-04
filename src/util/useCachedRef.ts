@@ -1,4 +1,4 @@
-import { readonly, ref, Ref, watch } from "vue";
+import { readonly, ref, type Ref, watch } from "vue";
 
 export function useCachedRef<T>(baseRef: Ref<T>) {
     const cache = ref(baseRef.value) as Ref<T>;

@@ -1,5 +1,5 @@
 import { Point } from "sprotty-protocol";
-import { Segment } from "./segment.js";
+import type { Segment } from "./segment.js";
 
 /**
  * Defines an circular arc line

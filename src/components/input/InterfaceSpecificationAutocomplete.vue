@@ -12,8 +12,9 @@
     </FetchingAutocomplete>
 </template>
 <script setup lang="ts">
-import { NodeReturnType, useClient } from "@/graphql/client";
-import { DefaultInterfaceSpecificationInfoFragment } from "@/graphql/generated";
+import { requestThrow, queryNodeThrow } from "@/gql/client";
+import { graphql } from "@/gql";
+import type { DefaultInterfaceSpecificationInfoFragment } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
@@ -25,7 +26,27 @@ const props = defineProps({
     }
 });
 
-const client = useClient();
+const searchInterfaceSpecificationsQuery = graphql(`
+    query searchInterfaceSpecifications($query: String!, $count: Int!, $component: ID!) {
+        searchInterfaceSpecifications(query: $query, first: $count, filter: { component: { id: { eq: $component } } }) {
+            ...DefaultInterfaceSpecificationInfo
+        }
+    }
+`);
+
+const firstInterfaceSpecificationsQuery = graphql(`
+    query firstInterfaceSpecifications($count: Int!, $component: ID!) {
+        node(id: $component) {
+            ... on Component {
+                interfaceSpecifications(first: $count) {
+                    nodes {
+                        ...DefaultInterfaceSpecificationInfo
+                    }
+                }
+            }
+        }
+    }
+`);
 
 async function searchIssueTypes(filter: string, count: number): Promise<DefaultInterfaceSpecificationInfoFragment[]> {
     if (props.component == undefined) {
@@ -34,12 +55,18 @@ async function searchIssueTypes(filter: string, count: number): Promise<DefaultI
     return await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await client.searchInterfaceSpecifications({ component: props.component!, query, count });
+            const res = await requestThrow(searchInterfaceSpecificationsQuery, {
+                component: props.component!,
+                query,
+                count
+            });
             return res.searchInterfaceSpecifications;
         } else {
-            const res = await client.firstInterfaceSpecifications({ component: props.component!, count });
-            const nodeRes = res.node as NodeReturnType<"firstInterfaceSpecifications", "Component">;
-            return nodeRes.interfaceSpecifications.nodes;
+            const component = await queryNodeThrow(firstInterfaceSpecificationsQuery, "Component", {
+                component: props.component!,
+                count
+            });
+            return component.interfaceSpecifications.nodes;
         }
     }, "Error searching interface specifications");
 }

@@ -13,7 +13,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import { PropType, computed } from "vue";
+import { type PropType, computed } from "vue";
 import MetaForm from "@/components/input/schema/MetaForm.vue";
 
 export interface Field {

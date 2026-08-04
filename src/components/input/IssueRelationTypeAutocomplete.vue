@@ -12,8 +12,9 @@
     </FetchingAutocomplete>
 </template>
 <script setup lang="ts">
-import { NodeReturnType, useClient } from "@/graphql/client";
-import { DefaultIssueRelationTypeInfoFragment } from "@/graphql/generated";
+import { requestThrow, queryNodeThrow } from "@/gql/client";
+import { graphql } from "@/gql";
+import type { DefaultIssueRelationTypeInfoFragment } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
@@ -25,7 +26,27 @@ const props = defineProps({
     }
 });
 
-const client = useClient();
+const searchIssueRelationTypesQuery = graphql(`
+    query searchIssueRelationTypes($template: ID!, $query: String!, $count: Int!) {
+        searchIssueRelationTypes(query: $query, first: $count, filter: { partOf: { any: { id: { eq: $template } } } }) {
+            ...DefaultIssueRelationTypeInfo
+        }
+    }
+`);
+
+const firstIssueRelationTypesQuery = graphql(`
+    query firstIssueRelationTypes($template: ID!, $count: Int!) {
+        node(id: $template) {
+            ... on IssueTemplate {
+                relationTypes(first: $count, orderBy: [{ field: NAME }]) {
+                    nodes {
+                        ...DefaultIssueRelationTypeInfo
+                    }
+                }
+            }
+        }
+    }
+`);
 
 async function searchIssueRelationTypes(
     filter: string,
@@ -37,12 +58,14 @@ async function searchIssueRelationTypes(
     return await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await client.searchIssueRelationTypes({ template: props.template!, query, count });
+            const res = await requestThrow(searchIssueRelationTypesQuery, { template: props.template!, query, count });
             return res.searchIssueRelationTypes;
         } else {
-            const res = await client.firstIssueRelationTypes({ template: props.template!, count });
-            const nodeRes = res.node as NodeReturnType<"firstIssueRelationTypes", "IssueTemplate">;
-            return nodeRes.relationTypes.nodes;
+            const issueTemplate = await queryNodeThrow(firstIssueRelationTypesQuery, "IssueTemplate", {
+                template: props.template!,
+                count
+            });
+            return issueTemplate.relationTypes.nodes;
         }
     }, "Error searching issue types");
 }

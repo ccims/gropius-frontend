@@ -1,6 +1,6 @@
 import { Point } from "sprotty-protocol";
-import { Graph } from "../gropiusModel.js";
-import _Elk, { ElkNode } from "elkjs";
+import type { Graph } from "../gropiusModel.js";
+import _Elk, { type ElkNode } from "elkjs";
 import { Math2D } from "../line/math.js";
 
 const Elk = _Elk as unknown as typeof _Elk.default;

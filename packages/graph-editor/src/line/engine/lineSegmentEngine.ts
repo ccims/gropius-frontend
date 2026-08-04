@@ -1,7 +1,7 @@
 import { Math2D } from "../math.js";
 import { Point } from "sprotty-protocol";
 import { LineSegment } from "../model/lineSegment.js";
-import { NearestPointResult, SegmentEngine } from "./segmentEngine.js";
+import { type NearestPointResult, SegmentEngine } from "./segmentEngine.js";
 
 /**
  * Segment engine for LineSegment

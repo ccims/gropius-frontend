@@ -16,17 +16,26 @@
 <script lang="ts" setup>
 import DetailCompartment from "@/components/DetailCompartment.vue";
 import ConfirmationDialog from "@/components/dialog/ConfirmationDialog.vue";
-import { useClient } from "@/graphql/client";
 import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { graphql } from "@/gql";
+import { request } from "@/gql/client";
 
-const client = useClient();
+const deleteComponentMutation = graphql(`
+    mutation deleteComponent($id: ID!) {
+        deleteComponent(input: { id: $id }) {
+            __typename
+        }
+    }
+`);
+
 const route = useRoute();
 const router = useRouter();
 const componentId = computed(() => route.params.trackable as string);
 
 async function deleteComponent() {
-    await client.deleteComponent({ id: componentId.value });
+    const res = await request(deleteComponentMutation, { id: componentId.value });
+    if (!res) return;
     router.push({ name: "home" });
 }
 </script>

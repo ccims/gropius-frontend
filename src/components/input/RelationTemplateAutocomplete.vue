@@ -12,12 +12,31 @@
     </FetchingAutocomplete>
 </template>
 <script setup lang="ts">
-import { useClient } from "@/graphql/client";
-import { RelationTemplateFilterInput, DefaultRelationTemplateInfoFragment } from "@/graphql/generated";
+import { graphql } from "@/gql";
+import { requestThrow } from "@/gql/client";
+import type { RelationTemplateFilterInput, DefaultRelationTemplateInfoFragment } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
-import { PropType } from "vue";
+import type { PropType } from "vue";
+
+const searchRelationTemplatesQuery = graphql(`
+    query searchRelationTemplates($query: String!, $count: Int!, $filter: RelationTemplateFilterInput) {
+        searchRelationTemplates(query: $query, first: $count, filter: $filter) {
+            ...DefaultRelationTemplateInfo
+        }
+    }
+`);
+
+const getRelationTemplatesQuery = graphql(`
+    query getRelationTemplates($count: Int!, $filter: RelationTemplateFilterInput) {
+        relationTemplates(first: $count, filter: $filter) {
+            nodes {
+                ...DefaultRelationTemplateInfo
+            }
+        }
+    }
+`);
 
 const props = defineProps({
     label: {
@@ -31,16 +50,21 @@ const props = defineProps({
     }
 });
 
-const client = useClient();
-
 async function searchRelationTemplates(filter: string, count: number): Promise<DefaultRelationTemplateInfoFragment[]> {
     return await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await client.searchRelationTemplates({ query, count, filter: props.relationTemplateFilter });
+            const res = await requestThrow(searchRelationTemplatesQuery, {
+                query,
+                count,
+                filter: props.relationTemplateFilter
+            });
             return res.searchRelationTemplates;
         } else {
-            const res = await client.getRelationTemplates({ count: count - 1, filter: props.relationTemplateFilter });
+            const res = await requestThrow(getRelationTemplatesQuery, {
+                count: count - 1,
+                filter: props.relationTemplateFilter
+            });
             return res.relationTemplates.nodes;
         }
     }, "Error searching relation templates");

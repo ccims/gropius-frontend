@@ -40,20 +40,47 @@ import PaginatedList from "@/components/PaginatedList.vue";
 import ConfirmationDialog from "@/components/dialog/ConfirmationDialog.vue";
 import CreateLegalInformationDialog from "@/components/dialog/CreateLegalInformationDialog.vue";
 import UpdateLegalInformationDialog from "@/components/dialog/UpdateLegalInformationDialog.vue";
-import { useClient } from "@/graphql/client";
+import { request, requestThrow } from "@/gql/client";
+import { graphql } from "@/gql";
 import {
-    LegalInformationOrder,
+    type LegalInformationOrder,
     LegalInformationOrderField,
-    DefaultLegalInformationInfoFragment
-} from "@/graphql/generated";
+    type DefaultLegalInformationInfoFragment
+} from "@/gql/graphql";
 import { useAppStore } from "@/store/app";
 import { ItemManager } from "@/util/itemManager";
-import { withErrorMessage } from "@/util/withErrorMessage";
 import { ref, watch } from "vue";
+import { withErrorMessage } from "@/util/withErrorMessage";
+
+const getLegalInformationListQuery = graphql(`
+    query getLegalInformationList($orderBy: [LegalInformationOrder!], $count: Int!, $skip: Int!) {
+        legalInformation(orderBy: $orderBy, first: $count, skip: $skip) {
+            nodes {
+                ...DefaultLegalInformationInfo
+            }
+            totalCount
+        }
+    }
+`);
+
+const getFilteredLegalInformationListQuery = graphql(`
+    query getFilteredLegalInformationList($query: String!, $count: Int!) {
+        searchLegalInformation(query: $query, first: $count) {
+            ...DefaultLegalInformationInfo
+        }
+    }
+`);
+
+const deleteLegalInformationMutation = graphql(`
+    mutation deleteLegalInformation($id: ID!) {
+        deleteLegalInformation(input: { id: $id }) {
+            __typename
+        }
+    }
+`);
 
 type LegalInformation = DefaultLegalInformationInfoFragment;
 
-const client = useClient();
 const store = useAppStore();
 
 const legalInformationToUpdate = ref<LegalInformation>();
@@ -71,27 +98,31 @@ class LegalInformationItemManager extends ItemManager<LegalInformation, LegalInf
         page: number
     ): Promise<[LegalInformation[], number]> {
         if (filter == undefined) {
-            const res = await client.getLegalInformationList({
+            const res = await request(getLegalInformationListQuery, {
                 orderBy,
                 count,
                 skip: page * count
             });
-            const legalInformation = res.legalInformation;
-            return [legalInformation.nodes as LegalInformation[], legalInformation.totalCount];
+            if (res) {
+                return [res.legalInformation.nodes as LegalInformation[], res.legalInformation.totalCount];
+            }
         } else {
-            const res = await client.getFilteredLegalInformationList({
+            const res = await request(getFilteredLegalInformationListQuery, {
                 query: filter,
                 count
             });
-            return [res.searchLegalInformation as LegalInformation[], res.searchLegalInformation.length];
+            if (res) {
+                return [res.searchLegalInformation as LegalInformation[], res.searchLegalInformation.length];
+            }
         }
+        return [[], 0];
     }
 }
 const itemManager: ItemManager<LegalInformation, LegalInformationOrderField> = new LegalInformationItemManager();
 
 async function deleteLegalInformation(legalInformationId: string) {
     await withErrorMessage(async () => {
-        await client.deleteLegalInformation({
+        await requestThrow(deleteLegalInformationMutation, {
             id: legalInformationId
         });
     }, "Error deleting legal information");

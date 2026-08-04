@@ -14,15 +14,25 @@
     </v-dialog>
 </template>
 <script lang="ts" setup>
+import { graphql } from "@/gql";
+import { requestThrow } from "@/gql/client";
 import { onEvent } from "@/util/eventBus";
-import { useClient } from "@/graphql/client";
 import { ref, watch } from "vue";
 import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
-import LabelDialogContent, { Label } from "./LabelDialogContent.vue";
-import { DefaultLabelInfoFragment } from "@/graphql/generated";
+import LabelDialogContent, { type Label } from "./LabelDialogContent.vue";
+import type { DefaultLabelInfoFragment } from "@/gql/graphql";
+
+const createLabelMutation = graphql(`
+    mutation createLabel($input: CreateLabelInput!) {
+        createLabel(input: $input) {
+            label {
+                ...DefaultLabelInfo
+            }
+        }
+    }
+`);
 
 const createLabelDialog = ref(false);
-const client = useClient();
 const [blockWithErrorMessage, submitDisabled] = useBlockingWithErrorMessage();
 
 const emit = defineEmits<{
@@ -61,7 +71,7 @@ onEvent("create-label", () => {
 
 async function createLabel(state: Label) {
     const label = await blockWithErrorMessage(async () => {
-        const res = await client.createLabel({
+        const res = await requestThrow(createLabelMutation, {
             input: {
                 ...state,
                 trackables: [props.trackable]

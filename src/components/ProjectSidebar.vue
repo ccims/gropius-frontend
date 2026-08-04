@@ -87,31 +87,82 @@
     </v-slide-x-reverse-transition>
 </template>
 <script setup lang="ts">
-import { PropType, computed, ref, watch, watchEffect } from "vue";
+import { type PropType, computed, ref, watch, watchEffect } from "vue";
 import PaginatedList from "@/components/PaginatedList.vue";
 import {
-    GraphAggregatedIssueInfoFragment,
-    GraphComponentVersionInfoFragment,
-    GraphRelationPartnerInfoFragment,
-    IssueFilterInput,
-    IssueListItemInfoFragment,
-    IssueOrder,
-    IssueOrderField
-} from "@/graphql/generated";
-import { SelectedElement } from "@gropius/graph-editor";
-import { ContextMenuData } from "./GraphEditor.vue";
-import { NodeReturnType, useClient } from "@/graphql/client";
+    type GraphAggregatedIssueInfoFragment,
+    type GraphComponentVersionInfoFragment,
+    type GraphRelationPartnerInfoFragment,
+    type IssueFilterInput,
+    type IssueListItemInfoFragment,
+    type IssueOrder,
+    IssueOrderField,
+    type GraphInfoFragment
+} from "@/gql/graphql";
+import type { SelectedElement } from "@gropius/graph-editor";
+import type { ContextMenuData } from "./GraphEditor.vue";
+import { request, queryNode } from "@/gql/client";
+import { graphql } from "@/gql";
 import IssueListItem from "@/components/IssueListItem.vue";
-import { IdObject } from "@/util/types";
-import { RouteLocationRaw } from "vue-router";
+import type { IdObject } from "@/util/types";
+import type { RouteLocationRaw } from "vue-router";
 import { ItemManager } from "@/util/itemManager";
 import IssueFilterDropdowns from "@/components/input/IssueFilterDropdowns.vue";
 import { useTemplateRef } from "vue";
 
-type ProjectGraph = NodeReturnType<"getProjectGraph", "Project">;
+type ProjectGraph = GraphInfoFragment;
 type Issue = IssueListItemInfoFragment;
-type Trackable = NodeReturnType<"getIssueList", "Component">;
-type AggregatedIssue = NodeReturnType<"getIssueListOnAggregatedIssue", "AggregatedIssue">;
+
+const getIssueListQuery = graphql(`
+    query getIssueListForProjectSidebar(
+        $orderBy: [IssueOrder!]!
+        $count: Int!
+        $skip: Int!
+        $filter: IssueFilterInput
+        $trackable: ID!
+    ) {
+        node(id: $trackable) {
+            __typename
+            ... on Trackable {
+                issues(filter: $filter, orderBy: $orderBy, first: $count, skip: $skip) {
+                    nodes {
+                        ...IssueListItemInfo
+                    }
+                    totalCount
+                }
+            }
+        }
+    }
+`);
+
+const getIssueListOnAggregatedIssueQuery = graphql(`
+    query getIssueListOnAggregatedIssue(
+        $orderBy: [IssueOrder!]!
+        $count: Int!
+        $skip: Int!
+        $filter: IssueFilterInput
+        $aggregatedIssue: ID!
+    ) {
+        node(id: $aggregatedIssue) {
+            ... on AggregatedIssue {
+                issues(filter: $filter, orderBy: $orderBy, first: $count, skip: $skip) {
+                    nodes {
+                        ...IssueListItemInfo
+                    }
+                    totalCount
+                }
+            }
+        }
+    }
+`);
+
+const getFilteredIssueListQuery = graphql(`
+    query getFilteredIssueListForProjectSidebar($query: String!, $count: Int!, $filter: IssueFilterInput) {
+        searchIssues(query: $query, first: $count, filter: $filter) {
+            ...IssueListItemInfo
+        }
+    }
+`);
 
 const props = defineProps({
     originalGraph: {
@@ -124,8 +175,6 @@ const model = defineModel({
     type: Object as PropType<SelectedElement<ContextMenuData>>,
     required: false
 });
-
-const client = useClient();
 
 const filterFromDropdown = useTemplateRef("filterDropdowns");
 const convertedIssueStateIndices = computed(() => {
@@ -275,20 +324,23 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
                         any: { relationPartner: { id: { eq: additionalFilter.affectedEntity.id } } }
                     };
                 }
-                const res = await client.getIssueList({
+                const trackable = await queryNode(getIssueListQuery, "Component", {
                     ...parameters,
                     trackable: selectedElementInfo.value!.componentVersion.component.id,
                     filter: filterFields
                 });
-                const issues = (res.node as Trackable).issues;
-                return [issues.nodes, issues.totalCount];
+                if (trackable) {
+                    return [trackable.issues.nodes, trackable.issues.totalCount];
+                }
             } else {
-                const res = await client.getIssueListOnAggregatedIssue({
+                const aggregatedIssue = await queryNode(getIssueListOnAggregatedIssueQuery, "AggregatedIssue", {
                     ...parameters,
-                    aggregatedIssue: additionalFilter.aggregatedIssue!
+                    aggregatedIssue: additionalFilter.aggregatedIssue!,
+                    filter: filterFields
                 });
-                const issues = (res.node as AggregatedIssue).issues;
-                return [issues.nodes, issues.totalCount];
+                if (aggregatedIssue) {
+                    return [aggregatedIssue.issues.nodes, aggregatedIssue.issues.totalCount];
+                }
             }
         } else {
             if (!useAggregatedIssue) {
@@ -306,13 +358,16 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
             } else {
                 filterFields.aggregatedBy = { any: { id: { eq: additionalFilter.aggregatedIssue } } };
             }
-            const res = await client.getFilteredIssueList({
+            const res = await request(getFilteredIssueListQuery, {
                 query: filter,
                 count,
                 filter: filterFields
             });
-            return [res.searchIssues, res.searchIssues.length];
+            if (res) {
+                return [res.searchIssues, res.searchIssues.length];
+            }
         }
+        return [[], 0];
     }
 }
 const itemManager: ItemManager<Issue, IssueOrderField> = new IssueItemManager();

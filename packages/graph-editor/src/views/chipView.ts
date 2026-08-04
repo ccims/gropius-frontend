@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
-import { VNode } from "snabbdom";
-import { IView, RenderingContext, html } from "sprotty";
+import type { VNode } from "snabbdom";
+import { type IView, type RenderingContext, html } from "sprotty";
 import { SChip } from "../smodel/sChip.js";
 
 @injectable()

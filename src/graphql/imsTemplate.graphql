@@ -18,36 +18,3 @@ fragment DefaultIMSProjectTemplateInfo on IMSProjectTemplate {
     }
 }
 
-query searchIMSTemplates($query: String!, $count: Int!) {
-    searchIMSTemplates(query: $query, first: $count, filter: { isDeprecated: { eq: false } }) {
-        ...DefaultIMSTemplateInfo
-    }
-}
-
-query firstIMSTemplates($count: Int!) {
-    imsTemplates(first: $count, orderBy: [{ field: NAME }], filter: { isDeprecated: { eq: false } }) {
-        nodes {
-            ...DefaultIMSTemplateInfo
-        }
-    }
-}
-
-query getIMSTemplate($id: ID!) {
-    node(id: $id) {
-        ...on IMSTemplate {
-            ...DefaultIMSTemplateInfo
-        }
-    }
-}
-
-query getIMSProjectTemplate($id: ID!) {
-    node(id: $id) {
-        ...on IMS {
-            template {
-                imsProjectTemplate {
-                    ...DefaultIMSProjectTemplateInfo
-                }
-            }
-        }
-    }
-}

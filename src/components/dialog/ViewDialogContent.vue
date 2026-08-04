@@ -32,7 +32,7 @@ import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/yup";
 import { fieldConfig } from "@/util/vuetifyFormConfig";
 import ConfirmationDialog from "./ConfirmationDialog.vue";
-import { PropType, ref } from "vue";
+import { type PropType, ref } from "vue";
 import { watch } from "vue";
 import { computed } from "vue";
 import ViewTemplateFilter from "../input/ViewTemplateFilter.vue";

@@ -1,5 +1,5 @@
 import { MouseListener, SModelElementImpl } from "sprotty";
-import { Action } from "sprotty-protocol";
+import type { Action } from "sprotty-protocol";
 import { NavigationAction } from "./navigationAction.js";
 
 /**

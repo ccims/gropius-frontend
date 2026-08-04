@@ -114,17 +114,18 @@ import ConfirmationDialog from "@/components/dialog/ConfirmationDialog.vue";
 import { enumToRegularCase } from "@/util/casingTransformers";
 import { permissionSortFields } from "@/util/permissionSortFields";
 import { withErrorMessage } from "@/util/withErrorMessage";
-import { computed, PropType, watch } from "vue";
+import { computed, type PropType, watch } from "vue";
 import { ref } from "vue";
 import ManagePermissionUsersDialog from "./dialog/ManagePermissionUsersDialog.vue";
-import { IdObject, ValueOf } from "@/util/types";
+import type { IdObject, ValueOf } from "@/util/types";
 import CreatePermissionDialog from "./dialog/CreatePermissionDialog.vue";
 import UpdatePermissionDialog from "./dialog/UpdatePermissionDialog.vue";
 import { ItemManager } from "@/util/itemManager";
 import FilterDropdown from "@/components/input/FilterDropdown.vue";
 import { useFilterOption } from "@/util/useFilterOption";
-import { useClient } from "@/graphql/client";
-import { GlobalPermissionFilterInput } from "@/graphql/generated";
+import { graphql } from "@/gql";
+import { requestThrow } from "@/gql/client";
+import type { GlobalPermissionFilterInput } from "@/gql/graphql";
 
 export type UpdatePermissionFunctionInput<T> = IdObject &
     Partial<{
@@ -213,11 +214,20 @@ const userFilter = computed(() => {
     }
     return Object.keys(filter).length > 0 ? filter : undefined;
 });
-const client = useClient();
-const userFetch = async (search: string) =>
-    client
-        .searchGropiusUsers({ query: search, count: 100 })
-        .then((res) => res.searchGropiusUsers.map((u) => ({ id: u.id, name: u.username })));
+
+const searchGropiusUsersQuery = graphql(`
+    query searchGropiusUsersForPermissionList($query: String!, $count: Int!) {
+        searchGropiusUsers(query: $query, first: $count) {
+            id
+            username
+        }
+    }
+`);
+
+const userFetch = async (search: string) => {
+    const res = await requestThrow(searchGropiusUsersQuery, { query: search, count: 100 });
+    return res.searchGropiusUsers.map((u) => ({ id: u.id, name: u.username }));
+};
 
 defineExpose({
     userFilter

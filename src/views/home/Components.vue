@@ -35,20 +35,53 @@
 </template>
 <script lang="ts" setup>
 import PaginatedList from "@/components/PaginatedList.vue";
-import { ClientReturnType, useClient } from "@/graphql/client";
-import { ComponentFilterInput, ComponentOrder, ComponentOrderField } from "@/graphql/generated";
-import { RouteLocationRaw, useRouter } from "vue-router";
+import { request, requestThrow } from "@/gql/client";
+import { graphql } from "@/gql";
+import {
+    type ComponentFilterInput,
+    type ComponentOrder,
+    ComponentOrderField,
+    type ComponentListItemInfoFragment
+} from "@/gql/graphql";
+import { type RouteLocationRaw, useRouter } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
 import CreateComponentDialog from "@/components/dialog/CreateComponentDialog.vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import { ItemManager } from "@/util/itemManager";
 import FilterDropdown from "@/components/input/FilterDropdown.vue";
 import { useFilterOption } from "@/util/useFilterOption";
 import { computed } from "vue";
 
-type Component = ClientReturnType<"getComponentList">["components"]["nodes"][0];
+const getComponentListQuery = graphql(`
+    query getComponentList($orderBy: [ComponentOrder!]!, $count: Int!, $skip: Int!, $filter: ComponentFilterInput!) {
+        components(orderBy: $orderBy, first: $count, skip: $skip, filter: $filter) {
+            nodes {
+                ...ComponentListItemInfo
+            }
+            totalCount
+        }
+    }
+`);
 
-const client = useClient();
+const getFilteredComponentListQuery = graphql(`
+    query getFilteredComponentList($query: String!, $count: Int!, $filter: ComponentFilterInput!) {
+        searchComponents(query: $query, first: $count, filter: $filter) {
+            ...ComponentListItemInfo
+        }
+    }
+`);
+
+const searchComponentTemplatesQuery = graphql(`
+    query searchComponentTemplates($query: String!, $count: Int!) {
+        searchComponentTemplates(query: $query, first: $count) {
+            id
+            name
+        }
+    }
+`);
+
+type Component = ComponentListItemInfoFragment;
+
 const router = useRouter();
 
 const sortFields = {
@@ -64,10 +97,12 @@ const templateInput = computed(() => {
     }
     return { id: { in: templateIds.value } };
 });
-const templateFetch = async (query: string) =>
-    client.searchComponentTemplates({ query: query, count: 100 }).then((res) => res.searchComponentTemplates);
+const templateFetch = async (query: string) => {
+    const res = await requestThrow(searchComponentTemplatesQuery, { query: query, count: 100 });
+    return res.searchComponentTemplates;
+};
 
-const dependencyArray = computed(() => [templateInput])
+const dependencyArray = computed(() => [templateInput]);
 
 class ComponentItemManager extends ItemManager<Component, ComponentOrderField> {
     protected async fetchItems(
@@ -80,21 +115,26 @@ class ComponentItemManager extends ItemManager<Component, ComponentOrderField> {
             template: templateInput.value
         };
         if (filter == undefined) {
-            const res = await client.getComponentList({
+            const res = await request(getComponentListQuery, {
                 orderBy,
                 count,
                 skip: page * count,
                 filter: generalFilters
             });
-            return [res.components.nodes, res.components.totalCount];
+            if (res) {
+                return [res.components.nodes, res.components.totalCount];
+            }
         } else {
-            const res = await client.getFilteredComponentList({
+            const res = await request(getFilteredComponentListQuery, {
                 query: filter,
                 count,
                 filter: generalFilters
             });
-            return [res.searchComponents, res.searchComponents.length];
+            if (res) {
+                return [res.searchComponents, res.searchComponents.length];
+            }
         }
+        return [[], 0];
     }
 }
 const itemManager: ItemManager<Component, ComponentOrderField> = new ComponentItemManager();

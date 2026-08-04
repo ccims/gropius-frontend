@@ -1,9 +1,9 @@
 import { Point } from "sprotty-protocol";
 import { Component } from "../../model/component.js";
 import { Interface } from "../../model/interface.js";
-import { BaseSegment, MoveHandler } from "./moveHandler.js";
+import { type BaseSegment, MoveHandler } from "./moveHandler.js";
 import { UpdateLayoutAction } from "./updateLayoutAction.js";
-import { GraphLayout } from "../../gropiusModel.js";
+import type { GraphLayout } from "../../gropiusModel.js";
 import { SegmentLayout } from "../../line/model/segmentLayout.js";
 import { Relation } from "../../model/relation.js";
 import { RelationPath } from "../../smodel/relationPath.js";

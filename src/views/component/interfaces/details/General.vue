@@ -30,16 +30,47 @@
 import DetailCompartment from "@/components/DetailCompartment.vue";
 import InputWrapper from "@/components/input/InputWrapper.vue";
 import TemplatedFieldsDetailCompartment from "@/components/TemplatedFieldsDetailCompartment.vue";
-import { NodeReturnType, useClient } from "@/graphql/client";
-import { UpdateInterfaceSpecificationInput } from "@/graphql/generated";
+import type { UpdateInterfaceSpecificationInput } from "@/gql/graphql";
 import { eventBusKey, trackableKey } from "@/util/keys";
-import { withErrorMessage } from "@/util/withErrorMessage";
 import { computedAsync } from "@vueuse/core";
-import { inject } from "vue";
-import { computed } from "vue";
+import { computed, inject } from "vue";
 import { useRoute } from "vue-router";
+import { graphql } from "@/gql";
+import { queryNodeThrow, requestThrow } from "@/gql/client";
+import { withErrorMessage } from "@/util/withErrorMessage";
 
-const client = useClient();
+const getInterfaceSpecificationGeneralDetailsQuery = graphql(`
+    query getInterfaceSpecificationGeneralDetails($id: ID!) {
+        node(id: $id) {
+            id
+            ... on InterfaceSpecification {
+                name
+                description
+                templatedFields {
+                    name
+                    value
+                }
+                template {
+                    templateFieldSpecifications {
+                        name
+                        value
+                    }
+                }
+            }
+        }
+    }
+`);
+
+const updateInterfaceSpecificationMutation = graphql(`
+    mutation updateInterfaceSpecification($input: UpdateInterfaceSpecificationInput!) {
+        updateInterfaceSpecification(input: $input) {
+            interfaceSpecification {
+                id
+            }
+        }
+    }
+`);
+
 const route = useRoute();
 const eventBus = inject(eventBusKey);
 const interfaceSpecificationId = computed(() => route.params.interfaceSpecification as string);
@@ -51,11 +82,13 @@ const interfaceSpecification = computedAsync(
         if (!interfaceSpecificationId.value) {
             return null;
         }
-        const res = await withErrorMessage(
-            () => client.getInterfaceSpecificationGeneralDetails({ id: interfaceSpecificationId.value }),
+        return await withErrorMessage(
+            () =>
+                queryNodeThrow(getInterfaceSpecificationGeneralDetailsQuery, "InterfaceSpecification", {
+                    id: interfaceSpecificationId.value
+                }),
             "Error loading interfaceSpecification details"
         );
-        return res.node as NodeReturnType<"getInterfaceSpecificationGeneralDetails", "InterfaceSpecification">;
     },
     null,
     { shallow: false }
@@ -64,7 +97,7 @@ const interfaceSpecification = computedAsync(
 async function save(input: Omit<UpdateInterfaceSpecificationInput, "id">) {
     await withErrorMessage(
         () =>
-            client.updateInterfaceSpecification({
+            requestThrow(updateInterfaceSpecificationMutation, {
                 input: {
                     id: interfaceSpecificationId.value,
                     ...input

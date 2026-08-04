@@ -1,4 +1,4 @@
-import { RelationStyle } from "../gropiusModel.js";
+import type { RelationStyle } from "../gropiusModel.js";
 import { Relation } from "../model/relation.js";
 import { SSelectable } from "./sSelectable.js";
 import { Point } from "sprotty-protocol";

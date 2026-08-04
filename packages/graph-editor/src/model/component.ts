@@ -1,5 +1,5 @@
-import { Element } from "./element.js";
-import { IssueAffected } from "./issueAffected.js";
+import type { Element } from "./element.js";
+import type { IssueAffected } from "./issueAffected.js";
 
 export interface Component extends IssueAffected {
     type: typeof Component.TYPE;

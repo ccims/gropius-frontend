@@ -1,5 +1,5 @@
 import { MouseListener, SModelElementImpl, findParentByFeature } from "sprotty";
-import { Action } from "sprotty-protocol";
+import type { Action } from "sprotty-protocol";
 import { HoverHighlightAction } from "./hoverHighlightAction.js";
 import { SRoot } from "../../smodel/sRoot.js";
 import { isIssueRelationHighlightable } from "./issueHighlightableFeature.js";

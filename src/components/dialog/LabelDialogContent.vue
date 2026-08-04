@@ -51,7 +51,7 @@ import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/yup";
 import { fieldConfig } from "@/util/vuetifyFormConfig";
 import ConfirmationDialog from "./ConfirmationDialog.vue";
-import { PropType, computed } from "vue";
+import { type PropType, computed } from "vue";
 import { fallbackColor } from "@/util/fallbackColor";
 import { watch } from "vue";
 

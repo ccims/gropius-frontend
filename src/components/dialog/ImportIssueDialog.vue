@@ -23,18 +23,26 @@
     </v-dialog>
 </template>
 <script setup lang="ts">
-import { useClient } from "@/graphql/client";
+import { graphql } from "@/gql";
+import { requestThrow } from "@/gql/client";
 import { onEvent } from "@/util/eventBus";
 import { ref } from "vue";
 import ImportDialogContent from "./ImportDialogContent.vue";
 import ExternalIssueAutocomplete from "../input/ExternalIssueAutocomplete.vue";
 import Issue from "../info/Issue.vue";
-import { DefaultIssueInfoFragment } from "@/graphql/generated";
-import { useBlockingWithErrorMessage, withErrorMessage } from "@/util/withErrorMessage";
-import { IdObject } from "@/util/types";
+import type { DefaultIssueInfoFragment } from "@/gql/graphql";
+import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
+import type { IdObject } from "@/util/types";
+
+const addIssueToTrackableMutation = graphql(`
+    mutation addIssueToTrackableForImport($issue: ID!, $trackable: ID!) {
+        addIssueToTrackable(input: { issue: $issue, trackable: $trackable }) {
+            __typename
+        }
+    }
+`);
 
 const importIssueDialog = ref(false);
-const client = useClient();
 const [blockWithErrorMessage, submitDisabled] = useBlockingWithErrorMessage();
 
 const emit = defineEmits<{
@@ -54,7 +62,7 @@ onEvent("import-issue", () => {
 
 async function importIssue(issue: IdObject) {
     blockWithErrorMessage(async () => {
-        await client.addIssueToTrackable({
+        await requestThrow(addIssueToTrackableMutation, {
             issue: issue.id,
             trackable: props.trackable
         });

@@ -3,11 +3,12 @@ import axios from "axios";
 import { useLocalStorage } from "@vueuse/core";
 import { jwtDecode } from "jwt-decode";
 import { pushErrorMessage, withErrorMessage } from "@/util/withErrorMessage";
-import { ClientReturnType, useClient } from "@/graphql/client";
 import { Mutex } from "async-mutex";
 import { shallowRef } from "vue";
 import { TokenScope } from "@/util/oauth";
-import { BaseLegalInformationInfoFragment } from "@/graphql/generated";
+import type { BaseLegalInformationInfoFragment, CurrentUserInfoFragment } from "@/gql/graphql";
+import { request, requestThrow } from "@/gql/client";
+import { graphql } from "@/gql";
 
 export interface GlobalUserPermissions {
     canCreateProjects: boolean;
@@ -16,11 +17,34 @@ export interface GlobalUserPermissions {
     canCreateTemplates: boolean;
 }
 
+const getCurrentUserQuery = graphql(`
+    query getCurrentUser {
+        currentUser {
+            ...CurrentUserInfo
+        }
+
+        canCreateProjects: hasGlobalPermission(permission: CAN_CREATE_PROJECTS)
+        canCreateComponents: hasGlobalPermission(permission: CAN_CREATE_COMPONENTS)
+        canCreateIMSs: hasGlobalPermission(permission: CAN_CREATE_IMSS)
+        canCreateTemplates: hasGlobalPermission(permission: CAN_CREATE_TEMPLATES)
+    }
+`);
+
+const legalInformationQuery = graphql(`
+    query legalInformation {
+        legalInformation(orderBy: [{ field: PRIORITY, direction: ASC }]) {
+            nodes {
+                ...BaseLegalInformationInfo
+            }
+        }
+    }
+`);
+
 export const useAppStore = defineStore("app", {
     state: () => ({
         tokenRefreshLock: shallowRef(new Mutex()),
         accessTokenLock: shallowRef(new Mutex()),
-        user: undefined as undefined | (ClientReturnType<"getCurrentUser">["currentUser"] & GlobalUserPermissions),
+        user: undefined as undefined | (CurrentUserInfoFragment & GlobalUserPermissions),
         accessToken: "",
         refreshToken: "",
         accessTokenValidUntil: 0,
@@ -60,15 +84,14 @@ export const useAppStore = defineStore("app", {
             if (!(await this.isLoggedIn())) {
                 this.user = undefined;
             } else {
-                const client = useClient();
-                const userRes = await client.getCurrentUser();
-                if (userRes.currentUser != undefined) {
+                const res = await request(getCurrentUserQuery, {});
+                if (res?.currentUser) {
                     this.user = {
-                        ...userRes.currentUser,
-                        canCreateProjects: userRes.canCreateProjects,
-                        canCreateComponents: userRes.canCreateComponents,
-                        canCreateIMSs: userRes.canCreateIMSs,
-                        canCreateTemplates: userRes.canCreateTemplates
+                        ...res.currentUser,
+                        canCreateProjects: res.canCreateProjects,
+                        canCreateComponents: res.canCreateComponents,
+                        canCreateIMSs: res.canCreateIMSs,
+                        canCreateTemplates: res.canCreateTemplates
                     };
                 } else {
                     this.user = undefined;
@@ -140,9 +163,8 @@ export const useAppStore = defineStore("app", {
             }
         },
         async updateLegalInformation(): Promise<void> {
-            const client = useClient();
             const res = await withErrorMessage(async () => {
-                return await client.legalInformation();
+                return await requestThrow(legalInformationQuery, {});
             }, "Error fetching legal information");
             this.legalInformation = res.legalInformation.nodes;
         },

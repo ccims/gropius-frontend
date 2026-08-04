@@ -1,8 +1,8 @@
 import { Point } from "sprotty-protocol";
-import { RelationStyle } from "../gropiusModel.js";
+import type { RelationStyle } from "../gropiusModel.js";
 import { SegmentLayout } from "../line/model/segmentLayout.js";
-import { Element } from "./element.js";
-import { Selectable } from "./selectable.js";
+import type { Element } from "./element.js";
+import type { Selectable } from "./selectable.js";
 
 export interface Relation extends Selectable {
     type: typeof Relation.TYPE;

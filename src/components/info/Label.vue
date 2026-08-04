@@ -7,8 +7,8 @@
     </v-chip>
 </template>
 <script lang="ts" setup>
-import { DefaultLabelInfoFragment } from "@/graphql/generated";
-import { PropType } from "vue";
+import type { DefaultLabelInfoFragment } from "@/gql/graphql";
+import type { PropType } from "vue";
 
 defineProps({
     label: {

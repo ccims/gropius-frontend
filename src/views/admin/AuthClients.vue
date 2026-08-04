@@ -51,17 +51,18 @@
 <script lang="ts" setup>
 import CustomList from "@/components/CustomList.vue";
 import ListItem from "@/components/ListItem.vue";
-import { AuthClientInput } from "@/components/dialog/AuthClientDialogContent.vue";
-import AuthClientSecretsDialog, { AuthClientWithSecrets } from "@/components/dialog/AuthClientSecretsDialog.vue";
+import type { AuthClientInput } from "@/components/dialog/AuthClientDialogContent.vue";
+import AuthClientSecretsDialog, { type AuthClientWithSecrets } from "@/components/dialog/AuthClientSecretsDialog.vue";
 import ConfirmationDialog from "@/components/dialog/ConfirmationDialog.vue";
 import CopyTextDialog from "@/components/dialog/CopyTextDialog.vue";
 import CreateAuthClientDialog from "@/components/dialog/CreateAuthClientDialog.vue";
 import UpdateAuthClientDialog from "@/components/dialog/UpdateAuthClientDialog.vue";
-import { NodeReturnType, useClient } from "@/graphql/client";
-import { DefaultUserInfoFragment } from "@/graphql/generated";
+import { queryNodeThrow } from "@/gql/client";
+import { graphql } from "@/gql";
+import type { DefaultUserInfoFragment } from "@/gql/graphql";
 import { useAppStore } from "@/store/app";
 import { TokenScope } from "@/util/oauth";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import { computedAsync } from "@vueuse/core";
 import axios from "axios";
@@ -78,8 +79,17 @@ interface AuthClient {
     clientCredentialFlowUser?: string;
 }
 
+const getUserQuery = graphql(`
+    query getUser($id: ID!) {
+        node(id: $id) {
+            ... on User {
+                ...DefaultUserInfo
+            }
+        }
+    }
+`);
+
 const store = useAppStore();
-const client = useClient();
 
 const updateCounter = ref(0);
 const authClientToUpdate = ref<(AuthClientInput & IdObject) | undefined>();
@@ -108,10 +118,9 @@ async function updateAuthClient(authClientId: string) {
         const authClient = res.data as AuthClient;
         let user: DefaultUserInfoFragment | undefined = undefined;
         if (authClient.clientCredentialFlowUser != undefined) {
-            user = (await client.getUser({ id: authClient.clientCredentialFlowUser })).node as NodeReturnType<
-                "getUser",
-                "GropiusUser"
-            >;
+            user = await queryNodeThrow(getUserQuery, "GropiusUser", {
+                id: authClient.clientCredentialFlowUser
+            });
         }
         return {
             ...authClient,

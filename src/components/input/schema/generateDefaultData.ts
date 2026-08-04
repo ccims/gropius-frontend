@@ -1,5 +1,5 @@
 import {
-    Schema,
+    type Schema,
     isDiscriminatorForm,
     isElementsForm,
     isEnumForm,

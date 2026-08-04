@@ -17,15 +17,68 @@
     </FetchingAutocomplete>
 </template>
 <script setup lang="ts">
-import { NodeReturnType, useClient } from "@/graphql/client";
-import {
+import { graphql } from "@/gql";
+import { queryNodeThrow, requestThrow } from "@/gql/client";
+import type {
     DefaultInterfaceSpecificationVersionInfoFragment,
     DefaultInterfaceSpecificationInfoFragment
-} from "@/graphql/generated";
+} from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
-import { PropType } from "vue";
+import type { PropType } from "vue";
+
+const searchInterfaceSpecificationVersionsForAutocompleteQuery = graphql(`
+    query searchInterfaceSpecificationVersionsForAutocomplete(
+        $query: String!
+        $count: Int!
+        $interfaceSpecification: ID!
+    ) {
+        searchInterfaceSpecificationVersions(
+            query: $query
+            first: $count
+            filter: { interfaceSpecification: { id: { eq: $interfaceSpecification } } }
+        ) {
+            ...DefaultInterfaceSpecificationVersionInfo
+        }
+    }
+`);
+
+const firstInterfaceSpecificationVersionsForAutocompleteQuery = graphql(`
+    query firstInterfaceSpecificationVersionsForAutocomplete($interfaceSpecification: ID!, $count: Int!) {
+        node(id: $interfaceSpecification) {
+            ... on InterfaceSpecification {
+                versions(first: $count) {
+                    nodes {
+                        ...DefaultInterfaceSpecificationVersionInfo
+                    }
+                }
+            }
+        }
+    }
+`);
+
+const searchInterfaceSpecificationsForAutocompleteQuery = graphql(`
+    query searchInterfaceSpecificationsForAutocomplete($query: String!, $count: Int!, $component: ID!) {
+        searchInterfaceSpecifications(query: $query, first: $count, filter: { component: { id: { eq: $component } } }) {
+            ...DefaultInterfaceSpecificationInfo
+        }
+    }
+`);
+
+const firstInterfaceSpecificationsForAutocompleteQuery = graphql(`
+    query firstInterfaceSpecificationsForAutocomplete($count: Int!, $component: ID!) {
+        node(id: $component) {
+            ... on Component {
+                interfaceSpecifications(first: $count) {
+                    nodes {
+                        ...DefaultInterfaceSpecificationInfo
+                    }
+                }
+            }
+        }
+    }
+`);
 
 const props = defineProps({
     label: {
@@ -43,8 +96,6 @@ const props = defineProps({
     }
 });
 
-const client = useClient();
-
 async function searchInterfaceSpecificationVersions(
     filter: string,
     count: number,
@@ -53,20 +104,22 @@ async function searchInterfaceSpecificationVersions(
     return await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await client.searchInterfaceSpecificationVersions({
+            const res = await requestThrow(searchInterfaceSpecificationVersionsForAutocompleteQuery, {
                 query,
                 count,
                 interfaceSpecification: context!.id
             });
             return res.searchInterfaceSpecificationVersions;
         } else {
-            const res = (
-                await client.firstInterfaceSpecificationVersions({
+            const node = await queryNodeThrow(
+                firstInterfaceSpecificationVersionsForAutocompleteQuery,
+                "InterfaceSpecification",
+                {
                     interfaceSpecification: context!.id,
                     count: count - 1
-                })
-            ).node as NodeReturnType<"firstInterfaceSpecificationVersions", "InterfaceSpecification">;
-            return res.versions.nodes;
+                }
+            );
+            return node.versions.nodes;
         }
     }, "Error searching interface specification versions");
 }
@@ -78,12 +131,18 @@ async function searchInterfaceSpecifications(
     return await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await client.searchInterfaceSpecifications({ query, count, component: props.component });
+            const res = await requestThrow(searchInterfaceSpecificationsForAutocompleteQuery, {
+                query,
+                count,
+                component: props.component
+            });
             return res.searchInterfaceSpecifications;
         } else {
-            const res = (await client.firstInterfaceSpecifications({ count, component: props.component }))
-                .node as NodeReturnType<"firstInterfaceSpecifications", "Component">;
-            return res.interfaceSpecifications.nodes;
+            const node = await queryNodeThrow(firstInterfaceSpecificationsForAutocompleteQuery, "Component", {
+                count,
+                component: props.component
+            });
+            return node.interfaceSpecifications.nodes;
         }
     }, "Error searching interface specifications");
 }

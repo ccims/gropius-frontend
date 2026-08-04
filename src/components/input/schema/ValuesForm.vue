@@ -40,8 +40,8 @@
     </BaseObjectForm>
 </template>
 <script setup lang="ts">
-import { Schema, SchemaFormValues } from "jtd";
-import { PropType, computed, ref } from "vue";
+import type { Schema, SchemaFormValues } from "jtd";
+import { type PropType, computed, ref } from "vue";
 import { generateDefaultData } from "./generateDefaultData";
 import BaseObjectForm from "./BaseObjectForm.vue";
 import MetaForm from "./MetaForm.vue";

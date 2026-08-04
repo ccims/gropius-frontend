@@ -53,17 +53,45 @@
     </v-dialog>
 </template>
 <script setup lang="ts" generic="T">
-import { NodeReturnType, useClient } from "@/graphql/client";
-import { PropType, computed, ref, watch } from "vue";
+import { queryNode, request } from "@/gql/client";
+import { graphql } from "@/gql";
+import { type PropType, computed, ref, watch } from "vue";
 import PaginatedList from "../PaginatedList.vue";
-import { DefaultUserInfoFragment, GropiusUserOrder, GropiusUserOrderField } from "@/graphql/generated";
+import { type DefaultUserInfoFragment, type GropiusUserOrder, GropiusUserOrderField } from "@/gql/graphql";
 import User from "../info/User.vue";
 import ConfirmationDialog from "./ConfirmationDialog.vue";
 import GropiusUserAutocomplete from "../input/GropiusUserAutocomplete.vue";
-import { IdObject } from "@/util/types";
-import { UpdatePermissionFunction } from "../PermissionList.vue";
+import type { IdObject } from "@/util/types";
+import type { UpdatePermissionFunction } from "../PermissionList.vue";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import { ItemManager } from "@/util/itemManager";
+
+const getPermissionUserListQuery = graphql(`
+    query getPermissionUserList($orderBy: [GropiusUserOrder!]!, $count: Int!, $skip: Int!, $permission: ID!) {
+        node(id: $permission) {
+            ... on BasePermission {
+                users(orderBy: $orderBy, first: $count, skip: $skip) {
+                    nodes {
+                        ...DefaultUserInfo
+                    }
+                    totalCount
+                }
+            }
+        }
+    }
+`);
+
+const getFilteredPermissionUserListQuery = graphql(`
+    query getFilteredPermissionUserList($query: String!, $count: Int!, $permission: ID!) {
+        searchGropiusUsers(
+            query: $query
+            first: $count
+            filter: { permissions: { any: { id: { eq: $permission } } } }
+        ) {
+            ...DefaultUserInfo
+        }
+    }
+`);
 
 const props = defineProps({
     updatePermission: {
@@ -97,7 +125,6 @@ const managePermissionUsersDialog = computed({
         }
     }
 });
-const client = useClient();
 
 const modifiedUsers = ref<string[]>([]);
 
@@ -153,22 +180,26 @@ class UserItemManager extends ItemManager<DefaultUserInfoFragment, GropiusUserOr
         page: number
     ): Promise<[DefaultUserInfoFragment[], number]> {
         if (filter == undefined) {
-            const res = await client.getPermissionUserList({
+            const permission = await queryNode(getPermissionUserListQuery, "ComponentPermission", {
                 orderBy,
                 count,
                 skip: page * count,
                 permission: model.value!.id
             });
-            const users = (res.node as NodeReturnType<"getPermissionUserList", "ComponentPermission">).users;
-            return [users.nodes, users.totalCount];
+            if (permission) {
+                return [permission.users.nodes, permission.users.totalCount];
+            }
         } else {
-            const res = await client.getFilteredPermissionUserList({
+            const res = await request(getFilteredPermissionUserListQuery, {
                 query: filter,
                 count,
                 permission: model.value!.id
             });
-            return [res.searchGropiusUsers, res.searchGropiusUsers.length];
+            if (res) {
+                return [res.searchGropiusUsers, res.searchGropiusUsers.length];
+            }
         }
+        return [[], 0];
     }
 }
 const itemManager: ItemManager<DefaultUserInfoFragment, GropiusUserOrderField> = new UserItemManager();

@@ -13,15 +13,15 @@
     </v-card>
 </template>
 <script setup lang="ts">
-import { ClientReturnType } from "@/graphql/client";
 import { useAppStore } from "@/store/app";
-import { PropType } from "vue";
+import type { PropType } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
+import type { CurrentUserInfoFragment } from "@/gql/graphql";
 
 defineProps({
     user: {
-        type: Object as PropType<ClientReturnType<"getCurrentUser">["currentUser"] & object>,
+        type: Object as PropType<CurrentUserInfoFragment & object>,
         required: true
     }
 });
@@ -31,12 +31,16 @@ const route = useRoute();
 const router = useRouter();
 
 async function logout() {
-    const csrf = (await axios.get<{ csrf: string }>(`/auth/api/internal/auth/csrf`)).data.csrf
-    await axios.post(`/auth/api/internal/auth/logout/current`, {}, {
-        headers: {
-            "x-csrf-token": csrf
+    const csrf = (await axios.get<{ csrf: string }>(`/auth/api/internal/auth/csrf`)).data.csrf;
+    await axios.post(
+        `/auth/api/internal/auth/logout/current`,
+        {},
+        {
+            headers: {
+                "x-csrf-token": csrf
+            }
         }
-    });
+    );
     store.logout();
     await router.push({
         name: "home",

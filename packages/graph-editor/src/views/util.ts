@@ -1,4 +1,4 @@
-import { VNode } from "snabbdom";
+import type { VNode } from "snabbdom";
 import { svg } from "sprotty";
 import { Point } from "sprotty-protocol";
 

@@ -16,17 +16,26 @@
 <script lang="ts" setup>
 import DetailCompartment from "@/components/DetailCompartment.vue";
 import ConfirmationDialog from "@/components/dialog/ConfirmationDialog.vue";
-import { useClient } from "@/graphql/client";
 import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { graphql } from "@/gql";
+import { request } from "@/gql/client";
 
-const client = useClient();
+const deleteProjectMutation = graphql(`
+    mutation deleteProject($id: ID!) {
+        deleteProject(input: { id: $id }) {
+            __typename
+        }
+    }
+`);
+
 const route = useRoute();
 const router = useRouter();
 const projectId = computed(() => route.params.trackable as string);
 
 async function deleteProject() {
-    await client.deleteProject({ id: projectId.value });
+    const res = await request(deleteProjectMutation, { id: projectId.value });
+    if (!res) return;
     router.push({ name: "home" });
 }
 </script>

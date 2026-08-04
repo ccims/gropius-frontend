@@ -1,5 +1,5 @@
 import { SChildElementImpl } from "sprotty";
-import { Element } from "../model/element.js";
+import type { Element } from "../model/element.js";
 import { SRoot } from "./sRoot.js";
 
 /**

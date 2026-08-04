@@ -48,7 +48,7 @@ import { fieldConfig } from "@/util/vuetifyFormConfig";
 import ConfirmationDialog from "./ConfirmationDialog.vue";
 import SimpleField from "@/components/input/SimpleField.vue";
 import Markdown from "@/components/Markdown.vue";
-import { PropType } from "vue";
+import type { PropType } from "vue";
 import { watch } from "vue";
 
 export interface LegalInformation {

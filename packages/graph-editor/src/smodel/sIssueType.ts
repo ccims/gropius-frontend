@@ -1,4 +1,4 @@
-import { Selectable } from "sprotty-protocol";
+import type { Selectable } from "sprotty-protocol";
 import { IssueRelationHighlightable } from "../features/issueRelationHighlight/IssueRelationHighlightable.js";
 import { IssueType } from "../model/issueType.js";
 import { SElement } from "./sElement.js";

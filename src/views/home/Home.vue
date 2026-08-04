@@ -38,16 +38,17 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { useClient } from "@/graphql/client";
+import { request } from "@/gql/client";
+import { graphql } from "@/gql";
 import { computed } from "vue";
-import { RouteLocationRaw, useRoute, useRouter } from "vue-router";
+import { type RouteLocationRaw, useRoute, useRouter } from "vue-router";
 import PaginatedList from "@/components/PaginatedList.vue";
 import {
-    IssueFilterInput,
-    IssueOrder,
+    type IssueFilterInput,
+    type IssueOrder,
     IssueOrderField,
-    ParticipatingIssueListItemInfoFragment
-} from "@/graphql/generated";
+    type ParticipatingIssueListItemInfoFragment
+} from "@/gql/graphql";
 import IssueListItem from "@/components/IssueListItem.vue";
 import IssueStateSegmentedButton from "@/components/input/IssueStateSegmentedButton.vue";
 import { useAppStore } from "@/store/app";
@@ -58,7 +59,27 @@ import { useTemplateRef } from "vue";
 
 type Issue = ParticipatingIssueListItemInfoFragment;
 
-const client = useClient();
+const getParticipatingIssueListQuery = graphql(`
+    query getParticipatingIssueList($orderBy: [IssueOrder!]!, $count: Int!, $skip: Int!, $filter: IssueFilterInput) {
+        currentUser {
+            participatedIssues(filter: $filter, orderBy: $orderBy, first: $count, skip: $skip) {
+                nodes {
+                    ...ParticipatingIssueListItemInfo
+                }
+                totalCount
+            }
+        }
+    }
+`);
+
+const getParticipatingFilteredIssueListQuery = graphql(`
+    query getParticipatingFilteredIssueList($query: String!, $count: Int!, $filter: IssueFilterInput) {
+        searchIssues(query: $query, first: $count, filter: $filter) {
+            ...ParticipatingIssueListItemInfo
+        }
+    }
+`);
+
 const router = useRouter();
 const route = useRoute();
 const store = useAppStore();
@@ -137,27 +158,32 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
             }
         }
         if (filter == undefined) {
-            const res = await client.getParticipatingIssueList({
+            const res = await request(getParticipatingIssueListQuery, {
                 orderBy,
                 count,
                 skip: page * count,
                 filter: issueFilter
             });
-            const issues = res.currentUser!.participatedIssues;
-            return [issues.nodes, issues.totalCount];
+            if (res) {
+                const issues = res.currentUser!.participatedIssues;
+                return [issues.nodes, issues.totalCount];
+            }
         } else {
             if (issueFilterIndex.value == 0) {
                 issueFilter.participants = {
                     any: userFilter.value
                 };
             }
-            const res = await client.getParticipatingFilteredIssueList({
+            const res = await request(getParticipatingFilteredIssueListQuery, {
                 query: filter,
                 count,
                 filter: issueFilter
             });
-            return [res.searchIssues, res.searchIssues.length];
+            if (res) {
+                return [res.searchIssues, res.searchIssues.length];
+            }
         }
+        return [[], 0];
     }
 }
 const itemManager: ItemManager<Issue, IssueOrderField> = new IssueItemManager();

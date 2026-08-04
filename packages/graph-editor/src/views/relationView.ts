@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
-import { VNode } from "snabbdom";
-import { IView, RenderingContext, svg } from "sprotty";
+import type { VNode } from "snabbdom";
+import { type IView, type RenderingContext, svg } from "sprotty";
 import { SRelation } from "../smodel/sRelation.js";
 import { Math2D } from "../line/math.js";
 import { StrokeStyle } from "../gropiusModel.js";

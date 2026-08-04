@@ -1,24 +1,3 @@
-query getCurrentUser {
-    currentUser {
-        ...DefaultUserInfo
-        email
-        isAdmin
-    }
-
-    canCreateProjects: hasGlobalPermission(permission: CAN_CREATE_PROJECTS)
-    canCreateComponents: hasGlobalPermission(permission: CAN_CREATE_COMPONENTS)
-    canCreateIMSs: hasGlobalPermission(permission: CAN_CREATE_IMSS)
-    canCreateTemplates: hasGlobalPermission(permission: CAN_CREATE_TEMPLATES)
-}
-
-query getUser($id: ID!) {
-    node(id: $id) {
-        ... on User {
-            ...DefaultUserInfo
-        }
-    }
-}
-
 fragment DefaultUserInfo on User {
     id
     username
@@ -26,8 +5,11 @@ fragment DefaultUserInfo on User {
     avatar
 }
 
-query searchGropiusUsers($query: String!, $count: Int!, $filter: GropiusUserFilterInput) {
-    searchGropiusUsers(query: $query, first: $count, filter: $filter) {
-        ...DefaultUserInfo
+fragment CurrentUserInfo on User {
+    ...DefaultUserInfo
+    email
+    ... on GropiusUser {
+        isAdmin
     }
 }
+

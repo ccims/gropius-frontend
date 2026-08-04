@@ -33,7 +33,7 @@ export async function buildOAuthUrl(scope: TokenScope[], redirectTo: string): Pr
             response_type: "code",
             scope: scope.join(" "),
             redirect_uri: window.location.origin + "/login",
-            state: JSON.stringify({ }),
+            state: JSON.stringify({}),
             code_challenge_method: "S256",
             code_challenge: codeChallenge
         }).toString()

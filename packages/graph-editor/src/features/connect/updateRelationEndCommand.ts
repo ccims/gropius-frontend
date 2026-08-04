@@ -1,5 +1,5 @@
 import { injectable, inject } from "inversify";
-import { CommandExecutionContext, CommandReturn, SChildElementImpl, SystemCommand, TYPES } from "sprotty";
+import { type CommandExecutionContext, type CommandReturn, SChildElementImpl, SystemCommand, TYPES } from "sprotty";
 import { UpdateRelationEndAction } from "./updateRelationEndAction.js";
 import { SRelation } from "../../smodel/sRelation.js";
 import { SRoot } from "../../smodel/sRoot.js";

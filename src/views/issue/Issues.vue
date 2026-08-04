@@ -26,23 +26,22 @@
     </PaginatedList>
 </template>
 <script lang="ts" setup>
-import { NodeReturnType, useClient } from "@/graphql/client";
 import { computed, useTemplateRef } from "vue";
-import { RouteLocationRaw, useRoute, useRouter } from "vue-router";
+import { type RouteLocationRaw, useRoute, useRouter } from "vue-router";
 import PaginatedList from "@/components/PaginatedList.vue";
-import { IssueFilterInput, IssueListItemInfoFragment, IssueOrder, IssueOrderField } from "@/graphql/generated";
 import IssueListItem from "@/components/IssueListItem.vue";
 import IssueStateSegmentedButton from "@/components/input/IssueStateSegmentedButton.vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import IssueDialogs from "@/components/IssueDialogs.vue";
 import { issueSortFields } from "@/util/issueSortFields";
 import { ItemManager } from "@/util/itemManager";
 import IssueFilterDropdowns from "@/components/input/IssueFilterDropdowns.vue";
+import { type IssueListItemInfoFragment, IssueOrderField, type IssueOrder, type IssueFilterInput } from "@/gql/graphql";
+import { request, queryNode } from "@/gql/client";
+import { graphql } from "@/gql";
 
-type Trackable = NodeReturnType<"getIssueList", "Component">;
 type Issue = IssueListItemInfoFragment;
 
-const client = useClient();
 const router = useRouter();
 const route = useRoute();
 
@@ -67,6 +66,35 @@ const issueStateIndices = computed({
 
 const trackableId = computed(() => route.params.trackable as string);
 
+const getIssueList = graphql(`
+    query getIssueList(
+        $orderBy: [IssueOrder!]!
+        $count: Int!
+        $skip: Int!
+        $filter: IssueFilterInput
+        $trackable: ID!
+    ) {
+        node(id: $trackable) {
+            __typename
+            ... on Trackable {
+                issues(filter: $filter, orderBy: $orderBy, first: $count, skip: $skip) {
+                    nodes {
+                        ...IssueListItemInfo
+                    }
+                    totalCount
+                }
+            }
+        }
+    }
+`);
+const getFilteredIssueList = graphql(`
+    query getFilteredIssueList($query: String!, $count: Int!, $filter: IssueFilterInput) {
+        searchIssues(query: $query, first: $count, filter: $filter) {
+            ...IssueListItemInfo
+        }
+    }
+`);
+
 class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
     protected async fetchItems(
         filter: string | undefined,
@@ -87,17 +115,18 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
               }
             : {};
         if (filter == undefined) {
-            const res = await client.getIssueList({
+            const component = await queryNode(getIssueList, "Component", {
                 orderBy,
                 count,
                 skip: page * count,
                 trackable: trackableId.value,
                 filter: generalFilters
             });
-            const issues = (res.node as Trackable).issues;
-            return [issues.nodes, issues.totalCount];
+            if (component) {
+                return [component.issues.nodes, component.issues.totalCount];
+            }
         } else {
-            const res = await client.getFilteredIssueList({
+            const res = await request(getFilteredIssueList, {
                 query: filter,
                 count,
                 filter: {
@@ -105,8 +134,11 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
                     trackables: { any: { id: { eq: trackableId.value } } }
                 }
             });
-            return [res.searchIssues, res.searchIssues.length];
+            if (res) {
+                return [res.searchIssues, res.searchIssues.length];
+            }
         }
+        return [[], 0];
     }
 }
 

@@ -1,5 +1,5 @@
 import { ActionHandlerRegistry, LocalModelSource } from "sprotty";
-import {
+import type {
     Graph,
     GraphLayout,
     ComponentVersion,
@@ -18,8 +18,8 @@ import { Interface } from "../model/interface.js";
 import { Label } from "../model/label.js";
 import { Relation } from "../model/relation.js";
 import { UpdateLayoutAction } from "../features/move/updateLayoutAction.js";
-import { Action, Bounds, SModelElement, SelectAction, SelectAllAction } from "sprotty-protocol";
-import { Element } from "../model/element.js";
+import { type Action, Bounds, type SModelElement, SelectAction, SelectAllAction } from "sprotty-protocol";
+import type { Element } from "../model/element.js";
 import { Chip } from "../model/chip.js";
 import { IssueType } from "../model/issueType.js";
 import { IssueRelation } from "../model/issueRelation.js";

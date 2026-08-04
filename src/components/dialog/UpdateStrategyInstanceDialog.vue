@@ -14,10 +14,10 @@
     </v-dialog>
 </template>
 <script lang="ts" setup>
-import { computed, PropType, ref } from "vue";
+import { computed, type PropType, ref } from "vue";
 import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
-import StrategyInstanceDialogContent, { StrategyInstance } from "./StrategyInstanceDialogContent.vue";
-import { IdObject } from "@/util/types";
+import StrategyInstanceDialogContent, { type StrategyInstance } from "./StrategyInstanceDialogContent.vue";
+import type { IdObject } from "@/util/types";
 import axios from "axios";
 import { useAppStore } from "@/store/app";
 import { useCachedRef } from "@/util/useCachedRef";

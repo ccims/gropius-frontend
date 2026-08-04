@@ -17,16 +17,13 @@
     </FetchingAutocomplete>
 </template>
 <script setup lang="ts">
-import { NodeReturnType, useClient } from "@/graphql/client";
-import {
-    DefaultImsInfoFragment,
-    DefaultImsPermissionInfoFragment,
-    DefaultTrackableInfoFragment
-} from "@/graphql/generated";
+import { requestThrow, queryNodeThrow } from "@/gql/client";
+import { graphql } from "@/gql";
+import type { DefaultImsInfoFragment, DefaultImsPermissionInfoFragment } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
-import { PropType } from "vue";
+import type { PropType } from "vue";
 
 const props = defineProps({
     imsPermission: {
@@ -40,7 +37,39 @@ const props = defineProps({
     }
 });
 
-const client = useClient();
+const searchIMSPermissionsQuery = graphql(`
+    query searchIMSPermissionsForExternal($query: String!, $count: Int!, $ims: ID!) {
+        searchIMSPermissions(
+            query: $query
+            first: $count
+            filter: { nodesWithPermission: { any: { id: { eq: $ims } } } }
+        ) {
+            ...DefaultIMSPermissionInfo
+        }
+    }
+`);
+
+const firstIMSPermissionsQuery = graphql(`
+    query firstIMSPermissions($ims: ID!, $count: Int!) {
+        node(id: $ims) {
+            ... on IMS {
+                permissions(first: $count, orderBy: [{ field: NAME }]) {
+                    nodes {
+                        ...DefaultIMSPermissionInfo
+                    }
+                }
+            }
+        }
+    }
+`);
+
+const searchIMSsQuery = graphql(`
+    query searchIMSsForExternal($query: String!, $count: Int!) {
+        searchIMSs(query: $query, first: $count) {
+            ...DefaultIMSInfo
+        }
+    }
+`);
 
 async function searchIMSPermissions(
     filter: string,
@@ -50,11 +79,11 @@ async function searchIMSPermissions(
     return await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await client.searchIMSPermissions({ query, count, ims: context!.id });
+            const res = await requestThrow(searchIMSPermissionsQuery, { query, count, ims: context!.id });
             return res.searchIMSPermissions;
         } else {
-            const res = await client.firstIMSPermissions({ ims: context!.id, count });
-            return (res.node as NodeReturnType<"firstIMSPermissions", "IMS">).permissions.nodes;
+            const ims = await queryNodeThrow(firstIMSPermissionsQuery, "IMS", { ims: context!.id, count });
+            return ims.permissions.nodes;
         }
     }, "Error searching ims permissions");
 }
@@ -63,7 +92,7 @@ async function searchIMSs(filter: string, count: number): Promise<DefaultImsInfo
     return await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await client.searchIMSs({ query, count });
+            const res = await requestThrow(searchIMSsQuery, { query, count });
             return res.searchIMSs;
         } else {
             return [];

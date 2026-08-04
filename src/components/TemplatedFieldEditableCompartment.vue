@@ -31,10 +31,10 @@
     </EditableCompartment>
 </template>
 <script setup lang="ts">
-import { PropType, ref, toRaw, watch } from "vue";
+import { type PropType, ref, toRaw, watch } from "vue";
 import EditableCompartment from "./EditableCompartment.vue";
 import MetaForm from "./input/schema/MetaForm.vue";
-import { Schema } from "jtd";
+import type { Schema } from "jtd";
 
 const props = defineProps({
     name: {

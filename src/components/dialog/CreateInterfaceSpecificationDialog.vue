@@ -68,26 +68,60 @@
     </v-dialog>
 </template>
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { onEvent } from "@/util/eventBus";
 import * as yup from "yup";
 import { useForm } from "vee-validate";
 import { fieldConfig } from "@/util/vuetifyFormConfig";
 import { useBlockingWithErrorMessage, withErrorMessage } from "@/util/withErrorMessage";
-import { NodeReturnType, useClient } from "@/graphql/client";
+import { queryNodeThrow, requestThrow } from "@/gql/client";
+import { graphql } from "@/gql";
 import { toTypedSchema } from "@vee-validate/yup";
 import InterfaceSpecificationTemplateAutocomplete from "../input/InterfaceSpecificationTemplateAutocomplete.vue";
-import TemplatedFieldsInput, { Field } from "../input/schema/TemplatedFieldsInput.vue";
+import TemplatedFieldsInput, { type Field } from "../input/schema/TemplatedFieldsInput.vue";
 import { computedAsync } from "@vueuse/core";
 import { generateDefaultData } from "../input/schema/generateDefaultData";
-import { watch } from "vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import VersionedTemplatedNodeDialogContent from "./VersionedTemplatedNodeDialogContent.vue";
-import { InterfaceSpecificationTemplateFilterInput, InterfaceSpecificationVersionInput } from "@/graphql/generated";
+import type { InterfaceSpecificationTemplateFilterInput, InterfaceSpecificationVersionInput } from "@/gql/graphql";
 
 const createInterfaceSpecificationDialog = ref(false);
-const client = useClient();
 const [blockWithErrorMessage, submitDisabled] = useBlockingWithErrorMessage();
+
+const getInterfaceSpecificationTemplateQuery = graphql(`
+    query getInterfaceSpecificationTemplateForDialog($id: ID!) {
+        node(id: $id) {
+            id
+            ... on InterfaceSpecificationTemplate {
+                templateFieldSpecifications {
+                    name
+                    value
+                }
+                interfaceSpecificationVersionTemplate {
+                    templateFieldSpecifications {
+                        name
+                        value
+                    }
+                }
+            }
+        }
+    }
+`);
+
+const createInterfaceSpecificationFromDialogMutation = graphql(`
+    mutation createInterfaceSpecificationFromDialog($input: CreateInterfaceSpecificationInput!) {
+        createInterfaceSpecification(input: $input) {
+            interfaceSpecification {
+                id
+                versions {
+                    nodes {
+                        id
+                    }
+                }
+            }
+        }
+    }
+`);
 
 const props = defineProps({
     component: {
@@ -181,14 +215,12 @@ const templateValue = computedAsync(
         if (template.value == null) {
             return null;
         }
-        const templateRes = await withErrorMessage(async () => {
-            return client.getInterfaceSpecificationTemplate({ id: template.value! });
+
+        return await withErrorMessage(async () => {
+            return queryNodeThrow(getInterfaceSpecificationTemplateQuery, "InterfaceSpecificationTemplate", {
+                id: template.value!
+            });
         }, "Error loading template");
-        const templateNode = templateRes.node as NodeReturnType<
-            "getInterfaceSpecificationTemplate",
-            "InterfaceSpecificationTemplate"
-        >;
-        return templateNode;
     },
     null,
     { shallow: false }
@@ -261,7 +293,7 @@ async function createInterfaceSpecification(hasVersion: boolean) {
             const versionFields = await getVersionFields();
             versions.push(versionFields!);
         }
-        const res = await client.createInterfaceSpecification({
+        const res = await requestThrow(createInterfaceSpecificationFromDialogMutation, {
             input: {
                 ...interfaceSpecificationFields!,
                 versions: versions,

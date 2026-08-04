@@ -1,10 +1,10 @@
-import { RenderingContext, svg } from "sprotty";
-import { VNode } from "snabbdom";
-import { ShapeStyle, StrokeStyle } from "../gropiusModel.js";
-import { IssueAffected } from "../model/issueAffected.js";
+import { type RenderingContext, svg } from "sprotty";
+import type { VNode } from "snabbdom";
+import { type ShapeStyle, StrokeStyle } from "../gropiusModel.js";
+import type { IssueAffected } from "../model/issueAffected.js";
 import { SSelectable } from "./sSelectable.js";
-import { Locateable, Point, Selectable } from "sprotty-protocol";
-import { Shape } from "../shape/shape.js";
+import { type Locateable, Point, type Selectable } from "sprotty-protocol";
+import type { Shape } from "../shape/shape.js";
 import { wrapForeignElement } from "../views/util.js";
 import { LineEngine } from "../line/engine/lineEngine.js";
 import { SChip } from "./sChip.js";

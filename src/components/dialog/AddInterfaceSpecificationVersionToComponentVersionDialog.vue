@@ -63,16 +63,43 @@ import * as yup from "yup";
 import { useForm, useIsFormDirty } from "vee-validate";
 import { fieldConfig } from "@/util/vuetifyFormConfig";
 import { useBlockingWithErrorMessage, withErrorMessage } from "@/util/withErrorMessage";
-import { NodeReturnType, useClient } from "@/graphql/client";
+import { graphql } from "@/gql";
+import { queryNodeThrow, requestThrow } from "@/gql/client";
 import { toTypedSchema } from "@vee-validate/yup";
 import ConfirmationDialog from "./ConfirmationDialog.vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import InterfaceSpecificationVersionModelAutocomplete from "../input/InterfaceSpecificationVersionModelAutocomplete.vue";
 import InterfaceSpecificationAutocomplete from "../input/InterfaceSpecificationAutocomplete.vue";
 import { computedAsync } from "@vueuse/core";
 
+const getInterfaceSpecificationVisibilityInfoQuery = graphql(`
+    query getInterfaceSpecificationVisibilityInfo($id: ID!, $componentTemplate: ID!) {
+        node(id: $id) {
+            ... on InterfaceSpecification {
+                template {
+                    canBeVisibleOnComponents(filter: { id: { eq: $componentTemplate } }) {
+                        totalCount
+                    }
+                    canBeInvisibleOnComponents(filter: { id: { eq: $componentTemplate } }) {
+                        totalCount
+                    }
+                }
+            }
+        }
+    }
+`);
+
+const addInterfaceSpecificationVersionToComponentVersionMutation = graphql(`
+    mutation addInterfaceSpecificationVersionToComponentVersion(
+        $input: AddInterfaceSpecificationVersionToComponentVersionInput!
+    ) {
+        addInterfaceSpecificationVersionToComponentVersion(input: $input) {
+            __typename
+        }
+    }
+`);
+
 const dialog = ref(false);
-const client = useClient();
 const [blockWithErrorMessage, submitDisabled] = useBlockingWithErrorMessage();
 
 const emit = defineEmits<{
@@ -128,14 +155,12 @@ const interfaceSpecificationVisibilityInfo = computedAsync(
                 invisible: true
             };
         }
-        const visibilityRes = (
-            await withErrorMessage(async () => {
-                return client.getInterfaceSpecificationVisibilityInfo({
-                    id: interfaceSpecification.value!,
-                    componentTemplate: props.componentTemplate!
-                });
-            }, "Error loading interface specification visibility info")
-        ).node as NodeReturnType<"getInterfaceSpecificationVisibilityInfo", "InterfaceSpecification">;
+        const visibilityRes = await withErrorMessage(async () => {
+            return queryNodeThrow(getInterfaceSpecificationVisibilityInfoQuery, "InterfaceSpecification", {
+                id: interfaceSpecification.value!,
+                componentTemplate: props.componentTemplate!
+            });
+        }, "Error loading interface specification visibility info");
         return {
             visible: visibilityRes.template.canBeVisibleOnComponents.totalCount > 0,
             invisible: visibilityRes.template.canBeInvisibleOnComponents.totalCount > 0
@@ -182,7 +207,7 @@ onEvent("add-interface-specification-version-to-component-version", () => {
 
 const addInterfaceSpecificationVersionToComponentVersion = handleSubmit(async (state) => {
     await blockWithErrorMessage(async () => {
-        await client.addInterfaceSpecificationVersionToComponentVersion({
+        await requestThrow(addInterfaceSpecificationVersionToComponentVersionMutation, {
             input: {
                 visible: state.visible,
                 invisible: state.invisible,

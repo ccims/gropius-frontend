@@ -1,7 +1,7 @@
 import { useAppStore } from "@/store/app";
-import { buildOAuthUrl, OAuthRespose, TokenScope } from "@/util/oauth";
+import { buildOAuthUrl, type OAuthRespose, TokenScope } from "@/util/oauth";
 import axios from "axios";
-import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
 import router from "@/router/index";
 
 export async function onLoginEnter(

@@ -10,10 +10,10 @@
     <v-checkbox v-else-if="isBoolean" v-model="cachedValue" :rules="rules" :label="name" :readonly="readonly" />
 </template>
 <script setup lang="ts">
-import { Schema, SchemaFormType } from "jtd";
+import type { Schema, SchemaFormType } from "jtd";
 import { computed, ref } from "vue";
-import { PropType } from "vue";
-import { Rule, ifPresent, requiredRule } from "./rules";
+import type { PropType } from "vue";
+import { type Rule, ifPresent, requiredRule } from "./rules";
 import { watch } from "vue";
 
 const props = defineProps({

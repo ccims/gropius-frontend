@@ -1,4 +1,4 @@
-import { Component, SetupContext, h } from "vue";
+import { type Component, type SetupContext, h } from "vue";
 import Comment from "./Comment.vue";
 import AddedLabelEvent from "./AddedLabelEvent.vue";
 import RemovedLabelEvent from "./RemovedLabelEvent.vue";

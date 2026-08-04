@@ -1,4 +1,4 @@
-import { Element } from "./element.js";
+import type { Element } from "./element.js";
 
 export interface ContextMenu extends Element {
     type: typeof ContextMenu.TYPE;

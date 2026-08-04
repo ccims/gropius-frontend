@@ -4,7 +4,7 @@
 
 <script lang="ts" setup>
 import mitt from "mitt";
-import { Events } from "./util/eventBus";
+import type { Events } from "./util/eventBus";
 import { provide } from "vue";
 import { eventBusKey } from "./util/keys";
 

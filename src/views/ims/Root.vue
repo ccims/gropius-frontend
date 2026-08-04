@@ -1,30 +1,55 @@
 <template>
-    <BaseLayout
+    <BaseLayoutWithError
         :title-segments="titleSegments"
         :tabs="tabs"
         :right-sidebar-items="rightSidebarItems"
         :left-sidebar-items="leftSidebarItems"
+        :data-present="!!ims"
+        :evaluating="evaluating"
     >
         <template #content>
             <router-view />
         </template>
-    </BaseLayout>
+    </BaseLayoutWithError>
 </template>
 
 <script lang="ts" setup>
-import BaseLayout from "@/components/BaseLayout.vue";
-import { NodeReturnType, useClient } from "@/graphql/client";
+import { queryNodeThrow } from "@/gql/client";
+import { graphql } from "@/gql";
 import { computedAsync } from "@vueuse/core";
-import { computed, ref } from "vue";
-import { RouteLocationRaw, useRoute } from "vue-router";
-import { withErrorMessage } from "@/util/withErrorMessage";
-import { inject } from "vue";
+import { computed, inject, ref, shallowRef } from "vue";
+import { type RouteLocationRaw, useRoute } from "vue-router";
 import { eventBusKey } from "@/util/keys";
 import { onEvent } from "@/util/eventBus";
+import BaseLayoutWithError from "@/components/BaseLayoutWithError.vue";
+import { withErrorMessage } from "@/util/withErrorMessage";
 
-type Component = NodeReturnType<"getComponent", "Component">;
+const getIMSQuery = graphql(`
+    query getIMS($id: ID!) {
+        node(id: $id) {
+            __typename
+            ... on IMS {
+                name
+                description
+                syncTrackables: hasPermission(permission: SYNC_TRACKABLES)
+                admin: hasPermission(permission: ADMIN)
+            }
+        }
+    }
+`);
 
-const client = useClient();
+const getNamedNodeQuery = graphql(`
+    query getNamedNode($id: ID!) {
+        node(id: $id) {
+            __typename
+            id
+            ... on Named {
+                name
+            }
+        }
+    }
+`);
+
 const route = useRoute();
 const imsId = computed(() => route.params.ims as string);
 const imsProjectId = computed(() => route.params.project as string | undefined);
@@ -34,18 +59,19 @@ const titleSegmentDependency = ref(0);
 onEvent("title-segment-changed", () => {
     titleSegmentDependency.value++;
 });
-
+const evaluating = shallowRef(false);
 const ims = computedAsync(
     async () => {
         if (!imsId.value) {
             return null;
         }
         titleSegmentDependency.value;
-        const res = await withErrorMessage(() => client.getIMS({ id: imsId.value }), "Error loading component");
-        return res.node as Component;
+        return await withErrorMessage(() => {
+            return queryNodeThrow(getIMSQuery, "IMS", { id: imsId.value });
+        }, "Error loading IMS");
     },
     null,
-    { shallow: false }
+    { shallow: false, evaluating }
 );
 
 const project = computedAsync(
@@ -54,11 +80,9 @@ const project = computedAsync(
             return null;
         }
         titleSegmentDependency.value;
-        const res = await withErrorMessage(
-            () => client.getNamedNode({ id: imsProjectId.value! }),
-            "Error loading ims project"
-        );
-        return res.node as { id: string; name: string };
+        return (await withErrorMessage(() => {
+            return queryNodeThrow(getNamedNodeQuery, "Named", { id: imsProjectId.value! });
+        }, "Error loading IMS project")) as { id: string; name: string };
     },
     null,
     { shallow: false }

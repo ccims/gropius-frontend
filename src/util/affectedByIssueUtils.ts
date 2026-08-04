@@ -1,5 +1,4 @@
-import { DefaultAffectedByIssueInfoFragment } from "@/graphql/generated";
-import { ClientReturnType } from "@/graphql/client";
+import type { DefaultAffectedByIssueInfoFragment, DetailedAffectedByIssueInfoFragment } from "@/gql/graphql";
 
 export function affectedByIssueName(entity: DefaultAffectedByIssueInfoFragment): string {
     switch (entity.__typename) {
@@ -62,9 +61,7 @@ export function affectedByIssueIcon(type: DefaultAffectedByIssueInfoFragment["__
     }
 }
 
-export function expandSearchResult(
-    items: ClientReturnType<"searchAffectedByIssues">["searchAffectedByIssues"]
-): DefaultAffectedByIssueInfoFragment[] {
+export function expandSearchResult(items: DetailedAffectedByIssueInfoFragment[]): DefaultAffectedByIssueInfoFragment[] {
     const lookup = new Map<string, DefaultAffectedByIssueInfoFragment>();
     for (const item of items) {
         lookup.set(item.id, item);

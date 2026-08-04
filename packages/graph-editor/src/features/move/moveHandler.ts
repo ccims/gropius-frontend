@@ -1,10 +1,10 @@
-import { Action, Point } from "sprotty-protocol";
-import { RelationLayout } from "../../gropiusModel.js";
+import { type Action, Point } from "sprotty-protocol";
+import type { RelationLayout } from "../../gropiusModel.js";
 import { SegmentLayout } from "../../line/model/segmentLayout.js";
 import { roundToPrecision } from "../../base/roundToPrecision.js";
 import { LineEngine } from "../../line/engine/lineEngine.js";
 import { Line } from "../../line/model/line.js";
-import { RelationPath, RelationPathSegment } from "../../smodel/relationPath.js";
+import { RelationPath, type RelationPathSegment } from "../../smodel/relationPath.js";
 
 export type BaseSegment =
     | {
