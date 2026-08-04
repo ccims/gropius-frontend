@@ -35,21 +35,31 @@
                     clearable
                 />
 
-                <div class="icon-container">
-                    <IconButton
-                        v-for="icon in filteredIcons"
-                        :key="icon.name"
-                        class="icon-button"
-                        :class="{ selected: selectedName === icon.name }"
-                        :variant="selectedName === icon.name ? 'flat' : 'text'"
-                        :color="selectedName === icon.name ? 'secondary-container' : ''"
-                        @click="selectIcon(icon)"
-                    >
-                        <SvgWrapper :path="icon.iconPath" />
-                        <v-tooltip activator="parent" location="top" scroll-strategy="close">
-                            {{ icon.name }}
-                        </v-tooltip>
-                    </IconButton>
+                <!--
+                    Every icon is a button with its own tooltip, mounting all of them at once made
+                    opening the picker block for a quarter of a second, so only the visible rows exist.
+                -->
+                <div ref="iconContainer" class="icon-container">
+                    <v-virtual-scroll :items="iconRows" :item-height="rowHeight" :height="scrollerHeight">
+                        <template #default="{ item: row }">
+                            <div class="icon-row">
+                                <IconButton
+                                    v-for="icon in row"
+                                    :key="icon.name"
+                                    class="icon-button"
+                                    :class="{ selected: selectedName === icon.name }"
+                                    :variant="selectedName === icon.name ? 'flat' : 'text'"
+                                    :color="selectedName === icon.name ? 'secondary-container' : ''"
+                                    @click="selectIcon(icon)"
+                                >
+                                    <SvgWrapper :path="icon.iconPath" />
+                                    <v-tooltip activator="parent" location="top" scroll-strategy="close">
+                                        {{ icon.name }}
+                                    </v-tooltip>
+                                </IconButton>
+                            </div>
+                        </template>
+                    </v-virtual-scroll>
                 </div>
             </v-window-item>
 
@@ -70,9 +80,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, ref, useTemplateRef, watch } from "vue";
+import { useElementSize } from "@vueuse/core";
 import SvgWrapper from "../SvgWrapper.vue";
 import { iconList } from "../icons";
+
+/** Padding of the box around the icons, must match the stylesheet */
+const containerPadding = 8;
 
 const model = defineModel<string>({ required: true });
 
@@ -124,6 +138,27 @@ const filteredIcons = computed(() => {
     return iconList.filter((icon) => icon.name.toLowerCase().includes(iconSearch.value.toLowerCase()));
 });
 
+/** Height of a row and width of an icon button, including the gap to the next one */
+const rowHeight = 44;
+/** At most this many rows are visible at once, the rest is scrolled to */
+const maxVisibleRows = 4.5;
+
+const iconContainer = useTemplateRef("iconContainer");
+const { width: containerWidth } = useElementSize(iconContainer);
+
+// the virtual scroller works on rows, so the icons are wrapped into rows here instead of by the layout
+const columns = computed(() => Math.max(1, Math.floor((containerWidth.value - 2 * containerPadding) / rowHeight)));
+
+const iconRows = computed(() => {
+    const rows: (typeof iconList)[] = [];
+    for (let index = 0; index < filteredIcons.value.length; index += columns.value) {
+        rows.push(filteredIcons.value.slice(index, index + columns.value));
+    }
+    return rows;
+});
+
+const scrollerHeight = computed(() => Math.min(maxVisibleRows, Math.max(iconRows.value.length, 1)) * rowHeight);
+
 function normalizePath(path: string | null): string {
     return (path ?? "").trim().replace(/"/g, "");
 }
@@ -136,16 +171,14 @@ function selectIcon(icon: (typeof iconList)[number]) {
 
 <style scoped>
 .icon-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-
-    max-height: 200px;
-    overflow-y: auto;
-
     border: thin solid rgb(var(--v-theme-outline-variant));
     border-radius: 12px;
     padding: 8px;
+}
+
+.icon-row {
+    display: flex;
+    gap: 4px;
 }
 
 .icon-button {
@@ -153,14 +186,14 @@ function selectIcon(icon: (typeof iconList)[number]) {
     height: 40px;
 }
 
-.icon-button :deep(svg) {
-    width: 24px;
-    height: 24px;
-}
-
 /* the svg fills with currentColor, the button itself keeps the on-secondary-container text color */
 .icon-button.selected :deep(svg) {
     color: rgb(var(--v-theme-primary));
+}
+
+.icon-button :deep(svg) {
+    width: 24px;
+    height: 24px;
 }
 
 /* the outlined card draws its border with currentColor, the icon gets its own color */

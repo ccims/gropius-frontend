@@ -80,7 +80,12 @@ import IconPicker from "../input/IconPicker.vue";
 import ConfirmationDialog from "./ConfirmationDialog.vue";
 
 export type TemplateAttributeKind =
-    "issueType" | "issuePriority" | "issueState" | "assignmentType" | "issueRelationType";
+    | "issueType"
+    | "issuePriority"
+    | "issueState"
+    | "assignmentType"
+    | "issueRelationType"
+    | "intraComponentDependencySpecificationType";
 
 export interface TemplateAttribute {
     id: string;
@@ -99,7 +104,8 @@ const attributeNames: Record<TemplateAttributeKind, string> = {
     issuePriority: "issue priority",
     issueState: "issue state",
     assignmentType: "assignment type",
-    issueRelationType: "relation type"
+    issueRelationType: "relation type",
+    intraComponentDependencySpecificationType: "dependency type"
 };
 
 const updateIssueTypeMutation = graphql(`
@@ -146,6 +152,18 @@ const updateIssueRelationTypeMutation = graphql(`
     mutation updateIssueRelationType($input: UpdateIssueRelationTypeInput!) {
         updateIssueRelationType(input: $input) {
             issueRelationType {
+                id
+            }
+        }
+    }
+`);
+
+const updateIntraComponentDependencySpecificationTypeMutation = graphql(`
+    mutation updateIntraComponentDependencySpecificationType(
+        $input: UpdateIntraComponentDependencySpecificationTypeInput!
+    ) {
+        updateIntraComponentDependencySpecificationType(input: $input) {
+            intraComponentDependencySpecificationType {
                 id
             }
         }
@@ -250,6 +268,11 @@ const submitChanges = handleSubmit(async (state) => {
             case "issueRelationType":
                 await requestThrow(updateIssueRelationTypeMutation, {
                     input: { id, name, description, inverseName: state.inverseName! }
+                });
+                break;
+            case "intraComponentDependencySpecificationType":
+                await requestThrow(updateIntraComponentDependencySpecificationTypeMutation, {
+                    input: { id, name, description }
                 });
                 break;
         }

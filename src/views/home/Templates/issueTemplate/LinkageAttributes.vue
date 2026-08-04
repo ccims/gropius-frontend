@@ -65,8 +65,8 @@ import { graphql } from "@/gql";
 import { useAppStore } from "@/store/app";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import { computedAsync } from "@vueuse/core";
+import { useTemplateId } from "@/util/templates";
 import { computed, ref } from "vue";
-import { useRoute } from "vue-router";
 
 const getIssueTemplateLinkageAttributesQuery = graphql(`
     query getIssueTemplateLinkageAttributes($id: ID!) {
@@ -100,10 +100,9 @@ const getIssueTemplateLinkageAttributesQuery = graphql(`
     }
 `);
 
-const route = useRoute();
 const store = useAppStore();
+const issueTemplateId = useTemplateId();
 
-const issueTemplateId = computed(() => route.params.issueTemplate as string);
 const canCreateTemplates = computed(() => store.user?.canCreateTemplates ?? false);
 
 const editedAttribute = ref<TemplateAttribute | null>(null);
