@@ -7,7 +7,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import { DefaultTimelineItemInfoFragment } from "@/graphql/generated";
+import type { DefaultTimelineItemInfoFragment } from "@/gql/graphql";
 
 export type TimelineItemType<T extends string> = DefaultTimelineItemInfoFragment & { __typename: T };
 </script>

@@ -10,12 +10,13 @@
     </FetchingAutocomplete>
 </template>
 <script setup lang="ts">
-import { NodeReturnType, useClient } from "@/graphql/client";
-import { DefaultLabelInfoFragment } from "@/graphql/generated";
+import { requestThrow, queryNodeThrow } from "@/gql/client";
+import { graphql } from "@/gql";
+import type { DefaultLabelInfoFragment } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
-import { PropType } from "vue";
+import type { PropType } from "vue";
 
 const props = defineProps({
     issue: {
@@ -29,18 +30,46 @@ const props = defineProps({
     }
 });
 
-const client = useClient();
+const searchLabelsQuery = graphql(`
+    query searchLabels($issue: ID!, $query: String!, $count: Int!) {
+        searchLabels(
+            query: $query
+            first: $count
+            filter: { trackables: { any: { issues: { any: { id: { eq: $issue } } } } } }
+        ) {
+            ...DefaultLabelInfo
+        }
+    }
+`);
+
+const firstLabelsQuery = graphql(`
+    query firstLabelsForAutocomplete($issue: ID!, $count: Int!) {
+        node(id: $issue) {
+            id
+            ... on Issue {
+                trackables {
+                    nodes {
+                        labels(first: $count, orderBy: [{ field: NAME }]) {
+                            nodes {
+                                ...DefaultLabelInfo
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`);
 
 async function searchLabels(filter: string, count: number): Promise<DefaultLabelInfoFragment[]> {
     const searchRes = await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await client.searchLabels({ issue: props.issue, query, count });
+            const res = await requestThrow(searchLabelsQuery, { issue: props.issue, query, count });
             return res.searchLabels;
         } else {
-            const res = await client.firstLabels({ issue: props.issue, count });
-            const nodeRes = res.node as NodeReturnType<"firstLabels", "Issue">;
-            return nodeRes.trackables.nodes.flatMap((trackable) => trackable.labels.nodes);
+            const issue = await queryNodeThrow(firstLabelsQuery, "Issue", { issue: props.issue, count });
+            return issue.trackables.nodes.flatMap((trackable) => trackable.labels.nodes);
         }
     }, "Error searching labels");
     const searchedLabels = new Map(searchRes.map((label) => [label.id, label]));

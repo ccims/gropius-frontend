@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
-import { VNode } from "snabbdom";
-import { IView, RenderingContext, html, svg } from "sprotty";
+import type { VNode } from "snabbdom";
+import { type IView, type RenderingContext, html, svg } from "sprotty";
 import { SContextMenu } from "../smodel/sContextMenu.js";
 import { SRoot } from "../smodel/sRoot.js";
 import { wrapForeignElement } from "./util.js";

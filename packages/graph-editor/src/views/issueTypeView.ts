@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
-import { VNode } from "snabbdom";
-import { IView, RenderingContext, svg } from "sprotty";
+import type { VNode } from "snabbdom";
+import { type IView, type RenderingContext, svg } from "sprotty";
 import { SIssueType } from "../smodel/sIssueType.js";
 import { wrapForeignElement } from "./util.js";
 import { SChip } from "../smodel/sChip.js";

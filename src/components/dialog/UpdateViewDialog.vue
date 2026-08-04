@@ -15,13 +15,24 @@
     </v-dialog>
 </template>
 <script lang="ts" setup>
-import { useClient } from "@/graphql/client";
-import { PropType } from "vue";
+import { graphql } from "@/gql";
+import { requestThrow } from "@/gql/client";
+import type { PropType } from "vue";
 import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
-import ViewDialogContent, { View } from "./ViewDialogContent.vue";
+import ViewDialogContent, { type View } from "./ViewDialogContent.vue";
 import { computed } from "vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import { useCachedRef } from "@/util/useCachedRef";
+
+const updateViewMutation = graphql(`
+    mutation updateViewForDialog($input: UpdateViewInput!) {
+        updateView(input: $input) {
+            view {
+                id
+            }
+        }
+    }
+`);
 
 const updateViewDialog = computed({
     get: () => model.value != null,
@@ -31,7 +42,6 @@ const updateViewDialog = computed({
         }
     }
 });
-const client = useClient();
 const [blockWithErrorMessage, submitDisabled] = useBlockingWithErrorMessage();
 
 const emit = defineEmits<{
@@ -59,7 +69,7 @@ const cachedModel = useCachedRef(model);
 
 async function updateView(state: View) {
     const view = await blockWithErrorMessage(async () => {
-        const res = await client.updateView({
+        const res = await requestThrow(updateViewMutation, {
             input: {
                 ...state,
                 id: model.value!.id

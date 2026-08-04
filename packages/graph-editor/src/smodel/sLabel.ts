@@ -1,4 +1,4 @@
-import { BoundsAware } from "sprotty-protocol";
+import type { BoundsAware } from "sprotty-protocol";
 import { Label } from "../model/label.js";
 import { SHtmlElement } from "./sHtmlElement.js";
 

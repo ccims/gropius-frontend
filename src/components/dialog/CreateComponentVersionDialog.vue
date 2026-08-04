@@ -40,17 +40,46 @@ import * as yup from "yup";
 import { useForm } from "vee-validate";
 import { fieldConfig } from "@/util/vuetifyFormConfig";
 import { useBlockingWithErrorMessage, withErrorMessage } from "@/util/withErrorMessage";
-import { NodeReturnType, useClient } from "@/graphql/client";
+import { queryNode, request, requestThrow, queryNodeThrow } from "@/gql/client";
+import { graphql } from "@/gql";
 import { toTypedSchema } from "@vee-validate/yup";
 import TemplatedNodeDialogContent from "./TemplatedNodeDialogContent.vue";
-import TemplatedFieldsInput, { Field } from "../input/schema/TemplatedFieldsInput.vue";
+import TemplatedFieldsInput, { type Field } from "../input/schema/TemplatedFieldsInput.vue";
 import { computedAsync } from "@vueuse/core";
 import { generateDefaultData } from "../input/schema/generateDefaultData";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 
 const createComponentVersionDialog = ref(false);
-const client = useClient();
 const [blockWithErrorMessage, submitDisabled] = useBlockingWithErrorMessage();
+
+const getComponentVersionTemplateQuery = graphql(`
+    query getComponentVersionTemplateForDialog($component: ID!) {
+        node(id: $component) {
+            id
+            ... on Component {
+                template {
+                    componentVersionTemplate {
+                        id
+                        templateFieldSpecifications {
+                            name
+                            value
+                        }
+                    }
+                }
+            }
+        }
+    }
+`);
+
+const createComponentVersionMutation = graphql(`
+    mutation createComponentVersion($input: CreateComponentVersionInput!) {
+        createComponentVersion(input: $input) {
+            componentVersion {
+                id
+            }
+        }
+    }
+`);
 
 const props = defineProps({
     component: {
@@ -93,12 +122,10 @@ const [tags, tagsProps] = defineField("tags", fieldConfig);
 const templatedFields = ref<Field[]>([]);
 const templateValue = computedAsync(
     async () => {
-        const templateRes = await withErrorMessage(async () => {
-            return client.getComponentVersionTemplate({ component: props.component });
+        const component = await withErrorMessage(async () => {
+            return queryNodeThrow(getComponentVersionTemplateQuery, "Component", { component: props.component });
         }, "Error loading template");
-        const componentNode = templateRes.node as NodeReturnType<"getComponentVersionTemplate", "Component">;
-        const templateNode = componentNode.template.componentVersionTemplate;
-        return templateNode;
+        return component.template.componentVersionTemplate;
     },
     null,
     { shallow: false }
@@ -119,7 +146,7 @@ onEvent("create-component-version", () => {
 
 const createComponentVersion = handleSubmit(async (state) => {
     const componentVersion = await blockWithErrorMessage(async () => {
-        const res = await client.createComponentVersion({
+        const res = await requestThrow(createComponentVersionMutation, {
             input: {
                 ...state,
                 tags: state.tags ?? [],

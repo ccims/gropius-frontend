@@ -1,9 +1,9 @@
 import { injectable } from "inversify";
 import {
-    CommandExecutionContext,
-    CommandReturn,
+    type CommandExecutionContext,
+    type CommandReturn,
     CommandStack as SprottyCommandStack,
-    ICommand,
+    type ICommand,
     SModelRootImpl
 } from "sprotty";
 import {

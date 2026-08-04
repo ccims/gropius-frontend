@@ -46,15 +46,37 @@
 
 <script lang="ts" setup>
 import DetailCompartment from "@/components/DetailCompartment.vue";
-import { NodeReturnType, useClient } from "@/graphql/client";
+import { queryNodeThrow } from "@/gql/client";
+import { graphql } from "@/gql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import { computedAsync } from "@vueuse/core";
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 
-type IssueTemplate = NodeReturnType<"getIssueTemplateFields", "IssueTemplate">;
+const getIssueTemplateLinkageAttributesQuery = graphql(`
+    query getIssueTemplateLinkageAttributes($id: ID!) {
+        node(id: $id) {
+            __typename
+            id
+            ... on IssueTemplate {
+                assignmentTypes {
+                    nodes {
+                        name
+                        description
+                    }
+                }
+                relationTypes {
+                    nodes {
+                        name
+                        description
+                        inverseName
+                    }
+                }
+            }
+        }
+    }
+`);
 
-const client = useClient();
 const route = useRoute();
 const issueTemplateId = computed(() => route.params.issueTemplate as string);
 
@@ -63,11 +85,11 @@ const issueTemplate = computedAsync(
         if (!issueTemplateId.value) {
             return null;
         }
-        const res = await withErrorMessage(
-            () => client.getIssueTemplateFields({ id: issueTemplateId.value }),
+        return await withErrorMessage(
+            () =>
+                queryNodeThrow(getIssueTemplateLinkageAttributesQuery, "IssueTemplate", { id: issueTemplateId.value }),
             "Error loading issue template details"
         );
-        return res.node as IssueTemplate;
     },
     null,
     { shallow: false }

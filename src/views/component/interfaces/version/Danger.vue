@@ -16,17 +16,30 @@
 <script lang="ts" setup>
 import DetailCompartment from "@/components/DetailCompartment.vue";
 import ConfirmationDialog from "@/components/dialog/ConfirmationDialog.vue";
-import { useClient } from "@/graphql/client";
 import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { graphql } from "@/gql";
+import { request } from "@/gql/client";
 
-const client = useClient();
+const deleteInterfaceSpecificationVersionMutation = graphql(`
+    mutation deleteInterfaceSpecificationVersion($id: ID!) {
+        deleteInterfaceSpecificationVersion(input: { id: $id }) {
+            __typename
+        }
+    }
+`);
+
 const route = useRoute();
 const router = useRouter();
 const interfaceSpecificationVersionId = computed(() => route.params.interfaceSpecificationVersion as string);
 
 async function deleteInterfaceSpecificationVersion() {
-    await client.deleteInterfaceSpecificationVersion({ id: interfaceSpecificationVersionId.value });
+    const res = await request(deleteInterfaceSpecificationVersionMutation, {
+        id: interfaceSpecificationVersionId.value
+    });
+    if (!res) {
+        return;
+    }
     router.push({
         name: "interface-specification-versions",
         params: {

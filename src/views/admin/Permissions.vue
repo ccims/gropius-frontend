@@ -1,5 +1,6 @@
 <template>
     <PermissionList
+        ref="permissionList"
         :permission-entries="permissionEntries"
         :item-manager="itemManager"
         node-name="global"
@@ -12,24 +13,75 @@
 <script lang="ts" setup>
 import { ItemManager } from "@/util/itemManager";
 import PermissionList, {
-    CreatePermissionFunctionInput,
-    UpdatePermissionFunctionInput
+    type CreatePermissionFunctionInput,
+    type UpdatePermissionFunctionInput
 } from "@/components/PermissionList.vue";
-import { useClient } from "@/graphql/client";
+import { request, requestThrow } from "@/gql/client";
+import { graphql } from "@/gql";
 import {
     PermissionEntry,
     GlobalPermissionOrderField,
-    DefaultGlobalPermissionInfoFragment,
-    GlobalPermissionOrder
-} from "@/graphql/generated";
-import { IdObject } from "@/util/types";
-import { computed } from "vue";
+    type DefaultGlobalPermissionInfoFragment,
+    type GlobalPermissionOrder
+} from "@/gql/graphql";
+import type { IdObject } from "@/util/types";
+import { computed, useTemplateRef } from "vue";
 import { useRoute } from "vue-router";
 
-const client = useClient();
+const getGlobalPermissionListQuery = graphql(`
+    query getGlobalPermissionList(
+        $orderBy: [GlobalPermissionOrder!]!
+        $count: Int!
+        $skip: Int!
+        $filter: GlobalPermissionFilterInput
+    ) {
+        globalPermissions(orderBy: $orderBy, first: $count, skip: $skip, filter: $filter) {
+            nodes {
+                ...DefaultGlobalPermissionInfo
+            }
+            totalCount
+        }
+    }
+`);
+
+const getFilteredGlobalPermissionListQuery = graphql(`
+    query getFilteredGlobalPermissionList($query: String!, $count: Int!, $filter: GlobalPermissionFilterInput!) {
+        searchGlobalPermissions(query: $query, first: $count, filter: $filter) {
+            ...DefaultGlobalPermissionInfo
+        }
+    }
+`);
+
+const deleteGlobalPermissionMutation = graphql(`
+    mutation deleteGlobalPermission($globalPermission: ID!) {
+        deleteGlobalPermission(input: { id: $globalPermission }) {
+            __typename
+        }
+    }
+`);
+
+const updateGlobalPermissionMutation = graphql(`
+    mutation updateGlobalPermission($input: UpdateGlobalPermissionInput!) {
+        updateGlobalPermission(input: $input) {
+            __typename
+        }
+    }
+`);
+
+const createGlobalPermissionMutation = graphql(`
+    mutation createGlobalPermission($input: CreateGlobalPermissionInput!) {
+        createGlobalPermission(input: $input) {
+            globalPermission {
+                id
+            }
+        }
+    }
+`);
+
 const route = useRoute();
 
 const globalId = computed(() => route.params.trackable as string);
+const permissionList = useTemplateRef("permissionList");
 
 const permissionEntries = Object.values(PermissionEntry);
 
@@ -41,20 +93,26 @@ class PermissionItemManager extends ItemManager<DefaultGlobalPermissionInfoFragm
         page: number
     ): Promise<[DefaultGlobalPermissionInfoFragment[], number]> {
         if (filter == undefined) {
-            const res = await client.getGlobalPermissionList({
+            const res = await request(getGlobalPermissionListQuery, {
                 orderBy,
                 count,
-                skip: page * count
+                skip: page * count,
+                filter: permissionList.value?.userFilter ?? {}
             });
-            const permissions = res.globalPermissions;
-            return [permissions.nodes, permissions.totalCount];
+            if (res) {
+                return [res.globalPermissions.nodes, res.globalPermissions.totalCount];
+            }
         } else {
-            const res = await client.getFilteredGlobalPermissionList({
+            const res = await request(getFilteredGlobalPermissionListQuery, {
                 query: filter,
-                count
+                count,
+                filter: permissionList.value?.userFilter ?? {}
             });
-            return [res.searchGlobalPermissions, res.searchGlobalPermissions.length];
+            if (res) {
+                return [res.searchGlobalPermissions, res.searchGlobalPermissions.length];
+            }
         }
+        return [[], 0];
     }
 }
 
@@ -64,15 +122,15 @@ const itemManager = new PermissionItemManager() as ItemManager<
 >;
 
 async function deletePermission(id: string): Promise<void> {
-    await client.deleteGlobalPermission({ globalPermission: id });
+    await request(deleteGlobalPermissionMutation, { globalPermission: id });
 }
 
 async function updatePermission(input: UpdatePermissionFunctionInput<PermissionEntry>): Promise<void> {
-    await client.updateGlobalPermission({ input });
+    await request(updateGlobalPermissionMutation, { input });
 }
 
 async function createPermission(input: CreatePermissionFunctionInput<PermissionEntry>): Promise<IdObject> {
-    const res = await client.createGlobalPermission({
+    const res = await requestThrow(createGlobalPermissionMutation, {
         input: { ...input }
     });
     return res.createGlobalPermission.globalPermission;

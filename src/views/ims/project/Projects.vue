@@ -25,19 +25,43 @@
 </template>
 <script lang="ts" setup>
 import PaginatedList from "@/components/PaginatedList.vue";
-import { NodeReturnType, useClient } from "@/graphql/client";
-import { RouteLocationRaw, useRoute, useRouter } from "vue-router";
+import { queryNode, request } from "@/gql/client";
+import { graphql } from "@/gql";
+import { type RouteLocationRaw, useRoute, useRouter } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
-import { IdObject } from "@/util/types";
-import { DefaultImsProjectInfoFragment, ImsProjectOrder, ImsProjectOrderField } from "@/graphql/generated";
+import type { IdObject } from "@/util/types";
+import { type DefaultImsProjectInfoFragment, type ImsProjectOrder, ImsProjectOrderField } from "@/gql/graphql";
 import SyncSelfAllowedSwitch from "@/components/input/SyncSelfAllowedSwitch.vue";
 import { computed } from "vue";
 import CreateIMSProjectDialog from "@/components/dialog/CreateIMSProjectDialog.vue";
 import { ItemManager } from "@/util/itemManager";
 
+const getIMSProjectListFromIMSQuery = graphql(`
+    query getIMSProjectListFromIMS($orderBy: [IMSProjectOrder!]!, $count: Int!, $skip: Int!, $ims: ID!) {
+        node(id: $ims) {
+            __typename
+            ... on IMS {
+                projects(orderBy: $orderBy, first: $count, skip: $skip) {
+                    nodes {
+                        ...DefaultIMSProjectInfo
+                    }
+                    totalCount
+                }
+            }
+        }
+    }
+`);
+
+const getFilteredIMSProjectListQuery = graphql(`
+    query getFilteredIMSProjectList($query: String!, $count: Int!, $filter: IMSProjectFilterInput!) {
+        searchIMSProjects(query: $query, first: $count, filter: $filter) {
+            ...DefaultIMSProjectInfo
+        }
+    }
+`);
+
 type IMSProject = DefaultImsProjectInfoFragment;
 
-const client = useClient();
 const router = useRouter();
 const route = useRoute();
 
@@ -56,23 +80,26 @@ class IMSProjectItemManager extends ItemManager<IMSProject, ImsProjectOrderField
         page: number
     ): Promise<[IMSProject[], number]> {
         if (filter == undefined) {
-            const res = (
-                await client.getIMSProjectListFromIMS({
-                    orderBy,
-                    count,
-                    skip: page * count,
-                    ims: ims.value
-                })
-            ).node as NodeReturnType<"getIMSProjectListFromIMS", "IMS">;
-            return [res.projects.nodes, res.projects.totalCount];
+            const res = await queryNode(getIMSProjectListFromIMSQuery, "IMS", {
+                orderBy,
+                count,
+                skip: page * count,
+                ims: ims.value
+            });
+            if (res) {
+                return [res.projects.nodes, res.projects.totalCount];
+            }
         } else {
-            const res = await client.getFilteredIMSProjectList({
+            const res = await request(getFilteredIMSProjectListQuery, {
                 query: filter,
                 count,
                 filter: { ims: { id: { eq: ims.value } } }
             });
-            return [res.searchIMSProjects, res.searchIMSProjects.length];
+            if (res) {
+                return [res.searchIMSProjects, res.searchIMSProjects.length];
+            }
         }
+        return [[], 0];
     }
 }
 const itemManager: ItemManager<IMSProject, ImsProjectOrderField> = new IMSProjectItemManager() as ItemManager<

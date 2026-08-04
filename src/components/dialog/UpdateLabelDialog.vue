@@ -15,13 +15,24 @@
     </v-dialog>
 </template>
 <script lang="ts" setup>
-import { useClient } from "@/graphql/client";
-import { PropType } from "vue";
+import { graphql } from "@/gql";
+import { requestThrow } from "@/gql/client";
+import type { PropType } from "vue";
 import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
-import LabelDialogContent, { Label } from "./LabelDialogContent.vue";
+import LabelDialogContent, { type Label } from "./LabelDialogContent.vue";
 import { computed } from "vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import { useCachedRef } from "@/util/useCachedRef";
+
+const updateLabelMutation = graphql(`
+    mutation updateLabel($input: UpdateLabelInput!) {
+        updateLabel(input: $input) {
+            label {
+                id
+            }
+        }
+    }
+`);
 
 const updateLabelDialog = computed({
     get: () => model.value != null,
@@ -31,7 +42,6 @@ const updateLabelDialog = computed({
         }
     }
 });
-const client = useClient();
 const [blockWithErrorMessage, submitDisabled] = useBlockingWithErrorMessage();
 
 const emit = defineEmits<{
@@ -54,7 +64,7 @@ const cachedModel = useCachedRef(model);
 
 async function updateLabel(state: Label) {
     const label = await blockWithErrorMessage(async () => {
-        const res = await client.updateLabel({
+        const res = await requestThrow(updateLabelMutation, {
             input: {
                 ...state,
                 id: model.value!.id

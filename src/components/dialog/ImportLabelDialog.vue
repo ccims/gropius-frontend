@@ -23,18 +23,26 @@
     </v-dialog>
 </template>
 <script setup lang="ts">
-import { useClient } from "@/graphql/client";
+import { graphql } from "@/gql";
+import { requestThrow } from "@/gql/client";
 import { onEvent } from "@/util/eventBus";
 import { ref } from "vue";
 import ImportDialogContent from "./ImportDialogContent.vue";
 import ExternalLabelAutocomplete from "../input/ExternalLabelAutocomplete.vue";
 import Label from "../info/Label.vue";
-import { DefaultLabelInfoFragment } from "@/graphql/generated";
-import { useBlockingWithErrorMessage, withErrorMessage } from "@/util/withErrorMessage";
-import { IdObject } from "@/util/types";
+import type { DefaultLabelInfoFragment } from "@/gql/graphql";
+import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
+import type { IdObject } from "@/util/types";
+
+const addLabelToTrackableMutation = graphql(`
+    mutation addLabelToTrackable($trackable: ID!, $label: ID!) {
+        addLabelToTrackable(input: { label: $label, trackable: $trackable }) {
+            __typename
+        }
+    }
+`);
 
 const importLabelDialog = ref(false);
-const client = useClient();
 const [blockWithErrorMessage, submitDisabled] = useBlockingWithErrorMessage();
 
 const emit = defineEmits<{
@@ -54,7 +62,7 @@ onEvent("import-label", () => {
 
 async function importLabel(label: IdObject) {
     blockWithErrorMessage(async () => {
-        await client.addLabelToTrackable({
+        await requestThrow(addLabelToTrackableMutation, {
             label: label.id,
             trackable: props.trackable
         });

@@ -1,6 +1,6 @@
 // Composables
 import { onAnyEnter, onLoginEnter } from "@/router/navigationGuards";
-import { RouteRecordRaw, createRouter, createWebHistory } from "vue-router";
+import { type RouteRecordRaw, createRouter, createWebHistory } from "vue-router";
 
 const routes: RouteRecordRaw[] = [
     {
@@ -64,6 +64,38 @@ const routes: RouteRecordRaw[] = [
                         component: () => import("../views/home/Templates/IssueTemplates.vue")
                     }
                 ]
+            },
+            {
+                path: "admin",
+                name: "admin",
+                component: () => import("../views/RouterOnly.vue"),
+                children: [
+                    {
+                        path: "",
+                        name: "admin-permissions",
+                        component: () => import("../views/admin/Permissions.vue")
+                    },
+                    {
+                        path: "strategy-instances",
+                        name: "admin-strategy-instances",
+                        component: () => import("../views/admin/StrategyInstances.vue")
+                    },
+                    {
+                        path: "auth-clients",
+                        name: "admin-auth-clients",
+                        component: () => import("../views/admin/AuthClients.vue")
+                    },
+                    {
+                        path: "legal-information",
+                        name: "admin-legal-information",
+                        component: () => import("../views/admin/LegalInformation.vue")
+                    },
+                    {
+                        path: "graphiql",
+                        name: "admin-graphiql",
+                        component: () => import("../views/admin/GraphiQL.vue")
+                    }
+                ]
             }
         ]
     },
@@ -99,44 +131,6 @@ const routes: RouteRecordRaw[] = [
                         path: "field-specifications",
                         name: "issue-template-details-field-specifications",
                         component: () => import("../views/home/Templates/issueTemplate/TemplateFieldSpecifications.vue")
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        path: "/",
-        component: () => import("../views/home/Root.vue"),
-        children: [
-            {
-                path: "admin",
-                name: "admin",
-                component: () => import("../views/RouterOnly.vue"),
-                children: [
-                    {
-                        path: "",
-                        name: "admin-permissions",
-                        component: () => import("../views/admin/Permissions.vue")
-                    },
-                    {
-                        path: "strategy-instances",
-                        name: "admin-strategy-instances",
-                        component: () => import("../views/admin/StrategyInstances.vue")
-                    },
-                    {
-                        path: "auth-clients",
-                        name: "admin-auth-clients",
-                        component: () => import("../views/admin/AuthClients.vue")
-                    },
-                    {
-                        path: "legal-information",
-                        name: "admin-legal-information",
-                        component: () => import("../views/admin/LegalInformation.vue")
-                    },
-                    {
-                        path: "graphiql",
-                        name: "admin-graphiql",
-                        component: () => import("../views/admin/GraphiQL.vue")
                     }
                 ]
             }

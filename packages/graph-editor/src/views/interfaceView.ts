@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
-import { VNode } from "snabbdom";
-import { IView, IViewArgs, RenderingContext, svg } from "sprotty";
+import type { VNode } from "snabbdom";
+import { type IView, type IViewArgs, type RenderingContext, svg } from "sprotty";
 import { SInterface } from "../smodel/sInterface.js";
 import { SLabel } from "../smodel/sLabel.js";
 import { LineEngine } from "../line/engine/lineEngine.js";

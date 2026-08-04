@@ -5,7 +5,7 @@
         :sort-fields="issueSortFields"
         :to="(issue: Issue) => issueRoute(issue)"
         :sort-ascending-initially="false"
-        :dependencies="[stateFilterInput]"
+        :dependencies="filterFromDropdown?.dependencyArray ?? []"
         query-param-prefix=""
     >
         <template #item="{ item }">
@@ -14,28 +14,79 @@
         <template #search-append>
             <IssueStateSegmentedButton v-model="issueStateIndices" class="ml-2" />
         </template>
+        <template #additional-filter>
+            <IssueFilterDropdowns
+                :item-manager="itemManager"
+                :state-indices="issueStateIndices"
+                ref="filterDropdowns"
+            />
+        </template>
         <IssueDialogs />
     </PaginatedList>
 </template>
 <script lang="ts" setup>
-import { NodeReturnType, useClient } from "@/graphql/client";
+import { queryNode, request } from "@/gql/client";
+import { graphql } from "@/gql";
 import { computed } from "vue";
-import { RouteLocationRaw, useRoute, useRouter } from "vue-router";
+import { type RouteLocationRaw, useRoute, useRouter } from "vue-router";
 import PaginatedList from "@/components/PaginatedList.vue";
-import { IssueOrder, IssueOrderField, ProjectComponentIssueListItemInfoFragment } from "@/graphql/generated";
+import {
+    type IssueFilterInput,
+    type IssueOrder,
+    IssueOrderField,
+    type ProjectComponentIssueListItemInfoFragment
+} from "@/gql/graphql";
 import IssueListItem from "@/components/IssueListItem.vue";
 import IssueStateSegmentedButton from "@/components/input/IssueStateSegmentedButton.vue";
-import { IdObject } from "@/util/types";
 import IssueDialogs from "@/components/IssueDialogs.vue";
 import { issueSortFields } from "@/util/issueSortFields";
 import { ItemManager } from "@/util/itemManager";
+import IssueFilterDropdowns from "@/components/input/IssueFilterDropdowns.vue";
+import { useTemplateRef } from "vue";
 
-type Project = NodeReturnType<"getComponentIssueList", "Project">;
+const getComponentIssueListQuery = graphql(`
+    query getComponentIssueList(
+        $orderBy: [IssueOrder!]!
+        $count: Int!
+        $skip: Int!
+        $filter: IssueFilterInput
+        $project: ID!
+    ) {
+        node(id: $project) {
+            __typename
+            ... on Project {
+                componentIssues(filter: $filter, orderBy: $orderBy, first: $count, skip: $skip) {
+                    nodes {
+                        ...ProjectComponentIssueListItemInfo
+                    }
+                    totalCount
+                }
+            }
+        }
+    }
+`);
+
+const getComponentFilteredIssueListQuery = graphql(`
+    query getComponentFilteredIssueList($query: String!, $count: Int!, $project: ID!, $filter: IssueFilterInput!) {
+        searchIssues(
+            query: $query
+            first: $count
+            filter: {
+                and: [$filter]
+                trackables: { any: { isComponentAnd: { versions: { any: { partOfProject: $project } } } } }
+            }
+        ) {
+            ...ProjectComponentIssueListItemInfo
+        }
+    }
+`);
+
 type Issue = ProjectComponentIssueListItemInfoFragment;
 
-const client = useClient();
 const router = useRouter();
 const route = useRoute();
+
+const filterFromDropdown = useTemplateRef("filterDropdowns");
 
 const issueStateIndices = computed({
     get: () => {
@@ -53,15 +104,6 @@ const issueStateIndices = computed({
         router.replace({ query: { ...route.query, state } });
     }
 });
-
-const stateFilterInput = computed(() => {
-    if (issueStateIndices.value.length != 1) {
-        return undefined;
-    }
-    const state = issueStateIndices.value[0] == 0;
-    return { isOpen: { eq: state } };
-});
-
 const trackableId = computed(() => route.params.trackable as string);
 
 class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
@@ -71,25 +113,41 @@ class IssueItemManager extends ItemManager<Issue, IssueOrderField> {
         count: number,
         page: number
     ): Promise<[Issue[], number]> {
+        const currentFilter = filterFromDropdown.value;
+        const issueFilter: IssueFilterInput = currentFilter
+            ? {
+                  labels: currentFilter.labelInput,
+                  template: currentFilter.templateInput,
+                  assignments: currentFilter.assignedToInput,
+                  priority: currentFilter.priorityInput,
+                  type: currentFilter.typeInput,
+                  state: currentFilter.stateInput,
+                  affects: currentFilter.affectedInput
+              }
+            : {};
         if (filter == undefined) {
-            const res = await client.getComponentIssueList({
+            const res = await queryNode(getComponentIssueListQuery, "Project", {
                 orderBy,
                 count,
                 skip: page * count,
                 project: trackableId.value,
-                filter: { state: stateFilterInput.value }
+                filter: issueFilter
             });
-            const issues = (res.node as Project).componentIssues;
-            return [issues.nodes, issues.totalCount];
+            if (res) {
+                return [res.componentIssues.nodes, res.componentIssues.totalCount];
+            }
         } else {
-            const res = await client.getComponentFilteredIssueList({
+            const res = await request(getComponentFilteredIssueListQuery, {
                 query: filter,
                 count,
                 project: trackableId.value,
-                filter: { state: stateFilterInput.value }
+                filter: issueFilter
             });
-            return [res.searchIssues, res.searchIssues.length];
+            if (res) {
+                return [res.searchIssues, res.searchIssues.length];
+            }
         }
+        return [[], 0];
     }
 }
 const itemManager: ItemManager<Issue, IssueOrderField> = new IssueItemManager();

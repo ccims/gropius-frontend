@@ -5,7 +5,7 @@
     </v-btn-toggle>
 </template>
 <script setup lang="ts">
-import { PropType } from "vue";
+import type { PropType } from "vue";
 
 const model = defineModel({
     type: Array as PropType<number[]>,

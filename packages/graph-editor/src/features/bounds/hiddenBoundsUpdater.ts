@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { BoundsAware, SModelElementImpl, HiddenBoundsUpdater as SprottyHiddenBoundsUpdater } from "sprotty";
+import { type BoundsAware, SModelElementImpl, HiddenBoundsUpdater as SprottyHiddenBoundsUpdater } from "sprotty";
 import { Bounds } from "sprotty-protocol";
 
 @injectable()

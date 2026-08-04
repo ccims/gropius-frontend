@@ -16,17 +16,28 @@
 <script lang="ts" setup>
 import DetailCompartment from "@/components/DetailCompartment.vue";
 import ConfirmationDialog from "@/components/dialog/ConfirmationDialog.vue";
-import { useClient } from "@/graphql/client";
 import { computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { graphql } from "@/gql";
+import { request } from "@/gql/client";
 
-const client = useClient();
+const deleteComponentVersionMutation = graphql(`
+    mutation deleteComponentVersion($id: ID!) {
+        deleteComponentVersion(input: { id: $id }) {
+            __typename
+        }
+    }
+`);
+
 const route = useRoute();
 const router = useRouter();
 const componentVersionId = computed(() => route.params.version as string);
 
 async function deleteComponentVersion() {
-    await client.deleteComponentVersion({ id: componentVersionId.value });
+    const res = await request(deleteComponentVersionMutation, { id: componentVersionId.value });
+    if (!res) {
+        return;
+    }
     router.push({ name: "component-versions", params: { trackable: route.params.trackable } });
 }
 </script>

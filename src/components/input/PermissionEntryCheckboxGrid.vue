@@ -11,7 +11,7 @@
 </template>
 <script setup lang="ts" generic="T extends string">
 import { enumToRegularCase } from "@/util/casingTransformers";
-import { PropType } from "vue";
+import type { PropType } from "vue";
 
 defineProps({
     permissionEntries: {

@@ -22,8 +22,8 @@
     </span>
 </template>
 <script setup lang="ts">
-import { DefaultUserInfoFragment } from "@/graphql/generated";
-import { PropType } from "vue";
+import type { DefaultUserInfoFragment } from "@/gql/graphql";
+import type { PropType } from "vue";
 
 defineProps({
     user: {

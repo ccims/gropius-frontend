@@ -35,7 +35,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import { MdEditor, MdPreview, ToolbarNames } from "md-editor-v3";
+import { MdEditor, MdPreview, type ToolbarNames } from "md-editor-v3";
 import { computed, nextTick, ref, watch } from "vue";
 import "@github/task-lists-element";
 import { useTheme } from "vuetify";

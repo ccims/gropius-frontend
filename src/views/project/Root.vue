@@ -1,30 +1,51 @@
 <template>
-    <BaseLayout
+    <BaseLayoutWithError
         :title-segments="titleSegments"
         :tabs="tabs"
         :right-sidebar-items="rightSidebarItems"
         :left-sidebar-items="leftSidebarItems"
+        :data-present="!!project"
+        :evaluating="evaluating"
     >
         <template #content>
             <router-view />
         </template>
-    </BaseLayout>
+    </BaseLayoutWithError>
 </template>
 
 <script lang="ts" setup>
-import BaseLayout from "@/components/BaseLayout.vue";
-import { NodeReturnType, useClient } from "@/graphql/client";
+import { queryNodeThrow } from "@/gql/client";
+import { graphql } from "@/gql";
 import { computedAsync } from "@vueuse/core";
-import { computed, provide, ref } from "vue";
-import { RouteLocationRaw, useRoute } from "vue-router";
-import { withErrorMessage } from "@/util/withErrorMessage";
+import { computed, inject, provide, ref, shallowRef } from "vue";
+import { type RouteLocationRaw, useRoute } from "vue-router";
 import { eventBusKey, trackableKey } from "@/util/keys";
-import { inject } from "vue";
 import { onEvent } from "@/util/eventBus";
+import BaseLayoutWithError from "@/components/BaseLayoutWithError.vue";
+import { withErrorMessage } from "@/util/withErrorMessage";
 
-type Project = NodeReturnType<"getProject", "Project">;
+const getProjectQuery = graphql(`
+    query getProject($id: ID!) {
+        node(id: $id) {
+            __typename
+            id
+            ... on Project {
+                __typename
+                name
+                description
+                ...OpenIssueCount
+                createIssues: hasPermission(permission: CREATE_ISSUES)
+                manageLabels: hasPermission(permission: MANAGE_LABELS)
+                manageComponents: hasPermission(permission: MANAGE_COMPONENTS)
+                manageIssues: hasPermission(permission: MANAGE_ISSUES)
+                manageIMS: hasPermission(permission: MANAGE_IMS)
+                manageViews: hasPermission(permission: MANAGE_VIEWS)
+                admin: hasPermission(permission: ADMIN)
+            }
+        }
+    }
+`);
 
-const client = useClient();
 const route = useRoute();
 const projectId = computed(() => route.params.trackable as string);
 const eventBus = inject(eventBusKey);
@@ -33,18 +54,20 @@ const titleSegmentDependency = ref(0);
 onEvent("title-segment-changed", () => {
     titleSegmentDependency.value++;
 });
-
+const evaluating = shallowRef(false);
 const project = computedAsync(
     async () => {
         if (!projectId.value) {
             return null;
         }
         titleSegmentDependency.value;
-        const res = await withErrorMessage(() => client.getProject({ id: projectId.value }), "Error loading project");
-        return res.node as Project;
+        return (await withErrorMessage(
+            () => queryNodeThrow(getProjectQuery, "Project", { id: projectId.value }),
+            "Error loading project"
+        ))!;
     },
     null,
-    { shallow: false }
+    { shallow: false, evaluating }
 );
 
 provide(trackableKey, project);

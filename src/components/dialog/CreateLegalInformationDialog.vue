@@ -13,15 +13,25 @@
     </v-dialog>
 </template>
 <script lang="ts" setup>
+import { graphql } from "@/gql";
+import { requestThrow } from "@/gql/client";
 import { onEvent } from "@/util/eventBus";
-import { useClient } from "@/graphql/client";
 import { ref } from "vue";
 import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
-import LegalInformationDialogContent, { LegalInformation } from "./LegalInformationDialogContent.vue";
-import { DefaultLegalInformationInfoFragment } from "@/graphql/generated";
+import LegalInformationDialogContent, { type LegalInformation } from "./LegalInformationDialogContent.vue";
+import type { DefaultLegalInformationInfoFragment } from "@/gql/graphql";
+
+const createLegalInformationMutation = graphql(`
+    mutation createLegalInformation($input: CreateLegalInformationInput!) {
+        createLegalInformation(input: $input) {
+            legalInformation {
+                ...DefaultLegalInformationInfo
+            }
+        }
+    }
+`);
 
 const createLegalInformationDialog = ref(false);
-const client = useClient();
 const [blockWithErrorMessage, submitDisabled] = useBlockingWithErrorMessage();
 
 const emit = defineEmits<{
@@ -40,7 +50,7 @@ onEvent("create-legal-information", () => {
 
 async function createLegalInformation(state: LegalInformation) {
     const legalInformation = await blockWithErrorMessage(async () => {
-        const res = await client.createLegalInformation({
+        const res = await requestThrow(createLegalInformationMutation, {
             input: {
                 ...state
             }

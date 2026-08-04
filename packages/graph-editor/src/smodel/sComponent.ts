@@ -1,7 +1,7 @@
 import { Point } from "sprotty-protocol";
-import { LinearAnimatable } from "../features/animation/model.js";
+import type { LinearAnimatable } from "../features/animation/model.js";
 import { Component } from "../model/component.js";
-import { Shape } from "../shape/shape.js";
+import type { Shape } from "../shape/shape.js";
 import { ShapeGenerator } from "../shape/shapeGenerator.js";
 import { SIssueAffected } from "./sIssueAffected.js";
 

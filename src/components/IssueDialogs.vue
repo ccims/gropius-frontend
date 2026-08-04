@@ -3,9 +3,9 @@
     <ImportIssueDialog :trackable="trackableId" @imported-issue="(issue: IdObject) => selectIssue(issue)" />
 </template>
 <script lang="ts" setup>
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import { computed } from "vue";
-import { useRouter, useRoute, RouteLocationRaw } from "vue-router";
+import { useRouter, useRoute, type RouteLocationRaw } from "vue-router";
 import CreateIssueDialog from "./dialog/CreateIssueDialog.vue";
 import ImportIssueDialog from "./dialog/ImportIssueDialog.vue";
 

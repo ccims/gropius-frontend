@@ -41,16 +41,47 @@
 import DetailCompartment from "@/components/DetailCompartment.vue";
 import InputWrapper from "@/components/input/InputWrapper.vue";
 import TemplatedFieldsDetailCompartment from "@/components/TemplatedFieldsDetailCompartment.vue";
-import { NodeReturnType, useClient } from "@/graphql/client";
-import { UpdateInterfaceSpecificationVersionInput } from "@/graphql/generated";
+import type { UpdateInterfaceSpecificationVersionInput } from "@/gql/graphql";
 import { eventBusKey, trackableKey } from "@/util/keys";
-import { withErrorMessage } from "@/util/withErrorMessage";
 import { computedAsync } from "@vueuse/core";
-import { inject } from "vue";
-import { computed } from "vue";
+import { computed, inject } from "vue";
 import { useRoute } from "vue-router";
+import { graphql } from "@/gql";
+import { queryNodeThrow, requestThrow } from "@/gql/client";
+import { withErrorMessage } from "@/util/withErrorMessage";
 
-const client = useClient();
+const getInterfaceSpecificationVersionGeneralDetailsQuery = graphql(`
+    query getInterfaceSpecificationVersionGeneralDetails($id: ID!) {
+        node(id: $id) {
+            id
+            ... on InterfaceSpecificationVersion {
+                version
+                tags
+                templatedFields {
+                    name
+                    value
+                }
+                template {
+                    templateFieldSpecifications {
+                        name
+                        value
+                    }
+                }
+            }
+        }
+    }
+`);
+
+const updateInterfaceSpecificationVersionMutation = graphql(`
+    mutation updateInterfaceSpecificationVersion($input: UpdateInterfaceSpecificationVersionInput!) {
+        updateInterfaceSpecificationVersion(input: $input) {
+            interfaceSpecificationVersion {
+                id
+            }
+        }
+    }
+`);
+
 const route = useRoute();
 const eventBus = inject(eventBusKey);
 const interfaceSpecificationVersionId = computed(() => route.params.interfaceSpecificationVersion as string);
@@ -62,14 +93,14 @@ const interfaceSpecificationVersion = computedAsync(
         if (!interfaceSpecificationVersionId.value) {
             return null;
         }
-        const res = await withErrorMessage(
-            () => client.getInterfaceSpecificationVersionGeneralDetails({ id: interfaceSpecificationVersionId.value }),
+
+        return await withErrorMessage(
+            () =>
+                queryNodeThrow(getInterfaceSpecificationVersionGeneralDetailsQuery, "InterfaceSpecificationVersion", {
+                    id: interfaceSpecificationVersionId.value
+                }),
             "Error loading interfaceSpecificationVersion details"
         );
-        return res.node as NodeReturnType<
-            "getInterfaceSpecificationVersionGeneralDetails",
-            "InterfaceSpecificationVersion"
-        >;
     },
     null,
     { shallow: false }
@@ -78,7 +109,7 @@ const interfaceSpecificationVersion = computedAsync(
 async function save(input: Omit<UpdateInterfaceSpecificationVersionInput, "id">) {
     await withErrorMessage(
         () =>
-            client.updateInterfaceSpecificationVersion({
+            requestThrow(updateInterfaceSpecificationVersionMutation, {
                 input: {
                     id: interfaceSpecificationVersionId.value,
                     ...input

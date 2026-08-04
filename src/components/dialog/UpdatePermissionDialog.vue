@@ -29,15 +29,15 @@
     </v-dialog>
 </template>
 <script lang="ts" setup generic="T extends string">
-import { PropType, Ref, ref, watch } from "vue";
+import { type PropType, type Ref, ref, watch } from "vue";
 import { useBlockingWithErrorMessage, withErrorMessage } from "@/util/withErrorMessage";
 import { computed } from "vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import { fieldConfig } from "@/util/vuetifyFormConfig";
 import { toTypedSchema } from "@vee-validate/yup";
 import { useForm } from "vee-validate";
 import * as yup from "yup";
-import { UpdatePermissionFunction } from "../PermissionList.vue";
+import type { UpdatePermissionFunction } from "../PermissionList.vue";
 import PermissionEntryCheckboxGrid from "../input/PermissionEntryCheckboxGrid.vue";
 import ConfirmationDialog from "./ConfirmationDialog.vue";
 

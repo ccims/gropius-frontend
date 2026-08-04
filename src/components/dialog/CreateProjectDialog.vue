@@ -34,19 +34,29 @@
     </v-dialog>
 </template>
 <script setup lang="ts">
+import { graphql } from "@/gql";
+import { request, requestThrow } from "@/gql/client";
 import { ref } from "vue";
 import { onEvent } from "@/util/eventBus";
 import * as yup from "yup";
 import { useForm, useIsFormDirty } from "vee-validate";
 import { fieldConfig } from "@/util/vuetifyFormConfig";
 import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
-import { useClient } from "@/graphql/client";
 import { toTypedSchema } from "@vee-validate/yup";
 import ConfirmationDialog from "./ConfirmationDialog.vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
+
+const createProjectMutation = graphql(`
+    mutation createProject($input: CreateProjectInput!) {
+        createProject(input: $input) {
+            project {
+                id
+            }
+        }
+    }
+`);
 
 const createProjectDialog = ref(false);
-const client = useClient();
 const [blockWithErrorMessage, submitDisabled] = useBlockingWithErrorMessage();
 
 const emit = defineEmits<{
@@ -77,7 +87,7 @@ onEvent("create-project", () => {
 
 const createProject = handleSubmit(async (state) => {
     const project = await blockWithErrorMessage(async () => {
-        const res = await client.createProject({
+        const res = await requestThrow(createProjectMutation, {
             input: {
                 ...state,
                 description: state.description ?? ""

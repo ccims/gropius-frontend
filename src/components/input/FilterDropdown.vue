@@ -48,9 +48,9 @@
     </v-menu>
 </template>
 <script setup lang="ts" generic="T, S extends string, I extends IdObject & { name: string; description?: string }">
-import { computed, PropType, ref, watch } from "vue";
+import { computed, type PropType, ref, watch } from "vue";
 import { ItemManager } from "@/util/itemManager";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 
 const props = defineProps({
     label: {

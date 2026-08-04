@@ -13,25 +13,25 @@
         :closable-chips="mode == 'model-multiple'"
         @update:focused="resetFromFocus"
     >
-        <template #item="{ props, item }">
-            <v-list-item v-if="item.value == 'new'" v-bind="props" title="Create new" append-icon="mdi-plus" />
-            <div v-else-if="(item.raw as { hidden?: boolean }).hidden" class="placeholder-item" />
+        <template #item="{ props, internalItem }">
+            <v-list-item v-if="internalItem.value == 'new'" v-bind="props" title="Create new" append-icon="mdi-plus" />
+            <div v-else-if="(internalItem.raw as { hidden?: boolean }).hidden" class="placeholder-item" />
             <slot
-                v-else-if="!contextSearchMode && item.value != context?.id"
+                v-else-if="!contextSearchMode && internalItem.value != context?.id"
                 name="item"
                 :props="props"
-                :item="<ListItem<T>>item"
+                :item="<ListItem<T>>internalItem"
             ></slot>
-            <slot v-else name="context-item" :props="props" :item="<ListItem<C>>item"></slot>
+            <slot v-else name="context-item" :props="props" :item="<ListItem<C>>internalItem"></slot>
         </template>
-        <template v-if="$slots.chip" #chip="{ props, item }">
-            <slot name="chip" v-bind="props" :item="<ListItem<T | C>>item" />
+        <template v-if="$slots.chip" #chip="{ props, internalItem }">
+            <slot name="chip" v-bind="props" :item="<ListItem<T | C>>internalItem" />
         </template>
     </v-autocomplete>
 </template>
 <script setup lang="ts" generic="T extends IdObject, C extends IdObject">
-import { IdObject } from "@/util/types";
-import { onMounted, Ref, watch, ref, PropType, computed, nextTick } from "vue";
+import type { IdObject } from "@/util/types";
+import { onMounted, type Ref, watch, ref, type PropType, computed, nextTick } from "vue";
 
 export interface ListItem<T> {
     raw: T;

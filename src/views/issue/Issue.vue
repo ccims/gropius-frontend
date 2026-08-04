@@ -430,7 +430,6 @@
     </div>
 </template>
 <script setup lang="ts">
-import { NodeReturnType, useClient } from "@/graphql/client";
 import { computed, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { computedAsync } from "@vueuse/core";
@@ -439,18 +438,17 @@ import IssueIcon from "@/components/IssueIcon.vue";
 import User from "@/components/info/User.vue";
 import RelativeTimeWrapper from "@/components/RelativeTimeWrapper.vue";
 import { provide } from "vue";
-import { useBlockingWithErrorMessage, withErrorMessage } from "@/util/withErrorMessage";
 import TimelineBreak from "@/components/timeline/TimelineBreak.vue";
 import { useAppStore } from "@/store/app";
-import Comment, { Comment as CommentType } from "@/components/timeline/Comment.vue";
-import { TimelineItemType } from "@/components/timeline/TimelineItemBase.vue";
+import Comment, { type Comment as CommentType } from "@/components/timeline/Comment.vue";
+import type { TimelineItemType } from "@/components/timeline/TimelineItemBase.vue";
 import { nextTick } from "vue";
 import EditableCompartment from "@/components/EditableCompartment.vue";
 import Label from "@/components/info/Label.vue";
 import IssueState from "@/components/info/IssueState.vue";
 import IssueType from "@/components/info/IssueType.vue";
 import IssuePriority from "@/components/info/IssuePriority.vue";
-import {
+import type {
     AssignmentTimelineInfoFragment,
     DefaultAffectedByIssueInfoFragment,
     DefaultIssueInfoFragment,
@@ -459,7 +457,7 @@ import {
     DefaultUserInfoFragment,
     GropiusUserFilterInput,
     OutgoingRelationTimelineInfoFragment
-} from "@/graphql/generated";
+} from "@/gql/graphql";
 import { eventBusKey, issueKey, trackableKey } from "@/util/keys";
 import IssueTypeAutocomplete from "@/components/input/IssueTypeAutocomplete.vue";
 import IssueStateAutocomplete from "@/components/input/IssueStateAutocomplete.vue";
@@ -480,10 +478,261 @@ import IssueDialogs from "@/components/IssueDialogs.vue";
 import { affectedByIssueDescription, affectedByIssueIcon } from "@/util/affectedByIssueUtils";
 import { affectedByIssueName } from "@/util/affectedByIssueUtils";
 import CreateLabelDialog from "@/components/dialog/CreateLabelDialog.vue";
+import { graphql } from "@/gql";
+import { request, queryNodeThrow, requestThrow } from "@/gql/client";
+import { useBlockingWithErrorMessage, withErrorMessage } from "@/util/withErrorMessage";
 
-export type Issue = NodeReturnType<"getIssue", "Issue">;
+const getIssueQuery = graphql(`
+    query getIssue($id: ID!) {
+        node(id: $id) {
+            __typename
+            ... on Issue {
+                id
+                title
+                createdBy {
+                    ...DefaultUserInfo
+                }
+                createdAt
+                lastUpdatedAt
+                timelineItems(orderBy: [{ field: CREATED_AT }]) {
+                    nodes {
+                        ...DefaultTimelineItemInfo
+                    }
+                }
+                artefacts {
+                    nodes {
+                        ...ArtefactTimelineInfo
+                    }
+                }
+                outgoingRelations {
+                    nodes {
+                        id
+                        ...OutgoingRelationTimelineInfo
+                    }
+                    totalCount
+                }
+                incomingRelations {
+                    nodes {
+                        id
+                        ...IncomingRelationTimelineInfo
+                    }
+                    totalCount
+                }
+                labels {
+                    nodes {
+                        ...DefaultLabelInfo
+                    }
+                }
+                affects {
+                    nodes {
+                        ...AffectedByIssueTimelineInfo
+                    }
+                }
+                assignments {
+                    nodes {
+                        ...AssignmentTimelineInfo
+                    }
+                }
+                type {
+                    ...DefaultIssueTypeInfo
+                }
+                state {
+                    ...DefaultIssueStateInfo
+                }
+                priority {
+                    ...DefaultIssuePriorityInfo
+                }
+                trackables {
+                    nodes {
+                        ...DefaultTrackableInfo
+                    }
+                }
+                templatedFields {
+                    name
+                    value
+                }
+                template {
+                    ...DefaultIssueTemplateInfo
+                }
+                manageIssues: hasPermission(permission: MANAGE_ISSUES)
+                comment: hasPermission(permission: COMMENT)
+                moderator: hasPermission(permission: MODERATOR)
+                exportIssues: hasPermission(permission: EXPORT_ISSUES)
+            }
+        }
+    }
+`);
 
-const client = useClient();
+const changeIssueTypeMutation = graphql(`
+    mutation changeIssueType($issue: ID!, $type: ID!) {
+        changeIssueType(input: { issue: $issue, type: $type }) {
+            typeChangedEvent {
+                ...TypeChangedEventTimelineInfo
+            }
+        }
+    }
+`);
+
+const changeIssueStateMutation = graphql(`
+    mutation changeIssueState($issue: ID!, $state: ID!) {
+        changeIssueState(input: { issue: $issue, state: $state }) {
+            stateChangedEvent {
+                ...StateChangedEventTimelineInfo
+            }
+        }
+    }
+`);
+
+const changeIssuePriorityMutation = graphql(`
+    mutation changeIssuePriority($issue: ID!, $priority: ID!) {
+        changeIssuePriority(input: { issue: $issue, priority: $priority }) {
+            priorityChangedEvent {
+                ...PriorityChangedEventTimelineInfo
+            }
+        }
+    }
+`);
+
+const addLabelToIssueMutation = graphql(`
+    mutation addLabelToIssue($issue: ID!, $label: ID!) {
+        addLabelToIssue(input: { issue: $issue, label: $label }) {
+            addedLabelEvent {
+                ...AddedLabelEventTimelineInfo
+            }
+        }
+    }
+`);
+
+const removeLabelFromIssueMutation = graphql(`
+    mutation removeLabelFromIssue($issue: ID!, $label: ID!) {
+        removeLabelFromIssue(input: { issue: $issue, label: $label }) {
+            removedLabelEvent {
+                ...RemovedLabelEventTimelineInfo
+            }
+        }
+    }
+`);
+
+const removeAssignmentMutation = graphql(`
+    mutation removeAssignment($id: ID!) {
+        removeAssignment(input: { assignment: $id }) {
+            removedAssignmentEvent {
+                ...RemovedAssignmentEventTimelineInfo
+            }
+        }
+    }
+`);
+
+const changeAssignmentTypeMutation = graphql(`
+    mutation changeAssignmentType($assignment: ID!, $type: ID) {
+        changeAssignmentType(input: { assignment: $assignment, type: $type }) {
+            assignmentTypeChangedEvent {
+                ...AssignmentTypeChangedEventTimelineInfo
+            }
+        }
+    }
+`);
+
+const createAssignmentMutation = graphql(`
+    mutation createAssignment($issue: ID!, $user: ID!) {
+        createAssignment(input: { issue: $issue, user: $user }) {
+            assignment {
+                ...AssignmentTimelineInfo
+            }
+        }
+    }
+`);
+
+const removeIssueRelationMutation = graphql(`
+    mutation removeIssueRelation($id: ID!) {
+        removeIssueRelation(input: { issueRelation: $id }) {
+            removedOutgoingRelationEvent {
+                ...RemovedOutgoingRelationEventTimelineInfo
+            }
+        }
+    }
+`);
+
+const changeIssueRelationTypeMutation = graphql(`
+    mutation changeIssueRelationType($issueRelation: ID!, $type: ID) {
+        changeIssueRelationType(input: { issueRelation: $issueRelation, type: $type }) {
+            outgoingRelationTypeChangedEvent {
+                ...OutgoingRelationTypeChangedEventTimelineInfo
+            }
+        }
+    }
+`);
+
+const createIssueRelationMutation = graphql(`
+    mutation createIssueRelation($issue: ID!, $relatedIssue: ID!) {
+        createIssueRelation(input: { issue: $issue, relatedIssue: $relatedIssue }) {
+            issueRelation {
+                ...IssueRelationTimelineInfo
+            }
+        }
+    }
+`);
+
+const changeIssueTitleMutation = graphql(`
+    mutation changeIssueTitle($id: ID!, $title: String!) {
+        changeIssueTitle(input: { issue: $id, title: $title }) {
+            titleChangedEvent {
+                ...TitleChangedEventTimelineInfo
+            }
+        }
+    }
+`);
+
+const addAffectedEntityToIssueMutation = graphql(`
+    mutation addAffectedEntityToIssue($issue: ID!, $affectedEntity: ID!) {
+        addAffectedEntityToIssue(input: { issue: $issue, affectedEntity: $affectedEntity }) {
+            addedAffectedEntityEvent {
+                ...AddedAffectedEntityEventTimelineInfo
+            }
+        }
+    }
+`);
+
+const removeAffectedEntityFromIssueMutation = graphql(`
+    mutation removeAffectedEntityFromIssue($issue: ID!, $affectedEntity: ID!) {
+        removeAffectedEntityFromIssue(input: { issue: $issue, affectedEntity: $affectedEntity }) {
+            removedAffectedEntityEvent {
+                ...RemovedAffectedEntityEventTimelineInfo
+            }
+        }
+    }
+`);
+
+const changeIssueTemplatedFieldMutation = graphql(`
+    mutation changeIssueTemplatedField($input: ChangeIssueTemplatedFieldInput!) {
+        changeIssueTemplatedField(input: $input) {
+            templatedFieldChangedEvent {
+                ...TemplatedFieldChangedEventTimelineInfo
+            }
+        }
+    }
+`);
+
+const addIssueToTrackableMutation = graphql(`
+    mutation addIssueToTrackable($issue: ID!, $trackable: ID!) {
+        addIssueToTrackable(input: { issue: $issue, trackable: $trackable }) {
+            addedToTrackableEvent {
+                ...AddedToTrackableEventTimelineInfo
+            }
+        }
+    }
+`);
+
+const removeIssueFromTrackableMutation = graphql(`
+    mutation removeIssueFromTrackable($issue: ID!, $trackable: ID!) {
+        removeIssueFromTrackable(input: { issue: $issue, trackable: $trackable }) {
+            removedFromTrackableEvent {
+                ...RemovedFromTrackableEventTimelineInfo
+            }
+        }
+    }
+`);
+
 const route = useRoute();
 const store = useAppStore();
 const issueId = computed(() => route.params.issue as string);
@@ -500,11 +749,10 @@ const issue = computedAsync(
             return null;
         }
         const dependency = issueReloadDependency.value;
-        const res = await withErrorMessage(
-            () => client.getIssue({ id: issueId.value }),
+        const issue = await withErrorMessage(
+            () => queryNodeThrow(getIssueQuery, "Issue", { id: issueId.value }),
             `Error loading issue: (${dependency})`
         );
-        const issue = res.node as Issue;
         const timeline = issue.timelineItems.nodes;
         const body = timeline.find((item) => item.__typename == "Body")!;
         issue.timelineItems.nodes = [body, ...timeline.filter((item) => item.__typename != "Body")];
@@ -604,7 +852,7 @@ async function updateIssueType(type: string | null) {
         return;
     }
     const event = await withErrorMessage(async () => {
-        const res = await client.changeIssueType({ issue: issueId.value, type });
+        const res = await requestThrow(changeIssueTypeMutation, { issue: issueId.value, type });
         return res.changeIssueType.typeChangedEvent;
     }, "Error updating issue type");
     addTimelineItem(event);
@@ -620,7 +868,7 @@ async function updateIssueState(state: string | null) {
         return;
     }
     const event = await withErrorMessage(async () => {
-        const res = await client.changeIssueState({ issue: issueId.value, state });
+        const res = await requestThrow(changeIssueStateMutation, { issue: issueId.value, state });
         return res.changeIssueState.stateChangedEvent;
     }, "Error updating issue state");
     addTimelineItem(event);
@@ -636,7 +884,7 @@ async function updateIssuePriority(priority: string | null) {
         return;
     }
     const event = await withErrorMessage(async () => {
-        const res = await client.changeIssuePriority({ issue: issueId.value, priority: priority });
+        const res = await requestThrow(changeIssuePriorityMutation, { issue: issueId.value, priority: priority });
         return res.changeIssuePriority.priorityChangedEvent;
     }, "Error updating issue priority");
     addTimelineItem(event);
@@ -650,7 +898,7 @@ async function updateIssuePriority(priority: string | null) {
 async function addLabel(label: DefaultLabelInfoFragment) {
     const labelId = label.id;
     const event = await withErrorMessage(async () => {
-        const res = await client.addLabelToIssue({ issue: issueId.value, label: labelId });
+        const res = await requestThrow(addLabelToIssueMutation, { issue: issueId.value, label: labelId });
         return res.addLabelToIssue.addedLabelEvent;
     }, "Error adding label to issue");
     addTimelineItem(event);
@@ -663,7 +911,7 @@ async function addLabel(label: DefaultLabelInfoFragment) {
 
 async function removeLabel(labelId: string) {
     const event = await withErrorMessage(async () => {
-        const res = await client.removeLabelFromIssue({ issue: issueId.value, label: labelId });
+        const res = await requestThrow(removeLabelFromIssueMutation, { issue: issueId.value, label: labelId });
         return res.removeLabelFromIssue.removedLabelEvent;
     }, "Error removing label from issue");
     addTimelineItem(event);
@@ -681,10 +929,11 @@ function createLabel(name: string) {
 const editedAssignmentTypes = ref<Record<string, boolean>>({});
 
 async function removeAssignment(relationId: string) {
-    const event = await withErrorMessage(async () => {
-        const res = await client.removeAssignment({ id: relationId });
-        return res.removeAssignment.removedAssignmentEvent;
-    }, "Error removing assignment from issue");
+    const res = await request(removeAssignmentMutation, { id: relationId });
+    if (!res) {
+        return;
+    }
+    const event = res.removeAssignment.removedAssignmentEvent;
     addTimelineItem(event);
     const index = assignments.value.findIndex((relation) => relation.id == relationId);
     if (index != -1) {
@@ -697,7 +946,7 @@ async function updateAssignmentType(assignment: AssignmentTimelineInfoFragment, 
         return;
     }
     const event = await withErrorMessage(async () => {
-        const res = await client.changeAssignmentType({ assignment: assignment.id, type });
+        const res = await requestThrow(changeAssignmentTypeMutation, { assignment: assignment.id, type });
         return res.changeAssignmentType.assignmentTypeChangedEvent;
     }, "Error updating assignment type");
     addTimelineItem(event);
@@ -711,7 +960,7 @@ async function updateAssignmentType(assignment: AssignmentTimelineInfoFragment, 
 
 async function removeAssignmentType(assignment: AssignmentTimelineInfoFragment) {
     const event = await withErrorMessage(async () => {
-        const res = await client.changeAssignmentType({ assignment: assignment.id, type: null });
+        const res = await requestThrow(changeAssignmentTypeMutation, { assignment: assignment.id, type: null });
         return res.changeAssignmentType.assignmentTypeChangedEvent;
     }, "Error updating assignment type");
     addTimelineItem(event);
@@ -725,7 +974,7 @@ const assignmentUserFilter = computed(
 
 async function assignUser(user: DefaultUserInfoFragment) {
     const event = await withErrorMessage(async () => {
-        const res = await client.createAssignment({ issue: issueId.value, user: user.id });
+        const res = await requestThrow(createAssignmentMutation, { issue: issueId.value, user: user.id });
         return res.createAssignment.assignment;
     }, "Error creating assignment");
     addTimelineItem(event);
@@ -741,7 +990,7 @@ const editedRelationTypes = ref<Record<string, boolean>>({});
 
 async function removeOutgoingRelation(relationId: string) {
     const event = await withErrorMessage(async () => {
-        const res = await client.removeIssueRelation({ id: relationId });
+        const res = await requestThrow(removeIssueRelationMutation, { id: relationId });
         return res.removeIssueRelation.removedOutgoingRelationEvent;
     }, "Error removing outgoing relation from issue");
     addTimelineItem(event);
@@ -756,7 +1005,7 @@ async function updateRelationType(relation: OutgoingRelationTimelineInfoFragment
         return;
     }
     const event = await withErrorMessage(async () => {
-        const res = await client.changeIssueRelationType({ issueRelation: relation.id, type });
+        const res = await requestThrow(changeIssueRelationTypeMutation, { issueRelation: relation.id, type });
         return res.changeIssueRelationType.outgoingRelationTypeChangedEvent;
     }, "Error updating issue relation type");
     addTimelineItem(event);
@@ -770,7 +1019,7 @@ async function updateRelationType(relation: OutgoingRelationTimelineInfoFragment
 
 async function removeRelationType(relation: OutgoingRelationTimelineInfoFragment) {
     const event = await withErrorMessage(async () => {
-        const res = await client.changeIssueRelationType({ issueRelation: relation.id, type: null });
+        const res = await requestThrow(changeIssueRelationTypeMutation, { issueRelation: relation.id, type: null });
         return res.changeIssueRelationType.outgoingRelationTypeChangedEvent;
     }, "Error updating issue relation type");
     addTimelineItem(event);
@@ -780,7 +1029,10 @@ async function removeRelationType(relation: OutgoingRelationTimelineInfoFragment
 
 async function addOutgoingRelation(relatedIssue: DefaultIssueInfoFragment) {
     const event = await withErrorMessage(async () => {
-        const res = await client.createIssueRelation({ issue: issueId.value, relatedIssue: relatedIssue.id });
+        const res = await requestThrow(createIssueRelationMutation, {
+            issue: issueId.value,
+            relatedIssue: relatedIssue.id
+        });
         return res.createIssueRelation.issueRelation;
     }, "Error creating issue relation");
     addTimelineItem(event);
@@ -807,7 +1059,7 @@ function cancelEditTitle() {
 
 async function saveTitle() {
     const event = await titleBlockWithErrorMessage(async () => {
-        const res = await client.changeIssueTitle({ id: issueId.value, title: editTitleText.value });
+        const res = await requestThrow(changeIssueTitleMutation, { id: issueId.value, title: editTitleText.value });
         return res.changeIssueTitle.titleChangedEvent;
     }, "Error updating issue title");
     addTimelineItem(event);
@@ -848,7 +1100,10 @@ const groupedAffectedEntities = computed(() => {
 async function addAffectedEntity(affectedEntity: DefaultAffectedByIssueInfoFragment) {
     const affectedEntityId = affectedEntity.id;
     const event = await withErrorMessage(async () => {
-        const res = await client.addAffectedEntityToIssue({ issue: issueId.value, affectedEntity: affectedEntityId });
+        const res = await requestThrow(addAffectedEntityToIssueMutation, {
+            issue: issueId.value,
+            affectedEntity: affectedEntityId
+        });
         return res.addAffectedEntityToIssue.addedAffectedEntityEvent;
     }, "Error adding affectedentity to issue");
     addTimelineItem(event);
@@ -861,7 +1116,7 @@ async function addAffectedEntity(affectedEntity: DefaultAffectedByIssueInfoFragm
 
 async function removeAffectedEntity(affectedEntityId: string) {
     const event = await withErrorMessage(async () => {
-        const res = await client.removeAffectedEntityFromIssue({
+        const res = await requestThrow(removeAffectedEntityFromIssueMutation, {
             issue: issueId.value,
             affectedEntity: affectedEntityId
         });
@@ -891,7 +1146,9 @@ const templatedFields = computed(() => {
 
 async function updateTemplatedField(name: string, value: any) {
     const event = await withErrorMessage(async () => {
-        const res = await client.changeIssueTemplatedField({ input: { issue: issueId.value, name, value } });
+        const res = await requestThrow(changeIssueTemplatedFieldMutation, {
+            input: { issue: issueId.value, name, value }
+        });
         return res.changeIssueTemplatedField.templatedFieldChangedEvent;
     }, "Error updating templated field");
     addTimelineItem(event);
@@ -907,7 +1164,7 @@ async function updateTemplatedField(name: string, value: any) {
 async function addToTrackable(trackable: DefaultTrackableInfoFragment) {
     const trackableId = trackable.id;
     const event = await withErrorMessage(async () => {
-        const res = await client.addIssueToTrackable({ issue: issueId.value, trackable: trackableId });
+        const res = await requestThrow(addIssueToTrackableMutation, { issue: issueId.value, trackable: trackableId });
         return res.addIssueToTrackable.addedToTrackableEvent;
     }, "Error adding issue to component or project");
     addTimelineItem(event);
@@ -920,7 +1177,10 @@ async function addToTrackable(trackable: DefaultTrackableInfoFragment) {
 
 async function removeFromTrackable(trackableId: string) {
     const event = await withErrorMessage(async () => {
-        const res = await client.removeIssueFromTrackable({ issue: issueId.value, trackable: trackableId });
+        const res = await requestThrow(removeIssueFromTrackableMutation, {
+            issue: issueId.value,
+            trackable: trackableId
+        });
         return res.removeIssueFromTrackable.removedFromTrackableEvent;
     }, "Error removing issue from component or project");
     addTimelineItem(event);

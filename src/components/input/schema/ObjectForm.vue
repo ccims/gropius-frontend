@@ -73,8 +73,14 @@
     </BaseObjectForm>
 </template>
 <script setup lang="ts">
-import { Schema, SchemaFormDiscriminator, SchemaFormProperties, SchemaFormValues, isDiscriminatorForm } from "jtd";
-import { PropType, computed } from "vue";
+import {
+    type Schema,
+    type SchemaFormDiscriminator,
+    type SchemaFormProperties,
+    type SchemaFormValues,
+    isDiscriminatorForm
+} from "jtd";
+import { type PropType, computed } from "vue";
 import BaseObjectForm from "./BaseObjectForm.vue";
 import { derefSchemaRecursive, generateDefaultData } from "./generateDefaultData";
 import MetaForm from "./MetaForm.vue";

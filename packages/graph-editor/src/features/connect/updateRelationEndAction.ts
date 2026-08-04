@@ -1,4 +1,4 @@
-import { Action, Point } from "sprotty-protocol";
+import { type Action, Point } from "sprotty-protocol";
 
 export interface UpdateRelationEndAction extends Action {
     kind: typeof UpdateRelationEndAction.KIND;

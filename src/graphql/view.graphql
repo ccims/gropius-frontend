@@ -1,22 +1,3 @@
-query getViewList($orderBy: [ViewOrder!]!, $count: Int!, $skip: Int!, $project: ID!) {
-    node(id: $project) {
-        ... on Project {
-            views(orderBy: $orderBy, first: $count, skip: $skip) {
-                nodes {
-                    ...DefaultViewInfo
-                }
-                totalCount
-            }
-        }
-    }
-}
-
-query getFilteredViewList($query: String!, $count: Int!, $project: ID!) {
-    searchViews(query: $query, first: $count, filter: { project: { id: { eq: $project } } }) {
-        ...DefaultViewInfo
-    }
-}
-
 fragment DefaultViewInfo on View {
     id
     name
@@ -55,50 +36,3 @@ fragment ViewGraphInfo on View {
     }
 }
 
-query getView($id: ID!) {
-    node(id: $id) {
-        ... on View {
-            ...ViewGraphInfo
-        }
-    }
-}
-
-query searchViews($project: ID!, $query: String!, $count: Int!) {
-    searchViews(query: $query, first: $count, filter: { project: { id: { eq: $project } } }) {
-        ...DefaultViewInfo
-    }
-}
-
-query firstViews($project: ID!, $count: Int!) {
-    node(id: $project) {
-        ... on Project {
-            views(first: $count, orderBy: [{ field: NAME }]) {
-                nodes {
-                    ...DefaultViewInfo
-                }
-            }
-        }
-    }
-}
-
-mutation createView($input: CreateViewInput!) {
-    createView(input: $input) {
-        view {
-            id
-        }
-    }
-}
-
-mutation updateView($input: UpdateViewInput!) {
-    updateView(input: $input) {
-        view {
-            id
-        }
-    }
-}
-
-mutation deleteView($id: ID!) {
-    deleteView(input: { id: $id }) {
-        __typename
-    }
-}

@@ -20,8 +20,9 @@
     </FetchingAutocomplete>
 </template>
 <script setup lang="ts">
-import { NodeReturnType, useClient } from "@/graphql/client";
-import { DefaultIssueStateInfoFragment } from "@/graphql/generated";
+import { requestThrow, queryNodeThrow } from "@/gql/client";
+import { graphql } from "@/gql";
+import type { DefaultIssueStateInfoFragment } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
@@ -33,7 +34,27 @@ const props = defineProps({
     }
 });
 
-const client = useClient();
+const searchIssueStatesQuery = graphql(`
+    query searchIssueStates($template: ID!, $query: String!, $count: Int!) {
+        searchIssueStates(query: $query, first: $count, filter: { partOf: { any: { id: { eq: $template } } } }) {
+            ...DefaultIssueStateInfo
+        }
+    }
+`);
+
+const firstIssueStatesQuery = graphql(`
+    query firstIssueStates($template: ID!, $count: Int!) {
+        node(id: $template) {
+            ... on IssueTemplate {
+                issueStates(first: $count, orderBy: [{ field: NAME }]) {
+                    nodes {
+                        ...DefaultIssueStateInfo
+                    }
+                }
+            }
+        }
+    }
+`);
 
 async function searchIssueStates(filter: string, count: number): Promise<DefaultIssueStateInfoFragment[]> {
     if (props.template == undefined) {
@@ -42,12 +63,14 @@ async function searchIssueStates(filter: string, count: number): Promise<Default
     return await withErrorMessage(async () => {
         const query = transformSearchQuery(filter);
         if (query != undefined) {
-            const res = await client.searchIssueStates({ template: props.template!, query, count });
+            const res = await requestThrow(searchIssueStatesQuery, { template: props.template!, query, count });
             return res.searchIssueStates;
         } else {
-            const res = await client.firstIssueStates({ template: props.template!, count });
-            const nodeRes = res.node as NodeReturnType<"firstIssueStates", "IssueTemplate">;
-            return nodeRes.issueStates.nodes;
+            const issueTemplate = await queryNodeThrow(firstIssueStatesQuery, "IssueTemplate", {
+                template: props.template!,
+                count
+            });
+            return issueTemplate.issueStates.nodes;
         }
     }, "Error searching issue states");
 }

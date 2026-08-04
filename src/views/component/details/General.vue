@@ -38,16 +38,49 @@
 import DetailCompartment from "@/components/DetailCompartment.vue";
 import InputWrapper from "@/components/input/InputWrapper.vue";
 import TemplatedFieldsDetailCompartment from "@/components/TemplatedFieldsDetailCompartment.vue";
-import { NodeReturnType, useClient } from "@/graphql/client";
-import { UpdateComponentInput } from "@/graphql/generated";
+import type { UpdateComponentInput } from "@/gql/graphql";
 import { eventBusKey } from "@/util/keys";
-import { withErrorMessage } from "@/util/withErrorMessage";
 import { computedAsync } from "@vueuse/core";
-import { inject } from "vue";
-import { computed } from "vue";
+import { computed, inject } from "vue";
 import { useRoute } from "vue-router";
+import { graphql } from "@/gql";
+import { queryNodeThrow, requestThrow } from "@/gql/client";
+import { withErrorMessage } from "@/util/withErrorMessage";
 
-const client = useClient();
+const getComponentGeneralDetailsQuery = graphql(`
+    query getComponentGeneralDetails($id: ID!) {
+        node(id: $id) {
+            id
+            ... on Component {
+                name
+                description
+                repositoryURL
+                templatedFields {
+                    name
+                    value
+                }
+                template {
+                    templateFieldSpecifications {
+                        name
+                        value
+                    }
+                }
+                admin: hasPermission(permission: ADMIN)
+            }
+        }
+    }
+`);
+
+const updateComponentMutation = graphql(`
+    mutation updateComponent($input: UpdateComponentInput!) {
+        updateComponent(input: $input) {
+            component {
+                id
+            }
+        }
+    }
+`);
+
 const route = useRoute();
 const eventBus = inject(eventBusKey);
 const componentId = computed(() => route.params.trackable as string);
@@ -57,11 +90,10 @@ const component = computedAsync(
         if (!componentId.value) {
             return null;
         }
-        const res = await withErrorMessage(
-            () => client.getComponentGeneralDetails({ id: componentId.value }),
+        return await withErrorMessage(
+            () => queryNodeThrow(getComponentGeneralDetailsQuery, "Component", { id: componentId.value }),
             "Error loading component details"
         );
-        return res.node as NodeReturnType<"getComponentGeneralDetails", "Component">;
     },
     null,
     { shallow: false }
@@ -70,7 +102,7 @@ const component = computedAsync(
 async function save(input: Omit<UpdateComponentInput, "id">) {
     await withErrorMessage(
         () =>
-            client.updateComponent({
+            requestThrow(updateComponentMutation, {
                 input: {
                     id: componentId.value,
                     ...input

@@ -42,7 +42,7 @@
 </template>
 <script setup lang="ts">
 import {
-    Schema,
+    type Schema,
     isElementsForm,
     isPropertiesForm,
     isDiscriminatorForm,
@@ -51,7 +51,7 @@ import {
     isEnumForm
 } from "jtd";
 import { computed } from "vue";
-import { PropType } from "vue";
+import type { PropType } from "vue";
 import ElementsForm from "./ElementsForm.vue";
 import ValuesForm from "./ValuesForm.vue";
 import ObjectForm from "./ObjectForm.vue";

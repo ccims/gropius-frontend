@@ -1,5 +1,5 @@
-import { OrderDirection } from "@/graphql/generated";
-import { ref, Ref } from "vue";
+import { OrderDirection } from "@/gql/graphql";
+import { ref, type Ref } from "vue";
 
 export abstract class ItemManager<I, J> {
     cachedItems: Ref<[I[], number] | undefined> = ref(undefined);

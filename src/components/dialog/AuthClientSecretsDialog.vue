@@ -37,7 +37,7 @@
     </v-dialog>
 </template>
 <script lang="ts" setup>
-import { computed, ref, watch, PropType } from "vue";
+import { computed, ref, watch, type PropType } from "vue";
 import CustomList from "../CustomList.vue";
 import ListItem from "../ListItem.vue";
 import ConfirmationDialog from "./ConfirmationDialog.vue";

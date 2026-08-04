@@ -28,16 +28,35 @@
 <script lang="ts" setup>
 import PaginatedList from "@/components/PaginatedList.vue";
 import { ItemManager } from "@/util/itemManager";
-import { ClientReturnType, useClient } from "@/graphql/client";
-import { RouteLocationRaw, useRouter } from "vue-router";
-import { IssueTemplateOrder, IssueTemplateOrderField } from "@/graphql/generated";
+import { request } from "@/gql/client";
+import { graphql } from "@/gql";
+import { type DefaultIssueTemplateInfoFragment, type IssueTemplateOrder, IssueTemplateOrderField } from "@/gql/graphql";
+import { type RouteLocationRaw, useRouter } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
 import CreateIssueTemplateDialog from "@/components/dialog/CreateIssueTemplateDialog.vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 
-type IssueTemplate = ClientReturnType<"firstIssueTemplates">["issueTemplates"]["nodes"][0];
+const getIssueTemplateListQuery = graphql(`
+    query getIssueTemplateList($orderBy: [IssueTemplateOrder!]!, $count: Int!, $skip: Int!) {
+        issueTemplates(orderBy: $orderBy, first: $count, skip: $skip, filter: { isDeprecated: { eq: false } }) {
+            nodes {
+                ...DefaultIssueTemplateInfo
+            }
+            totalCount
+        }
+    }
+`);
 
-const client = useClient();
+const getFilteredIssueTemplateListQuery = graphql(`
+    query getFilteredIssueTemplateList($query: String!, $count: Int!) {
+        searchIssueTemplates(query: $query, first: $count, filter: { isDeprecated: { eq: false } }) {
+            ...DefaultIssueTemplateInfo
+        }
+    }
+`);
+
+type IssueTemplate = DefaultIssueTemplateInfoFragment;
+
 const router = useRouter();
 
 const sortFields = {
@@ -47,18 +66,23 @@ const sortFields = {
 
 class IssueTemplateItemManager extends ItemManager<IssueTemplate, IssueTemplateOrderField> {
     protected async fetchItems(
-        filter: string,
+        filter: string | undefined,
         orderBy: IssueTemplateOrder[],
         count: number,
         page: number
     ): Promise<[IssueTemplate[], number]> {
-        if (!filter) {
-            const res = await client.firstIssueTemplates({ count });
-            return [res.issueTemplates.nodes, res.issueTemplates.nodes.length];
+        if (filter == undefined) {
+            const res = await request(getIssueTemplateListQuery, { orderBy, count, skip: page * count });
+            if (res) {
+                return [res.issueTemplates.nodes, res.issueTemplates.totalCount];
+            }
         } else {
-            const res = await client.searchIssueTemplates({ query: filter, count });
-            return [res.searchIssueTemplates, res.searchIssueTemplates.length];
+            const res = await request(getFilteredIssueTemplateListQuery, { query: filter, count });
+            if (res) {
+                return [res.searchIssueTemplates, res.searchIssueTemplates.length];
+            }
         }
+        return [[], 0];
     }
 }
 

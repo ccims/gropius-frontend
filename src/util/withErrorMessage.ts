@@ -1,5 +1,5 @@
 import { useAppStore } from "@/store/app";
-import { Ref, ref } from "vue";
+import { type Ref, ref } from "vue";
 
 export async function withErrorMessage<T>(
     action: () => Promise<T>,

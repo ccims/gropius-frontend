@@ -10,10 +10,10 @@
     />
 </template>
 <script setup lang="ts">
-import { Schema, SchemaFormEnum } from "jtd";
+import type { Schema, SchemaFormEnum } from "jtd";
 import { computed } from "vue";
-import { PropType } from "vue";
-import { Rule, requiredRule } from "./rules";
+import type { PropType } from "vue";
+import { type Rule, requiredRule } from "./rules";
 
 const props = defineProps({
     schema: {

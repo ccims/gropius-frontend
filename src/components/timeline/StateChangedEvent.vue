@@ -4,8 +4,8 @@
     </DefaultIconTimelineItem>
 </template>
 <script setup lang="ts">
-import { PropType } from "vue";
-import { TimelineItemType } from "./TimelineItemBase.vue";
+import type { PropType } from "vue";
+import type { TimelineItemType } from "./TimelineItemBase.vue";
 import DefaultIconTimelineItem from "./DefaultIconTimelineItem.vue";
 import IssueState from "../info/IssueState.vue";
 

@@ -48,12 +48,30 @@
     </v-dialog>
 </template>
 <script setup lang="ts">
-import { NodeReturnType, useClient } from "@/graphql/client";
+import { graphql } from "@/gql";
+import { queryNodeThrow } from "@/gql/client";
 import { useCachedRef } from "@/util/useCachedRef";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import { computedAsync } from "@vueuse/core";
-import { computed, PropType, ref } from "vue";
+import { computed, type PropType, ref } from "vue";
 import ConfirmationDialog from "./ConfirmationDialog.vue";
+
+const getInterfaceSpecificationVisibilityInfoQuery = graphql(`
+    query getInterfaceSpecificationVisibilityInfo($id: ID!, $componentTemplate: ID!) {
+        node(id: $id) {
+            ... on InterfaceSpecification {
+                template {
+                    canBeVisibleOnComponents(filter: { id: { eq: $componentTemplate } }) {
+                        totalCount
+                    }
+                    canBeInvisibleOnComponents(filter: { id: { eq: $componentTemplate } }) {
+                        totalCount
+                    }
+                }
+            }
+        }
+    }
+`);
 
 const props = defineProps({
     updateInterfaceDefinition: {
@@ -91,8 +109,6 @@ const editInterfaceDefinitionDialog = computed({
     }
 });
 
-const client = useClient();
-
 const interfaceSpecificationVisibilityInfo = computedAsync(
     async () => {
         if (props.componentTemplate == undefined || model.value?.interfaceSpecification == null) {
@@ -101,14 +117,12 @@ const interfaceSpecificationVisibilityInfo = computedAsync(
                 invisible: false
             };
         }
-        const visibilityRes = (
-            await withErrorMessage(async () => {
-                return client.getInterfaceSpecificationVisibilityInfo({
-                    id: model.value!.interfaceSpecification,
-                    componentTemplate: props.componentTemplate!
-                });
-            }, "Error loading interface specification visibility info")
-        ).node as NodeReturnType<"getInterfaceSpecificationVisibilityInfo", "InterfaceSpecification">;
+        const visibilityRes = await withErrorMessage(async () => {
+            return await queryNodeThrow(getInterfaceSpecificationVisibilityInfoQuery, "InterfaceSpecification", {
+                id: model.value!.interfaceSpecification,
+                componentTemplate: props.componentTemplate!
+            });
+        }, "Error loading interface specification visibility info");
         return {
             visible: visibilityRes.template.canBeVisibleOnComponents.totalCount > 0,
             invisible: visibilityRes.template.canBeInvisibleOnComponents.totalCount > 0

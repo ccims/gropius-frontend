@@ -26,8 +26,9 @@
                                 />
                             </v-col>
                             <v-col cols="6">
-                                <IssueTemplatesAutocomplete
+                                <IssueTemplateAutocomplete
                                     v-model="selectedTemplates"
+                                    multiple
                                     :error-messages="templateInheritanceErrorMessage"
                                 />
                             </v-col>
@@ -667,38 +668,92 @@
                         @confirm="cancelCreateIssueTemplate"
                     />
                 </DefaultButton>
-                <DefaultButton variant="text" color="primary" @click="next">{{
-                    step === stepLabels.length ? "Create" : "Next"
-                }}</DefaultButton>
+                <DefaultButton
+                    variant="text"
+                    color="primary"
+                    :disabled="step === stepLabels.length && submitDisabled"
+                    @click="next"
+                    >{{ step === stepLabels.length ? "Create" : "Next" }}</DefaultButton
+                >
             </v-card-actions>
         </v-card>
     </v-dialog>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from "vue";
+import { ref, watch } from "vue";
 import { useForm } from "vee-validate";
 import * as yup from "yup";
 import { fieldConfig } from "@/util/vuetifyFormConfig";
-import { NodeReturnType, useClient } from "@/graphql/client";
+import { graphql } from "@/gql";
+import { queryNodeThrow, requestThrow } from "@/gql/client";
 import { onEvent } from "@/util/eventBus";
+import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
 import { computed } from "vue";
 import ConfirmationDialog from "./ConfirmationDialog.vue";
-import IssueTemplatesAutocomplete from "../input/IssueTemplatesAutocomplete.vue";
+import IssueTemplateAutocomplete from "../input/IssueTemplateAutocomplete.vue";
 import ExpandableCard from "../ExpandableCard.vue";
 import TemplatedFieldSpecificationsValueBox from "../TemplatedFieldSpecificationsValueBox.vue";
 
 import { iconList as baseIconList } from "../icons";
 import SvgWrapper from "../SvgWrapper.vue";
 
-import {
-    type IssueTypeInput,
-    type IssuePriorityInput,
-    type IssueStateInput,
-    type AssignmentTypeInput,
-    type IssueRelationTypeInput,
-    type JsonFieldInput
-} from "@/graphql/generated";
+import type {
+    IssueTypeInput,
+    IssuePriorityInput,
+    IssueStateInput,
+    AssignmentTypeInput,
+    IssueRelationTypeInput,
+    JsonFieldInput,
+    IssueTemplateFieldsFragment,
+    DefaultIssueTemplateInfoFragment
+} from "@/gql/graphql";
+
+const searchIssueTemplatesByNameQuery = graphql(`
+    query searchIssueTemplatesByName($query: String!, $count: Int!) {
+        searchIssueTemplates(query: $query, first: $count, filter: { isDeprecated: { eq: false } }) {
+            id
+            name
+        }
+    }
+`);
+
+const getIssueTemplateFieldsQuery = graphql(`
+    query getIssueTemplateFields($id: ID!) {
+        node(id: $id) {
+            __typename
+            ... on IssueTemplate {
+                ...IssueTemplateFields
+            }
+        }
+    }
+`);
+
+const getIssueTemplateNameQuery = graphql(`
+    query getIssueTemplateName($id: ID!) {
+        node(id: $id) {
+            __typename
+            id
+            ... on IssueTemplate {
+                name
+            }
+        }
+    }
+`);
+
+const createIssueTemplateMutation = graphql(`
+    mutation createIssueTemplate($input: CreateIssueTemplateInput!) {
+        createIssueTemplate(input: $input) {
+            issueTemplate {
+                ...DefaultIssueTemplateInfo
+            }
+        }
+    }
+`);
+
+const emit = defineEmits<{
+    (event: "created-template", template: DefaultIssueTemplateInfoFragment): void;
+}>();
 
 const createIssueTemplateDialog = ref(false);
 const step = ref(1);
@@ -732,7 +787,7 @@ const [templateName, templateNameProps] = defineField("templateName", fieldConfi
 const [templateDescription, templateDescriptionProps] = defineField("templateDescription", fieldConfig);
 const [repositoryURL, repositoryURLProps] = defineField("repositoryURL", fieldConfig);
 
-const client = useClient();
+const [blockWithErrorMessage, submitDisabled] = useBlockingWithErrorMessage();
 
 const templateAlreadyExists = ref<boolean>(false);
 watch(templateName, async (newName) => {
@@ -741,20 +796,19 @@ watch(templateName, async (newName) => {
         return;
     }
 
-    const res = await client.searchIssueTemplates({ query: newName, count: 1 });
-    templateAlreadyExists.value = res.searchIssueTemplates.some((t: { name: string }) => t.name === newName);
+    const res = await requestThrow(searchIssueTemplatesByNameQuery, { query: newName, count: 1 });
+    templateAlreadyExists.value = res.searchIssueTemplates.some((t) => t.name === newName);
 });
 
 const selectedTemplates = ref<string[]>([]);
 
 async function loadTemplate(id: string) {
-    return await client.getIssueTemplateFields({ id });
+    return await queryNodeThrow(getIssueTemplateFieldsQuery, "IssueTemplate", { id });
 }
 
 async function getTemplateName(id: string) {
-    const template = await client.getIssueTemplate({ id });
-    const templateNode = template.node as NodeReturnType<"getIssueTemplate", "IssueTemplate">;
-    return templateNode.name;
+    const template = await queryNodeThrow(getIssueTemplateNameQuery, "IssueTemplate", { id });
+    return template.name;
 }
 
 const expandedCardKey = ref<{
@@ -853,14 +907,11 @@ async function handleTemplateInheritance() {
     deleteObsoleteAttributes();
     for (const templateId of selectedTemplates.value) {
         try {
-            const template = await loadTemplate(templateId);
-            if (template?.node) {
-                const templateNode = template.node as NodeReturnType<"getIssueTemplateFields", "IssueTemplate">;
-                await handleInheritanceConflicts(templateNode);
-                if (templateInheritanceErrorMessage.value) {
-                    isInheritanceConflict.value = true;
-                    return;
-                }
+            const templateNode = await loadTemplate(templateId);
+            await handleInheritanceConflicts(templateNode);
+            if (templateInheritanceErrorMessage.value) {
+                isInheritanceConflict.value = true;
+                return;
             }
         } catch (e) {
             console.error(e);
@@ -874,7 +925,7 @@ watch(selectedTemplates, async () => {
     await handleTemplateInheritance();
 });
 
-async function handleInheritanceConflicts(templateNode: NodeReturnType<"getIssueTemplateFields", "IssueTemplate">) {
+async function handleInheritanceConflicts(templateNode: IssueTemplateFieldsFragment) {
     for (const issueType of disabledCards.value.issueTypes) {
         if (
             templateNode.id !== issueType.fromTemplate &&
@@ -934,7 +985,7 @@ async function handleInheritanceConflicts(templateNode: NodeReturnType<"getIssue
     pushDisabledCards(templateNode);
 }
 
-function pushAttributes(templateNode: NodeReturnType<"getIssueTemplateFields", "IssueTemplate">) {
+function pushAttributes(templateNode: IssueTemplateFieldsFragment) {
     issueTypes.value.push(
         ...templateNode.issueTypes.nodes.filter((t) => !issueTypes.value.some((e) => e.name === t.name))
     );
@@ -981,7 +1032,7 @@ function deleteObsoleteAttributes() {
     deleteObsoleteCards();
 }
 
-function pushDisabledCards(templateNode: NodeReturnType<"getIssueTemplateFields", "IssueTemplate">) {
+function pushDisabledCards(templateNode: IssueTemplateFieldsFragment) {
     disabledCards.value.issueTypes.push(
         ...templateNode.issueTypes.nodes.map((t) => ({ entry: t.name, fromTemplate: templateNode.id }))
     );
@@ -1275,24 +1326,60 @@ function cancelCreateCard() {
     deleteTemplateFieldSpecificationByName("");
 }
 
-function createIssueTemplate() {
-    client.createIssueTemplate({
-        input: {
-            name: templateName.value,
-            description: templateDescription.value ?? "",
-            extends: selectedTemplates.value,
-            issueTypes: issueTypes.value,
-            issuePriorities: issuePriorities.value,
-            issueStates: issueStates.value,
-            assignmentTypes: assignmentTypes.value,
-            relationTypes: relationTypes.value
-        }
-    });
-    console.log("Issue template created");
+/**
+ * The backend copies everything defined on the extended templates onto the new template, so only the
+ * entries that were added here may be submitted - inherited ones would end up duplicated (and are
+ * rejected outright for templateFieldSpecifications, which must be disjoint).
+ */
+function withoutInherited<T extends { name: string }>(entries: T[], inherited: InheritedEntry[]): T[] {
+    return entries.filter((entry) => !inherited.some((e) => e.entry === entry.name));
+}
+
+async function createIssueTemplate() {
+    const inherited = disabledCards.value;
+    const template = await blockWithErrorMessage(async () => {
+        const res = await requestThrow(createIssueTemplateMutation, {
+            input: {
+                name: templateName.value,
+                description: templateDescription.value ?? "",
+                extends: selectedTemplates.value,
+                issueTypes: withoutInherited(issueTypes.value, inherited.issueTypes),
+                issuePriorities: withoutInherited(issuePriorities.value, inherited.issuePriorities),
+                issueStates: withoutInherited(issueStates.value, inherited.issueStates),
+                assignmentTypes: withoutInherited(assignmentTypes.value, inherited.assignmentTypes),
+                relationTypes: withoutInherited(relationTypes.value, inherited.relationTypes),
+                templateFieldSpecifications: withoutInherited(
+                    templateFieldSpecifications.value,
+                    inherited.templateFieldSpecifications
+                )
+            }
+        });
+        return res.createIssueTemplate.issueTemplate;
+    }, "Error creating issue template");
+    createIssueTemplateDialog.value = false;
+    emit("created-template", template);
 }
 
 onEvent("create-issue-template", () => {
     resetForm();
+    selectedTemplates.value = [];
+    issueTypes.value = [];
+    issuePriorities.value = [];
+    issueStates.value = [];
+    assignmentTypes.value = [];
+    relationTypes.value = [];
+    templateFieldSpecifications.value = [];
+    disabledCards.value = {
+        issueTypes: [],
+        issuePriorities: [],
+        issueStates: [],
+        assignmentTypes: [],
+        relationTypes: [],
+        templateFieldSpecifications: []
+    };
+    cancelCreateCard();
+    templateInheritanceErrorMessage.value = "";
+    isInheritanceConflict.value = false;
     createIssueTemplateDialog.value = true;
     step.value = 1;
 });
@@ -1311,7 +1398,6 @@ function next() {
         step.value++;
     } else {
         createIssueTemplate();
-        createIssueTemplateDialog.value = false;
     }
 }
 

@@ -1,6 +1,6 @@
 import { ArrowEngine } from "./engines/arrowEngine.js";
 import { MarkerEngine } from "./engines/markerEngine.js";
-import { Marker as GropiusMarker, RelationStyle, StrokeStyle } from "../gropiusModel.js";
+import { type Marker as GropiusMarker, type RelationStyle, StrokeStyle } from "../gropiusModel.js";
 import { DiamondEngine } from "./engines/diamondEngine.js";
 import { TriangleEngine } from "./engines/triangleEngine.js";
 import { CircleEngine } from "./engines/circleEngine.js";

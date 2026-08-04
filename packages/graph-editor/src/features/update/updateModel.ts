@@ -1,19 +1,19 @@
 import { injectable } from "inversify";
 import {
     Animation,
-    CommandExecutionContext,
-    CommandReturn,
+    type CommandExecutionContext,
+    type CommandReturn,
     CompoundAnimation,
     forEachMatch,
     isSelectable,
-    MatchResult,
+    type MatchResult,
     SModelElementImpl,
     SModelRootImpl,
     UpdateModelCommand as BaseUpdateModelCommand,
     ViewportRootElementImpl
 } from "sprotty";
 import {
-    ElmentLinearInterpolationAnimation,
+    type ElmentLinearInterpolationAnimation,
     LinearInterpolationAnimation
 } from "../animation/linearInterpolationAnimation.js";
 import { computeCommonAnimatableFields, isLinearAnimatable } from "../animation/model.js";

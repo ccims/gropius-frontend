@@ -4,7 +4,7 @@
         :item-manager="itemManager"
         :sort-fields="sortFields"
         :to="() => undefined"
-        :dependencies="modifiedViews"
+        :dependencies="dependencyArray"
         query-param-prefix=""
     >
         <template #item="{ item }">
@@ -52,14 +52,24 @@
                 </template>
             </ListItem>
         </template>
+        <template #additional-filter>
+            <FilterDropdown
+                v-model="templateIds"
+                :item-manager="itemManager"
+                :mapper="(item) => item.filterByTemplate.nodes"
+                label="Template"
+                :fetch-on-search="templateFetch"
+            />
+        </template>
         <CreateViewDialog :project="trackableId" :templates="templates" @created-view="modifiedViews.push($event.id)" />
         <UpdateViewDialog v-model="viewToUpdate" :templates="templates" @updated-view="modifiedViews.push($event.id)" />
     </PaginatedList>
 </template>
 <script lang="ts" setup>
 import PaginatedList from "@/components/PaginatedList.vue";
-import { NodeReturnType, useClient } from "@/graphql/client";
-import { ViewOrder, ViewOrderField } from "@/graphql/generated";
+import { requestThrow, queryNodeThrow } from "@/gql/client";
+import { graphql } from "@/gql";
+import { type ViewOrder, ViewOrderField, type DefaultViewInfoFragment } from "@/gql/graphql";
 import { useRoute } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
 import { computed, inject, ref } from "vue";
@@ -70,10 +80,89 @@ import { computedAsync } from "@vueuse/core";
 import ConfirmationDialog from "@/components/dialog/ConfirmationDialog.vue";
 import UpdateViewDialog from "@/components/dialog/UpdateViewDialog.vue";
 import { ItemManager } from "@/util/itemManager";
+import { useFilterOption } from "@/util/useFilterOption";
+import FilterDropdown from "@/components/input/FilterDropdown.vue";
 
-type View = NodeReturnType<"getViewList", "Project">["views"]["nodes"][0];
+type View = DefaultViewInfoFragment & {
+    filterByTemplate: {
+        nodes: {
+            id: string;
+            name: string;
+            description: string;
+        }[];
+    };
+};
 
-const client = useClient();
+const getViewListQuery = graphql(`
+    query getViewList($orderBy: [ViewOrder!]!, $count: Int!, $skip: Int!, $project: ID!, $filter: ViewFilterInput!) {
+        node(id: $project) {
+            ... on Project {
+                views(orderBy: $orderBy, first: $count, skip: $skip, filter: $filter) {
+                    nodes {
+                        ...DefaultViewInfo
+                        filterByTemplate {
+                            nodes {
+                                description
+                            }
+                        }
+                    }
+                    totalCount
+                }
+            }
+        }
+    }
+`);
+
+const getFilteredViewListQuery = graphql(`
+    query getFilteredViewList($query: String!, $count: Int!, $filter: ViewFilterInput!) {
+        searchViews(query: $query, first: $count, filter: $filter) {
+            ...DefaultViewInfo
+            filterByTemplate {
+                nodes {
+                    description
+                }
+            }
+        }
+    }
+`);
+
+const searchComponentTemplatesQuery = graphql(`
+    query searchComponentTemplatesForViews($query: String!, $count: Int!) {
+        searchComponentTemplates(query: $query, first: $count) {
+            id
+            name
+            description
+        }
+    }
+`);
+
+const getProjectComponentTemplatesQuery = graphql(`
+    query getProjectComponentTemplates($project: ID!) {
+        node(id: $project) {
+            ... on Project {
+                components {
+                    nodes {
+                        component {
+                            template {
+                                name
+                                id
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+`);
+
+const deleteViewMutation = graphql(`
+    mutation deleteView($id: ID!) {
+        deleteView(input: { id: $id }) {
+            __typename
+        }
+    }
+`);
+
 const route = useRoute();
 const trackable = inject(trackableKey);
 const trackableId = computed(() => route.params.trackable as string);
@@ -93,6 +182,21 @@ const sortFields = {
     "[Default]": ViewOrderField.Id
 };
 
+const templateIds = useFilterOption("template", true);
+const templateInput = computed(() => {
+    if (templateIds.value.length === 0) {
+        return undefined;
+    } else {
+        return { any: { id: { in: templateIds.value } } };
+    }
+});
+const templateFetch = async (query: string) => {
+    const res = await requestThrow(searchComponentTemplatesQuery, { query: query, count: 100 });
+    return res.searchComponentTemplates;
+};
+
+const dependencyArray = computed(() => [modifiedViews, templateInput]);
+
 class ViewItemManager extends ItemManager<View, ViewOrderField> {
     protected async fetchItems(
         filter: string | undefined,
@@ -101,20 +205,19 @@ class ViewItemManager extends ItemManager<View, ViewOrderField> {
         page: number
     ): Promise<[View[], number]> {
         if (filter == undefined) {
-            const res = (
-                await client.getViewList({
-                    orderBy,
-                    count,
-                    skip: page * count,
-                    project: trackableId.value
-                })
-            ).node as NodeReturnType<"getViewList", "Project">;
-            return [res.views.nodes!, res.views.totalCount];
+            const project = await queryNodeThrow(getViewListQuery, "Project", {
+                orderBy,
+                count,
+                skip: page * count,
+                project: trackableId.value,
+                filter: { filterByTemplate: templateInput.value }
+            });
+            return [project.views.nodes, project.views.totalCount];
         } else {
-            const res = await client.getFilteredViewList({
+            const res = await requestThrow(getFilteredViewListQuery, {
                 query: filter,
                 count,
-                project: trackableId.value
+                filter: { filterByTemplate: templateInput.value, project: { id: { eq: trackableId.value } } }
             });
             return [res.searchViews, res.searchViews.length];
         }
@@ -124,8 +227,9 @@ const itemManager: ItemManager<View, ViewOrderField> = new ViewItemManager();
 
 const templates = computedAsync(async () => {
     return withErrorMessage(async () => {
-        const project = (await client.getProjectComponentTemplates({ project: trackableId.value }))
-            .node as NodeReturnType<"getProjectComponentTemplates", "Project">;
+        const project = await queryNodeThrow(getProjectComponentTemplatesQuery, "Project", {
+            project: trackableId.value
+        });
         const templateLookup = new Map<string, { id: string; name: string }>();
         for (const componentVersion of project.components.nodes) {
             const template = componentVersion.component.template;
@@ -149,8 +253,8 @@ function updateView(view: View) {
 }
 
 async function deleteView(viewId: string) {
-    withErrorMessage(async () => {
-        await client.deleteView({ id: viewId });
+    await withErrorMessage(async () => {
+        await requestThrow(deleteViewMutation, { id: viewId });
     }, "Error deleting view");
     modifiedViews.value.push(viewId);
 }

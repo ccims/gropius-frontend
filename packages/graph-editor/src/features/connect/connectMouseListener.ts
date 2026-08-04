@@ -1,6 +1,13 @@
 import { injectable } from "inversify";
-import { IActionHandler, ICommand, MouseListener, SModelElementImpl, findParentByFeature, isViewport } from "sprotty";
-import { Action, Point } from "sprotty-protocol";
+import {
+    type IActionHandler,
+    type ICommand,
+    MouseListener,
+    SModelElementImpl,
+    findParentByFeature,
+    isViewport
+} from "sprotty";
+import { type Action, Point } from "sprotty-protocol";
 import { ConnectAction } from "./connectAction.js";
 import { CancelConnectAction } from "./cancelConnectAction.js";
 import { isConnectable } from "./connectFeature.js";

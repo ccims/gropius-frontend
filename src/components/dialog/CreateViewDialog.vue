@@ -14,16 +14,26 @@
     </v-dialog>
 </template>
 <script lang="ts" setup>
+import { graphql } from "@/gql";
+import { requestThrow } from "@/gql/client";
 import { onEvent } from "@/util/eventBus";
-import { useClient } from "@/graphql/client";
-import { computed, PropType, ref } from "vue";
+import { computed, type PropType, ref } from "vue";
 import { useBlockingWithErrorMessage } from "@/util/withErrorMessage";
-import ViewDialogContent, { View } from "./ViewDialogContent.vue";
-import { IdObject } from "@/util/types";
-import { CreateViewInput } from "@/graphql/generated";
+import ViewDialogContent, { type View } from "./ViewDialogContent.vue";
+import type { IdObject } from "@/util/types";
+import type { CreateViewInput } from "@/gql/graphql";
+
+const createViewMutation = graphql(`
+    mutation createView($input: CreateViewInput!) {
+        createView(input: $input) {
+            view {
+                id
+            }
+        }
+    }
+`);
 
 const createViewDialog = ref(false);
-const client = useClient();
 const [blockWithErrorMessage, submitDisabled] = useBlockingWithErrorMessage();
 
 const emit = defineEmits<{
@@ -68,7 +78,7 @@ onEvent("create-view", () => {
 
 async function createView(state: View) {
     const view = await blockWithErrorMessage(async () => {
-        const res = await client.createView({
+        const res = await requestThrow(createViewMutation, {
             input: {
                 ...state,
                 project: props.project,

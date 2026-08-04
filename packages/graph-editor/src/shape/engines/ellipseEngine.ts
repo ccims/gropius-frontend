@@ -1,6 +1,6 @@
 import { Bounds, Dimension, Point } from "sprotty-protocol";
-import { ShapeStyle, StrokeStyle } from "../../gropiusModel.js";
-import { Shape } from "../shape.js";
+import { type ShapeStyle, StrokeStyle } from "../../gropiusModel.js";
+import type { Shape } from "../shape.js";
 import { ShapeEngine } from "./shapeEngine.js";
 import { ArcSegment } from "../../line/model/arcSegment.js";
 import { Line } from "../../line/model/line.js";

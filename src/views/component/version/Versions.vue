@@ -42,18 +42,45 @@
 </template>
 <script lang="ts" setup>
 import PaginatedList from "@/components/PaginatedList.vue";
-import { NodeReturnType, useClient } from "@/graphql/client";
-import { ComponentVersionOrder, ComponentVersionOrderField } from "@/graphql/generated";
-import { RouteLocationRaw, useRoute, useRouter } from "vue-router";
+import {
+    type ComponentVersionOrder,
+    ComponentVersionOrderField,
+    type ComponentVersionListItemInfoFragment
+} from "@/gql/graphql";
+import { type RouteLocationRaw, useRoute, useRouter } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
 import { computed } from "vue";
 import CreateComponentVersionDialog from "@/components/dialog/CreateComponentVersionDialog.vue";
-import { IdObject } from "@/util/types";
+import type { IdObject } from "@/util/types";
 import { ItemManager } from "@/util/itemManager";
+import { queryNode, request } from "@/gql/client";
+import { graphql } from "@/gql";
 
-type ComponentVersion = NodeReturnType<"getComponentVersionList", "Component">["versions"]["nodes"][0];
+type ComponentVersion = ComponentVersionListItemInfoFragment;
 
-const client = useClient();
+const getComponentVersionListQuery = graphql(`
+    query getComponentVersionList($orderBy: [ComponentVersionOrder!]!, $count: Int!, $skip: Int!, $component: ID!) {
+        node(id: $component) {
+            ... on Component {
+                versions(orderBy: $orderBy, first: $count, skip: $skip) {
+                    nodes {
+                        ...ComponentVersionListItemInfo
+                    }
+                    totalCount
+                }
+            }
+        }
+    }
+`);
+
+const getFilteredComponentVersionListQuery = graphql(`
+    query getFilteredComponentVersionList($query: String!, $count: Int!, $component: ID!) {
+        searchComponentVersions(query: $query, first: $count, filter: { component: { id: { eq: $component } } }) {
+            ...ComponentVersionListItemInfo
+        }
+    }
+`);
+
 const router = useRouter();
 const route = useRoute();
 const trackableId = computed(() => route.params.trackable as string);
@@ -71,23 +98,26 @@ class ComponentVersionItemManager extends ItemManager<ComponentVersion, Componen
         page: number
     ): Promise<[ComponentVersion[], number]> {
         if (filter == undefined) {
-            const res = (
-                await client.getComponentVersionList({
-                    orderBy,
-                    count,
-                    skip: page * count,
-                    component: trackableId.value
-                })
-            ).node as NodeReturnType<"getComponentVersionList", "Component">;
-            return [res.versions.nodes!, res.versions.totalCount];
+            const component = await queryNode(getComponentVersionListQuery, "Component", {
+                orderBy,
+                count,
+                skip: page * count,
+                component: trackableId.value
+            });
+            if (component) {
+                return [component.versions.nodes, component.versions.totalCount];
+            }
         } else {
-            const res = await client.getFilteredComponentVersionList({
+            const res = await request(getFilteredComponentVersionListQuery, {
                 query: filter,
                 count,
                 component: trackableId.value
             });
-            return [res.searchComponentVersions, res.searchComponentVersions.length];
+            if (res) {
+                return [res.searchComponentVersions, res.searchComponentVersions.length];
+            }
         }
+        return [[], 0];
     }
 }
 const itemManager: ItemManager<ComponentVersion, ComponentVersionOrderField> = new ComponentVersionItemManager();

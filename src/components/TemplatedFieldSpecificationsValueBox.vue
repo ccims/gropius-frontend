@@ -271,8 +271,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from "vue";
-import { type JsonFieldInput } from "@/graphql/generated";
+import { computed } from "vue";
 import EditableCard from "./EditableCard.vue";
 
 type PrimitiveType =

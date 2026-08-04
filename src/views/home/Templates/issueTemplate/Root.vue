@@ -1,53 +1,63 @@
 <template>
-    <BaseLayout
+    <BaseLayoutWithError
         :title-segments="titleSegments"
         :tabs="tabs"
         :right-sidebar-items="rightSidebarItems"
         :left-sidebar-items="leftSidebarItems"
+        :data-present="!!issueTemplate"
+        :evaluating="evaluating"
     >
         <template #content>
             <router-view />
         </template>
-    </BaseLayout>
+    </BaseLayoutWithError>
 </template>
 
 <script lang="ts" setup>
-import BaseLayout from "@/components/BaseLayout.vue";
-import { NodeReturnType, useClient } from "@/graphql/client";
+import BaseLayoutWithError from "@/components/BaseLayoutWithError.vue";
+import { queryNodeThrow } from "@/gql/client";
+import { graphql } from "@/gql";
 import { computedAsync } from "@vueuse/core";
-import { computed, ref } from "vue";
-import { RouteLocationRaw, useRoute } from "vue-router";
+import { computed, ref, shallowRef } from "vue";
+import { type RouteLocationRaw, useRoute } from "vue-router";
 import { withErrorMessage } from "@/util/withErrorMessage";
-import { inject } from "vue";
-import { eventBusKey } from "@/util/keys";
 import { onEvent } from "@/util/eventBus";
 
-type IssueTemplate = NodeReturnType<"getIssueTemplate", "IssueTemplate">;
+const getIssueTemplateQuery = graphql(`
+    query getIssueTemplate($id: ID!) {
+        node(id: $id) {
+            __typename
+            id
+            ... on IssueTemplate {
+                name
+                description
+            }
+        }
+    }
+`);
 
-const client = useClient();
 const route = useRoute();
 const issueTemplateId = computed(() => route.params.issueTemplate as string);
-const eventBus = inject(eventBusKey);
 
 const titleSegmentDependency = ref(0);
 onEvent("title-segment-changed", () => {
     titleSegmentDependency.value++;
 });
 
+const evaluating = shallowRef(false);
 const issueTemplate = computedAsync(
     async () => {
         if (!issueTemplateId.value) {
             return null;
         }
         titleSegmentDependency.value;
-        const res = await withErrorMessage(
-            () => client.getIssueTemplate({ id: issueTemplateId.value }),
+        return await withErrorMessage(
+            () => queryNodeThrow(getIssueTemplateQuery, "IssueTemplate", { id: issueTemplateId.value }),
             "Error loading issue template"
         );
-        return res.node as IssueTemplate;
     },
     null,
-    { shallow: false }
+    { shallow: false, evaluating }
 );
 
 function issueTemplatePath(name: string): RouteLocationRaw {

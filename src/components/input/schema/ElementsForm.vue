@@ -27,8 +27,8 @@
     </BaseObjectForm>
 </template>
 <script setup lang="ts">
-import { Schema, SchemaFormElements } from "jtd";
-import { PropType } from "vue";
+import type { Schema, SchemaFormElements } from "jtd";
+import type { PropType } from "vue";
 import { generateDefaultData } from "./generateDefaultData";
 import BaseObjectForm from "./BaseObjectForm.vue";
 import MetaForm from "./MetaForm.vue";

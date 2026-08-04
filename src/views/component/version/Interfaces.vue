@@ -4,7 +4,7 @@
         :item-manager="itemManager"
         :sort-fields="sortFields"
         :to="() => undefined"
-        :dependencies="modifiedIds"
+        :dependencies="dependencyArray"
         query-param-prefix=""
     >
         <template #item="{ item }">
@@ -78,6 +78,24 @@
                 </template>
             </ListItem>
         </template>
+        <template #additional-filter>
+            <div class="d-flex ga-2 align-center h-100">
+                <FilterDropdown
+                    v-model="templateIds"
+                    :item-manager="itemManager"
+                    :mapper="(item) => item.template"
+                    label="Template"
+                    :fetch-on-search="templateFetch"
+                />
+                <FilterDropdown
+                    v-model="interfaceSpecificationIds"
+                    :item-manager="itemManager"
+                    :mapper="(item) => item.interfaceSpecificationData"
+                    label="Interface Specification"
+                    :fetch-on-search="interfaceSpecificationFetch"
+                />
+            </div>
+        </template>
         <AddInterfaceSpecificationVersionToComponentVersionDialog
             :component="componentId"
             :component-version="componentVersionId"
@@ -93,12 +111,16 @@
 </template>
 <script lang="ts" setup>
 import PaginatedList from "@/components/PaginatedList.vue";
-import { NodeReturnType, useClient } from "@/graphql/client";
+import { queryNode, queryNodeThrow, request, requestThrow } from "@/gql/client";
+import { graphql } from "@/gql";
 import {
-    DefaultInterfaceDefinitionInfoFragment,
-    InterfaceDefinitionOrder,
-    InterfaceDefinitionOrderField
-} from "@/graphql/generated";
+    type DefaultInterfaceDefinitionInfoFragment,
+    type InterfaceDefinitionFilterInput,
+    type InterfaceDefinitionOrder,
+    InterfaceDefinitionOrderField,
+    type InterfaceSpecificationFilterInput,
+    type InterfaceSpecificationVersionFilterInput
+} from "@/gql/graphql";
 import { useRoute } from "vue-router";
 import ListItem from "@/components/ListItem.vue";
 import { computed, inject, ref } from "vue";
@@ -109,6 +131,8 @@ import { trackableKey } from "@/util/keys";
 import ConfirmationDialog from "@/components/dialog/ConfirmationDialog.vue";
 import EditInterfaceDefinitionDialog from "@/components/dialog/EditInterfaceDefinitionDialog.vue";
 import { ItemManager } from "@/util/itemManager";
+import { useFilterOption } from "@/util/useFilterOption";
+import FilterDropdown from "@/components/input/FilterDropdown.vue";
 
 type InterfaceDefinition = DefaultInterfaceDefinitionInfoFragment & {
     name: string;
@@ -116,9 +140,130 @@ type InterfaceDefinition = DefaultInterfaceDefinitionInfoFragment & {
     interfaceSpecification: string;
     interfaceSpecificationVersion: string;
     description?: string;
+    interfaceSpecificationData: { id: string; name: string; description: string };
+    template: { id: string; name: string; description: string };
 };
 
-const client = useClient();
+const getComponentTemplateDetailsQuery = graphql(`
+    query getComponentTemplateDetails($id: ID!) {
+        node(id: $id) {
+            id
+            ... on Component {
+                template {
+                    id
+                }
+            }
+        }
+    }
+`);
+
+const getInterfaceDefinitionListQuery = graphql(`
+    query getInterfaceDefinitionList(
+        $orderBy: [InterfaceDefinitionOrder!]!
+        $count: Int!
+        $skip: Int!
+        $componentVersion: ID!
+        $filter: InterfaceDefinitionFilterInput!
+    ) {
+        node(id: $componentVersion) {
+            ... on ComponentVersion {
+                interfaceDefinitions(orderBy: $orderBy, first: $count, skip: $skip, filter: $filter) {
+                    nodes {
+                        ...DefaultInterfaceDefinitionInfo
+                        interfaceSpecificationVersion {
+                            id
+                            version
+                            interfaceSpecification {
+                                id
+                                name
+                                description
+                                template {
+                                    id
+                                    name
+                                    description
+                                }
+                            }
+                        }
+                    }
+                    totalCount
+                }
+            }
+        }
+    }
+`);
+
+const getFilteredInterfaceDefinitionListQuery = graphql(`
+    query getFilteredInterfaceDefinitionList(
+        $query: String!
+        $count: Int!
+        $specificationFilter: InterfaceSpecificationFilterInput!
+        $versionFilter: InterfaceSpecificationVersionFilterInput!
+        $definitionFilter: InterfaceDefinitionFilterInput!
+    ) {
+        searchInterfaceSpecifications(query: $query, first: $count, filter: $specificationFilter) {
+            id
+            name
+            description
+            template {
+                id
+                name
+                description
+            }
+            versions(filter: $versionFilter, first: $count) {
+                nodes {
+                    id
+                    version
+                    interfaceDefinitions(filter: $definitionFilter) {
+                        nodes {
+                            ...DefaultInterfaceDefinitionInfo
+                        }
+                    }
+                }
+            }
+        }
+    }
+`);
+
+const searchInterfaceSpecificationsQuery = graphql(`
+    query searchInterfaceSpecificationsForVersionInterfaces($query: String!, $count: Int!, $component: ID!) {
+        searchInterfaceSpecifications(query: $query, first: $count, filter: { component: { id: { eq: $component } } }) {
+            id
+            name
+            description
+        }
+    }
+`);
+
+const searchInterfaceSpecificationTemplatesQuery = graphql(`
+    query searchInterfaceSpecificationTemplatesForVersionInterfaces($query: String!, $count: Int!) {
+        searchInterfaceSpecificationTemplates(query: $query, first: $count) {
+            id
+            name
+            description
+        }
+    }
+`);
+
+const removeInterfaceSpecificationVersionFromComponentVersionMutation = graphql(`
+    mutation removeInterfaceSpecificationVersionFromComponentVersion(
+        $input: RemoveInterfaceSpecificationVersionFromComponentVersionInput!
+    ) {
+        removeInterfaceSpecificationVersionFromComponentVersion(input: $input) {
+            __typename
+        }
+    }
+`);
+
+const addInterfaceSpecificationVersionToComponentVersionMutation = graphql(`
+    mutation addInterfaceSpecificationVersionToComponentVersion(
+        $input: AddInterfaceSpecificationVersionToComponentVersionInput!
+    ) {
+        addInterfaceSpecificationVersionToComponentVersion(input: $input) {
+            __typename
+        }
+    }
+`);
+
 const route = useRoute();
 const componentVersionId = computed(() => route.params.version as string);
 const componentId = computed(() => route.params.trackable as string);
@@ -131,6 +276,50 @@ const sortFields = {
     "[Default]": InterfaceDefinitionOrderField.Id
 };
 
+const interfaceSpecificationIds = useFilterOption("interfacespecification", true);
+const interfaceSpecificationInput = computed(() => {
+    if (interfaceSpecificationIds.value.length === 0) {
+        return undefined;
+    }
+    return {
+        in: interfaceSpecificationIds.value
+    };
+});
+const interfaceSpecificationFetch = async (search: string) => {
+    const res = await requestThrow(searchInterfaceSpecificationsQuery, {
+        query: search,
+        count: 100,
+        component: componentId.value
+    });
+    return res.searchInterfaceSpecifications.map((t) => ({
+        id: t.id,
+        name: t.name,
+        description: t.description
+    }));
+};
+const templateIds = useFilterOption("template", true);
+const templateInput = computed(() => {
+    if (templateIds.value.length === 0) {
+        return undefined;
+    }
+    return {
+        id: { in: templateIds.value }
+    };
+});
+const templateFetch = async (search: string) => {
+    const res = await requestThrow(searchInterfaceSpecificationTemplatesQuery, {
+        query: search,
+        count: 100
+    });
+    return res.searchInterfaceSpecificationTemplates.map((t) => ({
+        id: t.id,
+        name: t.name,
+        description: t.description
+    }));
+};
+
+const dependencyArray = computed(() => [modifiedIds, templateInput, interfaceSpecificationInput]);
+
 class InterfaceDefinitionItemManager extends ItemManager<InterfaceDefinition, InterfaceDefinitionOrderField> {
     protected async fetchItems(
         filter: string,
@@ -139,48 +328,76 @@ class InterfaceDefinitionItemManager extends ItemManager<InterfaceDefinition, In
         page: number
     ): Promise<[InterfaceDefinition[], number]> {
         if (filter == undefined) {
-            const res = (
-                await client.getInterfaceDefinitionList({
-                    orderBy,
-                    count,
-                    skip: page * count,
-                    componentVersion: componentVersionId.value
-                })
-            ).node as NodeReturnType<"getInterfaceDefinitionList", "ComponentVersion">;
-            return [
-                res.interfaceDefinitions.nodes.map((definition) => ({
-                    ...definition,
-                    name: definition.interfaceSpecificationVersion.interfaceSpecification.name,
-                    description: definition.interfaceSpecificationVersion.interfaceSpecification.description,
-                    version: definition.interfaceSpecificationVersion.version,
-                    interfaceSpecificationVersion: definition.interfaceSpecificationVersion.id,
-                    interfaceSpecification: definition.interfaceSpecificationVersion.interfaceSpecification.id
-                })),
-                res.interfaceDefinitions.totalCount
-            ];
-        } else {
-            const res = await client.getFilteredInterfaceDefinitionList({
-                query: filter,
+            const componentVersion = await queryNode(getInterfaceDefinitionListQuery, "ComponentVersion", {
+                orderBy,
                 count,
-                componentVersion: componentVersionId.value
-            });
-            const definitions: InterfaceDefinition[] = [];
-            for (const interfaceSpecification of res.searchInterfaceSpecifications) {
-                for (const version of interfaceSpecification.versions.nodes) {
-                    for (const definition of version.interfaceDefinitions.nodes) {
-                        definitions.push({
-                            ...definition,
-                            name: interfaceSpecification.name,
-                            description: interfaceSpecification.description,
-                            version: version.version,
-                            interfaceSpecificationVersion: version.id,
-                            interfaceSpecification: interfaceSpecification.id
-                        });
+                skip: page * count,
+                componentVersion: componentVersionId.value,
+                filter: {
+                    interfaceSpecificationVersion: {
+                        interfaceSpecification: {
+                            id: interfaceSpecificationInput.value,
+                            template: templateInput.value
+                        }
                     }
                 }
+            });
+            if (componentVersion) {
+                return [
+                    componentVersion.interfaceDefinitions.nodes.map((definition) => ({
+                        ...definition,
+                        name: definition.interfaceSpecificationVersion.interfaceSpecification.name,
+                        description: definition.interfaceSpecificationVersion.interfaceSpecification.description,
+                        version: definition.interfaceSpecificationVersion.version,
+                        interfaceSpecificationVersion: definition.interfaceSpecificationVersion.id,
+                        interfaceSpecification: definition.interfaceSpecificationVersion.interfaceSpecification.id,
+                        interfaceSpecificationData: definition.interfaceSpecificationVersion.interfaceSpecification,
+                        template: definition.interfaceSpecificationVersion.interfaceSpecification.template
+                    })),
+                    componentVersion.interfaceDefinitions.totalCount
+                ];
             }
-            return [definitions, res.searchInterfaceSpecifications.length];
+        } else {
+            const definitionFilter: InterfaceDefinitionFilterInput = {
+                componentVersion: { id: { eq: componentVersionId.value } }
+            };
+            const versionFilter: InterfaceSpecificationVersionFilterInput = {
+                interfaceDefinitions: { any: definitionFilter }
+            };
+            const specificationFilter: InterfaceSpecificationFilterInput = {
+                versions: { any: versionFilter },
+                template: templateInput.value,
+                id: interfaceSpecificationInput.value
+            };
+            const res = await request(getFilteredInterfaceDefinitionListQuery, {
+                query: filter,
+                count,
+                specificationFilter,
+                versionFilter,
+                definitionFilter
+            });
+            if (res) {
+                const definitions: InterfaceDefinition[] = [];
+                for (const interfaceSpecification of res.searchInterfaceSpecifications) {
+                    for (const version of interfaceSpecification.versions.nodes) {
+                        for (const definition of version.interfaceDefinitions.nodes) {
+                            definitions.push({
+                                ...definition,
+                                name: interfaceSpecification.name,
+                                description: interfaceSpecification.description,
+                                version: version.version,
+                                interfaceSpecificationVersion: version.id,
+                                interfaceSpecification: interfaceSpecification.id,
+                                interfaceSpecificationData: interfaceSpecification,
+                                template: interfaceSpecification.template
+                            });
+                        }
+                    }
+                }
+                return [definitions, res.searchInterfaceSpecifications.length];
+            }
         }
+        return [[], 0];
     }
 }
 const itemManager = new InterfaceDefinitionItemManager() as ItemManager<
@@ -190,10 +407,9 @@ const itemManager = new InterfaceDefinitionItemManager() as ItemManager<
 
 const componentTemplateInfo = computedAsync(
     async () => {
-        const templateRes = await withErrorMessage(async () => {
-            return client.getComponentTemplateDetails({ id: componentId.value });
+        return await withErrorMessage(async () => {
+            return queryNodeThrow(getComponentTemplateDetailsQuery, "Component", { id: componentId.value });
         }, "Error loading component template info");
-        return templateRes.node as NodeReturnType<"getComponentTemplateDetails", "Component">;
     },
     null,
     { shallow: false }
@@ -205,7 +421,7 @@ async function deleteInterfaceDefinition(
     invisible: boolean
 ) {
     await withErrorMessage(async () => {
-        await client.removeInterfaceSpecificationVersionFromComponentVersion({
+        await requestThrow(removeInterfaceSpecificationVersionFromComponentVersionMutation, {
             input: {
                 interfaceSpecificationVersion: interfaceSpecificationVersionId,
                 componentVersion: componentVersionId.value,
@@ -226,15 +442,14 @@ async function updateInterfaceDefinition(id: string, visible: boolean, value: bo
             interfaceSpecificationVersion: id
         };
         if (value) {
-            await client.addInterfaceSpecificationVersionToComponentVersion({
+            await requestThrow(addInterfaceSpecificationVersionToComponentVersionMutation, {
                 input: wrappedValue
             });
         } else {
-            await client.removeInterfaceSpecificationVersionFromComponentVersion({
+            await requestThrow(removeInterfaceSpecificationVersionFromComponentVersionMutation, {
                 input: wrappedValue
             });
         }
-        modifiedIds.value.push(id);
     }, "Error updating interface definition visibility");
     modifiedIds.value.push(id);
 }

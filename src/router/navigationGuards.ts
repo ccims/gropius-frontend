@@ -1,60 +1,45 @@
 import { useAppStore } from "@/store/app";
-import { buildOAuthUrl, OAuthRespose, TokenScope } from "@/util/oauth";
-import { withErrorMessage } from "@/util/withErrorMessage";
+import { buildOAuthUrl, type OAuthRespose, TokenScope } from "@/util/oauth";
 import axios from "axios";
-import { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import type { RouteLocationNormalized, RouteLocationRaw } from "vue-router";
+import router from "@/router/index";
 
 export async function onLoginEnter(
     to: RouteLocationNormalized,
     from: RouteLocationNormalized
 ): Promise<RouteLocationRaw | boolean> {
     const oauthCode = to.query["code"] ?? "";
-    const state = JSON.parse((to.query["state"] as string | undefined) ?? "{}");
     const store = useAppStore();
+
     if (oauthCode !== undefined && oauthCode.length > 0) {
         try {
-            const tokenResponse: OAuthRespose = await withErrorMessage(
-                async () =>
-                    (
-                        await axios.post("/auth/oauth/token", {
-                            grant_type: "authorization_code",
-                            client_id: "gropius-auth-client",
-                            code: oauthCode,
-                            code_verifier: store.codeVerifier
-                        })
-                    ).data,
-                "Could not login."
-            );
-            if (state.register) {
-                withErrorMessage(async () => {
-                    await axios.post(
-                        "/auth/api/login/registration/self-link",
-                        {
-                            register_token: tokenResponse.access_token
-                        },
-                        {
-                            headers: {
-                                Authorization: `Bearer ${await store.getAccessToken()}`
-                            }
-                        }
-                    );
-                }, "Could not link account.");
-            } else {
-                await handleOAuthResponse(tokenResponse, store);
-            }
+            const tokenResponse: OAuthRespose = (
+                await axios.post("/auth/oauth/token", {
+                    grant_type: "authorization_code",
+                    client_id: "gropius-auth-client",
+                    code: oauthCode,
+                    code_verifier: store.codeVerifier
+                })
+            ).data;
+            await store.setNewTokenPair(tokenResponse.access_token, tokenResponse.refresh_token);
+
+            const redirectTo = store.redirectTo;
+            store.redirectTo = "";
             return {
-                path: state.from,
+                ...router.resolve(redirectTo),
                 replace: true
             };
-        } catch (err) {
+        } catch (err: any) {
+            console.log(err);
+            store.pushError("Could not login");
             return {
                 name: "home",
                 replace: true
             };
         }
-    } else {
-        return authorizeIfRequired(to);
     }
+
+    return true;
 }
 
 export async function onAnyEnter(
@@ -64,21 +49,20 @@ export async function onAnyEnter(
     if (to.name == "login") {
         return true;
     }
-    useAppStore().validateLegalInformation();
-    return await authorizeIfRequired(to);
+    const result = await authorizeIfRequired(to);
+    if (from.name !== to.name && result === true) {
+        useAppStore().validateLegalInformation();
+    }
+    return result;
 }
 
-async function authorizeIfRequired(to: RouteLocationNormalized) {
+export async function authorizeIfRequired(to: RouteLocationNormalized): Promise<boolean> {
     const store = useAppStore();
     if (!(await store.isLoggedIn())) {
         window.location.href = await buildOAuthUrl([TokenScope.LOGIN_SERVICE, TokenScope.BACKEND], to.fullPath);
-        true;
+        return false;
     } else {
-        store.validateUser();
+        await store.validateUser();
     }
     return true;
-}
-
-async function handleOAuthResponse(tokenResponse: OAuthRespose, store: ReturnType<typeof useAppStore>) {
-    store.setNewTokenPair(tokenResponse.access_token, tokenResponse.refresh_token);
 }
