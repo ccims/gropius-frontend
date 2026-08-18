@@ -2,30 +2,37 @@
     <v-dialog v-model="dialog" persistent width="auto">
         <v-card color="surface-elevated-3" rounded="lger" class="pa-3 select-state-content" elevation="0">
             <v-card-title class="pl-4">Select issue state</v-card-title>
-            <v-card-text class="pb-0">
+            <v-card-text class="text-medium-emphasis pb-4">
                 The column
-                <span class="font-weight-medium">{{ cachedModel?.columnName }}</span>
+                <span class="font-weight-medium text-high-emphasis">{{ cachedModel?.columnName }}</span>
                 is assigned multiple issue states. Choose the state the issue should get.
             </v-card-text>
-            <v-list class="pa-2" bg-color="transparent">
-                <v-list-item
+            <div class="d-flex flex-column ga-2 px-4">
+                <div
                     v-for="state in cachedModel?.states ?? []"
                     :key="state.id"
-                    :title="state.name"
-                    :subtitle="state.description"
-                    rounded="lger"
-                    :active="selected == state.id"
+                    class="state-option d-flex align-center pa-3"
+                    :class="{ 'state-option--selected': selected == state.id }"
                     @click="selected = state.id"
                 >
-                    <template #prepend>
-                        <v-icon
-                            :style="`color: rgb(var(--v-theme-issue-${state.isOpen ? 'open' : 'closed'}))`"
-                            class="opacity-100 mr-4"
-                            icon="mdi-circle"
-                        />
-                    </template>
-                </v-list-item>
-            </v-list>
+                    <v-icon
+                        :icon="selected == state.id ? 'mdi-radiobox-marked' : 'mdi-radiobox-blank'"
+                        class="state-radio mr-3 flex-0-0"
+                    />
+                    <v-icon
+                        icon="mdi-circle"
+                        size="12"
+                        :class="state.isOpen ? 'state-dot--open' : 'state-dot--closed'"
+                        class="opacity-100 mr-3 flex-0-0"
+                    />
+                    <div class="flex-1-1 text-truncate">
+                        <div>{{ state.name }}</div>
+                        <div v-if="state.description" class="text-body-2 text-medium-emphasis text-truncate">
+                            {{ state.description }}
+                        </div>
+                    </div>
+                </div>
+            </div>
             <v-card-actions>
                 <v-spacer />
                 <DefaultButton variant="text" color="" @click="cancel">Cancel</DefaultButton>
@@ -87,7 +94,40 @@ function confirm() {
 </script>
 <style scoped lang="scss">
 @use "@/styles/settings.scss";
+
 .select-state-content {
     width: min(500px, calc(100vw - 3 * settings.$side-bar-width));
+}
+
+.state-option {
+    border: thin solid rgb(var(--v-theme-outline-variant));
+    border-radius: 12px;
+    cursor: pointer;
+
+    &:hover {
+        background: rgba(var(--v-theme-on-surface), var(--v-hover-opacity));
+    }
+
+    &--selected {
+        border-color: rgb(var(--v-theme-primary));
+        background: rgba(var(--v-theme-primary), 0.12);
+
+        &:hover {
+            background: rgba(var(--v-theme-primary), 0.16);
+        }
+
+        .state-radio {
+            // the app disables Vuetify's color pack, so the theme color has to be applied directly
+            color: rgb(var(--v-theme-primary));
+        }
+    }
+}
+
+.state-dot--open {
+    color: rgb(var(--v-theme-issue-open));
+}
+
+.state-dot--closed {
+    color: rgb(var(--v-theme-issue-closed));
 }
 </style>

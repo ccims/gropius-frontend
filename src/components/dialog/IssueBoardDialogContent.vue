@@ -7,6 +7,15 @@
                 <v-textarea v-model="description" v-bind="descriptionProps" label="Description" class="mb-1" />
             </div>
             <v-card-actions>
+                <DefaultButton v-if="deletable" variant="text" color="error">
+                    Delete
+                    <ConfirmationDialog
+                        :title="`Delete issue board ${initialValue.name}?`"
+                        message="Are you sure you want to delete this issue board? The issues on it are not deleted."
+                        confirm-text="Delete"
+                        @confirm="$emit('delete')"
+                    />
+                </DefaultButton>
                 <v-spacer />
                 <DefaultButton variant="text" color="" @click="!meta.dirty && $emit('cancel')">
                     Cancel
@@ -41,6 +50,7 @@ export interface IssueBoard {
 const emit = defineEmits<{
     (event: "submit", issueBoard: IssueBoard): void;
     (event: "cancel"): void;
+    (event: "delete"): void;
 }>();
 
 const props = defineProps({
@@ -65,6 +75,11 @@ const props = defineProps({
         required: true
     },
     submitDisabled: {
+        type: Boolean,
+        default: false
+    },
+    /** If true, the dialog also offers to delete the issue board */
+    deletable: {
         type: Boolean,
         default: false
     }

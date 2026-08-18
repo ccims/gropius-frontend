@@ -32,11 +32,7 @@
                 <v-icon icon="mdi-dots-horizontal" size="small" />
                 <v-menu activator="parent" location="bottom end">
                     <v-list rounded="lger" class="pa-2" bg-color="surface-elevated-3">
-                        <v-list-item
-                            title="Remove from board"
-                            prepend-icon="mdi-close"
-                            @click.stop="removeDialog = true"
-                        />
+                        <v-list-item title="Remove from board" prepend-icon="mdi-close" @click.stop="$emit('remove')" />
                     </v-list>
                 </v-menu>
             </IconButton>
@@ -45,25 +41,14 @@
         <div v-if="issue.labels.nodes.length > 0" class="d-flex flex-wrap ga-1 mt-2">
             <Label v-for="label in issue.labels.nodes" :key="label.id" :label="label" size="x-small" />
         </div>
-        <!-- ConfirmationDialog uses its parent as activator, so it is wrapped to keep the card itself from opening it -->
-        <div class="d-none">
-            <ConfirmationDialog
-                v-model="removeDialog"
-                title="Remove issue from board?"
-                message="Are you sure you want to remove this issue from the Issue Board? The issue itself is not deleted."
-                confirm-text="Remove"
-                @confirm="$emit('remove')"
-            />
-        </div>
     </v-card>
 </template>
 <script setup lang="ts">
 import type { IssueBoardCardInfoFragment } from "@/gql/graphql";
-import { computed, ref, type PropType } from "vue";
+import { computed, type PropType } from "vue";
 import IssueIcon from "../IssueIcon.vue";
 import UserStack from "../UserStack.vue";
 import Label from "../info/Label.vue";
-import ConfirmationDialog from "../dialog/ConfirmationDialog.vue";
 import SvgWrapper from "../SvgWrapper.vue";
 
 const props = defineProps({
@@ -91,8 +76,6 @@ const emit = defineEmits<{
     (event: "remove"): void;
     (event: "open"): void;
 }>();
-
-const removeDialog = ref(false);
 
 const assignees = computed(() => props.issue.assignments.nodes.map((assignment) => assignment.user));
 

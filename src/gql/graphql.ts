@@ -2922,11 +2922,7 @@ export type IssuePriorityFilterInput = {
 export type IssuePriorityInput = {
     /** The description of the NamedNode */
     description: string;
-    /**
-     * A path that is used as the icon for the IssuePriority, must not be blank.
-     *         Used with a 0 0 24 24 viewBox. No stroke, only fill.
-     *
-     */
+    /** A path that is used as the icon for issues. Used with a 0 0 24 24 viewBox. No stroke, only fill. */
     iconPath: string;
     /** The name of the NamedNode, must not be blank */
     name: string;
@@ -5234,7 +5230,7 @@ export type UpdateIssueBoardInput = {
 export type UpdateIssuePriorityInput = {
     /** The description of the NamedNode */
     description?: string | null | undefined;
-    /** A path that is used as the icon for the IssuePriority, must not be blank */
+    /** A path that is used as the icon for issues */
     iconPath?: string | null | undefined;
     /** The id of the node to update */
     id: string;
@@ -7264,7 +7260,14 @@ export type CreateIssueBoardMutation = {
     __typename: "Mutation";
     createIssueBoard: {
         __typename: "CreateIssueBoardPayload";
-        issueBoard: { __typename: "IssueBoard"; id: string; name: string; description: string };
+        issueBoard: {
+            __typename: "IssueBoard";
+            id: string;
+            name: string;
+            description: string;
+            issueBoardColumns: { __typename: "IssueBoardColumnConnection"; totalCount: number };
+            issueBoardItems: { __typename: "IssueBoardItemConnection"; totalCount: number };
+        };
     };
 };
 
@@ -8033,8 +8036,24 @@ export type UpdateIssueBoardMutation = {
     __typename: "Mutation";
     updateIssueBoard: {
         __typename: "UpdateIssueBoardPayload";
-        issueBoard: { __typename: "IssueBoard"; id: string; name: string; description: string };
+        issueBoard: {
+            __typename: "IssueBoard";
+            id: string;
+            name: string;
+            description: string;
+            issueBoardColumns: { __typename: "IssueBoardColumnConnection"; totalCount: number };
+            issueBoardItems: { __typename: "IssueBoardItemConnection"; totalCount: number };
+        };
     };
+};
+
+export type DeleteIssueBoardFromDialogMutationVariables = Exact<{
+    id: string;
+}>;
+
+export type DeleteIssueBoardFromDialogMutation = {
+    __typename: "Mutation";
+    deleteIssueBoard: { __typename: "DeleteNodePayload"; id: string };
 };
 
 export type UpdateLabelMutationVariables = Exact<{
@@ -13288,7 +13307,14 @@ export type DefaultIssueIconInfoFragment = {
     type: { __typename: "IssueType"; iconPath: string };
 };
 
-export type DefaultIssueBoardInfoFragment = { __typename: "IssueBoard"; id: string; name: string; description: string };
+export type DefaultIssueBoardInfoFragment = {
+    __typename: "IssueBoard";
+    id: string;
+    name: string;
+    description: string;
+    issueBoardColumns: { __typename: "IssueBoardColumnConnection"; totalCount: number };
+    issueBoardItems: { __typename: "IssueBoardItemConnection"; totalCount: number };
+};
 
 export type IssueBoardColumnInfoFragment = {
     __typename: "IssueBoardColumn";
@@ -24995,7 +25021,14 @@ export type GetIssueBoardListQuery = {
               issueBoards: {
                   __typename: "IssueBoardConnection";
                   totalCount: number;
-                  nodes: Array<{ __typename: "IssueBoard"; id: string; name: string; description: string }>;
+                  nodes: Array<{
+                      __typename: "IssueBoard";
+                      id: string;
+                      name: string;
+                      description: string;
+                      issueBoardColumns: { __typename: "IssueBoardColumnConnection"; totalCount: number };
+                      issueBoardItems: { __typename: "IssueBoardItemConnection"; totalCount: number };
+                  }>;
               };
           }
         | { __typename: "ComponentPermission" }
@@ -25047,7 +25080,14 @@ export type GetIssueBoardListQuery = {
               issueBoards: {
                   __typename: "IssueBoardConnection";
                   totalCount: number;
-                  nodes: Array<{ __typename: "IssueBoard"; id: string; name: string; description: string }>;
+                  nodes: Array<{
+                      __typename: "IssueBoard";
+                      id: string;
+                      name: string;
+                      description: string;
+                      issueBoardColumns: { __typename: "IssueBoardColumnConnection"; totalCount: number };
+                      issueBoardItems: { __typename: "IssueBoardItemConnection"; totalCount: number };
+                  }>;
               };
           }
         | { __typename: "ProjectPermission" }
@@ -25084,16 +25124,14 @@ export type GetFilteredIssueBoardListQueryVariables = Exact<{
 
 export type GetFilteredIssueBoardListQuery = {
     __typename: "Query";
-    searchIssueBoards: Array<{ __typename: "IssueBoard"; id: string; name: string; description: string }>;
-};
-
-export type DeleteIssueBoardMutationVariables = Exact<{
-    id: string;
-}>;
-
-export type DeleteIssueBoardMutation = {
-    __typename: "Mutation";
-    deleteIssueBoard: { __typename: "DeleteNodePayload"; id: string };
+    searchIssueBoards: Array<{
+        __typename: "IssueBoard";
+        id: string;
+        name: string;
+        description: string;
+        issueBoardColumns: { __typename: "IssueBoardColumnConnection"; totalCount: number };
+        issueBoardItems: { __typename: "IssueBoardItemConnection"; totalCount: number };
+    }>;
 };
 
 export type GetLabelListQueryVariables = Exact<{
@@ -29394,7 +29432,29 @@ export const DefaultIssueBoardInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "__typename" } },
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
-                    { kind: "Field", name: { kind: "Name", value: "description" } }
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueBoardColumns" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueBoardItems" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    }
                 ]
             }
         }
@@ -41902,7 +41962,29 @@ export const CreateIssueBoardDocument = {
                     { kind: "Field", name: { kind: "Name", value: "__typename" } },
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
-                    { kind: "Field", name: { kind: "Name", value: "description" } }
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueBoardColumns" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueBoardItems" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    }
                 ]
             }
         }
@@ -43534,12 +43616,84 @@ export const UpdateIssueBoardDocument = {
                     { kind: "Field", name: { kind: "Name", value: "__typename" } },
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
-                    { kind: "Field", name: { kind: "Name", value: "description" } }
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueBoardColumns" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueBoardItems" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    }
                 ]
             }
         }
     ]
 } as unknown as DocumentNode<UpdateIssueBoardMutation, UpdateIssueBoardMutationVariables>;
+export const DeleteIssueBoardFromDialogDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "mutation",
+            name: { kind: "Name", value: "deleteIssueBoardFromDialog" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "deleteIssueBoard" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "input" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "id" },
+                                            value: { kind: "Variable", name: { kind: "Name", value: "id" } }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<DeleteIssueBoardFromDialogMutation, DeleteIssueBoardFromDialogMutationVariables>;
 export const UpdateLabelDocument = {
     kind: "Document",
     definitions: [
@@ -78963,7 +79117,29 @@ export const GetIssueBoardListDocument = {
                     { kind: "Field", name: { kind: "Name", value: "__typename" } },
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
-                    { kind: "Field", name: { kind: "Name", value: "description" } }
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueBoardColumns" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueBoardItems" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    }
                 ]
             }
         }
@@ -79068,54 +79244,26 @@ export const GetFilteredIssueBoardListDocument = {
                     { kind: "Field", name: { kind: "Name", value: "__typename" } },
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
-                    { kind: "Field", name: { kind: "Name", value: "description" } }
-                ]
-            }
-        }
-    ]
-} as unknown as DocumentNode<GetFilteredIssueBoardListQuery, GetFilteredIssueBoardListQueryVariables>;
-export const DeleteIssueBoardDocument = {
-    kind: "Document",
-    definitions: [
-        {
-            kind: "OperationDefinition",
-            operation: "mutation",
-            name: { kind: "Name", value: "deleteIssueBoard" },
-            variableDefinitions: [
-                {
-                    kind: "VariableDefinition",
-                    variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
-                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
-                }
-            ],
-            selectionSet: {
-                kind: "SelectionSet",
-                selections: [
-                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
                     {
                         kind: "Field",
-                        name: { kind: "Name", value: "deleteIssueBoard" },
-                        arguments: [
-                            {
-                                kind: "Argument",
-                                name: { kind: "Name", value: "input" },
-                                value: {
-                                    kind: "ObjectValue",
-                                    fields: [
-                                        {
-                                            kind: "ObjectField",
-                                            name: { kind: "Name", value: "id" },
-                                            value: { kind: "Variable", name: { kind: "Name", value: "id" } }
-                                        }
-                                    ]
-                                }
-                            }
-                        ],
+                        name: { kind: "Name", value: "issueBoardColumns" },
                         selectionSet: {
                             kind: "SelectionSet",
                             selections: [
                                 { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "id" } }
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueBoardItems" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
                             ]
                         }
                     }
@@ -79123,7 +79271,7 @@ export const DeleteIssueBoardDocument = {
             }
         }
     ]
-} as unknown as DocumentNode<DeleteIssueBoardMutation, DeleteIssueBoardMutationVariables>;
+} as unknown as DocumentNode<GetFilteredIssueBoardListQuery, GetFilteredIssueBoardListQueryVariables>;
 export const GetLabelListDocument = {
     kind: "Document",
     definitions: [

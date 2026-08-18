@@ -2,6 +2,12 @@ fragment DefaultIssueBoardInfo on IssueBoard {
     id
     name
     description
+    issueBoardColumns {
+        totalCount
+    }
+    issueBoardItems {
+        totalCount
+    }
 }
 
 fragment IssueBoardColumnInfo on IssueBoardColumn {

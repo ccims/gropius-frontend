@@ -6,7 +6,13 @@
         <template v-else>
             <!-- the padding sits on the wrapper, so the gutter around the board stays put while scrolling -->
             <div class="board-container flex-1-1 pa-3">
-                <div class="board-scroll-container d-flex ga-3" @dragover.prevent @drop="onContainerDrop">
+                <div
+                    ref="scrollContainer"
+                    class="board-scroll-container d-flex ga-3"
+                    @dragover.prevent
+                    @drop="onContainerDrop"
+                    @wheel="onWheel"
+                >
                     <template v-for="(column, index) in displayedColumns" :key="column.id ?? 'no-matching-state'">
                         <div v-if="columnDropIndex == index" class="column-drop-indicator" />
                         <IssueBoardColumn
@@ -52,26 +58,34 @@
             :ignore="issuesOnBoard"
             @added-issue="reload()"
         />
+        <UpdateIssueBoardDialog
+            v-model="boardToUpdate"
+            :deletable="canManageBoard"
+            @updated-issue-board="boardUpdated()"
+            @deleted-issue-board="openBoardList()"
+        />
         <SelectIssueStateDialog v-model="stateSelection" @selected="finishPendingDrop" @cancel="pendingDrop = null" />
     </div>
 </template>
 <script lang="ts" setup>
 import { computedAsync } from "@vueuse/core";
-import { computed, inject, ref, shallowRef, watch } from "vue";
+import { computed, inject, onBeforeUnmount, ref, shallowRef, useTemplateRef, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { graphql } from "@/gql";
 import { queryNodeThrow, requestThrow } from "@/gql/client";
 import { withErrorMessage } from "@/util/withErrorMessage";
-import { trackableKey } from "@/util/keys";
+import { eventBusKey, trackableKey } from "@/util/keys";
 import IssueBoardColumn from "@/components/board/IssueBoardColumn.vue";
 import CreateIssueBoardColumnDialog from "@/components/dialog/CreateIssueBoardColumnDialog.vue";
 import UpdateIssueBoardColumnDialog from "@/components/dialog/UpdateIssueBoardColumnDialog.vue";
 import AddIssueToBoardDialog from "@/components/dialog/AddIssueToBoardDialog.vue";
+import UpdateIssueBoardDialog from "@/components/dialog/UpdateIssueBoardDialog.vue";
 import SelectIssueStateDialog, { type IssueStateSelection } from "@/components/dialog/SelectIssueStateDialog.vue";
 import type { IssueBoardColumnInfoFragment, IssueBoardItemInfoFragment } from "@/gql/graphql";
 import type { BoardDragState } from "@/components/board/boardDrag";
 import type { IssueBoardColumnInitialValue } from "@/components/dialog/IssueBoardColumnDialogContent.vue";
 import type { IdObject } from "@/util/types";
+import { onEvent } from "@/util/eventBus";
 
 const getIssueBoardQuery = graphql(`
     query getIssueBoard($id: ID!) {
@@ -269,6 +283,33 @@ function positionAtIndex(entries: { position: number }[], index: number): number
     return (entries[index - 1].position + entries[index].position) / 2;
 }
 
+const eventBus = inject(eventBusKey);
+const boardToUpdate = ref<{ id: string; name: string; description: string } | null>(null);
+
+function boardUpdated() {
+    reload();
+    // the name of the board is part of the title of the page
+    eventBus?.emit("title-segment-changed");
+}
+
+onEvent("edit-issue-board", () => {
+    const currentBoard = board.value;
+    if (currentBoard != undefined) {
+        boardToUpdate.value = {
+            id: currentBoard.id,
+            name: currentBoard.name,
+            description: currentBoard.description
+        };
+    }
+});
+
+function openBoardList() {
+    router.push({
+        name: route.name?.toString().startsWith("component") ? "component-issue-boards" : "project-issue-boards",
+        params: { trackable: trackableId.value }
+    });
+}
+
 const columnToUpdate = ref<(IssueBoardColumnInitialValue & IdObject) | null>(null);
 
 function editColumn(column: DisplayedColumn) {
@@ -405,6 +446,122 @@ async function dropColumn() {
     }, "Error moving column");
     reload();
 }
+
+const scrollContainer = useTemplateRef("scrollContainer");
+
+/**
+ * Checks whether the element itself scrolls vertically, which means it should keep the wheel event.
+ */
+function scrollsVertically(element: HTMLElement): boolean {
+    if (element.scrollHeight <= element.clientHeight) {
+        return false;
+    }
+    const overflowY = getComputedStyle(element).overflowY;
+    return overflowY == "auto" || overflowY == "scroll";
+}
+
+/** Fraction of the remaining distance the scroll animation covers per frame */
+const scrollEasing = 0.25;
+/**
+ * Smallest step of the scroll animation, scrollLeft can be rounded to whole pixels,
+ * so smaller steps would never arrive at the target.
+ */
+const scrollMinimumStep = 1;
+
+/** Frames after the last wheel tick before the animation gives up and jumps to the target */
+const scrollMaximumFrames = 60;
+
+let scrollTarget: number | undefined = undefined;
+let scrollAnimation: number | undefined = undefined;
+let scrollFramesLeft = 0;
+/** The position the animation last set, to tell its own scrolling apart from that of the user */
+let animatedPosition: number | undefined = undefined;
+
+function stopScrollAnimation() {
+    if (scrollAnimation != undefined) {
+        cancelAnimationFrame(scrollAnimation);
+    }
+    scrollAnimation = undefined;
+    scrollTarget = undefined;
+    animatedPosition = undefined;
+}
+
+/**
+ * Scrolls the board towards the current target, easing out like the scrolling of the browser itself
+ * instead of jumping by a whole wheel tick at once. Scrolling by any other means, for example by
+ * dragging the scrollbar, ends the animation instead of fighting it.
+ */
+function animateScroll() {
+    const container = scrollContainer.value;
+    if (container == undefined || scrollTarget == undefined) {
+        stopScrollAnimation();
+        return;
+    }
+    if (animatedPosition != undefined && Math.abs(container.scrollLeft - animatedPosition) > scrollMinimumStep) {
+        stopScrollAnimation();
+        return;
+    }
+    const distance = scrollTarget - container.scrollLeft;
+    // the animation must never outlive its target, an endless loop would block scrolling by other means
+    if (Math.abs(distance) <= scrollMinimumStep || scrollFramesLeft <= 0) {
+        container.scrollLeft = scrollTarget;
+        stopScrollAnimation();
+        return;
+    }
+    scrollFramesLeft--;
+    const step = distance * scrollEasing;
+    container.scrollLeft += Math.abs(step) < scrollMinimumStep ? Math.sign(distance) * scrollMinimumStep : step;
+    // the browser may round the position, so the next frame compares against what it actually stored
+    animatedPosition = container.scrollLeft;
+    scrollAnimation = requestAnimationFrame(animateScroll);
+}
+
+/**
+ * The delta of a wheel event is not necessarily in pixels, the other modes have to be converted.
+ */
+function wheelDeltaInPixels(event: WheelEvent, container: HTMLElement): number {
+    if (event.deltaMode == WheelEvent.DOM_DELTA_LINE) {
+        return event.deltaY * 16;
+    }
+    if (event.deltaMode == WheelEvent.DOM_DELTA_PAGE) {
+        return event.deltaY * container.clientWidth;
+    }
+    return event.deltaY;
+}
+
+/**
+ * Turns vertical scrolling into horizontal scrolling of the board, unless the pointer is over
+ * something that scrolls vertically itself, like the body of a column with more cards than fit.
+ */
+function onWheel(event: WheelEvent) {
+    const container = scrollContainer.value;
+    // horizontal scrolling, for example on a touchpad, already does the right thing on its own
+    if (container == undefined || Math.abs(event.deltaY) <= Math.abs(event.deltaX) || event.shiftKey || event.ctrlKey) {
+        return;
+    }
+    if (container.scrollWidth <= container.clientWidth) {
+        return;
+    }
+    let element = event.target as HTMLElement | null;
+    while (element != null && element != container) {
+        if (scrollsVertically(element)) {
+            return;
+        }
+        element = element.parentElement;
+    }
+    event.preventDefault();
+    const maxScroll = container.scrollWidth - container.clientWidth;
+    // ticks arriving while the animation is running add up instead of restarting it
+    const target = (scrollTarget ?? container.scrollLeft) + wheelDeltaInPixels(event, container);
+    scrollTarget = Math.max(0, Math.min(maxScroll, target));
+    scrollFramesLeft = scrollMaximumFrames;
+    if (scrollAnimation == undefined) {
+        animatedPosition = container.scrollLeft;
+        scrollAnimation = requestAnimationFrame(animateScroll);
+    }
+}
+
+onBeforeUnmount(stopScrollAnimation);
 
 function onContainerDrop() {
     if (dragState.value?.kind == "column") {

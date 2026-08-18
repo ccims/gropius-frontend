@@ -2,13 +2,15 @@
     <v-dialog v-model="updateIssueBoardDialog" persistent width="auto">
         <IssueBoardDialogContent
             v-if="cachedModel != undefined"
-            title="Update issue board"
+            title="Issue board settings"
             discard-title="Discard changes?"
             discard-message="Are you sure you want to discard the changes?"
-            submit-action="Update issue board"
+            submit-action="Save changes"
             :initial-value="cachedModel"
             :submit-disabled="submitDisabled"
+            :deletable="deletable"
             @submit="updateIssueBoard"
+            @delete="deleteIssueBoard"
             @cancel="updateIssueBoardDialog = false"
         />
     </v-dialog>
@@ -33,9 +35,25 @@ const updateIssueBoardMutation = graphql(`
     }
 `);
 
+const deleteIssueBoardMutation = graphql(`
+    mutation deleteIssueBoardFromDialog($id: ID!) {
+        deleteIssueBoard(input: { id: $id }) {
+            id
+        }
+    }
+`);
+
 const model = defineModel({
     type: Object as PropType<(IssueBoard & IdObject) | null>,
     required: false
+});
+
+defineProps({
+    /** If true, the dialog also offers to delete the issue board */
+    deletable: {
+        type: Boolean,
+        default: false
+    }
 });
 
 const updateIssueBoardDialog = computed({
@@ -50,6 +68,7 @@ const [blockWithErrorMessage, submitDisabled] = useBlockingWithErrorMessage();
 
 const emit = defineEmits<{
     (event: "updated-issue-board", issueBoard: DefaultIssueBoardInfoFragment): void;
+    (event: "deleted-issue-board", id: string): void;
 }>();
 
 const cachedModel = useCachedRef(model);
@@ -66,5 +85,14 @@ async function updateIssueBoard(state: IssueBoard) {
     }, "Error updating issue board");
     updateIssueBoardDialog.value = false;
     emit("updated-issue-board", issueBoard);
+}
+
+async function deleteIssueBoard() {
+    const id = model.value!.id;
+    await blockWithErrorMessage(async () => {
+        await requestThrow(deleteIssueBoardMutation, { id });
+    }, "Error deleting issue board");
+    updateIssueBoardDialog.value = false;
+    emit("deleted-issue-board", id);
 }
 </script>

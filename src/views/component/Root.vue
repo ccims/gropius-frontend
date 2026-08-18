@@ -408,6 +408,15 @@ const rightSidebarItems = computed(() => {
         return [
             [
                 {
+                    icon: "mdi-plus",
+                    description: `Add issue to board`,
+                    color: "secondary",
+                    disabled: !(component?.value?.manageIssues ?? false),
+                    onClick: () => {
+                        eventBus?.emit("add-issue-to-board", undefined);
+                    }
+                },
+                {
                     icon: "mdi-table-column-plus-after",
                     description: `Add column`,
                     color: "secondary",
@@ -415,14 +424,16 @@ const rightSidebarItems = computed(() => {
                     onClick: () => {
                         eventBus?.emit("create-issue-board-column", undefined);
                     }
-                },
+                }
+            ],
+            [
                 {
-                    icon: "mdi-plus",
-                    description: `Add issue to board`,
+                    icon: "mdi-cog",
+                    description: `Board settings`,
                     color: "secondary",
-                    disabled: !(component?.value?.manageIssues ?? false),
+                    disabled: !(component?.value?.manageIssueBoards ?? false),
                     onClick: () => {
-                        eventBus?.emit("add-issue-to-board", undefined);
+                        eventBus?.emit("edit-issue-board", undefined);
                     }
                 }
             ]

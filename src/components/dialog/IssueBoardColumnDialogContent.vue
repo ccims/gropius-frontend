@@ -6,10 +6,6 @@
                 <v-text-field v-model="name" v-bind="nameProps" label="Name" class="mb-1" />
                 <v-textarea v-model="description" v-bind="descriptionProps" label="Description" class="mb-1" />
                 <IssueStateMultiAutocomplete v-model="issueStates" :initial-items="initialValue.initialStates" />
-                <div class="text-medium-emphasis text-body-2 mt-n4">
-                    Issues with one of these states are shown in this column. A state can only be assigned to one column
-                    of a board.
-                </div>
             </div>
             <v-card-actions>
                 <v-spacer />
