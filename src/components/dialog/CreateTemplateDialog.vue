@@ -141,6 +141,15 @@ const props = defineProps({
         type: Boolean,
         required: false,
         default: false
+    },
+    /**
+     * Conflict between the extended templates that only the additional steps can detect.
+     * It is shown on the extended templates input and blocks continuing, like the conflicts found here.
+     */
+    inheritanceError: {
+        type: String,
+        required: false,
+        default: ""
     }
 });
 
@@ -149,6 +158,8 @@ const emit = defineEmits<{
 }>();
 
 const model = defineModel({ type: Boolean, required: true });
+/** IDs of the extended templates, for steps that inherit more than the field specifications */
+const extendedTemplateIds = defineModel<string[]>("extendedTemplateIds", { default: () => [] });
 
 const step = ref(1);
 const stepLabels = computed(() => props.steps.map((definition) => definition.label));
@@ -169,7 +180,6 @@ const { defineField, resetForm, meta, validate } = useForm({ validationSchema: s
 const [name, nameProps] = defineField("name", fieldConfig);
 const [description, descriptionProps] = defineField("description", fieldConfig);
 
-const extendedTemplateIds = ref<string[]>([]);
 const extendedTemplates = ref<{ id: string; name: string; templateFieldSpecifications: JsonFieldInput[] }[]>([]);
 const ownFieldSpecifications = ref<JsonFieldInput[]>([]);
 
@@ -216,7 +226,7 @@ const inheritedFields = computed(() => {
 const inheritedFieldNames = computed(() => [...inheritedFields.value.keys()]);
 
 // the backend requires the field specifications of all extended templates to be disjoint
-const inheritanceErrorMessage = computed(() => {
+const fieldInheritanceError = computed(() => {
     const definedBy = new Map<string, string>();
     for (const template of extendedTemplates.value) {
         for (const field of template.templateFieldSpecifications) {
@@ -235,6 +245,8 @@ const inheritanceErrorMessage = computed(() => {
     }
     return "";
 });
+
+const inheritanceErrorMessage = computed(() => fieldInheritanceError.value || props.inheritanceError);
 
 // the inherited specifications are shown read only next to the ones defined here
 const fieldSpecifications = computed({

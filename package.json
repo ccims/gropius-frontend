@@ -10,7 +10,7 @@
         "dev": "vite",
         "build": "vite build",
         "preview": "vite preview",
-        "codegen": "graphql-codegen --config codegen.ts",
+        "codegen": "scripts/codegen.sh",
         "format": "prettier --write \"**/*.{ts,json,js,tsx,jsx,vue}\""
     },
     "dependencies": {

@@ -7376,16 +7376,6 @@ export type CreateIssueFromDialogMutation = {
     createIssue: { __typename: "CreateIssuePayload"; issue: { __typename: "Issue"; id: string } };
 };
 
-export type SearchIssueTemplatesByNameQueryVariables = Exact<{
-    query: string;
-    count: number;
-}>;
-
-export type SearchIssueTemplatesByNameQuery = {
-    __typename: "Query";
-    searchIssueTemplates: Array<{ __typename: "IssueTemplate"; id: string; name: string }>;
-};
-
 export type GetIssueTemplateFieldsQueryVariables = Exact<{
     id: string;
 }>;
@@ -7449,11 +7439,6 @@ export type GetIssueTemplateFieldsQuery = {
               __typename: "IssueTemplate";
               id: string;
               name: string;
-              description: string;
-              extends: {
-                  __typename: "IssueTemplateConnection";
-                  nodes: Array<{ __typename: "IssueTemplate"; id: string }>;
-              };
               issueTypes: {
                   __typename: "IssueTypeConnection";
                   nodes: Array<{ __typename: "IssueType"; name: string; description: string; iconPath: string }>;
@@ -7485,7 +7470,6 @@ export type GetIssueTemplateFieldsQuery = {
                       inverseName: string;
                   }>;
               };
-              templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
           }
         | { __typename: "IssueType" }
         | { __typename: "Label" }
@@ -7516,98 +7500,6 @@ export type GetIssueTemplateFieldsQuery = {
         | { __typename: "TitleChangedEvent" }
         | { __typename: "TypeChangedEvent" }
         | { __typename: "View" }
-        | null;
-};
-
-export type GetIssueTemplateNameQueryVariables = Exact<{
-    id: string;
-}>;
-
-export type GetIssueTemplateNameQuery = {
-    __typename: "Query";
-    node:
-        | { __typename: "AddedAffectedEntityEvent"; id: string }
-        | { __typename: "AddedArtefactEvent"; id: string }
-        | { __typename: "AddedLabelEvent"; id: string }
-        | { __typename: "AddedToPinnedIssuesEvent"; id: string }
-        | { __typename: "AddedToTrackableEvent"; id: string }
-        | { __typename: "AggregatedIssue"; id: string }
-        | { __typename: "AggregatedIssueRelation"; id: string }
-        | { __typename: "Artefact"; id: string }
-        | { __typename: "ArtefactTemplate"; id: string }
-        | { __typename: "Assignment"; id: string }
-        | { __typename: "AssignmentType"; id: string }
-        | { __typename: "AssignmentTypeChangedEvent"; id: string }
-        | { __typename: "Body"; id: string }
-        | { __typename: "Component"; id: string }
-        | { __typename: "ComponentPermission"; id: string }
-        | { __typename: "ComponentTemplate"; id: string }
-        | { __typename: "ComponentVersion"; id: string }
-        | { __typename: "ComponentVersionTemplate"; id: string }
-        | { __typename: "FillStyle"; id: string }
-        | { __typename: "GlobalPermission"; id: string }
-        | { __typename: "GropiusUser"; id: string }
-        | { __typename: "IMS"; id: string }
-        | { __typename: "IMSIssue"; id: string }
-        | { __typename: "IMSIssueTemplate"; id: string }
-        | { __typename: "IMSPermission"; id: string }
-        | { __typename: "IMSProject"; id: string }
-        | { __typename: "IMSProjectTemplate"; id: string }
-        | { __typename: "IMSTemplate"; id: string }
-        | { __typename: "IMSUser"; id: string }
-        | { __typename: "IMSUserTemplate"; id: string }
-        | { __typename: "IncomingRelationTypeChangedEvent"; id: string }
-        | { __typename: "Interface"; id: string }
-        | { __typename: "InterfaceDefinition"; id: string }
-        | { __typename: "InterfacePart"; id: string }
-        | { __typename: "InterfacePartTemplate"; id: string }
-        | { __typename: "InterfaceSpecification"; id: string }
-        | { __typename: "InterfaceSpecificationDerivationCondition"; id: string }
-        | { __typename: "InterfaceSpecificationTemplate"; id: string }
-        | { __typename: "InterfaceSpecificationVersion"; id: string }
-        | { __typename: "InterfaceSpecificationVersionTemplate"; id: string }
-        | { __typename: "IntraComponentDependencyParticipant"; id: string }
-        | { __typename: "IntraComponentDependencySpecification"; id: string }
-        | { __typename: "IntraComponentDependencySpecificationType"; id: string }
-        | { __typename: "Issue"; id: string }
-        | { __typename: "IssueBoard"; id: string }
-        | { __typename: "IssueBoardColumn"; id: string }
-        | { __typename: "IssueBoardItem"; id: string }
-        | { __typename: "IssueComment"; id: string }
-        | { __typename: "IssuePriority"; id: string }
-        | { __typename: "IssueRelation"; id: string }
-        | { __typename: "IssueRelationType"; id: string }
-        | { __typename: "IssueState"; id: string }
-        | { __typename: "IssueTemplate"; name: string; id: string }
-        | { __typename: "IssueType"; id: string }
-        | { __typename: "Label"; id: string }
-        | { __typename: "LegalInformation"; id: string }
-        | { __typename: "OutgoingRelationTypeChangedEvent"; id: string }
-        | { __typename: "PriorityChangedEvent"; id: string }
-        | { __typename: "Project"; id: string }
-        | { __typename: "ProjectPermission"; id: string }
-        | { __typename: "RelatedByIssueEvent"; id: string }
-        | { __typename: "Relation"; id: string }
-        | { __typename: "RelationCondition"; id: string }
-        | { __typename: "RelationLayout"; id: string }
-        | { __typename: "RelationPartnerLayout"; id: string }
-        | { __typename: "RelationTemplate"; id: string }
-        | { __typename: "RemovedAffectedEntityEvent"; id: string }
-        | { __typename: "RemovedArtefactEvent"; id: string }
-        | { __typename: "RemovedAssignmentEvent"; id: string }
-        | { __typename: "RemovedFromPinnedIssuesEvent"; id: string }
-        | { __typename: "RemovedFromTrackableEvent"; id: string }
-        | { __typename: "RemovedIncomingRelationEvent"; id: string }
-        | { __typename: "RemovedLabelEvent"; id: string }
-        | { __typename: "RemovedOutgoingRelationEvent"; id: string }
-        | { __typename: "RemovedTemplatedFieldEvent"; id: string }
-        | { __typename: "StateChangedEvent"; id: string }
-        | { __typename: "StrokeStyle"; id: string }
-        | { __typename: "TemplateChangedEvent"; id: string }
-        | { __typename: "TemplatedFieldChangedEvent"; id: string }
-        | { __typename: "TitleChangedEvent"; id: string }
-        | { __typename: "TypeChangedEvent"; id: string }
-        | { __typename: "View"; id: string }
         | null;
 };
 
@@ -13433,8 +13325,6 @@ export type IssueTemplateFieldsFragment = {
     __typename: "IssueTemplate";
     id: string;
     name: string;
-    description: string;
-    extends: { __typename: "IssueTemplateConnection"; nodes: Array<{ __typename: "IssueTemplate"; id: string }> };
     issueTypes: {
         __typename: "IssueTypeConnection";
         nodes: Array<{ __typename: "IssueType"; name: string; description: string; iconPath: string }>;
@@ -13461,7 +13351,6 @@ export type IssueTemplateFieldsFragment = {
         __typename: "IssueRelationTypeConnection";
         nodes: Array<{ __typename: "IssueRelationType"; name: string; description: string; inverseName: string }>;
     };
-    templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
 };
 
 export type DefaultIssueTypeInfoFragment = {
@@ -30052,28 +29941,6 @@ export const IssueTemplateFieldsFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "__typename" } },
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
-                    { kind: "Field", name: { kind: "Name", value: "description" } },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "extends" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "nodes" },
-                                    selectionSet: {
-                                        kind: "SelectionSet",
-                                        selections: [
-                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                            { kind: "Field", name: { kind: "Name", value: "id" } }
-                                        ]
-                                    }
-                                }
-                            ]
-                        }
-                    },
                     {
                         kind: "Field",
                         name: { kind: "Name", value: "issueTypes" },
@@ -30186,18 +30053,6 @@ export const IssueTemplateFieldsFragmentDoc = {
                                         ]
                                     }
                                 }
-                            ]
-                        }
-                    },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "templateFieldSpecifications" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "name" } },
-                                { kind: "Field", name: { kind: "Name", value: "value" } }
                             ]
                         }
                     }
@@ -42110,81 +41965,6 @@ export const CreateIssueFromDialogDocument = {
         }
     ]
 } as unknown as DocumentNode<CreateIssueFromDialogMutation, CreateIssueFromDialogMutationVariables>;
-export const SearchIssueTemplatesByNameDocument = {
-    kind: "Document",
-    definitions: [
-        {
-            kind: "OperationDefinition",
-            operation: "query",
-            name: { kind: "Name", value: "searchIssueTemplatesByName" },
-            variableDefinitions: [
-                {
-                    kind: "VariableDefinition",
-                    variable: { kind: "Variable", name: { kind: "Name", value: "query" } },
-                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } }
-                },
-                {
-                    kind: "VariableDefinition",
-                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
-                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
-                }
-            ],
-            selectionSet: {
-                kind: "SelectionSet",
-                selections: [
-                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "searchIssueTemplates" },
-                        arguments: [
-                            {
-                                kind: "Argument",
-                                name: { kind: "Name", value: "query" },
-                                value: { kind: "Variable", name: { kind: "Name", value: "query" } }
-                            },
-                            {
-                                kind: "Argument",
-                                name: { kind: "Name", value: "first" },
-                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
-                            },
-                            {
-                                kind: "Argument",
-                                name: { kind: "Name", value: "filter" },
-                                value: {
-                                    kind: "ObjectValue",
-                                    fields: [
-                                        {
-                                            kind: "ObjectField",
-                                            name: { kind: "Name", value: "isDeprecated" },
-                                            value: {
-                                                kind: "ObjectValue",
-                                                fields: [
-                                                    {
-                                                        kind: "ObjectField",
-                                                        name: { kind: "Name", value: "eq" },
-                                                        value: { kind: "BooleanValue", value: false }
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        ],
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "id" } },
-                                { kind: "Field", name: { kind: "Name", value: "name" } }
-                            ]
-                        }
-                    }
-                ]
-            }
-        }
-    ]
-} as unknown as DocumentNode<SearchIssueTemplatesByNameQuery, SearchIssueTemplatesByNameQueryVariables>;
 export const GetIssueTemplateFieldsDocument = {
     kind: "Document",
     definitions: [
@@ -42250,28 +42030,6 @@ export const GetIssueTemplateFieldsDocument = {
                     { kind: "Field", name: { kind: "Name", value: "__typename" } },
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
-                    { kind: "Field", name: { kind: "Name", value: "description" } },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "extends" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "nodes" },
-                                    selectionSet: {
-                                        kind: "SelectionSet",
-                                        selections: [
-                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                            { kind: "Field", name: { kind: "Name", value: "id" } }
-                                        ]
-                                    }
-                                }
-                            ]
-                        }
-                    },
                     {
                         kind: "Field",
                         name: { kind: "Name", value: "issueTypes" },
@@ -42386,79 +42144,12 @@ export const GetIssueTemplateFieldsDocument = {
                                 }
                             ]
                         }
-                    },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "templateFieldSpecifications" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "name" } },
-                                { kind: "Field", name: { kind: "Name", value: "value" } }
-                            ]
-                        }
                     }
                 ]
             }
         }
     ]
 } as unknown as DocumentNode<GetIssueTemplateFieldsQuery, GetIssueTemplateFieldsQueryVariables>;
-export const GetIssueTemplateNameDocument = {
-    kind: "Document",
-    definitions: [
-        {
-            kind: "OperationDefinition",
-            operation: "query",
-            name: { kind: "Name", value: "getIssueTemplateName" },
-            variableDefinitions: [
-                {
-                    kind: "VariableDefinition",
-                    variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
-                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
-                }
-            ],
-            selectionSet: {
-                kind: "SelectionSet",
-                selections: [
-                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "node" },
-                        arguments: [
-                            {
-                                kind: "Argument",
-                                name: { kind: "Name", value: "id" },
-                                value: { kind: "Variable", name: { kind: "Name", value: "id" } }
-                            }
-                        ],
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "id" } },
-                                {
-                                    kind: "InlineFragment",
-                                    typeCondition: {
-                                        kind: "NamedType",
-                                        name: { kind: "Name", value: "IssueTemplate" }
-                                    },
-                                    selectionSet: {
-                                        kind: "SelectionSet",
-                                        selections: [
-                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                            { kind: "Field", name: { kind: "Name", value: "name" } }
-                                        ]
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                ]
-            }
-        }
-    ]
-} as unknown as DocumentNode<GetIssueTemplateNameQuery, GetIssueTemplateNameQueryVariables>;
 export const CreateIssueTemplateDocument = {
     kind: "Document",
     definitions: [

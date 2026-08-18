@@ -44,9 +44,7 @@ type Documents = {
     "\n    mutation createIssueBoard($input: CreateIssueBoardInput!) {\n        createIssueBoard(input: $input) {\n            issueBoard {\n                ...DefaultIssueBoardInfo\n            }\n        }\n    }\n": typeof types.CreateIssueBoardDocument;
     "\n    query getIssueTemplateForDialog($id: ID!) {\n        node(id: $id) {\n            id\n            ... on IssueTemplate {\n                templateFieldSpecifications {\n                    name\n                    value\n                }\n            }\n        }\n    }\n": typeof types.GetIssueTemplateForDialogDocument;
     "\n    mutation createIssueFromDialog($input: CreateIssueInput!) {\n        createIssue(input: $input) {\n            issue {\n                id\n            }\n        }\n    }\n": typeof types.CreateIssueFromDialogDocument;
-    "\n    query searchIssueTemplatesByName($query: String!, $count: Int!) {\n        searchIssueTemplates(query: $query, first: $count, filter: { isDeprecated: { eq: false } }) {\n            id\n            name\n        }\n    }\n": typeof types.SearchIssueTemplatesByNameDocument;
     "\n    query getIssueTemplateFields($id: ID!) {\n        node(id: $id) {\n            __typename\n            ... on IssueTemplate {\n                ...IssueTemplateFields\n            }\n        }\n    }\n": typeof types.GetIssueTemplateFieldsDocument;
-    "\n    query getIssueTemplateName($id: ID!) {\n        node(id: $id) {\n            __typename\n            id\n            ... on IssueTemplate {\n                name\n            }\n        }\n    }\n": typeof types.GetIssueTemplateNameDocument;
     "\n    mutation createIssueTemplate($input: CreateIssueTemplateInput!) {\n        createIssueTemplate(input: $input) {\n            issueTemplate {\n                ...DefaultIssueTemplateInfo\n            }\n        }\n    }\n": typeof types.CreateIssueTemplateDocument;
     "\n    mutation createLabel($input: CreateLabelInput!) {\n        createLabel(input: $input) {\n            label {\n                ...DefaultLabelInfo\n            }\n        }\n    }\n": typeof types.CreateLabelDocument;
     "\n    mutation createLegalInformation($input: CreateLegalInformationInput!) {\n        createLegalInformation(input: $input) {\n            legalInformation {\n                ...DefaultLegalInformationInfo\n            }\n        }\n    }\n": typeof types.CreateLegalInformationDocument;
@@ -175,7 +173,7 @@ type Documents = {
     "fragment DefaultIssuePriorityInfo on IssuePriority {\n  id\n  name\n  description\n  value\n  iconPath\n}": typeof types.DefaultIssuePriorityInfoFragmentDoc;
     "fragment DefaultIssueRelationTypeInfo on IssueRelationType {\n  id\n  name\n  description\n}": typeof types.DefaultIssueRelationTypeInfoFragmentDoc;
     "fragment DefaultIssueStateInfo on IssueState {\n  id\n  name\n  description\n  isOpen\n}": typeof types.DefaultIssueStateInfoFragmentDoc;
-    "fragment DefaultIssueTemplateInfo on IssueTemplate {\n  id\n  name\n  description\n  templateFieldSpecifications {\n    name\n    value\n  }\n}\n\nfragment IssueTemplateFields on IssueTemplate {\n  id\n  name\n  description\n  extends {\n    nodes {\n      id\n    }\n  }\n  issueTypes {\n    nodes {\n      name\n      description\n      iconPath\n    }\n  }\n  issuePriorities {\n    nodes {\n      name\n      description\n      value\n      iconPath\n    }\n  }\n  issueStates {\n    nodes {\n      name\n      description\n      isOpen\n    }\n  }\n  assignmentTypes {\n    nodes {\n      name\n      description\n    }\n  }\n  relationTypes {\n    nodes {\n      name\n      description\n      inverseName\n    }\n  }\n  templateFieldSpecifications {\n    name\n    value\n  }\n}": typeof types.DefaultIssueTemplateInfoFragmentDoc;
+    "fragment DefaultIssueTemplateInfo on IssueTemplate {\n  id\n  name\n  description\n  templateFieldSpecifications {\n    name\n    value\n  }\n}\n\nfragment IssueTemplateFields on IssueTemplate {\n  id\n  name\n  issueTypes {\n    nodes {\n      name\n      description\n      iconPath\n    }\n  }\n  issuePriorities {\n    nodes {\n      name\n      description\n      value\n      iconPath\n    }\n  }\n  issueStates {\n    nodes {\n      name\n      description\n      isOpen\n    }\n  }\n  assignmentTypes {\n    nodes {\n      name\n      description\n    }\n  }\n  relationTypes {\n    nodes {\n      name\n      description\n      inverseName\n    }\n  }\n}": typeof types.DefaultIssueTemplateInfoFragmentDoc;
     "fragment DefaultIssueTypeInfo on IssueType {\n  id\n  name\n  description\n  iconPath\n}": typeof types.DefaultIssueTypeInfoFragmentDoc;
     "fragment DefaultLabelInfo on Label {\n  id\n  name\n  description\n  color\n}": typeof types.DefaultLabelInfoFragmentDoc;
     "fragment BaseLegalInformationInfo on LegalInformation {\n  id\n  label\n  priority\n}\n\nfragment DefaultLegalInformationInfo on LegalInformation {\n  ...BaseLegalInformationInfo\n  text\n}": typeof types.BaseLegalInformationInfoFragmentDoc;
@@ -417,12 +415,8 @@ const documents: Documents = {
         types.GetIssueTemplateForDialogDocument,
     "\n    mutation createIssueFromDialog($input: CreateIssueInput!) {\n        createIssue(input: $input) {\n            issue {\n                id\n            }\n        }\n    }\n":
         types.CreateIssueFromDialogDocument,
-    "\n    query searchIssueTemplatesByName($query: String!, $count: Int!) {\n        searchIssueTemplates(query: $query, first: $count, filter: { isDeprecated: { eq: false } }) {\n            id\n            name\n        }\n    }\n":
-        types.SearchIssueTemplatesByNameDocument,
     "\n    query getIssueTemplateFields($id: ID!) {\n        node(id: $id) {\n            __typename\n            ... on IssueTemplate {\n                ...IssueTemplateFields\n            }\n        }\n    }\n":
         types.GetIssueTemplateFieldsDocument,
-    "\n    query getIssueTemplateName($id: ID!) {\n        node(id: $id) {\n            __typename\n            id\n            ... on IssueTemplate {\n                name\n            }\n        }\n    }\n":
-        types.GetIssueTemplateNameDocument,
     "\n    mutation createIssueTemplate($input: CreateIssueTemplateInput!) {\n        createIssueTemplate(input: $input) {\n            issueTemplate {\n                ...DefaultIssueTemplateInfo\n            }\n        }\n    }\n":
         types.CreateIssueTemplateDocument,
     "\n    mutation createLabel($input: CreateLabelInput!) {\n        createLabel(input: $input) {\n            label {\n                ...DefaultLabelInfo\n            }\n        }\n    }\n":
@@ -679,7 +673,7 @@ const documents: Documents = {
         types.DefaultIssueRelationTypeInfoFragmentDoc,
     "fragment DefaultIssueStateInfo on IssueState {\n  id\n  name\n  description\n  isOpen\n}":
         types.DefaultIssueStateInfoFragmentDoc,
-    "fragment DefaultIssueTemplateInfo on IssueTemplate {\n  id\n  name\n  description\n  templateFieldSpecifications {\n    name\n    value\n  }\n}\n\nfragment IssueTemplateFields on IssueTemplate {\n  id\n  name\n  description\n  extends {\n    nodes {\n      id\n    }\n  }\n  issueTypes {\n    nodes {\n      name\n      description\n      iconPath\n    }\n  }\n  issuePriorities {\n    nodes {\n      name\n      description\n      value\n      iconPath\n    }\n  }\n  issueStates {\n    nodes {\n      name\n      description\n      isOpen\n    }\n  }\n  assignmentTypes {\n    nodes {\n      name\n      description\n    }\n  }\n  relationTypes {\n    nodes {\n      name\n      description\n      inverseName\n    }\n  }\n  templateFieldSpecifications {\n    name\n    value\n  }\n}":
+    "fragment DefaultIssueTemplateInfo on IssueTemplate {\n  id\n  name\n  description\n  templateFieldSpecifications {\n    name\n    value\n  }\n}\n\nfragment IssueTemplateFields on IssueTemplate {\n  id\n  name\n  issueTypes {\n    nodes {\n      name\n      description\n      iconPath\n    }\n  }\n  issuePriorities {\n    nodes {\n      name\n      description\n      value\n      iconPath\n    }\n  }\n  issueStates {\n    nodes {\n      name\n      description\n      isOpen\n    }\n  }\n  assignmentTypes {\n    nodes {\n      name\n      description\n    }\n  }\n  relationTypes {\n    nodes {\n      name\n      description\n      inverseName\n    }\n  }\n}":
         types.DefaultIssueTemplateInfoFragmentDoc,
     "fragment DefaultIssueTypeInfo on IssueType {\n  id\n  name\n  description\n  iconPath\n}":
         types.DefaultIssueTypeInfoFragmentDoc,
@@ -1238,20 +1232,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-    source: "\n    query searchIssueTemplatesByName($query: String!, $count: Int!) {\n        searchIssueTemplates(query: $query, first: $count, filter: { isDeprecated: { eq: false } }) {\n            id\n            name\n        }\n    }\n"
-): (typeof documents)["\n    query searchIssueTemplatesByName($query: String!, $count: Int!) {\n        searchIssueTemplates(query: $query, first: $count, filter: { isDeprecated: { eq: false } }) {\n            id\n            name\n        }\n    }\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
     source: "\n    query getIssueTemplateFields($id: ID!) {\n        node(id: $id) {\n            __typename\n            ... on IssueTemplate {\n                ...IssueTemplateFields\n            }\n        }\n    }\n"
 ): (typeof documents)["\n    query getIssueTemplateFields($id: ID!) {\n        node(id: $id) {\n            __typename\n            ... on IssueTemplate {\n                ...IssueTemplateFields\n            }\n        }\n    }\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
-    source: "\n    query getIssueTemplateName($id: ID!) {\n        node(id: $id) {\n            __typename\n            id\n            ... on IssueTemplate {\n                name\n            }\n        }\n    }\n"
-): (typeof documents)["\n    query getIssueTemplateName($id: ID!) {\n        node(id: $id) {\n            __typename\n            id\n            ... on IssueTemplate {\n                name\n            }\n        }\n    }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -2024,8 +2006,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-    source: "fragment DefaultIssueTemplateInfo on IssueTemplate {\n  id\n  name\n  description\n  templateFieldSpecifications {\n    name\n    value\n  }\n}\n\nfragment IssueTemplateFields on IssueTemplate {\n  id\n  name\n  description\n  extends {\n    nodes {\n      id\n    }\n  }\n  issueTypes {\n    nodes {\n      name\n      description\n      iconPath\n    }\n  }\n  issuePriorities {\n    nodes {\n      name\n      description\n      value\n      iconPath\n    }\n  }\n  issueStates {\n    nodes {\n      name\n      description\n      isOpen\n    }\n  }\n  assignmentTypes {\n    nodes {\n      name\n      description\n    }\n  }\n  relationTypes {\n    nodes {\n      name\n      description\n      inverseName\n    }\n  }\n  templateFieldSpecifications {\n    name\n    value\n  }\n}"
-): (typeof documents)["fragment DefaultIssueTemplateInfo on IssueTemplate {\n  id\n  name\n  description\n  templateFieldSpecifications {\n    name\n    value\n  }\n}\n\nfragment IssueTemplateFields on IssueTemplate {\n  id\n  name\n  description\n  extends {\n    nodes {\n      id\n    }\n  }\n  issueTypes {\n    nodes {\n      name\n      description\n      iconPath\n    }\n  }\n  issuePriorities {\n    nodes {\n      name\n      description\n      value\n      iconPath\n    }\n  }\n  issueStates {\n    nodes {\n      name\n      description\n      isOpen\n    }\n  }\n  assignmentTypes {\n    nodes {\n      name\n      description\n    }\n  }\n  relationTypes {\n    nodes {\n      name\n      description\n      inverseName\n    }\n  }\n  templateFieldSpecifications {\n    name\n    value\n  }\n}"];
+    source: "fragment DefaultIssueTemplateInfo on IssueTemplate {\n  id\n  name\n  description\n  templateFieldSpecifications {\n    name\n    value\n  }\n}\n\nfragment IssueTemplateFields on IssueTemplate {\n  id\n  name\n  issueTypes {\n    nodes {\n      name\n      description\n      iconPath\n    }\n  }\n  issuePriorities {\n    nodes {\n      name\n      description\n      value\n      iconPath\n    }\n  }\n  issueStates {\n    nodes {\n      name\n      description\n      isOpen\n    }\n  }\n  assignmentTypes {\n    nodes {\n      name\n      description\n    }\n  }\n  relationTypes {\n    nodes {\n      name\n      description\n      inverseName\n    }\n  }\n}"
+): (typeof documents)["fragment DefaultIssueTemplateInfo on IssueTemplate {\n  id\n  name\n  description\n  templateFieldSpecifications {\n    name\n    value\n  }\n}\n\nfragment IssueTemplateFields on IssueTemplate {\n  id\n  name\n  issueTypes {\n    nodes {\n      name\n      description\n      iconPath\n    }\n  }\n  issuePriorities {\n    nodes {\n      name\n      description\n      value\n      iconPath\n    }\n  }\n  issueStates {\n    nodes {\n      name\n      description\n      isOpen\n    }\n  }\n  assignmentTypes {\n    nodes {\n      name\n      description\n    }\n  }\n  relationTypes {\n    nodes {\n      name\n      description\n      inverseName\n    }\n  }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
