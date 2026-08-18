@@ -36,6 +36,7 @@ const getComponentQuery = graphql(`
                 createIssues: hasPermission(permission: CREATE_ISSUES)
                 manageLabels: hasPermission(permission: MANAGE_LABELS)
                 manageIssues: hasPermission(permission: MANAGE_ISSUES)
+                manageIssueBoards: hasPermission(permission: MANAGE_ISSUE_BOARDS)
                 manageIMS: hasPermission(permission: MANAGE_IMS)
                 admin: hasPermission(permission: ADMIN)
             }
@@ -72,6 +73,7 @@ const interfaceSpecificationId = computed(() => route.params.interfaceSpecificat
 const interfaceSpecificationVersionId = computed(
     () => route.params.interfaceSpecificationVersion as string | undefined
 );
+const issueBoardId = computed(() => route.params.board as string | undefined);
 const eventBus = inject(eventBusKey);
 
 const titleSegmentDependency = ref(0);
@@ -144,6 +146,21 @@ const interfaceSpecificationVersion = computedAsync(
     { shallow: false }
 );
 
+const issueBoard = computedAsync(
+    async () => {
+        if (!issueBoardId.value) {
+            return null;
+        }
+        titleSegmentDependency.value;
+        return (await withErrorMessage(
+            () => queryNodeThrow(getNamedNodeQuery, "IssueBoard", { id: issueBoardId.value! }),
+            "Error loading issue board"
+        )) as { id: string; name: string };
+    },
+    null,
+    { shallow: false }
+);
+
 provide(trackableKey, component);
 
 function componentPath(name: string): RouteLocationRaw {
@@ -201,6 +218,10 @@ const titleSegments = computed(() => {
             path: interfaceSpecificationVersionPath("interface-specification-version-general")
         });
     }
+    const issueBoardValue = issueBoard.value;
+    if (issueBoardValue != undefined && issueBoardId.value != undefined) {
+        segments.push({ name: issueBoardValue.name, path: componentPath("component-issue-boards") });
+    }
     return segments;
 });
 
@@ -221,7 +242,8 @@ const tabs = computed(() => {
             { name: "Home", path: componentPath("component") },
             { name: "Details", path: componentPath("component-details-general"), exact: false },
             { name: "Versions", path: componentPath("component-versions"), exact: false },
-            { name: "Issues", path: componentPath("component-issues"), exact: false }
+            { name: "Issues", path: componentPath("component-issues"), exact: false },
+            { name: "Boards", path: componentPath("component-issue-boards"), exact: false }
         ];
     }
 });
@@ -364,6 +386,43 @@ const rightSidebarItems = computed(() => {
                     disabled: !(component?.value?.manageIssues ?? false),
                     onClick: () => {
                         eventBus?.emit("import-issue", undefined);
+                    }
+                }
+            ]
+        ];
+    } else if (route.name == "component-issue-boards") {
+        return [
+            [
+                {
+                    icon: "mdi-plus",
+                    description: `Create issue board`,
+                    color: "secondary",
+                    disabled: !(component?.value?.manageIssueBoards ?? false),
+                    onClick: () => {
+                        eventBus?.emit("create-issue-board", undefined);
+                    }
+                }
+            ]
+        ];
+    } else if (route.name == "component-issue-board") {
+        return [
+            [
+                {
+                    icon: "mdi-table-column-plus-after",
+                    description: `Add column`,
+                    color: "secondary",
+                    disabled: !(component?.value?.manageIssueBoards ?? false),
+                    onClick: () => {
+                        eventBus?.emit("create-issue-board-column", undefined);
+                    }
+                },
+                {
+                    icon: "mdi-plus",
+                    description: `Add issue to board`,
+                    color: "secondary",
+                    disabled: !(component?.value?.manageIssues ?? false),
+                    onClick: () => {
+                        eventBus?.emit("add-issue-to-board", undefined);
                     }
                 }
             ]
