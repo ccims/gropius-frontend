@@ -3,6 +3,5 @@ fragment DefaultIssuePriorityInfo on IssuePriority {
     name
     description
     value
+    iconPath
 }
-
-

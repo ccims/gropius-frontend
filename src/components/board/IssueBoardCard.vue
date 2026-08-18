@@ -11,9 +11,10 @@
     >
         <div class="d-flex align-center mb-2 ga-1">
             <IssueIcon :issue="issue" class="issue-icon flex-0-0" />
-            <v-icon v-if="issue.priority != undefined" class="priority-icon" :icon="priorityIcon" size="small">
+            <div v-if="issue.priority?.iconPath" class="d-flex align-center">
+                <SvgWrapper :path="issue.priority.iconPath" class="priority-icon" />
                 <v-tooltip activator="parent" location="bottom">{{ issue.priority.name }}</v-tooltip>
-            </v-icon>
+            </div>
             <v-spacer />
             <UserStack
                 v-if="assignees.length > 0"
@@ -63,7 +64,7 @@ import IssueIcon from "../IssueIcon.vue";
 import UserStack from "../UserStack.vue";
 import Label from "../info/Label.vue";
 import ConfirmationDialog from "../dialog/ConfirmationDialog.vue";
-import { issuePriorityIcon } from "@/util/issuePriorityIcon";
+import SvgWrapper from "../SvgWrapper.vue";
 
 const props = defineProps({
     issue: {
@@ -94,7 +95,6 @@ const emit = defineEmits<{
 const removeDialog = ref(false);
 
 const assignees = computed(() => props.issue.assignments.nodes.map((assignment) => assignment.user));
-const priorityIcon = computed(() => issuePriorityIcon(props.issue.priority?.value ?? 0));
 
 function onDragStart(event: DragEvent) {
     emit("drag-start", event.dataTransfer);
@@ -130,6 +130,8 @@ function onDragStart(event: DragEvent) {
 }
 
 .priority-icon {
+    width: 1.15em;
+    height: 1.15em;
     // the app disables Vuetify's color pack, so the theme color has to be applied directly
     color: rgb(var(--v-theme-primary));
 }

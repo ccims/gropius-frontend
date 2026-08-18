@@ -2922,7 +2922,11 @@ export type IssuePriorityFilterInput = {
 export type IssuePriorityInput = {
     /** The description of the NamedNode */
     description: string;
-    /** A path that is used as the icon for issues. Used with a 0 0 24 24 viewBox. No stroke, only fill. */
+    /**
+     * A path that is used as the icon for the IssuePriority, must not be blank.
+     *         Used with a 0 0 24 24 viewBox. No stroke, only fill.
+     *
+     */
     iconPath: string;
     /** The name of the NamedNode, must not be blank */
     name: string;
@@ -5230,7 +5234,7 @@ export type UpdateIssueBoardInput = {
 export type UpdateIssuePriorityInput = {
     /** The description of the NamedNode */
     description?: string | null | undefined;
-    /** A path that is used as the icon for issues */
+    /** A path that is used as the icon for the IssuePriority, must not be blank */
     iconPath?: string | null | undefined;
     /** The id of the node to update */
     id: string;
@@ -5602,6 +5606,7 @@ export type GetIssueListForProjectSidebarQuery = {
                           name: string;
                           description: string;
                           value: number;
+                          iconPath: string;
                       } | null;
                       template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
                       type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
@@ -5737,6 +5742,7 @@ export type GetIssueListForProjectSidebarQuery = {
                           name: string;
                           description: string;
                           value: number;
+                          iconPath: string;
                       } | null;
                       template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
                       type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
@@ -5870,6 +5876,7 @@ export type GetIssueListOnAggregatedIssueQuery = {
                           name: string;
                           description: string;
                           value: number;
+                          iconPath: string;
                       } | null;
                       template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
                       type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
@@ -6013,7 +6020,14 @@ export type GetFilteredIssueListForProjectSidebarQuery = {
                     | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
             }>;
         };
-        priority: { __typename: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+        priority: {
+            __typename: "IssuePriority";
+            id: string;
+            name: string;
+            description: string;
+            value: number;
+            iconPath: string;
+        } | null;
         template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
         type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
         affects: {
@@ -6268,7 +6282,14 @@ export type SearchIssuesForBoardQuery = {
         id: string;
         title: string;
         state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
-        priority: { __typename: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+        priority: {
+            __typename: "IssuePriority";
+            id: string;
+            name: string;
+            description: string;
+            value: number;
+            iconPath: string;
+        } | null;
         labels: {
             __typename: "LabelConnection";
             nodes: Array<{ __typename: "Label"; id: string; name: string; description: string; color: any }>;
@@ -6325,6 +6346,7 @@ export type FirstIssuesForBoardQuery = {
                           name: string;
                           description: string;
                           value: number;
+                          iconPath: string;
                       } | null;
                       labels: {
                           __typename: "LabelConnection";
@@ -6423,6 +6445,7 @@ export type FirstIssuesForBoardQuery = {
                           name: string;
                           description: string;
                           value: number;
+                          iconPath: string;
                       } | null;
                       labels: {
                           __typename: "LabelConnection";
@@ -10354,6 +10377,7 @@ export type GetUsedIssuePrioritiesQuery = {
                       name: string;
                       description: string;
                       value: number;
+                      iconPath: string;
                   }>;
               };
           }
@@ -10411,6 +10435,7 @@ export type GetUsedIssuePrioritiesQuery = {
                       name: string;
                       description: string;
                       value: number;
+                      iconPath: string;
                   }>;
               };
           }
@@ -11210,6 +11235,7 @@ export type SearchIssuePrioritiesQuery = {
         name: string;
         description: string;
         value: number;
+        iconPath: string;
     }>;
 };
 
@@ -11283,6 +11309,7 @@ export type FirstIssuePrioritiesQuery = {
                       name: string;
                       description: string;
                       value: number;
+                      iconPath: string;
                   }>;
               };
           }
@@ -13087,7 +13114,14 @@ export type IssueListItemInfoFragment = {
                 | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
         }>;
     };
-    priority: { __typename: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+    priority: {
+        __typename: "IssuePriority";
+        id: string;
+        name: string;
+        description: string;
+        value: number;
+        iconPath: string;
+    } | null;
     template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
     type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
     affects: {
@@ -13150,7 +13184,14 @@ export type ParticipatingIssueListItemInfoFragment = {
                 | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
         }>;
     };
-    priority: { __typename: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+    priority: {
+        __typename: "IssuePriority";
+        id: string;
+        name: string;
+        description: string;
+        value: number;
+        iconPath: string;
+    } | null;
     template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
     type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
     affects: {
@@ -13213,7 +13254,14 @@ export type ProjectComponentIssueListItemInfoFragment = {
                 | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
         }>;
     };
-    priority: { __typename: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+    priority: {
+        __typename: "IssuePriority";
+        id: string;
+        name: string;
+        description: string;
+        value: number;
+        iconPath: string;
+    } | null;
     template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
     type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
     affects: {
@@ -13259,7 +13307,14 @@ export type IssueBoardCardInfoFragment = {
     id: string;
     title: string;
     state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
-    priority: { __typename: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+    priority: {
+        __typename: "IssuePriority";
+        id: string;
+        name: string;
+        description: string;
+        value: number;
+        iconPath: string;
+    } | null;
     labels: {
         __typename: "LabelConnection";
         nodes: Array<{ __typename: "Label"; id: string; name: string; description: string; color: any }>;
@@ -13288,7 +13343,14 @@ export type IssueBoardItemInfoFragment = {
         id: string;
         title: string;
         state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
-        priority: { __typename: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+        priority: {
+            __typename: "IssuePriority";
+            id: string;
+            name: string;
+            description: string;
+            value: number;
+            iconPath: string;
+        } | null;
         labels: {
             __typename: "LabelConnection";
             nodes: Array<{ __typename: "Label"; id: string; name: string; description: string; color: any }>;
@@ -13315,6 +13377,7 @@ export type DefaultIssuePriorityInfoFragment = {
     name: string;
     description: string;
     value: number;
+    iconPath: string;
 };
 
 export type DefaultIssueRelationTypeInfoFragment = {
@@ -13932,8 +13995,22 @@ type DefaultTimelineItemInfo_PriorityChangedEvent_Fragment = {
     __typename: "PriorityChangedEvent";
     id: string;
     createdAt: any;
-    oldPriority: { __typename: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
-    newPriority: { __typename: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+    oldPriority: {
+        __typename: "IssuePriority";
+        id: string;
+        name: string;
+        description: string;
+        value: number;
+        iconPath: string;
+    } | null;
+    newPriority: {
+        __typename: "IssuePriority";
+        id: string;
+        name: string;
+        description: string;
+        value: number;
+        iconPath: string;
+    } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
         | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
@@ -14871,8 +14948,22 @@ export type PriorityChangedEventTimelineInfoFragment = {
     __typename: "PriorityChangedEvent";
     id: string;
     createdAt: any;
-    oldPriority: { __typename: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
-    newPriority: { __typename: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+    oldPriority: {
+        __typename: "IssuePriority";
+        id: string;
+        name: string;
+        description: string;
+        value: number;
+        iconPath: string;
+    } | null;
+    newPriority: {
+        __typename: "IssuePriority";
+        id: string;
+        name: string;
+        description: string;
+        value: number;
+        iconPath: string;
+    } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
         | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
@@ -15492,6 +15583,7 @@ export type IssuePriorityTimelineInfoFragment = {
     name: string;
     description: string;
     value: number;
+    iconPath: string;
 };
 
 export type IssueStateTimelineInfoFragment = {
@@ -16338,6 +16430,7 @@ export type GetComponentDetailsQuery = {
                           name: string;
                           description: string;
                           value: number;
+                          iconPath: string;
                       } | null;
                       template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
                       type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
@@ -16425,6 +16518,7 @@ export type GetComponentDetailsQuery = {
                           name: string;
                           description: string;
                           value: number;
+                          iconPath: string;
                       } | null;
                       template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
                       type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
@@ -18281,6 +18375,7 @@ export type GetParticipatingIssueListQuery = {
                     name: string;
                     description: string;
                     value: number;
+                    iconPath: string;
                 } | null;
                 template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
                 type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
@@ -18355,7 +18450,14 @@ export type GetParticipatingFilteredIssueListQuery = {
                     | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
             }>;
         };
-        priority: { __typename: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+        priority: {
+            __typename: "IssuePriority";
+            id: string;
+            name: string;
+            description: string;
+            value: number;
+            iconPath: string;
+        } | null;
         template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
         type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
         affects: {
@@ -21290,6 +21392,7 @@ export type GetIssueQuery = {
                                 name: string;
                                 description: string;
                                 value: number;
+                                iconPath: string;
                             } | null;
                             newPriority: {
                                 __typename: "IssuePriority";
@@ -21297,6 +21400,7 @@ export type GetIssueQuery = {
                                 name: string;
                                 description: string;
                                 value: number;
+                                iconPath: string;
                             } | null;
                             createdBy:
                                 | {
@@ -22038,6 +22142,7 @@ export type GetIssueQuery = {
                   name: string;
                   description: string;
                   value: number;
+                  iconPath: string;
               } | null;
               trackables: {
                   __typename: "TrackableConnection";
@@ -22159,6 +22264,7 @@ export type ChangeIssuePriorityMutation = {
                 name: string;
                 description: string;
                 value: number;
+                iconPath: string;
             } | null;
             newPriority: {
                 __typename: "IssuePriority";
@@ -22166,6 +22272,7 @@ export type ChangeIssuePriorityMutation = {
                 name: string;
                 description: string;
                 value: number;
+                iconPath: string;
             } | null;
             createdBy:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
@@ -22782,6 +22889,7 @@ export type GetIssueListQuery = {
                           name: string;
                           description: string;
                           value: number;
+                          iconPath: string;
                       } | null;
                       template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
                       type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
@@ -22917,6 +23025,7 @@ export type GetIssueListQuery = {
                           name: string;
                           description: string;
                           value: number;
+                          iconPath: string;
                       } | null;
                       template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
                       type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
@@ -23007,7 +23116,14 @@ export type GetFilteredIssueListQuery = {
                     | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
             }>;
         };
-        priority: { __typename: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+        priority: {
+            __typename: "IssuePriority";
+            id: string;
+            name: string;
+            description: string;
+            value: number;
+            iconPath: string;
+        } | null;
         template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
         type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
         affects: {
@@ -23175,6 +23291,7 @@ export type GetComponentIssueListQuery = {
                           name: string;
                           description: string;
                           value: number;
+                          iconPath: string;
                       } | null;
                       template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
                       type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
@@ -23274,7 +23391,14 @@ export type GetComponentFilteredIssueListQuery = {
                     | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
             }>;
         };
-        priority: { __typename: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+        priority: {
+            __typename: "IssuePriority";
+            id: string;
+            name: string;
+            description: string;
+            value: number;
+            iconPath: string;
+        } | null;
         template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
         type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
         affects: {
@@ -24705,6 +24829,7 @@ export type GetIssueBoardQuery = {
                               name: string;
                               description: string;
                               value: number;
+                              iconPath: string;
                           } | null;
                           labels: {
                               __typename: "LabelConnection";
@@ -28200,7 +28325,8 @@ export const DefaultIssuePriorityInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         }
@@ -28505,7 +28631,8 @@ export const IssueListItemInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         }
@@ -28653,7 +28780,8 @@ export const ParticipatingIssueListItemInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -29046,7 +29174,8 @@ export const ProjectComponentIssueListItemInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -29526,7 +29655,8 @@ export const IssueBoardCardInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -29655,7 +29785,8 @@ export const IssueBoardItemInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -33721,7 +33852,8 @@ export const IssuePriorityTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         }
@@ -33802,7 +33934,8 @@ export const PriorityChangedEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -37162,7 +37295,8 @@ export const DefaultTimelineItemInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -38425,7 +38559,8 @@ export const GetIssueListForProjectSidebarDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -38872,7 +39007,8 @@ export const GetIssueListOnAggregatedIssueDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -39233,7 +39369,8 @@ export const GetFilteredIssueListForProjectSidebarDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -39952,7 +40089,8 @@ export const SearchIssuesForBoardDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -40281,7 +40419,8 @@ export const FirstIssuesForBoardDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -49893,7 +50032,8 @@ export const GetUsedIssuePrioritiesDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         }
@@ -51989,7 +52129,8 @@ export const SearchIssuePrioritiesDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         }
@@ -52131,7 +52272,8 @@ export const FirstIssuePrioritiesDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         }
@@ -58257,7 +58399,8 @@ export const GetComponentDetailsDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -62316,7 +62459,8 @@ export const GetParticipatingIssueListDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -62723,7 +62867,8 @@ export const GetParticipatingFilteredIssueListDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -68330,7 +68475,8 @@ export const GetIssueDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -69760,7 +69906,8 @@ export const ChangeIssuePriorityDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -73323,7 +73470,8 @@ export const GetIssueListDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -73684,7 +73832,8 @@ export const GetFilteredIssueListDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -74128,7 +74277,8 @@ export const GetComponentIssueListDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -74665,7 +74815,8 @@ export const GetComponentFilteredIssueListDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -78154,7 +78305,8 @@ export const GetIssueBoardDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
