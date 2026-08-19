@@ -1,0 +1,60 @@
+fragment DefaultIssueBoardInfo on IssueBoard {
+    id
+    name
+    description
+    issueBoardColumns {
+        totalCount
+    }
+    issueBoardItems {
+        totalCount
+    }
+}
+
+fragment IssueBoardColumnInfo on IssueBoardColumn {
+    id
+    name
+    description
+    position
+    issueStates {
+        nodes {
+            ...DefaultIssueStateInfo
+        }
+    }
+}
+
+fragment IssueBoardCardInfo on Issue {
+    id
+    title
+    ...DefaultIssueIconInfo
+    state {
+        id
+        name
+        isOpen
+    }
+    priority {
+        ...DefaultIssuePriorityInfo
+    }
+    labels {
+        nodes {
+            ...DefaultLabelInfo
+        }
+    }
+    assignments {
+        nodes {
+            user {
+                ...DefaultUserInfo
+            }
+        }
+    }
+    issueComments {
+        totalCount
+    }
+}
+
+fragment IssueBoardItemInfo on IssueBoardItem {
+    id
+    position
+    issue {
+        ...IssueBoardCardInfo
+    }
+}

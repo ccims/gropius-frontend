@@ -331,6 +331,22 @@ const routes: RouteRecordRaw[] = [
                         component: () => import("../views/issue/Issue.vue")
                     }
                 ]
+            },
+            {
+                path: "boards",
+                component: () => import("../views/RouterOnly.vue"),
+                children: [
+                    {
+                        path: "",
+                        name: "component-issue-boards",
+                        component: () => import("../views/trackable/IssueBoards.vue")
+                    },
+                    {
+                        path: ":board",
+                        name: "component-issue-board",
+                        component: () => import("../views/trackable/IssueBoard.vue")
+                    }
+                ]
             }
         ]
     },
@@ -410,6 +426,22 @@ const routes: RouteRecordRaw[] = [
                 path: "component-issues",
                 name: "project-component-issues",
                 component: () => import("../views/project/ComponentIssues.vue")
+            },
+            {
+                path: "boards",
+                component: () => import("../views/RouterOnly.vue"),
+                children: [
+                    {
+                        path: "",
+                        name: "project-issue-boards",
+                        component: () => import("../views/trackable/IssueBoards.vue")
+                    },
+                    {
+                        path: ":board",
+                        name: "project-issue-board",
+                        component: () => import("../views/trackable/IssueBoard.vue")
+                    }
+                ]
             }
         ]
     },

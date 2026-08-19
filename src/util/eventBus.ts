@@ -28,6 +28,10 @@ export type Events = {
     "create-view": undefined;
     "add-interface-specification-version-to-component-version": undefined;
     "create-legal-information": undefined;
+    "create-issue-board": undefined;
+    "create-issue-board-column": undefined;
+    "add-issue-to-board": undefined;
+    "edit-issue-board": undefined;
 };
 
 export function onEvent(event: keyof Events, handler: (event: Events[keyof Events]) => void) {

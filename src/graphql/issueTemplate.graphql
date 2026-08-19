@@ -8,15 +8,10 @@ fragment DefaultIssueTemplateInfo on IssueTemplate {
     }
 }
 
+# the entries a created template can inherit, for the extended templates of the create dialog
 fragment IssueTemplateFields on IssueTemplate {
     id
     name
-    description
-    extends {
-        nodes {
-            id
-        }
-    }
     issueTypes {
         nodes {
             name
@@ -51,9 +46,5 @@ fragment IssueTemplateFields on IssueTemplate {
             description
             inverseName
         }
-    }
-    templateFieldSpecifications {
-        name
-        value
     }
 }

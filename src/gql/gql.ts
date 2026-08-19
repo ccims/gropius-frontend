@@ -22,6 +22,9 @@ type Documents = {
     "\n    mutation updateTemplateDeprecationStatus($id: ID!, $isDeprecated: Boolean!) {\n        updateTemplateDeprecationStatus(input: { id: $id, isDeprecated: $isDeprecated }) {\n            template {\n                id\n                isDeprecated\n            }\n        }\n    }\n": typeof types.UpdateTemplateDeprecationStatusDocument;
     "\n    query getInterfaceSpecificationVisibilityInfo($id: ID!, $componentTemplate: ID!) {\n        node(id: $id) {\n            ... on InterfaceSpecification {\n                template {\n                    canBeVisibleOnComponents(filter: { id: { eq: $componentTemplate } }) {\n                        totalCount\n                    }\n                    canBeInvisibleOnComponents(filter: { id: { eq: $componentTemplate } }) {\n                        totalCount\n                    }\n                }\n            }\n        }\n    }\n": typeof types.GetInterfaceSpecificationVisibilityInfoDocument;
     "\n    mutation addInterfaceSpecificationVersionToComponentVersion(\n        $input: AddInterfaceSpecificationVersionToComponentVersionInput!\n    ) {\n        addInterfaceSpecificationVersionToComponentVersion(input: $input) {\n            __typename\n        }\n    }\n": typeof types.AddInterfaceSpecificationVersionToComponentVersionDocument;
+    "\n    query searchIssuesForBoard($query: String!, $count: Int!, $trackable: ID!) {\n        searchIssues(query: $query, first: $count, filter: { trackables: { any: { id: { eq: $trackable } } } }) {\n            ...IssueBoardCardInfo\n        }\n    }\n": typeof types.SearchIssuesForBoardDocument;
+    "\n    query firstIssuesForBoard($trackable: ID!, $count: Int!) {\n        node(id: $trackable) {\n            __typename\n            ... on Trackable {\n                issues(first: $count, orderBy: [{ field: LAST_UPDATED_AT, direction: DESC }]) {\n                    nodes {\n                        ...IssueBoardCardInfo\n                    }\n                }\n            }\n        }\n    }\n": typeof types.FirstIssuesForBoardDocument;
+    "\n    mutation createIssueBoardItem($input: CreateIssueBoardItemInput!) {\n        createIssueBoardItem(input: $input) {\n            issueBoardItem {\n                id\n            }\n        }\n    }\n": typeof types.CreateIssueBoardItemDocument;
     "\n    mutation createArtefactTemplate($input: CreateArtefactTemplateInput!) {\n        createArtefactTemplate(input: $input) {\n            artefactTemplate {\n                id\n            }\n        }\n    }\n": typeof types.CreateArtefactTemplateDocument;
     "\n    query getComponentTemplateForDialog($id: ID!) {\n        node(id: $id) {\n            id\n            ... on ComponentTemplate {\n                templateFieldSpecifications {\n                    name\n                    value\n                }\n                componentVersionTemplate {\n                    templateFieldSpecifications {\n                        name\n                        value\n                    }\n                }\n            }\n        }\n    }\n": typeof types.GetComponentTemplateForDialogDocument;
     "\n    mutation createComponentFromDialog($input: CreateComponentInput!) {\n        createComponent(input: $input) {\n            component {\n                id\n                versions {\n                    nodes {\n                        id\n                    }\n                }\n            }\n        }\n    }\n": typeof types.CreateComponentFromDialogDocument;
@@ -37,11 +40,11 @@ type Documents = {
     "\n    mutation createInterfaceSpecificationTemplate($input: CreateInterfaceSpecificationTemplateInput!) {\n        createInterfaceSpecificationTemplate(input: $input) {\n            interfaceSpecificationTemplate {\n                id\n            }\n        }\n    }\n": typeof types.CreateInterfaceSpecificationTemplateDocument;
     "\n    query getInterfaceSpecificationVersionTemplateForDialog($interfaceSpecification: ID!) {\n        node(id: $interfaceSpecification) {\n            id\n            ... on InterfaceSpecification {\n                template {\n                    interfaceSpecificationVersionTemplate {\n                        id\n                        templateFieldSpecifications {\n                            name\n                            value\n                        }\n                    }\n                }\n            }\n        }\n    }\n": typeof types.GetInterfaceSpecificationVersionTemplateForDialogDocument;
     "\n    mutation createInterfaceSpecificationVersion($input: CreateInterfaceSpecificationVersionInput!) {\n        createInterfaceSpecificationVersion(input: $input) {\n            interfaceSpecificationVersion {\n                id\n            }\n        }\n    }\n": typeof types.CreateInterfaceSpecificationVersionDocument;
+    "\n    mutation createIssueBoardColumn($input: CreateIssueBoardColumnInput!) {\n        createIssueBoardColumn(input: $input) {\n            issueBoardColumn {\n                id\n            }\n        }\n    }\n": typeof types.CreateIssueBoardColumnDocument;
+    "\n    mutation createIssueBoard($input: CreateIssueBoardInput!) {\n        createIssueBoard(input: $input) {\n            issueBoard {\n                ...DefaultIssueBoardInfo\n            }\n        }\n    }\n": typeof types.CreateIssueBoardDocument;
     "\n    query getIssueTemplateForDialog($id: ID!) {\n        node(id: $id) {\n            id\n            ... on IssueTemplate {\n                templateFieldSpecifications {\n                    name\n                    value\n                }\n            }\n        }\n    }\n": typeof types.GetIssueTemplateForDialogDocument;
     "\n    mutation createIssueFromDialog($input: CreateIssueInput!) {\n        createIssue(input: $input) {\n            issue {\n                id\n            }\n        }\n    }\n": typeof types.CreateIssueFromDialogDocument;
-    "\n    query searchIssueTemplatesByName($query: String!, $count: Int!) {\n        searchIssueTemplates(query: $query, first: $count, filter: { isDeprecated: { eq: false } }) {\n            id\n            name\n        }\n    }\n": typeof types.SearchIssueTemplatesByNameDocument;
     "\n    query getIssueTemplateFields($id: ID!) {\n        node(id: $id) {\n            __typename\n            ... on IssueTemplate {\n                ...IssueTemplateFields\n            }\n        }\n    }\n": typeof types.GetIssueTemplateFieldsDocument;
-    "\n    query getIssueTemplateName($id: ID!) {\n        node(id: $id) {\n            __typename\n            id\n            ... on IssueTemplate {\n                name\n            }\n        }\n    }\n": typeof types.GetIssueTemplateNameDocument;
     "\n    mutation createIssueTemplate($input: CreateIssueTemplateInput!) {\n        createIssueTemplate(input: $input) {\n            issueTemplate {\n                ...DefaultIssueTemplateInfo\n            }\n        }\n    }\n": typeof types.CreateIssueTemplateDocument;
     "\n    mutation createLabel($input: CreateLabelInput!) {\n        createLabel(input: $input) {\n            label {\n                ...DefaultLabelInfo\n            }\n        }\n    }\n": typeof types.CreateLabelDocument;
     "\n    mutation createLegalInformation($input: CreateLegalInformationInput!) {\n        createLegalInformation(input: $input) {\n            legalInformation {\n                ...DefaultLegalInformationInfo\n            }\n        }\n    }\n": typeof types.CreateLegalInformationDocument;
@@ -56,6 +59,9 @@ type Documents = {
     "\n    mutation addProjectPermissionToProject($project: ID!, $projectPermission: ID!) {\n        updateProject(input: { id: $project, addedPermissions: [$projectPermission] }) {\n            __typename\n        }\n    }\n": typeof types.AddProjectPermissionToProjectDocument;
     "\n    query getPermissionUserList($orderBy: [GropiusUserOrder!]!, $count: Int!, $skip: Int!, $permission: ID!) {\n        node(id: $permission) {\n            ... on BasePermission {\n                users(orderBy: $orderBy, first: $count, skip: $skip) {\n                    nodes {\n                        ...DefaultUserInfo\n                    }\n                    totalCount\n                }\n            }\n        }\n    }\n": typeof types.GetPermissionUserListDocument;
     "\n    query getFilteredPermissionUserList($query: String!, $count: Int!, $permission: ID!) {\n        searchGropiusUsers(\n            query: $query\n            first: $count\n            filter: { permissions: { any: { id: { eq: $permission } } } }\n        ) {\n            ...DefaultUserInfo\n        }\n    }\n": typeof types.GetFilteredPermissionUserListDocument;
+    "\n    mutation updateIssueBoardColumn($input: UpdateIssueBoardColumnInput!) {\n        updateIssueBoardColumn(input: $input) {\n            issueBoardColumn {\n                id\n            }\n        }\n    }\n": typeof types.UpdateIssueBoardColumnDocument;
+    "\n    mutation updateIssueBoard($input: UpdateIssueBoardInput!) {\n        updateIssueBoard(input: $input) {\n            issueBoard {\n                ...DefaultIssueBoardInfo\n            }\n        }\n    }\n": typeof types.UpdateIssueBoardDocument;
+    "\n    mutation deleteIssueBoardFromDialog($id: ID!) {\n        deleteIssueBoard(input: { id: $id }) {\n            id\n        }\n    }\n": typeof types.DeleteIssueBoardFromDialogDocument;
     "\n    mutation updateLabel($input: UpdateLabelInput!) {\n        updateLabel(input: $input) {\n            label {\n                id\n            }\n        }\n    }\n": typeof types.UpdateLabelDocument;
     "\n    mutation updateLegalInformationForDialog($input: UpdateLegalInformationInput!) {\n        updateLegalInformation(input: $input) {\n            legalInformation {\n                id\n            }\n        }\n    }\n": typeof types.UpdateLegalInformationForDialogDocument;
     "\n    mutation updateIssueType($input: UpdateIssueTypeInput!) {\n        updateIssueType(input: $input) {\n            issueType {\n                id\n            }\n        }\n    }\n": typeof types.UpdateIssueTypeDocument;
@@ -125,6 +131,8 @@ type Documents = {
     "\n    query firstIssueRelationTypes($template: ID!, $count: Int!) {\n        node(id: $template) {\n            ... on IssueTemplate {\n                relationTypes(first: $count, orderBy: [{ field: NAME }]) {\n                    nodes {\n                        ...DefaultIssueRelationTypeInfo\n                    }\n                }\n            }\n        }\n    }\n": typeof types.FirstIssueRelationTypesDocument;
     "\n    query searchIssueStates($template: ID!, $query: String!, $count: Int!) {\n        searchIssueStates(query: $query, first: $count, filter: { partOf: { any: { id: { eq: $template } } } }) {\n            ...DefaultIssueStateInfo\n        }\n    }\n": typeof types.SearchIssueStatesDocument;
     "\n    query firstIssueStates($template: ID!, $count: Int!) {\n        node(id: $template) {\n            ... on IssueTemplate {\n                issueStates(first: $count, orderBy: [{ field: NAME }]) {\n                    nodes {\n                        ...DefaultIssueStateInfo\n                    }\n                }\n            }\n        }\n    }\n": typeof types.FirstIssueStatesDocument;
+    "\n    query searchAllIssueStates($query: String!, $count: Int!) {\n        searchIssueStates(query: $query, first: $count) {\n            ...DefaultIssueStateInfo\n        }\n    }\n": typeof types.SearchAllIssueStatesDocument;
+    "\n    query firstAllIssueStates($count: Int!) {\n        issueTemplates(first: $count) {\n            nodes {\n                id\n                issueStates(first: $count, orderBy: [{ field: NAME }]) {\n                    nodes {\n                        ...DefaultIssueStateInfo\n                    }\n                }\n            }\n        }\n    }\n": typeof types.FirstAllIssueStatesDocument;
     "\n    query searchIssueTemplates($query: String!, $count: Int!) {\n        searchIssueTemplates(query: $query, first: $count, filter: { isDeprecated: { eq: false } }) {\n            ...DefaultIssueTemplateInfo\n        }\n    }\n": typeof types.SearchIssueTemplatesDocument;
     "\n    query firstIssueTemplates($count: Int!) {\n        issueTemplates(first: $count, orderBy: [{ field: NAME }], filter: { isDeprecated: { eq: false } }) {\n            nodes {\n                ...DefaultIssueTemplateInfo\n            }\n        }\n    }\n": typeof types.FirstIssueTemplatesDocument;
     "\n    query searchIssueTypes($template: ID!, $query: String!, $count: Int!) {\n        searchIssueTypes(query: $query, first: $count, filter: { partOf: { any: { id: { eq: $template } } } }) {\n            ...DefaultIssueTypeInfo\n        }\n    }\n": typeof types.SearchIssueTypesDocument;
@@ -161,10 +169,11 @@ type Documents = {
     "fragment DefaultInterfaceSpecificationTemplateInfo on InterfaceSpecificationTemplate {\n  id\n  name\n  description\n  templateFieldSpecifications {\n    name\n    value\n  }\n}\n\nfragment DefaultInterfaceSpecificationVersionTemplateInfo on InterfaceSpecificationVersionTemplate {\n  id\n  name\n  description\n  templateFieldSpecifications {\n    name\n    value\n  }\n}": typeof types.DefaultInterfaceSpecificationTemplateInfoFragmentDoc;
     "fragment InterfaceSpecificationVersionListItemInfo on InterfaceSpecificationVersion {\n  id\n  version\n  tags\n}\n\nfragment DefaultInterfaceSpecificationVersionInfo on InterfaceSpecificationVersion {\n  id\n  interfaceSpecification {\n    name\n    description\n  }\n  version\n  __typename\n}": typeof types.InterfaceSpecificationVersionListItemInfoFragmentDoc;
     "fragment DefaultIssueInfo on Issue {\n  ...DefaultIssueIconInfo\n  id\n  title\n  trackables {\n    nodes {\n      ...DefaultTrackableInfo\n    }\n  }\n}\n\nfragment IssueListItemInfo on Issue {\n  id\n  title\n  createdAt\n  createdBy {\n    ...DefaultUserInfo\n  }\n  state {\n    id\n    name\n  }\n  ...DefaultIssueIconInfo\n  issueComments {\n    totalCount\n  }\n  labels {\n    nodes {\n      ...DefaultLabelInfo\n      trackables {\n        nodes {\n          id\n          name\n          description\n        }\n      }\n    }\n  }\n  assignments {\n    nodes {\n      user {\n        ...DefaultUserInfo\n      }\n    }\n  }\n  priority {\n    ...DefaultIssuePriorityInfo\n  }\n  template {\n    id\n    name\n    description\n  }\n  type {\n    id\n    name\n    iconPath\n  }\n  affects {\n    nodes {\n      id\n    }\n  }\n}\n\nfragment ParticipatingIssueListItemInfo on Issue {\n  ...IssueListItemInfo\n  trackables(first: 1) {\n    nodes {\n      __typename\n      id\n      name\n      description\n    }\n    totalCount\n  }\n}\n\nfragment ProjectComponentIssueListItemInfo on Issue {\n  ...IssueListItemInfo\n  trackables(\n    filter: {isComponentAnd: {versions: {any: {partOfProject: $project}}}}\n  ) {\n    nodes {\n      __typename\n      id\n      name\n      description\n    }\n    totalCount\n  }\n}\n\nfragment DefaultIssueIconInfo on Issue {\n  incomingRelations {\n    totalCount\n  }\n  outgoingRelations {\n    totalCount\n  }\n  state {\n    isOpen\n  }\n  type {\n    iconPath\n  }\n}": typeof types.DefaultIssueInfoFragmentDoc;
-    "fragment DefaultIssuePriorityInfo on IssuePriority {\n  id\n  name\n  description\n  value\n}": typeof types.DefaultIssuePriorityInfoFragmentDoc;
+    "fragment DefaultIssueBoardInfo on IssueBoard {\n  id\n  name\n  description\n  issueBoardColumns {\n    totalCount\n  }\n  issueBoardItems {\n    totalCount\n  }\n}\n\nfragment IssueBoardColumnInfo on IssueBoardColumn {\n  id\n  name\n  description\n  position\n  issueStates {\n    nodes {\n      ...DefaultIssueStateInfo\n    }\n  }\n}\n\nfragment IssueBoardCardInfo on Issue {\n  id\n  title\n  ...DefaultIssueIconInfo\n  state {\n    id\n    name\n    isOpen\n  }\n  priority {\n    ...DefaultIssuePriorityInfo\n  }\n  labels {\n    nodes {\n      ...DefaultLabelInfo\n    }\n  }\n  assignments {\n    nodes {\n      user {\n        ...DefaultUserInfo\n      }\n    }\n  }\n  issueComments {\n    totalCount\n  }\n}\n\nfragment IssueBoardItemInfo on IssueBoardItem {\n  id\n  position\n  issue {\n    ...IssueBoardCardInfo\n  }\n}": typeof types.DefaultIssueBoardInfoFragmentDoc;
+    "fragment DefaultIssuePriorityInfo on IssuePriority {\n  id\n  name\n  description\n  value\n  iconPath\n}": typeof types.DefaultIssuePriorityInfoFragmentDoc;
     "fragment DefaultIssueRelationTypeInfo on IssueRelationType {\n  id\n  name\n  description\n}": typeof types.DefaultIssueRelationTypeInfoFragmentDoc;
     "fragment DefaultIssueStateInfo on IssueState {\n  id\n  name\n  description\n  isOpen\n}": typeof types.DefaultIssueStateInfoFragmentDoc;
-    "fragment DefaultIssueTemplateInfo on IssueTemplate {\n  id\n  name\n  description\n  templateFieldSpecifications {\n    name\n    value\n  }\n}\n\nfragment IssueTemplateFields on IssueTemplate {\n  id\n  name\n  description\n  extends {\n    nodes {\n      id\n    }\n  }\n  issueTypes {\n    nodes {\n      name\n      description\n      iconPath\n    }\n  }\n  issuePriorities {\n    nodes {\n      name\n      description\n      value\n      iconPath\n    }\n  }\n  issueStates {\n    nodes {\n      name\n      description\n      isOpen\n    }\n  }\n  assignmentTypes {\n    nodes {\n      name\n      description\n    }\n  }\n  relationTypes {\n    nodes {\n      name\n      description\n      inverseName\n    }\n  }\n  templateFieldSpecifications {\n    name\n    value\n  }\n}": typeof types.DefaultIssueTemplateInfoFragmentDoc;
+    "fragment DefaultIssueTemplateInfo on IssueTemplate {\n  id\n  name\n  description\n  templateFieldSpecifications {\n    name\n    value\n  }\n}\n\nfragment IssueTemplateFields on IssueTemplate {\n  id\n  name\n  issueTypes {\n    nodes {\n      name\n      description\n      iconPath\n    }\n  }\n  issuePriorities {\n    nodes {\n      name\n      description\n      value\n      iconPath\n    }\n  }\n  issueStates {\n    nodes {\n      name\n      description\n      isOpen\n    }\n  }\n  assignmentTypes {\n    nodes {\n      name\n      description\n    }\n  }\n  relationTypes {\n    nodes {\n      name\n      description\n      inverseName\n    }\n  }\n}": typeof types.DefaultIssueTemplateInfoFragmentDoc;
     "fragment DefaultIssueTypeInfo on IssueType {\n  id\n  name\n  description\n  iconPath\n}": typeof types.DefaultIssueTypeInfoFragmentDoc;
     "fragment DefaultLabelInfo on Label {\n  id\n  name\n  description\n  color\n}": typeof types.DefaultLabelInfoFragmentDoc;
     "fragment BaseLegalInformationInfo on LegalInformation {\n  id\n  label\n  priority\n}\n\nfragment DefaultLegalInformationInfo on LegalInformation {\n  ...BaseLegalInformationInfo\n  text\n}": typeof types.BaseLegalInformationInfoFragmentDoc;
@@ -179,6 +188,8 @@ type Documents = {
     "fragment DefaultViewInfo on View {\n  id\n  name\n  description\n  filterByTemplate {\n    nodes {\n      id\n      name\n    }\n  }\n}\n\nfragment ViewGraphInfo on View {\n  ...DefaultViewInfo\n  relationLayouts {\n    nodes {\n      relation {\n        id\n      }\n      points {\n        x\n        y\n      }\n    }\n  }\n  relationPartnerLayouts {\n    nodes {\n      relationPartner {\n        id\n      }\n      pos {\n        x\n        y\n      }\n    }\n  }\n}": typeof types.DefaultViewInfoFragmentDoc;
     "\n    query getCurrentUser {\n        currentUser {\n            ...CurrentUserInfo\n        }\n\n        canCreateProjects: hasGlobalPermission(permission: CAN_CREATE_PROJECTS)\n        canCreateComponents: hasGlobalPermission(permission: CAN_CREATE_COMPONENTS)\n        canCreateIMSs: hasGlobalPermission(permission: CAN_CREATE_IMSS)\n        canCreateTemplates: hasGlobalPermission(permission: CAN_CREATE_TEMPLATES)\n    }\n": typeof types.GetCurrentUserDocument;
     "\n    query legalInformation {\n        legalInformation(orderBy: [{ field: PRIORITY, direction: ASC }]) {\n            nodes {\n                ...BaseLegalInformationInfo\n            }\n        }\n    }\n": typeof types.LegalInformationDocument;
+    "\n    mutation addIssueStateToBoardColumn($column: ID!, $state: ID!) {\n        addIssueStateToBoardColumn(input: { column: $column, state: $state }) {\n            id\n        }\n    }\n": typeof types.AddIssueStateToBoardColumnDocument;
+    "\n    mutation removeIssueStateFromBoardColumn($column: ID!, $state: ID!) {\n        removeIssueStateFromBoardColumn(input: { column: $column, state: $state }) {\n            id\n        }\n    }\n": typeof types.RemoveIssueStateFromBoardColumnDocument;
     "\n    query getIssueTemplateList($orderBy: [IssueTemplateOrder!]!, $count: Int!, $skip: Int!, $isDeprecated: Boolean!) {\n        issueTemplates(orderBy: $orderBy, first: $count, skip: $skip, filter: { isDeprecated: { eq: $isDeprecated } }) {\n            nodes {\n                ...TemplateListInfo\n            }\n            totalCount\n        }\n    }\n": typeof types.GetIssueTemplateListDocument;
     "\n    query getFilteredIssueTemplateList($query: String!, $count: Int!, $isDeprecated: Boolean!) {\n        searchIssueTemplates(query: $query, first: $count, filter: { isDeprecated: { eq: $isDeprecated } }) {\n            ...TemplateListInfo\n        }\n    }\n": typeof types.GetFilteredIssueTemplateListDocument;
     "\n    query getComponentTemplateList(\n        $orderBy: [ComponentTemplateOrder!]!\n        $count: Int!\n        $skip: Int!\n        $isDeprecated: Boolean!\n    ) {\n        componentTemplates(\n            orderBy: $orderBy\n            first: $count\n            skip: $skip\n            filter: { isDeprecated: { eq: $isDeprecated } }\n        ) {\n            nodes {\n                ...TemplateListInfo\n            }\n            totalCount\n        }\n    }\n": typeof types.GetComponentTemplateListDocument;
@@ -208,7 +219,7 @@ type Documents = {
     "\n    mutation updateGlobalPermission($input: UpdateGlobalPermissionInput!) {\n        updateGlobalPermission(input: $input) {\n            __typename\n        }\n    }\n": typeof types.UpdateGlobalPermissionDocument;
     "\n    mutation createGlobalPermission($input: CreateGlobalPermissionInput!) {\n        createGlobalPermission(input: $input) {\n            globalPermission {\n                id\n            }\n        }\n    }\n": typeof types.CreateGlobalPermissionDocument;
     "\n    query getComponentDetails($id: ID!) {\n        node(id: $id) {\n            id\n            ... on Component {\n                name\n                description\n                issues(orderBy: [{ field: LAST_UPDATED_AT, direction: DESC }], first: 20) {\n                    nodes {\n                        ...IssueListItemInfo\n                    }\n                }\n                pinnedIssues {\n                    nodes {\n                        ...IssueListItemInfo\n                    }\n                }\n            }\n        }\n    }\n": typeof types.GetComponentDetailsDocument;
-    "\n    query getComponent($id: ID!) {\n        node(id: $id) {\n            id\n            ... on Component {\n                __typename\n                name\n                description\n                ...OpenIssueCount\n                createIssues: hasPermission(permission: CREATE_ISSUES)\n                manageLabels: hasPermission(permission: MANAGE_LABELS)\n                manageIssues: hasPermission(permission: MANAGE_ISSUES)\n                manageIMS: hasPermission(permission: MANAGE_IMS)\n                admin: hasPermission(permission: ADMIN)\n            }\n        }\n    }\n": typeof types.GetComponentDocument;
+    "\n    query getComponent($id: ID!) {\n        node(id: $id) {\n            id\n            ... on Component {\n                __typename\n                name\n                description\n                ...OpenIssueCount\n                createIssues: hasPermission(permission: CREATE_ISSUES)\n                manageLabels: hasPermission(permission: MANAGE_LABELS)\n                manageIssues: hasPermission(permission: MANAGE_ISSUES)\n                manageIssueBoards: hasPermission(permission: MANAGE_ISSUE_BOARDS)\n                manageIMS: hasPermission(permission: MANAGE_IMS)\n                admin: hasPermission(permission: ADMIN)\n            }\n        }\n    }\n": typeof types.GetComponentDocument;
     "\n    query getVersionedNode($id: ID!) {\n        node(id: $id) {\n            id\n            ... on Versioned {\n                version\n            }\n        }\n    }\n": typeof types.GetVersionedNodeDocument;
     "\n    query getNamedNodeComponent($id: ID!) {\n        node(id: $id) {\n            id\n            ... on Named {\n                name\n            }\n        }\n    }\n": typeof types.GetNamedNodeComponentDocument;
     "\n    mutation deleteComponent($id: ID!) {\n        deleteComponent(input: { id: $id }) {\n            __typename\n        }\n    }\n": typeof types.DeleteComponentDocument;
@@ -316,7 +327,8 @@ type Documents = {
     "\n    mutation updateView($input: UpdateViewInput!) {\n        updateView(input: $input) {\n            __typename\n        }\n    }\n": typeof types.UpdateViewDocument;
     "\n    mutation updateProject($input: UpdateProjectInput!) {\n        updateProject(input: $input) {\n            project {\n                id\n            }\n        }\n    }\n": typeof types.UpdateProjectDocument;
     "\n    query getProjectGraph($project: ID!) {\n        node(id: $project) {\n            __typename\n            ... on Project {\n                ...GraphInfo\n                relationLayouts {\n                    nodes {\n                        relation {\n                            id\n                        }\n                        points {\n                            x\n                            y\n                        }\n                    }\n                }\n                relationPartnerLayouts {\n                    nodes {\n                        relationPartner {\n                            id\n                        }\n                        pos {\n                            x\n                            y\n                        }\n                    }\n                }\n            }\n        }\n    }\n": typeof types.GetProjectGraphDocument;
-    "\n    query getProject($id: ID!) {\n        node(id: $id) {\n            __typename\n            id\n            ... on Project {\n                __typename\n                name\n                description\n                ...OpenIssueCount\n                createIssues: hasPermission(permission: CREATE_ISSUES)\n                manageLabels: hasPermission(permission: MANAGE_LABELS)\n                manageComponents: hasPermission(permission: MANAGE_COMPONENTS)\n                manageIssues: hasPermission(permission: MANAGE_ISSUES)\n                manageIMS: hasPermission(permission: MANAGE_IMS)\n                manageViews: hasPermission(permission: MANAGE_VIEWS)\n                admin: hasPermission(permission: ADMIN)\n            }\n        }\n    }\n": typeof types.GetProjectDocument;
+    "\n    query getProject($id: ID!) {\n        node(id: $id) {\n            __typename\n            id\n            ... on Project {\n                __typename\n                name\n                description\n                ...OpenIssueCount\n                createIssues: hasPermission(permission: CREATE_ISSUES)\n                manageLabels: hasPermission(permission: MANAGE_LABELS)\n                manageComponents: hasPermission(permission: MANAGE_COMPONENTS)\n                manageIssues: hasPermission(permission: MANAGE_ISSUES)\n                manageIssueBoards: hasPermission(permission: MANAGE_ISSUE_BOARDS)\n                manageIMS: hasPermission(permission: MANAGE_IMS)\n                manageViews: hasPermission(permission: MANAGE_VIEWS)\n                admin: hasPermission(permission: ADMIN)\n            }\n        }\n    }\n": typeof types.GetProjectDocument;
+    "\n    query getIssueBoardNameProject($id: ID!) {\n        node(id: $id) {\n            id\n            ... on Named {\n                name\n            }\n        }\n    }\n": typeof types.GetIssueBoardNameProjectDocument;
     "\n    mutation deleteProject($id: ID!) {\n        deleteProject(input: { id: $id }) {\n            __typename\n        }\n    }\n": typeof types.DeleteProjectDocument;
     "\n    query getProjectGeneralDetails($id: ID!) {\n        node(id: $id) {\n            id\n            ... on Project {\n                name\n                description\n                repositoryURL\n                defaultView {\n                    id\n                }\n                admin: hasPermission(permission: ADMIN)\n            }\n        }\n    }\n": typeof types.GetProjectGeneralDetailsDocument;
     "\n    query getProjectPermissionList(\n        $orderBy: [ProjectPermissionOrder!]!\n        $count: Int!\n        $skip: Int!\n        $project: ID!\n        $filter: ProjectPermissionFilterInput!\n    ) {\n        node(id: $project) {\n            ... on Project {\n                permissions(orderBy: $orderBy, first: $count, skip: $skip, filter: $filter) {\n                    nodes {\n                        ...DefaultProjectPermissionInfo\n                    }\n                    totalCount\n                }\n            }\n        }\n    }\n": typeof types.GetProjectPermissionListDocument;
@@ -330,6 +342,14 @@ type Documents = {
     "\n    query getProjectComponentTemplates($project: ID!) {\n        node(id: $project) {\n            ... on Project {\n                components {\n                    nodes {\n                        component {\n                            template {\n                                name\n                                id\n                            }\n                        }\n                    }\n                }\n            }\n        }\n    }\n": typeof types.GetProjectComponentTemplatesDocument;
     "\n    mutation deleteView($id: ID!) {\n        deleteView(input: { id: $id }) {\n            __typename\n        }\n    }\n": typeof types.DeleteViewDocument;
     "\n    query getIMSProjectListFromTrackable(\n        $orderBy: [IMSProjectOrder!]!\n        $count: Int!\n        $skip: Int!\n        $trackable: ID!\n        $filter: IMSProjectFilterInput!\n    ) {\n        node(id: $trackable) {\n            __typename\n            ... on Trackable {\n                syncsTo(orderBy: $orderBy, first: $count, skip: $skip, filter: $filter) {\n                    nodes {\n                        ...DefaultIMSProjectInfo\n                    }\n                    totalCount\n                }\n            }\n        }\n    }\n": typeof types.GetImsProjectListFromTrackableDocument;
+    "\n    query getIssueBoard($id: ID!) {\n        node(id: $id) {\n            __typename\n            ... on IssueBoard {\n                id\n                name\n                description\n                issueBoardColumns(orderBy: [{ field: POSITION }], first: 100) {\n                    nodes {\n                        ...IssueBoardColumnInfo\n                    }\n                }\n                issueBoardItems(orderBy: [{ field: POSITION }], first: 500) {\n                    nodes {\n                        ...IssueBoardItemInfo\n                    }\n                }\n            }\n        }\n    }\n": typeof types.GetIssueBoardDocument;
+    "\n    mutation deleteIssueBoardColumn($id: ID!) {\n        deleteIssueBoardColumn(input: { id: $id }) {\n            id\n        }\n    }\n": typeof types.DeleteIssueBoardColumnDocument;
+    "\n    mutation updateIssueBoardColumnPosition($id: ID!, $position: Float!) {\n        updateIssueBoardColumn(input: { id: $id, position: $position }) {\n            issueBoardColumn {\n                id\n                position\n            }\n        }\n    }\n": typeof types.UpdateIssueBoardColumnPositionDocument;
+    "\n    mutation updateIssueBoardItemPosition($id: ID!, $position: Float!) {\n        updateIssueBoardItem(input: { id: $id, position: $position }) {\n            issueBoardItem {\n                id\n                position\n            }\n        }\n    }\n": typeof types.UpdateIssueBoardItemPositionDocument;
+    "\n    mutation deleteIssueBoardItem($id: ID!) {\n        deleteIssueBoardItem(input: { id: $id }) {\n            id\n        }\n    }\n": typeof types.DeleteIssueBoardItemDocument;
+    "\n    mutation changeIssueStateOnBoard($issue: ID!, $state: ID!) {\n        changeIssueState(input: { issue: $issue, state: $state }) {\n            stateChangedEvent {\n                id\n            }\n        }\n    }\n": typeof types.ChangeIssueStateOnBoardDocument;
+    "\n    query getIssueBoardList($orderBy: [IssueBoardOrder!]!, $count: Int!, $skip: Int!, $trackable: ID!) {\n        node(id: $trackable) {\n            __typename\n            ... on Trackable {\n                issueBoards(orderBy: $orderBy, first: $count, skip: $skip) {\n                    nodes {\n                        ...DefaultIssueBoardInfo\n                    }\n                    totalCount\n                }\n            }\n        }\n    }\n": typeof types.GetIssueBoardListDocument;
+    "\n    query getFilteredIssueBoardList($query: String!, $count: Int!, $trackable: ID!) {\n        searchIssueBoards(query: $query, first: $count, filter: { trackable: { id: { eq: $trackable } } }) {\n            ...DefaultIssueBoardInfo\n        }\n    }\n": typeof types.GetFilteredIssueBoardListDocument;
     "\n    query getLabelList($orderBy: [LabelOrder!]!, $count: Int!, $skip: Int!, $trackable: ID!) {\n        node(id: $trackable) {\n            __typename\n            ... on Trackable {\n                labels(orderBy: $orderBy, first: $count, skip: $skip) {\n                    nodes {\n                        ...DefaultLabelInfo\n                    }\n                    totalCount\n                }\n            }\n        }\n    }\n": typeof types.GetLabelListDocument;
     "\n    query getFilteredLabelList($query: String!, $count: Int!, $trackable: ID!) {\n        searchLabels(query: $query, first: $count, filter: { trackables: { any: { id: { eq: $trackable } } } }) {\n            ...DefaultLabelInfo\n        }\n    }\n": typeof types.GetFilteredLabelListDocument;
     "\n    mutation removeLabelFromTrackable($trackable: ID!, $label: ID!) {\n        removeLabelFromTrackable(input: { label: $label, trackable: $trackable }) {\n            __typename\n        }\n    }\n": typeof types.RemoveLabelFromTrackableDocument;
@@ -351,6 +371,12 @@ const documents: Documents = {
         types.GetInterfaceSpecificationVisibilityInfoDocument,
     "\n    mutation addInterfaceSpecificationVersionToComponentVersion(\n        $input: AddInterfaceSpecificationVersionToComponentVersionInput!\n    ) {\n        addInterfaceSpecificationVersionToComponentVersion(input: $input) {\n            __typename\n        }\n    }\n":
         types.AddInterfaceSpecificationVersionToComponentVersionDocument,
+    "\n    query searchIssuesForBoard($query: String!, $count: Int!, $trackable: ID!) {\n        searchIssues(query: $query, first: $count, filter: { trackables: { any: { id: { eq: $trackable } } } }) {\n            ...IssueBoardCardInfo\n        }\n    }\n":
+        types.SearchIssuesForBoardDocument,
+    "\n    query firstIssuesForBoard($trackable: ID!, $count: Int!) {\n        node(id: $trackable) {\n            __typename\n            ... on Trackable {\n                issues(first: $count, orderBy: [{ field: LAST_UPDATED_AT, direction: DESC }]) {\n                    nodes {\n                        ...IssueBoardCardInfo\n                    }\n                }\n            }\n        }\n    }\n":
+        types.FirstIssuesForBoardDocument,
+    "\n    mutation createIssueBoardItem($input: CreateIssueBoardItemInput!) {\n        createIssueBoardItem(input: $input) {\n            issueBoardItem {\n                id\n            }\n        }\n    }\n":
+        types.CreateIssueBoardItemDocument,
     "\n    mutation createArtefactTemplate($input: CreateArtefactTemplateInput!) {\n        createArtefactTemplate(input: $input) {\n            artefactTemplate {\n                id\n            }\n        }\n    }\n":
         types.CreateArtefactTemplateDocument,
     "\n    query getComponentTemplateForDialog($id: ID!) {\n        node(id: $id) {\n            id\n            ... on ComponentTemplate {\n                templateFieldSpecifications {\n                    name\n                    value\n                }\n                componentVersionTemplate {\n                    templateFieldSpecifications {\n                        name\n                        value\n                    }\n                }\n            }\n        }\n    }\n":
@@ -381,16 +407,16 @@ const documents: Documents = {
         types.GetInterfaceSpecificationVersionTemplateForDialogDocument,
     "\n    mutation createInterfaceSpecificationVersion($input: CreateInterfaceSpecificationVersionInput!) {\n        createInterfaceSpecificationVersion(input: $input) {\n            interfaceSpecificationVersion {\n                id\n            }\n        }\n    }\n":
         types.CreateInterfaceSpecificationVersionDocument,
+    "\n    mutation createIssueBoardColumn($input: CreateIssueBoardColumnInput!) {\n        createIssueBoardColumn(input: $input) {\n            issueBoardColumn {\n                id\n            }\n        }\n    }\n":
+        types.CreateIssueBoardColumnDocument,
+    "\n    mutation createIssueBoard($input: CreateIssueBoardInput!) {\n        createIssueBoard(input: $input) {\n            issueBoard {\n                ...DefaultIssueBoardInfo\n            }\n        }\n    }\n":
+        types.CreateIssueBoardDocument,
     "\n    query getIssueTemplateForDialog($id: ID!) {\n        node(id: $id) {\n            id\n            ... on IssueTemplate {\n                templateFieldSpecifications {\n                    name\n                    value\n                }\n            }\n        }\n    }\n":
         types.GetIssueTemplateForDialogDocument,
     "\n    mutation createIssueFromDialog($input: CreateIssueInput!) {\n        createIssue(input: $input) {\n            issue {\n                id\n            }\n        }\n    }\n":
         types.CreateIssueFromDialogDocument,
-    "\n    query searchIssueTemplatesByName($query: String!, $count: Int!) {\n        searchIssueTemplates(query: $query, first: $count, filter: { isDeprecated: { eq: false } }) {\n            id\n            name\n        }\n    }\n":
-        types.SearchIssueTemplatesByNameDocument,
     "\n    query getIssueTemplateFields($id: ID!) {\n        node(id: $id) {\n            __typename\n            ... on IssueTemplate {\n                ...IssueTemplateFields\n            }\n        }\n    }\n":
         types.GetIssueTemplateFieldsDocument,
-    "\n    query getIssueTemplateName($id: ID!) {\n        node(id: $id) {\n            __typename\n            id\n            ... on IssueTemplate {\n                name\n            }\n        }\n    }\n":
-        types.GetIssueTemplateNameDocument,
     "\n    mutation createIssueTemplate($input: CreateIssueTemplateInput!) {\n        createIssueTemplate(input: $input) {\n            issueTemplate {\n                ...DefaultIssueTemplateInfo\n            }\n        }\n    }\n":
         types.CreateIssueTemplateDocument,
     "\n    mutation createLabel($input: CreateLabelInput!) {\n        createLabel(input: $input) {\n            label {\n                ...DefaultLabelInfo\n            }\n        }\n    }\n":
@@ -419,6 +445,12 @@ const documents: Documents = {
         types.GetPermissionUserListDocument,
     "\n    query getFilteredPermissionUserList($query: String!, $count: Int!, $permission: ID!) {\n        searchGropiusUsers(\n            query: $query\n            first: $count\n            filter: { permissions: { any: { id: { eq: $permission } } } }\n        ) {\n            ...DefaultUserInfo\n        }\n    }\n":
         types.GetFilteredPermissionUserListDocument,
+    "\n    mutation updateIssueBoardColumn($input: UpdateIssueBoardColumnInput!) {\n        updateIssueBoardColumn(input: $input) {\n            issueBoardColumn {\n                id\n            }\n        }\n    }\n":
+        types.UpdateIssueBoardColumnDocument,
+    "\n    mutation updateIssueBoard($input: UpdateIssueBoardInput!) {\n        updateIssueBoard(input: $input) {\n            issueBoard {\n                ...DefaultIssueBoardInfo\n            }\n        }\n    }\n":
+        types.UpdateIssueBoardDocument,
+    "\n    mutation deleteIssueBoardFromDialog($id: ID!) {\n        deleteIssueBoard(input: { id: $id }) {\n            id\n        }\n    }\n":
+        types.DeleteIssueBoardFromDialogDocument,
     "\n    mutation updateLabel($input: UpdateLabelInput!) {\n        updateLabel(input: $input) {\n            label {\n                id\n            }\n        }\n    }\n":
         types.UpdateLabelDocument,
     "\n    mutation updateLegalInformationForDialog($input: UpdateLegalInformationInput!) {\n        updateLegalInformation(input: $input) {\n            legalInformation {\n                id\n            }\n        }\n    }\n":
@@ -557,6 +589,10 @@ const documents: Documents = {
         types.SearchIssueStatesDocument,
     "\n    query firstIssueStates($template: ID!, $count: Int!) {\n        node(id: $template) {\n            ... on IssueTemplate {\n                issueStates(first: $count, orderBy: [{ field: NAME }]) {\n                    nodes {\n                        ...DefaultIssueStateInfo\n                    }\n                }\n            }\n        }\n    }\n":
         types.FirstIssueStatesDocument,
+    "\n    query searchAllIssueStates($query: String!, $count: Int!) {\n        searchIssueStates(query: $query, first: $count) {\n            ...DefaultIssueStateInfo\n        }\n    }\n":
+        types.SearchAllIssueStatesDocument,
+    "\n    query firstAllIssueStates($count: Int!) {\n        issueTemplates(first: $count) {\n            nodes {\n                id\n                issueStates(first: $count, orderBy: [{ field: NAME }]) {\n                    nodes {\n                        ...DefaultIssueStateInfo\n                    }\n                }\n            }\n        }\n    }\n":
+        types.FirstAllIssueStatesDocument,
     "\n    query searchIssueTemplates($query: String!, $count: Int!) {\n        searchIssueTemplates(query: $query, first: $count, filter: { isDeprecated: { eq: false } }) {\n            ...DefaultIssueTemplateInfo\n        }\n    }\n":
         types.SearchIssueTemplatesDocument,
     "\n    query firstIssueTemplates($count: Int!) {\n        issueTemplates(first: $count, orderBy: [{ field: NAME }], filter: { isDeprecated: { eq: false } }) {\n            nodes {\n                ...DefaultIssueTemplateInfo\n            }\n        }\n    }\n":
@@ -629,13 +665,15 @@ const documents: Documents = {
         types.InterfaceSpecificationVersionListItemInfoFragmentDoc,
     "fragment DefaultIssueInfo on Issue {\n  ...DefaultIssueIconInfo\n  id\n  title\n  trackables {\n    nodes {\n      ...DefaultTrackableInfo\n    }\n  }\n}\n\nfragment IssueListItemInfo on Issue {\n  id\n  title\n  createdAt\n  createdBy {\n    ...DefaultUserInfo\n  }\n  state {\n    id\n    name\n  }\n  ...DefaultIssueIconInfo\n  issueComments {\n    totalCount\n  }\n  labels {\n    nodes {\n      ...DefaultLabelInfo\n      trackables {\n        nodes {\n          id\n          name\n          description\n        }\n      }\n    }\n  }\n  assignments {\n    nodes {\n      user {\n        ...DefaultUserInfo\n      }\n    }\n  }\n  priority {\n    ...DefaultIssuePriorityInfo\n  }\n  template {\n    id\n    name\n    description\n  }\n  type {\n    id\n    name\n    iconPath\n  }\n  affects {\n    nodes {\n      id\n    }\n  }\n}\n\nfragment ParticipatingIssueListItemInfo on Issue {\n  ...IssueListItemInfo\n  trackables(first: 1) {\n    nodes {\n      __typename\n      id\n      name\n      description\n    }\n    totalCount\n  }\n}\n\nfragment ProjectComponentIssueListItemInfo on Issue {\n  ...IssueListItemInfo\n  trackables(\n    filter: {isComponentAnd: {versions: {any: {partOfProject: $project}}}}\n  ) {\n    nodes {\n      __typename\n      id\n      name\n      description\n    }\n    totalCount\n  }\n}\n\nfragment DefaultIssueIconInfo on Issue {\n  incomingRelations {\n    totalCount\n  }\n  outgoingRelations {\n    totalCount\n  }\n  state {\n    isOpen\n  }\n  type {\n    iconPath\n  }\n}":
         types.DefaultIssueInfoFragmentDoc,
-    "fragment DefaultIssuePriorityInfo on IssuePriority {\n  id\n  name\n  description\n  value\n}":
+    "fragment DefaultIssueBoardInfo on IssueBoard {\n  id\n  name\n  description\n  issueBoardColumns {\n    totalCount\n  }\n  issueBoardItems {\n    totalCount\n  }\n}\n\nfragment IssueBoardColumnInfo on IssueBoardColumn {\n  id\n  name\n  description\n  position\n  issueStates {\n    nodes {\n      ...DefaultIssueStateInfo\n    }\n  }\n}\n\nfragment IssueBoardCardInfo on Issue {\n  id\n  title\n  ...DefaultIssueIconInfo\n  state {\n    id\n    name\n    isOpen\n  }\n  priority {\n    ...DefaultIssuePriorityInfo\n  }\n  labels {\n    nodes {\n      ...DefaultLabelInfo\n    }\n  }\n  assignments {\n    nodes {\n      user {\n        ...DefaultUserInfo\n      }\n    }\n  }\n  issueComments {\n    totalCount\n  }\n}\n\nfragment IssueBoardItemInfo on IssueBoardItem {\n  id\n  position\n  issue {\n    ...IssueBoardCardInfo\n  }\n}":
+        types.DefaultIssueBoardInfoFragmentDoc,
+    "fragment DefaultIssuePriorityInfo on IssuePriority {\n  id\n  name\n  description\n  value\n  iconPath\n}":
         types.DefaultIssuePriorityInfoFragmentDoc,
     "fragment DefaultIssueRelationTypeInfo on IssueRelationType {\n  id\n  name\n  description\n}":
         types.DefaultIssueRelationTypeInfoFragmentDoc,
     "fragment DefaultIssueStateInfo on IssueState {\n  id\n  name\n  description\n  isOpen\n}":
         types.DefaultIssueStateInfoFragmentDoc,
-    "fragment DefaultIssueTemplateInfo on IssueTemplate {\n  id\n  name\n  description\n  templateFieldSpecifications {\n    name\n    value\n  }\n}\n\nfragment IssueTemplateFields on IssueTemplate {\n  id\n  name\n  description\n  extends {\n    nodes {\n      id\n    }\n  }\n  issueTypes {\n    nodes {\n      name\n      description\n      iconPath\n    }\n  }\n  issuePriorities {\n    nodes {\n      name\n      description\n      value\n      iconPath\n    }\n  }\n  issueStates {\n    nodes {\n      name\n      description\n      isOpen\n    }\n  }\n  assignmentTypes {\n    nodes {\n      name\n      description\n    }\n  }\n  relationTypes {\n    nodes {\n      name\n      description\n      inverseName\n    }\n  }\n  templateFieldSpecifications {\n    name\n    value\n  }\n}":
+    "fragment DefaultIssueTemplateInfo on IssueTemplate {\n  id\n  name\n  description\n  templateFieldSpecifications {\n    name\n    value\n  }\n}\n\nfragment IssueTemplateFields on IssueTemplate {\n  id\n  name\n  issueTypes {\n    nodes {\n      name\n      description\n      iconPath\n    }\n  }\n  issuePriorities {\n    nodes {\n      name\n      description\n      value\n      iconPath\n    }\n  }\n  issueStates {\n    nodes {\n      name\n      description\n      isOpen\n    }\n  }\n  assignmentTypes {\n    nodes {\n      name\n      description\n    }\n  }\n  relationTypes {\n    nodes {\n      name\n      description\n      inverseName\n    }\n  }\n}":
         types.DefaultIssueTemplateInfoFragmentDoc,
     "fragment DefaultIssueTypeInfo on IssueType {\n  id\n  name\n  description\n  iconPath\n}":
         types.DefaultIssueTypeInfoFragmentDoc,
@@ -664,6 +702,10 @@ const documents: Documents = {
         types.GetCurrentUserDocument,
     "\n    query legalInformation {\n        legalInformation(orderBy: [{ field: PRIORITY, direction: ASC }]) {\n            nodes {\n                ...BaseLegalInformationInfo\n            }\n        }\n    }\n":
         types.LegalInformationDocument,
+    "\n    mutation addIssueStateToBoardColumn($column: ID!, $state: ID!) {\n        addIssueStateToBoardColumn(input: { column: $column, state: $state }) {\n            id\n        }\n    }\n":
+        types.AddIssueStateToBoardColumnDocument,
+    "\n    mutation removeIssueStateFromBoardColumn($column: ID!, $state: ID!) {\n        removeIssueStateFromBoardColumn(input: { column: $column, state: $state }) {\n            id\n        }\n    }\n":
+        types.RemoveIssueStateFromBoardColumnDocument,
     "\n    query getIssueTemplateList($orderBy: [IssueTemplateOrder!]!, $count: Int!, $skip: Int!, $isDeprecated: Boolean!) {\n        issueTemplates(orderBy: $orderBy, first: $count, skip: $skip, filter: { isDeprecated: { eq: $isDeprecated } }) {\n            nodes {\n                ...TemplateListInfo\n            }\n            totalCount\n        }\n    }\n":
         types.GetIssueTemplateListDocument,
     "\n    query getFilteredIssueTemplateList($query: String!, $count: Int!, $isDeprecated: Boolean!) {\n        searchIssueTemplates(query: $query, first: $count, filter: { isDeprecated: { eq: $isDeprecated } }) {\n            ...TemplateListInfo\n        }\n    }\n":
@@ -722,7 +764,7 @@ const documents: Documents = {
         types.CreateGlobalPermissionDocument,
     "\n    query getComponentDetails($id: ID!) {\n        node(id: $id) {\n            id\n            ... on Component {\n                name\n                description\n                issues(orderBy: [{ field: LAST_UPDATED_AT, direction: DESC }], first: 20) {\n                    nodes {\n                        ...IssueListItemInfo\n                    }\n                }\n                pinnedIssues {\n                    nodes {\n                        ...IssueListItemInfo\n                    }\n                }\n            }\n        }\n    }\n":
         types.GetComponentDetailsDocument,
-    "\n    query getComponent($id: ID!) {\n        node(id: $id) {\n            id\n            ... on Component {\n                __typename\n                name\n                description\n                ...OpenIssueCount\n                createIssues: hasPermission(permission: CREATE_ISSUES)\n                manageLabels: hasPermission(permission: MANAGE_LABELS)\n                manageIssues: hasPermission(permission: MANAGE_ISSUES)\n                manageIMS: hasPermission(permission: MANAGE_IMS)\n                admin: hasPermission(permission: ADMIN)\n            }\n        }\n    }\n":
+    "\n    query getComponent($id: ID!) {\n        node(id: $id) {\n            id\n            ... on Component {\n                __typename\n                name\n                description\n                ...OpenIssueCount\n                createIssues: hasPermission(permission: CREATE_ISSUES)\n                manageLabels: hasPermission(permission: MANAGE_LABELS)\n                manageIssues: hasPermission(permission: MANAGE_ISSUES)\n                manageIssueBoards: hasPermission(permission: MANAGE_ISSUE_BOARDS)\n                manageIMS: hasPermission(permission: MANAGE_IMS)\n                admin: hasPermission(permission: ADMIN)\n            }\n        }\n    }\n":
         types.GetComponentDocument,
     "\n    query getVersionedNode($id: ID!) {\n        node(id: $id) {\n            id\n            ... on Versioned {\n                version\n            }\n        }\n    }\n":
         types.GetVersionedNodeDocument,
@@ -938,8 +980,10 @@ const documents: Documents = {
         types.UpdateProjectDocument,
     "\n    query getProjectGraph($project: ID!) {\n        node(id: $project) {\n            __typename\n            ... on Project {\n                ...GraphInfo\n                relationLayouts {\n                    nodes {\n                        relation {\n                            id\n                        }\n                        points {\n                            x\n                            y\n                        }\n                    }\n                }\n                relationPartnerLayouts {\n                    nodes {\n                        relationPartner {\n                            id\n                        }\n                        pos {\n                            x\n                            y\n                        }\n                    }\n                }\n            }\n        }\n    }\n":
         types.GetProjectGraphDocument,
-    "\n    query getProject($id: ID!) {\n        node(id: $id) {\n            __typename\n            id\n            ... on Project {\n                __typename\n                name\n                description\n                ...OpenIssueCount\n                createIssues: hasPermission(permission: CREATE_ISSUES)\n                manageLabels: hasPermission(permission: MANAGE_LABELS)\n                manageComponents: hasPermission(permission: MANAGE_COMPONENTS)\n                manageIssues: hasPermission(permission: MANAGE_ISSUES)\n                manageIMS: hasPermission(permission: MANAGE_IMS)\n                manageViews: hasPermission(permission: MANAGE_VIEWS)\n                admin: hasPermission(permission: ADMIN)\n            }\n        }\n    }\n":
+    "\n    query getProject($id: ID!) {\n        node(id: $id) {\n            __typename\n            id\n            ... on Project {\n                __typename\n                name\n                description\n                ...OpenIssueCount\n                createIssues: hasPermission(permission: CREATE_ISSUES)\n                manageLabels: hasPermission(permission: MANAGE_LABELS)\n                manageComponents: hasPermission(permission: MANAGE_COMPONENTS)\n                manageIssues: hasPermission(permission: MANAGE_ISSUES)\n                manageIssueBoards: hasPermission(permission: MANAGE_ISSUE_BOARDS)\n                manageIMS: hasPermission(permission: MANAGE_IMS)\n                manageViews: hasPermission(permission: MANAGE_VIEWS)\n                admin: hasPermission(permission: ADMIN)\n            }\n        }\n    }\n":
         types.GetProjectDocument,
+    "\n    query getIssueBoardNameProject($id: ID!) {\n        node(id: $id) {\n            id\n            ... on Named {\n                name\n            }\n        }\n    }\n":
+        types.GetIssueBoardNameProjectDocument,
     "\n    mutation deleteProject($id: ID!) {\n        deleteProject(input: { id: $id }) {\n            __typename\n        }\n    }\n":
         types.DeleteProjectDocument,
     "\n    query getProjectGeneralDetails($id: ID!) {\n        node(id: $id) {\n            id\n            ... on Project {\n                name\n                description\n                repositoryURL\n                defaultView {\n                    id\n                }\n                admin: hasPermission(permission: ADMIN)\n            }\n        }\n    }\n":
@@ -966,6 +1010,22 @@ const documents: Documents = {
         types.DeleteViewDocument,
     "\n    query getIMSProjectListFromTrackable(\n        $orderBy: [IMSProjectOrder!]!\n        $count: Int!\n        $skip: Int!\n        $trackable: ID!\n        $filter: IMSProjectFilterInput!\n    ) {\n        node(id: $trackable) {\n            __typename\n            ... on Trackable {\n                syncsTo(orderBy: $orderBy, first: $count, skip: $skip, filter: $filter) {\n                    nodes {\n                        ...DefaultIMSProjectInfo\n                    }\n                    totalCount\n                }\n            }\n        }\n    }\n":
         types.GetImsProjectListFromTrackableDocument,
+    "\n    query getIssueBoard($id: ID!) {\n        node(id: $id) {\n            __typename\n            ... on IssueBoard {\n                id\n                name\n                description\n                issueBoardColumns(orderBy: [{ field: POSITION }], first: 100) {\n                    nodes {\n                        ...IssueBoardColumnInfo\n                    }\n                }\n                issueBoardItems(orderBy: [{ field: POSITION }], first: 500) {\n                    nodes {\n                        ...IssueBoardItemInfo\n                    }\n                }\n            }\n        }\n    }\n":
+        types.GetIssueBoardDocument,
+    "\n    mutation deleteIssueBoardColumn($id: ID!) {\n        deleteIssueBoardColumn(input: { id: $id }) {\n            id\n        }\n    }\n":
+        types.DeleteIssueBoardColumnDocument,
+    "\n    mutation updateIssueBoardColumnPosition($id: ID!, $position: Float!) {\n        updateIssueBoardColumn(input: { id: $id, position: $position }) {\n            issueBoardColumn {\n                id\n                position\n            }\n        }\n    }\n":
+        types.UpdateIssueBoardColumnPositionDocument,
+    "\n    mutation updateIssueBoardItemPosition($id: ID!, $position: Float!) {\n        updateIssueBoardItem(input: { id: $id, position: $position }) {\n            issueBoardItem {\n                id\n                position\n            }\n        }\n    }\n":
+        types.UpdateIssueBoardItemPositionDocument,
+    "\n    mutation deleteIssueBoardItem($id: ID!) {\n        deleteIssueBoardItem(input: { id: $id }) {\n            id\n        }\n    }\n":
+        types.DeleteIssueBoardItemDocument,
+    "\n    mutation changeIssueStateOnBoard($issue: ID!, $state: ID!) {\n        changeIssueState(input: { issue: $issue, state: $state }) {\n            stateChangedEvent {\n                id\n            }\n        }\n    }\n":
+        types.ChangeIssueStateOnBoardDocument,
+    "\n    query getIssueBoardList($orderBy: [IssueBoardOrder!]!, $count: Int!, $skip: Int!, $trackable: ID!) {\n        node(id: $trackable) {\n            __typename\n            ... on Trackable {\n                issueBoards(orderBy: $orderBy, first: $count, skip: $skip) {\n                    nodes {\n                        ...DefaultIssueBoardInfo\n                    }\n                    totalCount\n                }\n            }\n        }\n    }\n":
+        types.GetIssueBoardListDocument,
+    "\n    query getFilteredIssueBoardList($query: String!, $count: Int!, $trackable: ID!) {\n        searchIssueBoards(query: $query, first: $count, filter: { trackable: { id: { eq: $trackable } } }) {\n            ...DefaultIssueBoardInfo\n        }\n    }\n":
+        types.GetFilteredIssueBoardListDocument,
     "\n    query getLabelList($orderBy: [LabelOrder!]!, $count: Int!, $skip: Int!, $trackable: ID!) {\n        node(id: $trackable) {\n            __typename\n            ... on Trackable {\n                labels(orderBy: $orderBy, first: $count, skip: $skip) {\n                    nodes {\n                        ...DefaultLabelInfo\n                    }\n                    totalCount\n                }\n            }\n        }\n    }\n":
         types.GetLabelListDocument,
     "\n    query getFilteredLabelList($query: String!, $count: Int!, $trackable: ID!) {\n        searchLabels(query: $query, first: $count, filter: { trackables: { any: { id: { eq: $trackable } } } }) {\n            ...DefaultLabelInfo\n        }\n    }\n":
@@ -1036,6 +1096,24 @@ export function graphql(
 export function graphql(
     source: "\n    mutation addInterfaceSpecificationVersionToComponentVersion(\n        $input: AddInterfaceSpecificationVersionToComponentVersionInput!\n    ) {\n        addInterfaceSpecificationVersionToComponentVersion(input: $input) {\n            __typename\n        }\n    }\n"
 ): (typeof documents)["\n    mutation addInterfaceSpecificationVersionToComponentVersion(\n        $input: AddInterfaceSpecificationVersionToComponentVersionInput!\n    ) {\n        addInterfaceSpecificationVersionToComponentVersion(input: $input) {\n            __typename\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: "\n    query searchIssuesForBoard($query: String!, $count: Int!, $trackable: ID!) {\n        searchIssues(query: $query, first: $count, filter: { trackables: { any: { id: { eq: $trackable } } } }) {\n            ...IssueBoardCardInfo\n        }\n    }\n"
+): (typeof documents)["\n    query searchIssuesForBoard($query: String!, $count: Int!, $trackable: ID!) {\n        searchIssues(query: $query, first: $count, filter: { trackables: { any: { id: { eq: $trackable } } } }) {\n            ...IssueBoardCardInfo\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: "\n    query firstIssuesForBoard($trackable: ID!, $count: Int!) {\n        node(id: $trackable) {\n            __typename\n            ... on Trackable {\n                issues(first: $count, orderBy: [{ field: LAST_UPDATED_AT, direction: DESC }]) {\n                    nodes {\n                        ...IssueBoardCardInfo\n                    }\n                }\n            }\n        }\n    }\n"
+): (typeof documents)["\n    query firstIssuesForBoard($trackable: ID!, $count: Int!) {\n        node(id: $trackable) {\n            __typename\n            ... on Trackable {\n                issues(first: $count, orderBy: [{ field: LAST_UPDATED_AT, direction: DESC }]) {\n                    nodes {\n                        ...IssueBoardCardInfo\n                    }\n                }\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: "\n    mutation createIssueBoardItem($input: CreateIssueBoardItemInput!) {\n        createIssueBoardItem(input: $input) {\n            issueBoardItem {\n                id\n            }\n        }\n    }\n"
+): (typeof documents)["\n    mutation createIssueBoardItem($input: CreateIssueBoardItemInput!) {\n        createIssueBoardItem(input: $input) {\n            issueBoardItem {\n                id\n            }\n        }\n    }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -1130,6 +1208,18 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
+    source: "\n    mutation createIssueBoardColumn($input: CreateIssueBoardColumnInput!) {\n        createIssueBoardColumn(input: $input) {\n            issueBoardColumn {\n                id\n            }\n        }\n    }\n"
+): (typeof documents)["\n    mutation createIssueBoardColumn($input: CreateIssueBoardColumnInput!) {\n        createIssueBoardColumn(input: $input) {\n            issueBoardColumn {\n                id\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: "\n    mutation createIssueBoard($input: CreateIssueBoardInput!) {\n        createIssueBoard(input: $input) {\n            issueBoard {\n                ...DefaultIssueBoardInfo\n            }\n        }\n    }\n"
+): (typeof documents)["\n    mutation createIssueBoard($input: CreateIssueBoardInput!) {\n        createIssueBoard(input: $input) {\n            issueBoard {\n                ...DefaultIssueBoardInfo\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
     source: "\n    query getIssueTemplateForDialog($id: ID!) {\n        node(id: $id) {\n            id\n            ... on IssueTemplate {\n                templateFieldSpecifications {\n                    name\n                    value\n                }\n            }\n        }\n    }\n"
 ): (typeof documents)["\n    query getIssueTemplateForDialog($id: ID!) {\n        node(id: $id) {\n            id\n            ... on IssueTemplate {\n                templateFieldSpecifications {\n                    name\n                    value\n                }\n            }\n        }\n    }\n"];
 /**
@@ -1142,20 +1232,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-    source: "\n    query searchIssueTemplatesByName($query: String!, $count: Int!) {\n        searchIssueTemplates(query: $query, first: $count, filter: { isDeprecated: { eq: false } }) {\n            id\n            name\n        }\n    }\n"
-): (typeof documents)["\n    query searchIssueTemplatesByName($query: String!, $count: Int!) {\n        searchIssueTemplates(query: $query, first: $count, filter: { isDeprecated: { eq: false } }) {\n            id\n            name\n        }\n    }\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
     source: "\n    query getIssueTemplateFields($id: ID!) {\n        node(id: $id) {\n            __typename\n            ... on IssueTemplate {\n                ...IssueTemplateFields\n            }\n        }\n    }\n"
 ): (typeof documents)["\n    query getIssueTemplateFields($id: ID!) {\n        node(id: $id) {\n            __typename\n            ... on IssueTemplate {\n                ...IssueTemplateFields\n            }\n        }\n    }\n"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
-    source: "\n    query getIssueTemplateName($id: ID!) {\n        node(id: $id) {\n            __typename\n            id\n            ... on IssueTemplate {\n                name\n            }\n        }\n    }\n"
-): (typeof documents)["\n    query getIssueTemplateName($id: ID!) {\n        node(id: $id) {\n            __typename\n            id\n            ... on IssueTemplate {\n                name\n            }\n        }\n    }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -1240,6 +1318,24 @@ export function graphql(
 export function graphql(
     source: "\n    query getFilteredPermissionUserList($query: String!, $count: Int!, $permission: ID!) {\n        searchGropiusUsers(\n            query: $query\n            first: $count\n            filter: { permissions: { any: { id: { eq: $permission } } } }\n        ) {\n            ...DefaultUserInfo\n        }\n    }\n"
 ): (typeof documents)["\n    query getFilteredPermissionUserList($query: String!, $count: Int!, $permission: ID!) {\n        searchGropiusUsers(\n            query: $query\n            first: $count\n            filter: { permissions: { any: { id: { eq: $permission } } } }\n        ) {\n            ...DefaultUserInfo\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: "\n    mutation updateIssueBoardColumn($input: UpdateIssueBoardColumnInput!) {\n        updateIssueBoardColumn(input: $input) {\n            issueBoardColumn {\n                id\n            }\n        }\n    }\n"
+): (typeof documents)["\n    mutation updateIssueBoardColumn($input: UpdateIssueBoardColumnInput!) {\n        updateIssueBoardColumn(input: $input) {\n            issueBoardColumn {\n                id\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: "\n    mutation updateIssueBoard($input: UpdateIssueBoardInput!) {\n        updateIssueBoard(input: $input) {\n            issueBoard {\n                ...DefaultIssueBoardInfo\n            }\n        }\n    }\n"
+): (typeof documents)["\n    mutation updateIssueBoard($input: UpdateIssueBoardInput!) {\n        updateIssueBoard(input: $input) {\n            issueBoard {\n                ...DefaultIssueBoardInfo\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: "\n    mutation deleteIssueBoardFromDialog($id: ID!) {\n        deleteIssueBoard(input: { id: $id }) {\n            id\n        }\n    }\n"
+): (typeof documents)["\n    mutation deleteIssueBoardFromDialog($id: ID!) {\n        deleteIssueBoard(input: { id: $id }) {\n            id\n        }\n    }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -1658,6 +1754,18 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
+    source: "\n    query searchAllIssueStates($query: String!, $count: Int!) {\n        searchIssueStates(query: $query, first: $count) {\n            ...DefaultIssueStateInfo\n        }\n    }\n"
+): (typeof documents)["\n    query searchAllIssueStates($query: String!, $count: Int!) {\n        searchIssueStates(query: $query, first: $count) {\n            ...DefaultIssueStateInfo\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: "\n    query firstAllIssueStates($count: Int!) {\n        issueTemplates(first: $count) {\n            nodes {\n                id\n                issueStates(first: $count, orderBy: [{ field: NAME }]) {\n                    nodes {\n                        ...DefaultIssueStateInfo\n                    }\n                }\n            }\n        }\n    }\n"
+): (typeof documents)["\n    query firstAllIssueStates($count: Int!) {\n        issueTemplates(first: $count) {\n            nodes {\n                id\n                issueStates(first: $count, orderBy: [{ field: NAME }]) {\n                    nodes {\n                        ...DefaultIssueStateInfo\n                    }\n                }\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
     source: "\n    query searchIssueTemplates($query: String!, $count: Int!) {\n        searchIssueTemplates(query: $query, first: $count, filter: { isDeprecated: { eq: false } }) {\n            ...DefaultIssueTemplateInfo\n        }\n    }\n"
 ): (typeof documents)["\n    query searchIssueTemplates($query: String!, $count: Int!) {\n        searchIssueTemplates(query: $query, first: $count, filter: { isDeprecated: { eq: false } }) {\n            ...DefaultIssueTemplateInfo\n        }\n    }\n"];
 /**
@@ -1874,8 +1982,14 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-    source: "fragment DefaultIssuePriorityInfo on IssuePriority {\n  id\n  name\n  description\n  value\n}"
-): (typeof documents)["fragment DefaultIssuePriorityInfo on IssuePriority {\n  id\n  name\n  description\n  value\n}"];
+    source: "fragment DefaultIssueBoardInfo on IssueBoard {\n  id\n  name\n  description\n  issueBoardColumns {\n    totalCount\n  }\n  issueBoardItems {\n    totalCount\n  }\n}\n\nfragment IssueBoardColumnInfo on IssueBoardColumn {\n  id\n  name\n  description\n  position\n  issueStates {\n    nodes {\n      ...DefaultIssueStateInfo\n    }\n  }\n}\n\nfragment IssueBoardCardInfo on Issue {\n  id\n  title\n  ...DefaultIssueIconInfo\n  state {\n    id\n    name\n    isOpen\n  }\n  priority {\n    ...DefaultIssuePriorityInfo\n  }\n  labels {\n    nodes {\n      ...DefaultLabelInfo\n    }\n  }\n  assignments {\n    nodes {\n      user {\n        ...DefaultUserInfo\n      }\n    }\n  }\n  issueComments {\n    totalCount\n  }\n}\n\nfragment IssueBoardItemInfo on IssueBoardItem {\n  id\n  position\n  issue {\n    ...IssueBoardCardInfo\n  }\n}"
+): (typeof documents)["fragment DefaultIssueBoardInfo on IssueBoard {\n  id\n  name\n  description\n  issueBoardColumns {\n    totalCount\n  }\n  issueBoardItems {\n    totalCount\n  }\n}\n\nfragment IssueBoardColumnInfo on IssueBoardColumn {\n  id\n  name\n  description\n  position\n  issueStates {\n    nodes {\n      ...DefaultIssueStateInfo\n    }\n  }\n}\n\nfragment IssueBoardCardInfo on Issue {\n  id\n  title\n  ...DefaultIssueIconInfo\n  state {\n    id\n    name\n    isOpen\n  }\n  priority {\n    ...DefaultIssuePriorityInfo\n  }\n  labels {\n    nodes {\n      ...DefaultLabelInfo\n    }\n  }\n  assignments {\n    nodes {\n      user {\n        ...DefaultUserInfo\n      }\n    }\n  }\n  issueComments {\n    totalCount\n  }\n}\n\nfragment IssueBoardItemInfo on IssueBoardItem {\n  id\n  position\n  issue {\n    ...IssueBoardCardInfo\n  }\n}"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: "fragment DefaultIssuePriorityInfo on IssuePriority {\n  id\n  name\n  description\n  value\n  iconPath\n}"
+): (typeof documents)["fragment DefaultIssuePriorityInfo on IssuePriority {\n  id\n  name\n  description\n  value\n  iconPath\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -1892,8 +2006,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-    source: "fragment DefaultIssueTemplateInfo on IssueTemplate {\n  id\n  name\n  description\n  templateFieldSpecifications {\n    name\n    value\n  }\n}\n\nfragment IssueTemplateFields on IssueTemplate {\n  id\n  name\n  description\n  extends {\n    nodes {\n      id\n    }\n  }\n  issueTypes {\n    nodes {\n      name\n      description\n      iconPath\n    }\n  }\n  issuePriorities {\n    nodes {\n      name\n      description\n      value\n      iconPath\n    }\n  }\n  issueStates {\n    nodes {\n      name\n      description\n      isOpen\n    }\n  }\n  assignmentTypes {\n    nodes {\n      name\n      description\n    }\n  }\n  relationTypes {\n    nodes {\n      name\n      description\n      inverseName\n    }\n  }\n  templateFieldSpecifications {\n    name\n    value\n  }\n}"
-): (typeof documents)["fragment DefaultIssueTemplateInfo on IssueTemplate {\n  id\n  name\n  description\n  templateFieldSpecifications {\n    name\n    value\n  }\n}\n\nfragment IssueTemplateFields on IssueTemplate {\n  id\n  name\n  description\n  extends {\n    nodes {\n      id\n    }\n  }\n  issueTypes {\n    nodes {\n      name\n      description\n      iconPath\n    }\n  }\n  issuePriorities {\n    nodes {\n      name\n      description\n      value\n      iconPath\n    }\n  }\n  issueStates {\n    nodes {\n      name\n      description\n      isOpen\n    }\n  }\n  assignmentTypes {\n    nodes {\n      name\n      description\n    }\n  }\n  relationTypes {\n    nodes {\n      name\n      description\n      inverseName\n    }\n  }\n  templateFieldSpecifications {\n    name\n    value\n  }\n}"];
+    source: "fragment DefaultIssueTemplateInfo on IssueTemplate {\n  id\n  name\n  description\n  templateFieldSpecifications {\n    name\n    value\n  }\n}\n\nfragment IssueTemplateFields on IssueTemplate {\n  id\n  name\n  issueTypes {\n    nodes {\n      name\n      description\n      iconPath\n    }\n  }\n  issuePriorities {\n    nodes {\n      name\n      description\n      value\n      iconPath\n    }\n  }\n  issueStates {\n    nodes {\n      name\n      description\n      isOpen\n    }\n  }\n  assignmentTypes {\n    nodes {\n      name\n      description\n    }\n  }\n  relationTypes {\n    nodes {\n      name\n      description\n      inverseName\n    }\n  }\n}"
+): (typeof documents)["fragment DefaultIssueTemplateInfo on IssueTemplate {\n  id\n  name\n  description\n  templateFieldSpecifications {\n    name\n    value\n  }\n}\n\nfragment IssueTemplateFields on IssueTemplate {\n  id\n  name\n  issueTypes {\n    nodes {\n      name\n      description\n      iconPath\n    }\n  }\n  issuePriorities {\n    nodes {\n      name\n      description\n      value\n      iconPath\n    }\n  }\n  issueStates {\n    nodes {\n      name\n      description\n      isOpen\n    }\n  }\n  assignmentTypes {\n    nodes {\n      name\n      description\n    }\n  }\n  relationTypes {\n    nodes {\n      name\n      description\n      inverseName\n    }\n  }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -1978,6 +2092,18 @@ export function graphql(
 export function graphql(
     source: "\n    query legalInformation {\n        legalInformation(orderBy: [{ field: PRIORITY, direction: ASC }]) {\n            nodes {\n                ...BaseLegalInformationInfo\n            }\n        }\n    }\n"
 ): (typeof documents)["\n    query legalInformation {\n        legalInformation(orderBy: [{ field: PRIORITY, direction: ASC }]) {\n            nodes {\n                ...BaseLegalInformationInfo\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: "\n    mutation addIssueStateToBoardColumn($column: ID!, $state: ID!) {\n        addIssueStateToBoardColumn(input: { column: $column, state: $state }) {\n            id\n        }\n    }\n"
+): (typeof documents)["\n    mutation addIssueStateToBoardColumn($column: ID!, $state: ID!) {\n        addIssueStateToBoardColumn(input: { column: $column, state: $state }) {\n            id\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: "\n    mutation removeIssueStateFromBoardColumn($column: ID!, $state: ID!) {\n        removeIssueStateFromBoardColumn(input: { column: $column, state: $state }) {\n            id\n        }\n    }\n"
+): (typeof documents)["\n    mutation removeIssueStateFromBoardColumn($column: ID!, $state: ID!) {\n        removeIssueStateFromBoardColumn(input: { column: $column, state: $state }) {\n            id\n        }\n    }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -2156,8 +2282,8 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-    source: "\n    query getComponent($id: ID!) {\n        node(id: $id) {\n            id\n            ... on Component {\n                __typename\n                name\n                description\n                ...OpenIssueCount\n                createIssues: hasPermission(permission: CREATE_ISSUES)\n                manageLabels: hasPermission(permission: MANAGE_LABELS)\n                manageIssues: hasPermission(permission: MANAGE_ISSUES)\n                manageIMS: hasPermission(permission: MANAGE_IMS)\n                admin: hasPermission(permission: ADMIN)\n            }\n        }\n    }\n"
-): (typeof documents)["\n    query getComponent($id: ID!) {\n        node(id: $id) {\n            id\n            ... on Component {\n                __typename\n                name\n                description\n                ...OpenIssueCount\n                createIssues: hasPermission(permission: CREATE_ISSUES)\n                manageLabels: hasPermission(permission: MANAGE_LABELS)\n                manageIssues: hasPermission(permission: MANAGE_ISSUES)\n                manageIMS: hasPermission(permission: MANAGE_IMS)\n                admin: hasPermission(permission: ADMIN)\n            }\n        }\n    }\n"];
+    source: "\n    query getComponent($id: ID!) {\n        node(id: $id) {\n            id\n            ... on Component {\n                __typename\n                name\n                description\n                ...OpenIssueCount\n                createIssues: hasPermission(permission: CREATE_ISSUES)\n                manageLabels: hasPermission(permission: MANAGE_LABELS)\n                manageIssues: hasPermission(permission: MANAGE_ISSUES)\n                manageIssueBoards: hasPermission(permission: MANAGE_ISSUE_BOARDS)\n                manageIMS: hasPermission(permission: MANAGE_IMS)\n                admin: hasPermission(permission: ADMIN)\n            }\n        }\n    }\n"
+): (typeof documents)["\n    query getComponent($id: ID!) {\n        node(id: $id) {\n            id\n            ... on Component {\n                __typename\n                name\n                description\n                ...OpenIssueCount\n                createIssues: hasPermission(permission: CREATE_ISSUES)\n                manageLabels: hasPermission(permission: MANAGE_LABELS)\n                manageIssues: hasPermission(permission: MANAGE_ISSUES)\n                manageIssueBoards: hasPermission(permission: MANAGE_ISSUE_BOARDS)\n                manageIMS: hasPermission(permission: MANAGE_IMS)\n                admin: hasPermission(permission: ADMIN)\n            }\n        }\n    }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -2804,8 +2930,14 @@ export function graphql(
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(
-    source: "\n    query getProject($id: ID!) {\n        node(id: $id) {\n            __typename\n            id\n            ... on Project {\n                __typename\n                name\n                description\n                ...OpenIssueCount\n                createIssues: hasPermission(permission: CREATE_ISSUES)\n                manageLabels: hasPermission(permission: MANAGE_LABELS)\n                manageComponents: hasPermission(permission: MANAGE_COMPONENTS)\n                manageIssues: hasPermission(permission: MANAGE_ISSUES)\n                manageIMS: hasPermission(permission: MANAGE_IMS)\n                manageViews: hasPermission(permission: MANAGE_VIEWS)\n                admin: hasPermission(permission: ADMIN)\n            }\n        }\n    }\n"
-): (typeof documents)["\n    query getProject($id: ID!) {\n        node(id: $id) {\n            __typename\n            id\n            ... on Project {\n                __typename\n                name\n                description\n                ...OpenIssueCount\n                createIssues: hasPermission(permission: CREATE_ISSUES)\n                manageLabels: hasPermission(permission: MANAGE_LABELS)\n                manageComponents: hasPermission(permission: MANAGE_COMPONENTS)\n                manageIssues: hasPermission(permission: MANAGE_ISSUES)\n                manageIMS: hasPermission(permission: MANAGE_IMS)\n                manageViews: hasPermission(permission: MANAGE_VIEWS)\n                admin: hasPermission(permission: ADMIN)\n            }\n        }\n    }\n"];
+    source: "\n    query getProject($id: ID!) {\n        node(id: $id) {\n            __typename\n            id\n            ... on Project {\n                __typename\n                name\n                description\n                ...OpenIssueCount\n                createIssues: hasPermission(permission: CREATE_ISSUES)\n                manageLabels: hasPermission(permission: MANAGE_LABELS)\n                manageComponents: hasPermission(permission: MANAGE_COMPONENTS)\n                manageIssues: hasPermission(permission: MANAGE_ISSUES)\n                manageIssueBoards: hasPermission(permission: MANAGE_ISSUE_BOARDS)\n                manageIMS: hasPermission(permission: MANAGE_IMS)\n                manageViews: hasPermission(permission: MANAGE_VIEWS)\n                admin: hasPermission(permission: ADMIN)\n            }\n        }\n    }\n"
+): (typeof documents)["\n    query getProject($id: ID!) {\n        node(id: $id) {\n            __typename\n            id\n            ... on Project {\n                __typename\n                name\n                description\n                ...OpenIssueCount\n                createIssues: hasPermission(permission: CREATE_ISSUES)\n                manageLabels: hasPermission(permission: MANAGE_LABELS)\n                manageComponents: hasPermission(permission: MANAGE_COMPONENTS)\n                manageIssues: hasPermission(permission: MANAGE_ISSUES)\n                manageIssueBoards: hasPermission(permission: MANAGE_ISSUE_BOARDS)\n                manageIMS: hasPermission(permission: MANAGE_IMS)\n                manageViews: hasPermission(permission: MANAGE_VIEWS)\n                admin: hasPermission(permission: ADMIN)\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: "\n    query getIssueBoardNameProject($id: ID!) {\n        node(id: $id) {\n            id\n            ... on Named {\n                name\n            }\n        }\n    }\n"
+): (typeof documents)["\n    query getIssueBoardNameProject($id: ID!) {\n        node(id: $id) {\n            id\n            ... on Named {\n                name\n            }\n        }\n    }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -2884,6 +3016,54 @@ export function graphql(
 export function graphql(
     source: "\n    query getIMSProjectListFromTrackable(\n        $orderBy: [IMSProjectOrder!]!\n        $count: Int!\n        $skip: Int!\n        $trackable: ID!\n        $filter: IMSProjectFilterInput!\n    ) {\n        node(id: $trackable) {\n            __typename\n            ... on Trackable {\n                syncsTo(orderBy: $orderBy, first: $count, skip: $skip, filter: $filter) {\n                    nodes {\n                        ...DefaultIMSProjectInfo\n                    }\n                    totalCount\n                }\n            }\n        }\n    }\n"
 ): (typeof documents)["\n    query getIMSProjectListFromTrackable(\n        $orderBy: [IMSProjectOrder!]!\n        $count: Int!\n        $skip: Int!\n        $trackable: ID!\n        $filter: IMSProjectFilterInput!\n    ) {\n        node(id: $trackable) {\n            __typename\n            ... on Trackable {\n                syncsTo(orderBy: $orderBy, first: $count, skip: $skip, filter: $filter) {\n                    nodes {\n                        ...DefaultIMSProjectInfo\n                    }\n                    totalCount\n                }\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: "\n    query getIssueBoard($id: ID!) {\n        node(id: $id) {\n            __typename\n            ... on IssueBoard {\n                id\n                name\n                description\n                issueBoardColumns(orderBy: [{ field: POSITION }], first: 100) {\n                    nodes {\n                        ...IssueBoardColumnInfo\n                    }\n                }\n                issueBoardItems(orderBy: [{ field: POSITION }], first: 500) {\n                    nodes {\n                        ...IssueBoardItemInfo\n                    }\n                }\n            }\n        }\n    }\n"
+): (typeof documents)["\n    query getIssueBoard($id: ID!) {\n        node(id: $id) {\n            __typename\n            ... on IssueBoard {\n                id\n                name\n                description\n                issueBoardColumns(orderBy: [{ field: POSITION }], first: 100) {\n                    nodes {\n                        ...IssueBoardColumnInfo\n                    }\n                }\n                issueBoardItems(orderBy: [{ field: POSITION }], first: 500) {\n                    nodes {\n                        ...IssueBoardItemInfo\n                    }\n                }\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: "\n    mutation deleteIssueBoardColumn($id: ID!) {\n        deleteIssueBoardColumn(input: { id: $id }) {\n            id\n        }\n    }\n"
+): (typeof documents)["\n    mutation deleteIssueBoardColumn($id: ID!) {\n        deleteIssueBoardColumn(input: { id: $id }) {\n            id\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: "\n    mutation updateIssueBoardColumnPosition($id: ID!, $position: Float!) {\n        updateIssueBoardColumn(input: { id: $id, position: $position }) {\n            issueBoardColumn {\n                id\n                position\n            }\n        }\n    }\n"
+): (typeof documents)["\n    mutation updateIssueBoardColumnPosition($id: ID!, $position: Float!) {\n        updateIssueBoardColumn(input: { id: $id, position: $position }) {\n            issueBoardColumn {\n                id\n                position\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: "\n    mutation updateIssueBoardItemPosition($id: ID!, $position: Float!) {\n        updateIssueBoardItem(input: { id: $id, position: $position }) {\n            issueBoardItem {\n                id\n                position\n            }\n        }\n    }\n"
+): (typeof documents)["\n    mutation updateIssueBoardItemPosition($id: ID!, $position: Float!) {\n        updateIssueBoardItem(input: { id: $id, position: $position }) {\n            issueBoardItem {\n                id\n                position\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: "\n    mutation deleteIssueBoardItem($id: ID!) {\n        deleteIssueBoardItem(input: { id: $id }) {\n            id\n        }\n    }\n"
+): (typeof documents)["\n    mutation deleteIssueBoardItem($id: ID!) {\n        deleteIssueBoardItem(input: { id: $id }) {\n            id\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: "\n    mutation changeIssueStateOnBoard($issue: ID!, $state: ID!) {\n        changeIssueState(input: { issue: $issue, state: $state }) {\n            stateChangedEvent {\n                id\n            }\n        }\n    }\n"
+): (typeof documents)["\n    mutation changeIssueStateOnBoard($issue: ID!, $state: ID!) {\n        changeIssueState(input: { issue: $issue, state: $state }) {\n            stateChangedEvent {\n                id\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: "\n    query getIssueBoardList($orderBy: [IssueBoardOrder!]!, $count: Int!, $skip: Int!, $trackable: ID!) {\n        node(id: $trackable) {\n            __typename\n            ... on Trackable {\n                issueBoards(orderBy: $orderBy, first: $count, skip: $skip) {\n                    nodes {\n                        ...DefaultIssueBoardInfo\n                    }\n                    totalCount\n                }\n            }\n        }\n    }\n"
+): (typeof documents)["\n    query getIssueBoardList($orderBy: [IssueBoardOrder!]!, $count: Int!, $skip: Int!, $trackable: ID!) {\n        node(id: $trackable) {\n            __typename\n            ... on Trackable {\n                issueBoards(orderBy: $orderBy, first: $count, skip: $skip) {\n                    nodes {\n                        ...DefaultIssueBoardInfo\n                    }\n                    totalCount\n                }\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: "\n    query getFilteredIssueBoardList($query: String!, $count: Int!, $trackable: ID!) {\n        searchIssueBoards(query: $query, first: $count, filter: { trackable: { id: { eq: $trackable } } }) {\n            ...DefaultIssueBoardInfo\n        }\n    }\n"
+): (typeof documents)["\n    query getFilteredIssueBoardList($query: String!, $count: Int!, $trackable: ID!) {\n        searchIssueBoards(query: $query, first: $count, filter: { trackable: { id: { eq: $trackable } } }) {\n            ...DefaultIssueBoardInfo\n        }\n    }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

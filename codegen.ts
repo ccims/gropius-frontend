@@ -35,6 +35,7 @@ const config: CodegenConfig = {
     hooks: {
         afterAllFileWrite: ["prettier --write"]
     },
-    watch: true
+    // opt in, so a plain run regenerates once and exits, which is what scripts/codegen.sh needs
+    watch: process.argv.includes("--watch")
 };
 export default config;

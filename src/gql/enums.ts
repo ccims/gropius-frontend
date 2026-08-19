@@ -78,6 +78,8 @@ export const AllPermissionEntry = {
      * In contrast to `MODERATOR`, this does not allow editing / removing Comments of other users
      */
     ManageIssues: "MANAGE_ISSUES",
+    /** Allows to add, remove, and update Issue Boards on this Trackable. */
+    ManageIssueBoards: "MANAGE_ISSUE_BOARDS",
     /**
      * Allows to add, remove, and update Labels on this Trackable.
      * Also allows to delete a Label, but only if it is allowed on all Trackable the Label is on.
@@ -245,6 +247,8 @@ export const ComponentPermissionEntry = {
      * In contrast to `MODERATOR`, this does not allow editing / removing Comments of other users
      */
     ManageIssues: "MANAGE_ISSUES",
+    /** Allows to add, remove, and update Issue Boards on this Trackable. */
+    ManageIssueBoards: "MANAGE_ISSUE_BOARDS",
     /**
      * Allows to add, remove, and update Labels on this Trackable.
      * Also allows to delete a Label, but only if it is allowed on all Trackable the Label is on.
@@ -525,6 +529,35 @@ export const IntraComponentDependencySpecificationTypeOrderField = {
 
 export type IntraComponentDependencySpecificationTypeOrderField =
     (typeof IntraComponentDependencySpecificationTypeOrderField)[keyof typeof IntraComponentDependencySpecificationTypeOrderField];
+/** Fields a list of IssueBoardColumn can be sorted by */
+export const IssueBoardColumnOrderField = {
+    /** Order by id */
+    Id: "ID",
+    /** Order by name */
+    Name: "NAME",
+    /** Order by position */
+    Position: "POSITION"
+} as const;
+
+export type IssueBoardColumnOrderField = (typeof IssueBoardColumnOrderField)[keyof typeof IssueBoardColumnOrderField];
+/** Fields a list of IssueBoardItem can be sorted by */
+export const IssueBoardItemOrderField = {
+    /** Order by id */
+    Id: "ID",
+    /** Order by position */
+    Position: "POSITION"
+} as const;
+
+export type IssueBoardItemOrderField = (typeof IssueBoardItemOrderField)[keyof typeof IssueBoardItemOrderField];
+/** Fields a list of IssueBoard can be sorted by */
+export const IssueBoardOrderField = {
+    /** Order by id */
+    Id: "ID",
+    /** Order by name */
+    Name: "NAME"
+} as const;
+
+export type IssueBoardOrderField = (typeof IssueBoardOrderField)[keyof typeof IssueBoardOrderField];
 /** Fields a list of IssueComment can be sorted by */
 export const IssueCommentOrderField = {
     /** Order by bodyLastEditedAt */
@@ -760,6 +793,8 @@ export const ProjectPermissionEntry = {
      * In contrast to `MODERATOR`, this does not allow editing / removing Comments of other users
      */
     ManageIssues: "MANAGE_ISSUES",
+    /** Allows to add, remove, and update Issue Boards on this Trackable. */
+    ManageIssueBoards: "MANAGE_ISSUE_BOARDS",
     /**
      * Allows to add, remove, and update Labels on this Trackable.
      * Also allows to delete a Label, but only if it is allowed on all Trackable the Label is on.

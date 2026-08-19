@@ -40,7 +40,14 @@
             :mapper="(item) => item.priority"
             :sorter="(a, b) => a.value - b.value"
             :fetch-on-search="priorityFetch"
-        />
+        >
+            <template #default="{ item }">
+                <div class="d-flex align-center">
+                    <SvgWrapper v-if="item.iconPath" :path="item.iconPath" class="priority-icon mr-1" />
+                    {{ item.name }}
+                </div>
+            </template>
+        </FilterDropdown>
         <FilterDropdown
             v-model="typeIds"
             label="Type"
@@ -109,6 +116,7 @@ import { graphql } from "@/gql";
 import { queryNodeThrow, requestThrow } from "@/gql/client";
 import FilterDropdown from "@/components/input/FilterDropdown.vue";
 import IssueTypeIcon from "@/components/IssueTypeIcon.vue";
+import SvgWrapper from "@/components/SvgWrapper.vue";
 import User from "@/components/info/User.vue";
 import { computed, type PropType, ref, watch } from "vue";
 import { ItemManager } from "@/util/itemManager";
@@ -618,5 +626,12 @@ defineExpose({
 .type-icon {
     width: map.get(settings.$avatar-sizes, "large");
     height: map.get(settings.$avatar-sizes, "large");
+}
+
+.priority-icon {
+    width: map.get(settings.$avatar-sizes, "large");
+    height: map.get(settings.$avatar-sizes, "large");
+    // the app disables Vuetify's color pack, so the theme color has to be applied directly
+    color: rgb(var(--v-theme-primary));
 }
 </style>

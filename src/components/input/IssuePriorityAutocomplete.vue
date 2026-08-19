@@ -7,7 +7,11 @@
         item-title="name"
     >
         <template #item="{ props, item }">
-            <v-list-item :title="item.raw.name" :subtitle="item.raw.description" v-bind="props"> </v-list-item>
+            <v-list-item :title="item.raw.name" :subtitle="item.raw.description" v-bind="props">
+                <template v-if="item.raw.iconPath" #prepend>
+                    <SvgWrapper :path="item.raw.iconPath" class="priority-icon mr-4" />
+                </template>
+            </v-list-item>
         </template>
     </FetchingAutocomplete>
 </template>
@@ -18,6 +22,7 @@ import type { DefaultIssuePriorityInfoFragment } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
 import FetchingAutocomplete from "./FetchingAutocomplete.vue";
 import { transformSearchQuery } from "@/util/searchQueryTransformer";
+import SvgWrapper from "../SvgWrapper.vue";
 
 const searchIssuePrioritiesQuery = graphql(`
     query searchIssuePriorities($template: ID!, $query: String!, $count: Int!) {
@@ -67,3 +72,13 @@ async function searchIssuePriorities(filter: string, count: number): Promise<Def
     }, "Error searching issue priorities");
 }
 </script>
+<style scoped lang="scss">
+@use "@/styles/settings.scss";
+@use "sass:map";
+
+.priority-icon {
+    width: map.get(settings.$avatar-sizes, "large");
+    height: map.get(settings.$avatar-sizes, "large");
+    color: rgb(var(--v-theme-primary));
+}
+</style>

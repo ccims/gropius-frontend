@@ -1,0 +1,129 @@
+<template>
+    <v-card
+        class="board-card pa-3"
+        variant="outlined"
+        rounded="lger"
+        :draggable="draggable"
+        :class="{ dragging }"
+        @dragstart="onDragStart"
+        @dragend="$emit('drag-end')"
+        @click="$emit('open')"
+    >
+        <div class="d-flex align-center mb-2 ga-1">
+            <IssueIcon :issue="issue" class="issue-icon flex-0-0" />
+            <div v-if="issue.priority?.iconPath" class="d-flex align-center">
+                <SvgWrapper :path="issue.priority.iconPath" class="priority-icon" />
+                <v-tooltip activator="parent" location="bottom">{{ issue.priority.name }}</v-tooltip>
+            </div>
+            <v-spacer />
+            <UserStack
+                v-if="assignees.length > 0"
+                :users="assignees"
+                size="small"
+                class="assignee-stack flex-0-0 mr-1"
+            />
+            <IconButton
+                v-if="canRemove"
+                class="card-menu flex-0-0"
+                density="compact"
+                @click.stop
+                @dragstart.stop.prevent
+            >
+                <v-icon icon="mdi-dots-horizontal" size="small" />
+                <v-menu activator="parent" location="bottom end">
+                    <v-list rounded="lger" class="pa-2" bg-color="surface-elevated-3">
+                        <v-list-item title="Remove from board" prepend-icon="mdi-close" @click.stop="$emit('remove')" />
+                    </v-list>
+                </v-menu>
+            </IconButton>
+        </div>
+        <div class="text-body-2 card-title">{{ issue.title }}</div>
+        <div v-if="issue.labels.nodes.length > 0" class="d-flex flex-wrap ga-1 mt-2">
+            <Label v-for="label in issue.labels.nodes" :key="label.id" :label="label" size="x-small" />
+        </div>
+    </v-card>
+</template>
+<script setup lang="ts">
+import type { IssueBoardCardInfoFragment } from "@/gql/graphql";
+import { computed, type PropType } from "vue";
+import IssueIcon from "../IssueIcon.vue";
+import UserStack from "../UserStack.vue";
+import Label from "../info/Label.vue";
+import SvgWrapper from "../SvgWrapper.vue";
+
+const props = defineProps({
+    issue: {
+        type: Object as PropType<IssueBoardCardInfoFragment>,
+        required: true
+    },
+    draggable: {
+        type: Boolean,
+        default: false
+    },
+    dragging: {
+        type: Boolean,
+        default: false
+    },
+    canRemove: {
+        type: Boolean,
+        default: false
+    }
+});
+
+const emit = defineEmits<{
+    (event: "drag-start", dataTransfer: DataTransfer | null): void;
+    (event: "drag-end"): void;
+    (event: "remove"): void;
+    (event: "open"): void;
+}>();
+
+const assignees = computed(() => props.issue.assignments.nodes.map((assignment) => assignment.user));
+
+function onDragStart(event: DragEvent) {
+    emit("drag-start", event.dataTransfer);
+}
+</script>
+<style scoped lang="scss">
+@use "@/styles/settings.scss";
+@use "sass:map";
+
+.board-card {
+    background: rgb(var(--v-theme-surface));
+    border-color: rgb(var(--v-theme-outline-variant));
+    cursor: pointer;
+
+    &.dragging {
+        opacity: 0.4;
+    }
+
+    .card-menu {
+        opacity: 0;
+        transition: opacity 150ms;
+    }
+
+    &:hover .card-menu,
+    .card-menu:focus-within {
+        opacity: 1;
+    }
+}
+
+.issue-icon {
+    width: map.get(settings.$avatar-sizes, "large");
+    height: map.get(settings.$avatar-sizes, "large");
+}
+
+.priority-icon {
+    width: 1.15em;
+    height: 1.15em;
+    // the app disables Vuetify's color pack, so the theme color has to be applied directly
+    color: rgb(var(--v-theme-primary));
+}
+
+.card-title {
+    overflow-wrap: anywhere;
+}
+
+.assignee-stack {
+    background: transparent;
+}
+</style>

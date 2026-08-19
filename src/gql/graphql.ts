@@ -360,6 +360,8 @@ export type AllPermissionEntry =
      * In contrast to `MODERATOR`, this does not allow editing / removing Comments of other users
      */
     | "MANAGE_ISSUES"
+    /** Allows to add, remove, and update Issue Boards on this Trackable. */
+    | "MANAGE_ISSUE_BOARDS"
     /**
      * Allows to add, remove, and update Labels on this Trackable.
      * Also allows to delete a Label, but only if it is allowed on all Trackable the Label is on.
@@ -847,6 +849,8 @@ export type ComponentFilterInput = {
     id?: IdFilterInput | null | undefined;
     /** Filter by interfaceSpecifications */
     interfaceSpecifications?: InterfaceSpecificationListFilterInput | null | undefined;
+    /** Filter by issueBoards */
+    issueBoards?: IssueBoardListFilterInput | null | undefined;
     /** Filter by issues */
     issues?: IssueListFilterInput | null | undefined;
     /** Filter by labels */
@@ -958,6 +962,8 @@ export type ComponentPermissionEntry =
      * In contrast to `MODERATOR`, this does not allow editing / removing Comments of other users
      */
     | "MANAGE_ISSUES"
+    /** Allows to add, remove, and update Issue Boards on this Trackable. */
+    | "MANAGE_ISSUE_BOARDS"
     /**
      * Allows to add, remove, and update Labels on this Trackable.
      * Also allows to delete a Label, but only if it is allowed on all Trackable the Label is on.
@@ -1396,6 +1402,38 @@ export type CreateInterfaceSpecificationVersionInput = {
     templatedFields: Array<JsonFieldInput>;
     /** The version of the created InterfaceSpecificationVersion */
     version: string;
+};
+
+/** Input for the createIssueBoardColumn mutation */
+export type CreateIssueBoardColumnInput = {
+    /** The description of the NamedNode */
+    description: string;
+    /** ID of issue board the column is added to */
+    issueBoard: string;
+    /** The name of the NamedNode, must not be blank */
+    name: string;
+    /** Initial position (order) of the new column on the Issue Board */
+    position: number;
+};
+
+/** Input for the createIssueBoard mutation */
+export type CreateIssueBoardInput = {
+    /** The description of the NamedNode */
+    description: string;
+    /** The name of the NamedNode, must not be blank */
+    name: string;
+    /** ID of Trackable the issue board is added to */
+    trackable: string;
+};
+
+/** Input for the createIssueBoardItem mutation */
+export type CreateIssueBoardItemInput = {
+    /** ID of the Issue to represent in this board item */
+    issue: string;
+    /** ID of the IssueBoard to add this item to */
+    issueBoard: string;
+    /** Initial position of the new board item */
+    position: number;
 };
 
 /** Input for the createIssue mutation */
@@ -2590,6 +2628,113 @@ export type IntraComponentDependencySpecificationTypeListFilterInput = {
     none?: IntraComponentDependencySpecificationTypeFilterInput | null | undefined;
 };
 
+/** Filter used to filter IssueBoardColumn */
+export type IssueBoardColumnFilterInput = {
+    /** Connects all subformulas via and */
+    and?: Array<IssueBoardColumnFilterInput> | null | undefined;
+    /** Filter by description */
+    description?: StringFilterInput | null | undefined;
+    /** Filter by id */
+    id?: IdFilterInput | null | undefined;
+    /** Filters for nodes where the related node match this filter */
+    issueBoard?: IssueBoardFilterInput | null | undefined;
+    /** Filter by issueStates */
+    issueStates?: IssueStateListFilterInput | null | undefined;
+    /** Filter by name */
+    name?: StringFilterInput | null | undefined;
+    /** Negates the subformula */
+    not?: IssueBoardColumnFilterInput | null | undefined;
+    /** Connects all subformulas via or */
+    or?: Array<IssueBoardColumnFilterInput> | null | undefined;
+    /** Filter by position */
+    position?: FloatFilterInput | null | undefined;
+};
+
+/** Used to filter by a connection-based property. Fields are joined by AND */
+export type IssueBoardColumnListFilterInput = {
+    /** Filters for nodes where all of the related nodes match this filter */
+    all?: IssueBoardColumnFilterInput | null | undefined;
+    /** Filters for nodes where any of the related nodes match this filter */
+    any?: IssueBoardColumnFilterInput | null | undefined;
+    /** Filters for nodes where none of the related nodes match this filter */
+    none?: IssueBoardColumnFilterInput | null | undefined;
+};
+
+/** Filter used to filter IssueBoard */
+export type IssueBoardFilterInput = {
+    /** Connects all subformulas via and */
+    and?: Array<IssueBoardFilterInput> | null | undefined;
+    /** Filter by description */
+    description?: StringFilterInput | null | undefined;
+    /** Filter by id */
+    id?: IdFilterInput | null | undefined;
+    /** Filter by issueBoardColumns */
+    issueBoardColumns?: IssueBoardColumnListFilterInput | null | undefined;
+    /** Filter by issueBoardItems */
+    issueBoardItems?: IssueBoardItemListFilterInput | null | undefined;
+    /** Filter by name */
+    name?: StringFilterInput | null | undefined;
+    /** Negates the subformula */
+    not?: IssueBoardFilterInput | null | undefined;
+    /** Connects all subformulas via or */
+    or?: Array<IssueBoardFilterInput> | null | undefined;
+    /** Filters for nodes where the related node match this filter */
+    trackable?: TrackableFilterInput | null | undefined;
+};
+
+/** Filter used to filter IssueBoardItem */
+export type IssueBoardItemFilterInput = {
+    /** Connects all subformulas via and */
+    and?: Array<IssueBoardItemFilterInput> | null | undefined;
+    /** Filter by id */
+    id?: IdFilterInput | null | undefined;
+    /** Filters for nodes where the related node match this filter */
+    issue?: IssueFilterInput | null | undefined;
+    /** Filters for nodes where the related node match this filter */
+    issueBoard?: IssueBoardFilterInput | null | undefined;
+    /** Negates the subformula */
+    not?: IssueBoardItemFilterInput | null | undefined;
+    /** Connects all subformulas via or */
+    or?: Array<IssueBoardItemFilterInput> | null | undefined;
+    /** Filter by position */
+    position?: FloatFilterInput | null | undefined;
+};
+
+/** Used to filter by a connection-based property. Fields are joined by AND */
+export type IssueBoardItemListFilterInput = {
+    /** Filters for nodes where all of the related nodes match this filter */
+    all?: IssueBoardItemFilterInput | null | undefined;
+    /** Filters for nodes where any of the related nodes match this filter */
+    any?: IssueBoardItemFilterInput | null | undefined;
+    /** Filters for nodes where none of the related nodes match this filter */
+    none?: IssueBoardItemFilterInput | null | undefined;
+};
+
+/** Used to filter by a connection-based property. Fields are joined by AND */
+export type IssueBoardListFilterInput = {
+    /** Filters for nodes where all of the related nodes match this filter */
+    all?: IssueBoardFilterInput | null | undefined;
+    /** Filters for nodes where any of the related nodes match this filter */
+    any?: IssueBoardFilterInput | null | undefined;
+    /** Filters for nodes where none of the related nodes match this filter */
+    none?: IssueBoardFilterInput | null | undefined;
+};
+
+/** Defines the order of a IssueBoard list */
+export type IssueBoardOrder = {
+    /** The direction to order by, defaults to ASC */
+    direction?: OrderDirection | null | undefined;
+    /** The field to order by, defaults to ID */
+    field?: IssueBoardOrderField | null | undefined;
+};
+
+/** Fields a list of IssueBoard can be sorted by */
+export type IssueBoardOrderField =
+    /** Order by id */
+    | "ID"
+    /** Order by name */
+    | "NAME";
+
 /** Filter used to filter IssueComment */
 export type IssueCommentFilterInput = {
     /** Connects all subformulas via and */
@@ -2891,6 +3036,8 @@ export type IssueStateFilterInput = {
     id?: IdFilterInput | null | undefined;
     /** Filter by isOpen */
     isOpen?: BooleanFilterInput | null | undefined;
+    /** Filter by issueBoardColumns */
+    issueBoardColumns?: IssueBoardColumnListFilterInput | null | undefined;
     /** Filter by issuesWithState */
     issuesWithState?: IssueListFilterInput | null | undefined;
     /** Filter by name */
@@ -3394,6 +3541,8 @@ export type ProjectFilterInput = {
     description?: StringFilterInput | null | undefined;
     /** Filter by id */
     id?: IdFilterInput | null | undefined;
+    /** Filter by issueBoards */
+    issueBoards?: IssueBoardListFilterInput | null | undefined;
     /** Filter by issues */
     issues?: IssueListFilterInput | null | undefined;
     /** Filter by labels */
@@ -3497,6 +3646,8 @@ export type ProjectPermissionEntry =
      * In contrast to `MODERATOR`, this does not allow editing / removing Comments of other users
      */
     | "MANAGE_ISSUES"
+    /** Allows to add, remove, and update Issue Boards on this Trackable. */
+    | "MANAGE_ISSUE_BOARDS"
     /**
      * Allows to add, remove, and update Labels on this Trackable.
      * Also allows to delete a Label, but only if it is allowed on all Trackable the Label is on.
@@ -4675,6 +4826,8 @@ export type TrackableFilterInput = {
     isComponentAnd?: ComponentFilterInput | null | undefined;
     /** Filter for nodes of type Project */
     isProjectAnd?: ProjectFilterInput | null | undefined;
+    /** Filter by issueBoards */
+    issueBoards?: IssueBoardListFilterInput | null | undefined;
     /** Filter by issues */
     issues?: IssueListFilterInput | null | undefined;
     /** Filter by labels */
@@ -5043,6 +5196,28 @@ export type UpdateInterfaceSpecificationVersionTemplateInput = {
 
 /** Input for the updateIntraComponentDependencySpecificationType mutation */
 export type UpdateIntraComponentDependencySpecificationTypeInput = {
+    /** The description of the NamedNode */
+    description?: string | null | undefined;
+    /** The id of the node to update */
+    id: string;
+    /** The new name of the NamedNode, must not be empty */
+    name?: string | null | undefined;
+};
+
+/** Input for the updateIssueBoardColumn mutation */
+export type UpdateIssueBoardColumnInput = {
+    /** The description of the NamedNode */
+    description?: string | null | undefined;
+    /** The id of the node to update */
+    id: string;
+    /** The new name of the NamedNode, must not be empty */
+    name?: string | null | undefined;
+    /** New position (order) for this column on its Issue Board */
+    position?: number | null | undefined;
+};
+
+/** Input for the updateIssueBoard mutation */
+export type UpdateIssueBoardInput = {
     /** The description of the NamedNode */
     description?: string | null | undefined;
     /** The id of the node to update */
@@ -5427,6 +5602,7 @@ export type GetIssueListForProjectSidebarQuery = {
                           name: string;
                           description: string;
                           value: number;
+                          iconPath: string;
                       } | null;
                       template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
                       type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
@@ -5477,6 +5653,9 @@ export type GetIssueListForProjectSidebarQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -5559,6 +5738,7 @@ export type GetIssueListForProjectSidebarQuery = {
                           name: string;
                           description: string;
                           value: number;
+                          iconPath: string;
                       } | null;
                       template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
                       type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
@@ -5692,6 +5872,7 @@ export type GetIssueListOnAggregatedIssueQuery = {
                           name: string;
                           description: string;
                           value: number;
+                          iconPath: string;
                       } | null;
                       template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
                       type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
@@ -5750,6 +5931,9 @@ export type GetIssueListOnAggregatedIssueQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -5832,7 +6016,14 @@ export type GetFilteredIssueListForProjectSidebarQuery = {
                     | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
             }>;
         };
-        priority: { __typename: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+        priority: {
+            __typename: "IssuePriority";
+            id: string;
+            name: string;
+            description: string;
+            value: number;
+            iconPath: string;
+        } | null;
         template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
         type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
         affects: {
@@ -5903,6 +6094,9 @@ export type GetTemplateDeprecationStatusQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -6019,6 +6213,9 @@ export type GetInterfaceSpecificationVisibilityInfoQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -6065,6 +6262,260 @@ export type AddInterfaceSpecificationVersionToComponentVersionMutation = {
     __typename: "Mutation";
     addInterfaceSpecificationVersionToComponentVersion: {
         __typename: "AddInterfaceSpecificationVersionToComponentVersionPayload";
+    };
+};
+
+export type SearchIssuesForBoardQueryVariables = Exact<{
+    query: string;
+    count: number;
+    trackable: string;
+}>;
+
+export type SearchIssuesForBoardQuery = {
+    __typename: "Query";
+    searchIssues: Array<{
+        __typename: "Issue";
+        id: string;
+        title: string;
+        state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
+        priority: {
+            __typename: "IssuePriority";
+            id: string;
+            name: string;
+            description: string;
+            value: number;
+            iconPath: string;
+        } | null;
+        labels: {
+            __typename: "LabelConnection";
+            nodes: Array<{ __typename: "Label"; id: string; name: string; description: string; color: any }>;
+        };
+        assignments: {
+            __typename: "AssignmentConnection";
+            nodes: Array<{
+                __typename: "Assignment";
+                user:
+                    | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
+                    | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+            }>;
+        };
+        issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
+        incomingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
+        outgoingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
+        type: { __typename: "IssueType"; iconPath: string };
+    }>;
+};
+
+export type FirstIssuesForBoardQueryVariables = Exact<{
+    trackable: string;
+    count: number;
+}>;
+
+export type FirstIssuesForBoardQuery = {
+    __typename: "Query";
+    node:
+        | { __typename: "AddedAffectedEntityEvent" }
+        | { __typename: "AddedArtefactEvent" }
+        | { __typename: "AddedLabelEvent" }
+        | { __typename: "AddedToPinnedIssuesEvent" }
+        | { __typename: "AddedToTrackableEvent" }
+        | { __typename: "AggregatedIssue" }
+        | { __typename: "AggregatedIssueRelation" }
+        | { __typename: "Artefact" }
+        | { __typename: "ArtefactTemplate" }
+        | { __typename: "Assignment" }
+        | { __typename: "AssignmentType" }
+        | { __typename: "AssignmentTypeChangedEvent" }
+        | { __typename: "Body" }
+        | {
+              __typename: "Component";
+              issues: {
+                  __typename: "IssueConnection";
+                  nodes: Array<{
+                      __typename: "Issue";
+                      id: string;
+                      title: string;
+                      state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
+                      priority: {
+                          __typename: "IssuePriority";
+                          id: string;
+                          name: string;
+                          description: string;
+                          value: number;
+                          iconPath: string;
+                      } | null;
+                      labels: {
+                          __typename: "LabelConnection";
+                          nodes: Array<{
+                              __typename: "Label";
+                              id: string;
+                              name: string;
+                              description: string;
+                              color: any;
+                          }>;
+                      };
+                      assignments: {
+                          __typename: "AssignmentConnection";
+                          nodes: Array<{
+                              __typename: "Assignment";
+                              user:
+                                  | {
+                                        __typename: "GropiusUser";
+                                        id: string;
+                                        username: string;
+                                        displayName: string;
+                                        avatar: any;
+                                    }
+                                  | {
+                                        __typename: "IMSUser";
+                                        id: string;
+                                        username: string | null;
+                                        displayName: string;
+                                        avatar: any;
+                                    };
+                          }>;
+                      };
+                      issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
+                      incomingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
+                      outgoingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
+                      type: { __typename: "IssueType"; iconPath: string };
+                  }>;
+              };
+          }
+        | { __typename: "ComponentPermission" }
+        | { __typename: "ComponentTemplate" }
+        | { __typename: "ComponentVersion" }
+        | { __typename: "ComponentVersionTemplate" }
+        | { __typename: "FillStyle" }
+        | { __typename: "GlobalPermission" }
+        | { __typename: "GropiusUser" }
+        | { __typename: "IMS" }
+        | { __typename: "IMSIssue" }
+        | { __typename: "IMSIssueTemplate" }
+        | { __typename: "IMSPermission" }
+        | { __typename: "IMSProject" }
+        | { __typename: "IMSProjectTemplate" }
+        | { __typename: "IMSTemplate" }
+        | { __typename: "IMSUser" }
+        | { __typename: "IMSUserTemplate" }
+        | { __typename: "IncomingRelationTypeChangedEvent" }
+        | { __typename: "Interface" }
+        | { __typename: "InterfaceDefinition" }
+        | { __typename: "InterfacePart" }
+        | { __typename: "InterfacePartTemplate" }
+        | { __typename: "InterfaceSpecification" }
+        | { __typename: "InterfaceSpecificationDerivationCondition" }
+        | { __typename: "InterfaceSpecificationTemplate" }
+        | { __typename: "InterfaceSpecificationVersion" }
+        | { __typename: "InterfaceSpecificationVersionTemplate" }
+        | { __typename: "IntraComponentDependencyParticipant" }
+        | { __typename: "IntraComponentDependencySpecification" }
+        | { __typename: "IntraComponentDependencySpecificationType" }
+        | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
+        | { __typename: "IssueComment" }
+        | { __typename: "IssuePriority" }
+        | { __typename: "IssueRelation" }
+        | { __typename: "IssueRelationType" }
+        | { __typename: "IssueState" }
+        | { __typename: "IssueTemplate" }
+        | { __typename: "IssueType" }
+        | { __typename: "Label" }
+        | { __typename: "LegalInformation" }
+        | { __typename: "OutgoingRelationTypeChangedEvent" }
+        | { __typename: "PriorityChangedEvent" }
+        | {
+              __typename: "Project";
+              issues: {
+                  __typename: "IssueConnection";
+                  nodes: Array<{
+                      __typename: "Issue";
+                      id: string;
+                      title: string;
+                      state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
+                      priority: {
+                          __typename: "IssuePriority";
+                          id: string;
+                          name: string;
+                          description: string;
+                          value: number;
+                          iconPath: string;
+                      } | null;
+                      labels: {
+                          __typename: "LabelConnection";
+                          nodes: Array<{
+                              __typename: "Label";
+                              id: string;
+                              name: string;
+                              description: string;
+                              color: any;
+                          }>;
+                      };
+                      assignments: {
+                          __typename: "AssignmentConnection";
+                          nodes: Array<{
+                              __typename: "Assignment";
+                              user:
+                                  | {
+                                        __typename: "GropiusUser";
+                                        id: string;
+                                        username: string;
+                                        displayName: string;
+                                        avatar: any;
+                                    }
+                                  | {
+                                        __typename: "IMSUser";
+                                        id: string;
+                                        username: string | null;
+                                        displayName: string;
+                                        avatar: any;
+                                    };
+                          }>;
+                      };
+                      issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
+                      incomingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
+                      outgoingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
+                      type: { __typename: "IssueType"; iconPath: string };
+                  }>;
+              };
+          }
+        | { __typename: "ProjectPermission" }
+        | { __typename: "RelatedByIssueEvent" }
+        | { __typename: "Relation" }
+        | { __typename: "RelationCondition" }
+        | { __typename: "RelationLayout" }
+        | { __typename: "RelationPartnerLayout" }
+        | { __typename: "RelationTemplate" }
+        | { __typename: "RemovedAffectedEntityEvent" }
+        | { __typename: "RemovedArtefactEvent" }
+        | { __typename: "RemovedAssignmentEvent" }
+        | { __typename: "RemovedFromPinnedIssuesEvent" }
+        | { __typename: "RemovedFromTrackableEvent" }
+        | { __typename: "RemovedIncomingRelationEvent" }
+        | { __typename: "RemovedLabelEvent" }
+        | { __typename: "RemovedOutgoingRelationEvent" }
+        | { __typename: "RemovedTemplatedFieldEvent" }
+        | { __typename: "StateChangedEvent" }
+        | { __typename: "StrokeStyle" }
+        | { __typename: "TemplateChangedEvent" }
+        | { __typename: "TemplatedFieldChangedEvent" }
+        | { __typename: "TitleChangedEvent" }
+        | { __typename: "TypeChangedEvent" }
+        | { __typename: "View" }
+        | null;
+};
+
+export type CreateIssueBoardItemMutationVariables = Exact<{
+    input: CreateIssueBoardItemInput;
+}>;
+
+export type CreateIssueBoardItemMutation = {
+    __typename: "Mutation";
+    createIssueBoardItem: {
+        __typename: "CreateIssueBoardItemPayload";
+        issueBoardItem: { __typename: "IssueBoardItem"; id: string };
     };
 };
 
@@ -6139,6 +6590,9 @@ export type GetComponentTemplateForDialogQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -6270,6 +6724,9 @@ export type GetComponentVersionTemplateForDialogQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -6375,6 +6832,9 @@ export type GetImsTemplateForDialogQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -6484,6 +6944,9 @@ export type GetImsProjectTemplateForDialogQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -6590,6 +7053,9 @@ export type GetInterfaceSpecificationTemplateForDialogQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -6721,6 +7187,9 @@ export type GetInterfaceSpecificationVersionTemplateForDialogQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -6768,6 +7237,37 @@ export type CreateInterfaceSpecificationVersionMutation = {
     createInterfaceSpecificationVersion: {
         __typename: "CreateInterfaceSpecificationVersionPayload";
         interfaceSpecificationVersion: { __typename: "InterfaceSpecificationVersion"; id: string };
+    };
+};
+
+export type CreateIssueBoardColumnMutationVariables = Exact<{
+    input: CreateIssueBoardColumnInput;
+}>;
+
+export type CreateIssueBoardColumnMutation = {
+    __typename: "Mutation";
+    createIssueBoardColumn: {
+        __typename: "CreateIssueBoardColumnPayload";
+        issueBoardColumn: { __typename: "IssueBoardColumn"; id: string };
+    };
+};
+
+export type CreateIssueBoardMutationVariables = Exact<{
+    input: CreateIssueBoardInput;
+}>;
+
+export type CreateIssueBoardMutation = {
+    __typename: "Mutation";
+    createIssueBoard: {
+        __typename: "CreateIssueBoardPayload";
+        issueBoard: {
+            __typename: "IssueBoard";
+            id: string;
+            name: string;
+            description: string;
+            issueBoardColumns: { __typename: "IssueBoardColumnConnection"; totalCount: number };
+            issueBoardItems: { __typename: "IssueBoardItemConnection"; totalCount: number };
+        };
     };
 };
 
@@ -6822,6 +7322,9 @@ export type GetIssueTemplateForDialogQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -6871,16 +7374,6 @@ export type CreateIssueFromDialogMutationVariables = Exact<{
 export type CreateIssueFromDialogMutation = {
     __typename: "Mutation";
     createIssue: { __typename: "CreateIssuePayload"; issue: { __typename: "Issue"; id: string } };
-};
-
-export type SearchIssueTemplatesByNameQueryVariables = Exact<{
-    query: string;
-    count: number;
-}>;
-
-export type SearchIssueTemplatesByNameQuery = {
-    __typename: "Query";
-    searchIssueTemplates: Array<{ __typename: "IssueTemplate"; id: string; name: string }>;
 };
 
 export type GetIssueTemplateFieldsQueryVariables = Exact<{
@@ -6934,6 +7427,9 @@ export type GetIssueTemplateFieldsQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -6943,11 +7439,6 @@ export type GetIssueTemplateFieldsQuery = {
               __typename: "IssueTemplate";
               id: string;
               name: string;
-              description: string;
-              extends: {
-                  __typename: "IssueTemplateConnection";
-                  nodes: Array<{ __typename: "IssueTemplate"; id: string }>;
-              };
               issueTypes: {
                   __typename: "IssueTypeConnection";
                   nodes: Array<{ __typename: "IssueType"; name: string; description: string; iconPath: string }>;
@@ -6979,7 +7470,6 @@ export type GetIssueTemplateFieldsQuery = {
                       inverseName: string;
                   }>;
               };
-              templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
           }
         | { __typename: "IssueType" }
         | { __typename: "Label" }
@@ -7010,95 +7500,6 @@ export type GetIssueTemplateFieldsQuery = {
         | { __typename: "TitleChangedEvent" }
         | { __typename: "TypeChangedEvent" }
         | { __typename: "View" }
-        | null;
-};
-
-export type GetIssueTemplateNameQueryVariables = Exact<{
-    id: string;
-}>;
-
-export type GetIssueTemplateNameQuery = {
-    __typename: "Query";
-    node:
-        | { __typename: "AddedAffectedEntityEvent"; id: string }
-        | { __typename: "AddedArtefactEvent"; id: string }
-        | { __typename: "AddedLabelEvent"; id: string }
-        | { __typename: "AddedToPinnedIssuesEvent"; id: string }
-        | { __typename: "AddedToTrackableEvent"; id: string }
-        | { __typename: "AggregatedIssue"; id: string }
-        | { __typename: "AggregatedIssueRelation"; id: string }
-        | { __typename: "Artefact"; id: string }
-        | { __typename: "ArtefactTemplate"; id: string }
-        | { __typename: "Assignment"; id: string }
-        | { __typename: "AssignmentType"; id: string }
-        | { __typename: "AssignmentTypeChangedEvent"; id: string }
-        | { __typename: "Body"; id: string }
-        | { __typename: "Component"; id: string }
-        | { __typename: "ComponentPermission"; id: string }
-        | { __typename: "ComponentTemplate"; id: string }
-        | { __typename: "ComponentVersion"; id: string }
-        | { __typename: "ComponentVersionTemplate"; id: string }
-        | { __typename: "FillStyle"; id: string }
-        | { __typename: "GlobalPermission"; id: string }
-        | { __typename: "GropiusUser"; id: string }
-        | { __typename: "IMS"; id: string }
-        | { __typename: "IMSIssue"; id: string }
-        | { __typename: "IMSIssueTemplate"; id: string }
-        | { __typename: "IMSPermission"; id: string }
-        | { __typename: "IMSProject"; id: string }
-        | { __typename: "IMSProjectTemplate"; id: string }
-        | { __typename: "IMSTemplate"; id: string }
-        | { __typename: "IMSUser"; id: string }
-        | { __typename: "IMSUserTemplate"; id: string }
-        | { __typename: "IncomingRelationTypeChangedEvent"; id: string }
-        | { __typename: "Interface"; id: string }
-        | { __typename: "InterfaceDefinition"; id: string }
-        | { __typename: "InterfacePart"; id: string }
-        | { __typename: "InterfacePartTemplate"; id: string }
-        | { __typename: "InterfaceSpecification"; id: string }
-        | { __typename: "InterfaceSpecificationDerivationCondition"; id: string }
-        | { __typename: "InterfaceSpecificationTemplate"; id: string }
-        | { __typename: "InterfaceSpecificationVersion"; id: string }
-        | { __typename: "InterfaceSpecificationVersionTemplate"; id: string }
-        | { __typename: "IntraComponentDependencyParticipant"; id: string }
-        | { __typename: "IntraComponentDependencySpecification"; id: string }
-        | { __typename: "IntraComponentDependencySpecificationType"; id: string }
-        | { __typename: "Issue"; id: string }
-        | { __typename: "IssueComment"; id: string }
-        | { __typename: "IssuePriority"; id: string }
-        | { __typename: "IssueRelation"; id: string }
-        | { __typename: "IssueRelationType"; id: string }
-        | { __typename: "IssueState"; id: string }
-        | { __typename: "IssueTemplate"; name: string; id: string }
-        | { __typename: "IssueType"; id: string }
-        | { __typename: "Label"; id: string }
-        | { __typename: "LegalInformation"; id: string }
-        | { __typename: "OutgoingRelationTypeChangedEvent"; id: string }
-        | { __typename: "PriorityChangedEvent"; id: string }
-        | { __typename: "Project"; id: string }
-        | { __typename: "ProjectPermission"; id: string }
-        | { __typename: "RelatedByIssueEvent"; id: string }
-        | { __typename: "Relation"; id: string }
-        | { __typename: "RelationCondition"; id: string }
-        | { __typename: "RelationLayout"; id: string }
-        | { __typename: "RelationPartnerLayout"; id: string }
-        | { __typename: "RelationTemplate"; id: string }
-        | { __typename: "RemovedAffectedEntityEvent"; id: string }
-        | { __typename: "RemovedArtefactEvent"; id: string }
-        | { __typename: "RemovedAssignmentEvent"; id: string }
-        | { __typename: "RemovedFromPinnedIssuesEvent"; id: string }
-        | { __typename: "RemovedFromTrackableEvent"; id: string }
-        | { __typename: "RemovedIncomingRelationEvent"; id: string }
-        | { __typename: "RemovedLabelEvent"; id: string }
-        | { __typename: "RemovedOutgoingRelationEvent"; id: string }
-        | { __typename: "RemovedTemplatedFieldEvent"; id: string }
-        | { __typename: "StateChangedEvent"; id: string }
-        | { __typename: "StrokeStyle"; id: string }
-        | { __typename: "TemplateChangedEvent"; id: string }
-        | { __typename: "TemplatedFieldChangedEvent"; id: string }
-        | { __typename: "TitleChangedEvent"; id: string }
-        | { __typename: "TypeChangedEvent"; id: string }
-        | { __typename: "View"; id: string }
         | null;
 };
 
@@ -7236,6 +7637,9 @@ export type GetExtendedTemplateQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -7433,6 +7837,9 @@ export type GetPermissionUserListQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -7499,6 +7906,46 @@ export type GetFilteredPermissionUserListQuery = {
         displayName: string;
         avatar: any;
     }>;
+};
+
+export type UpdateIssueBoardColumnMutationVariables = Exact<{
+    input: UpdateIssueBoardColumnInput;
+}>;
+
+export type UpdateIssueBoardColumnMutation = {
+    __typename: "Mutation";
+    updateIssueBoardColumn: {
+        __typename: "UpdateIssueBoardColumnPayload";
+        issueBoardColumn: { __typename: "IssueBoardColumn"; id: string };
+    };
+};
+
+export type UpdateIssueBoardMutationVariables = Exact<{
+    input: UpdateIssueBoardInput;
+}>;
+
+export type UpdateIssueBoardMutation = {
+    __typename: "Mutation";
+    updateIssueBoard: {
+        __typename: "UpdateIssueBoardPayload";
+        issueBoard: {
+            __typename: "IssueBoard";
+            id: string;
+            name: string;
+            description: string;
+            issueBoardColumns: { __typename: "IssueBoardColumnConnection"; totalCount: number };
+            issueBoardItems: { __typename: "IssueBoardItemConnection"; totalCount: number };
+        };
+    };
+};
+
+export type DeleteIssueBoardFromDialogMutationVariables = Exact<{
+    id: string;
+}>;
+
+export type DeleteIssueBoardFromDialogMutation = {
+    __typename: "Mutation";
+    deleteIssueBoard: { __typename: "DeleteNodePayload"; id: string };
 };
 
 export type UpdateLabelMutationVariables = Exact<{
@@ -7744,6 +8191,9 @@ export type FirstComponentVersionsForAutocompleteQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -7873,6 +8323,9 @@ export type FirstAssignmentTypesQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -8031,6 +8484,9 @@ export type FirstComponentVersionsQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -8186,6 +8642,9 @@ export type FirstComponentPermissionsQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -8339,6 +8798,9 @@ export type FirstImsPermissionsQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -8486,6 +8948,9 @@ export type FirstIssuesForExternalAutocompleteQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -8621,6 +9086,9 @@ export type FirstTrackableLabelsForExternalQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -8740,6 +9208,9 @@ export type FirstProjectPermissionsQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -8967,6 +9438,9 @@ export type FirstInterfaceSpecificationsQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -9124,6 +9598,9 @@ export type FirstInterfaceSpecificationVersionsForAutocompleteQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -9236,6 +9713,9 @@ export type FirstInterfaceSpecificationsForAutocompleteQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -9357,6 +9837,9 @@ export type FirstInterfaceSpecificationVersionsForModelQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -9459,6 +9942,9 @@ export type GetUsedIssueTemplatesQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -9580,6 +10066,9 @@ export type GetUsedLabelsQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -9708,6 +10197,9 @@ export type FirstTrackableLabelsForFilterQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -9796,6 +10288,7 @@ export type GetUsedIssuePrioritiesQuery = {
                       name: string;
                       description: string;
                       value: number;
+                      iconPath: string;
                   }>;
               };
           }
@@ -9829,6 +10322,9 @@ export type GetUsedIssuePrioritiesQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -9850,6 +10346,7 @@ export type GetUsedIssuePrioritiesQuery = {
                       name: string;
                       description: string;
                       value: number;
+                      iconPath: string;
                   }>;
               };
           }
@@ -9943,6 +10440,9 @@ export type GetUsedIssueTypesQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -10054,6 +10554,9 @@ export type GetAssignedUsersQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -10165,6 +10668,9 @@ export type GetUsedIssueStatesQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -10347,6 +10853,9 @@ export type FirstAffectedByIssuesForFilterQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -10637,6 +11146,7 @@ export type SearchIssuePrioritiesQuery = {
         name: string;
         description: string;
         value: number;
+        iconPath: string;
     }>;
 };
 
@@ -10692,6 +11202,9 @@ export type FirstIssuePrioritiesQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -10707,6 +11220,7 @@ export type FirstIssuePrioritiesQuery = {
                       name: string;
                       description: string;
                       value: number;
+                      iconPath: string;
                   }>;
               };
           }
@@ -10805,6 +11319,9 @@ export type FirstIssueRelationTypesQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -10918,6 +11435,9 @@ export type FirstIssueStatesQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -10966,6 +11486,47 @@ export type FirstIssueStatesQuery = {
         | { __typename: "TypeChangedEvent" }
         | { __typename: "View" }
         | null;
+};
+
+export type SearchAllIssueStatesQueryVariables = Exact<{
+    query: string;
+    count: number;
+}>;
+
+export type SearchAllIssueStatesQuery = {
+    __typename: "Query";
+    searchIssueStates: Array<{
+        __typename: "IssueState";
+        id: string;
+        name: string;
+        description: string;
+        isOpen: boolean;
+    }>;
+};
+
+export type FirstAllIssueStatesQueryVariables = Exact<{
+    count: number;
+}>;
+
+export type FirstAllIssueStatesQuery = {
+    __typename: "Query";
+    issueTemplates: {
+        __typename: "IssueTemplateConnection";
+        nodes: Array<{
+            __typename: "IssueTemplate";
+            id: string;
+            issueStates: {
+                __typename: "IssueStateConnection";
+                nodes: Array<{
+                    __typename: "IssueState";
+                    id: string;
+                    name: string;
+                    description: string;
+                    isOpen: boolean;
+                }>;
+            };
+        }>;
+    };
 };
 
 export type SearchIssueTemplatesQueryVariables = Exact<{
@@ -11071,6 +11632,9 @@ export type FirstIssueTypesQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -11218,6 +11782,9 @@ export type FirstLabelsForAutocompleteQuery = {
                   >;
               };
           }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -11331,6 +11898,9 @@ export type GetSyncPermissionTargetForSwitchQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -11480,6 +12050,9 @@ export type FirstViewsQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -12452,7 +13025,14 @@ export type IssueListItemInfoFragment = {
                 | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
         }>;
     };
-    priority: { __typename: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+    priority: {
+        __typename: "IssuePriority";
+        id: string;
+        name: string;
+        description: string;
+        value: number;
+        iconPath: string;
+    } | null;
     template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
     type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
     affects: {
@@ -12515,7 +13095,14 @@ export type ParticipatingIssueListItemInfoFragment = {
                 | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
         }>;
     };
-    priority: { __typename: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+    priority: {
+        __typename: "IssuePriority";
+        id: string;
+        name: string;
+        description: string;
+        value: number;
+        iconPath: string;
+    } | null;
     template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
     type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
     affects: {
@@ -12578,7 +13165,14 @@ export type ProjectComponentIssueListItemInfoFragment = {
                 | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
         }>;
     };
-    priority: { __typename: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+    priority: {
+        __typename: "IssuePriority";
+        id: string;
+        name: string;
+        description: string;
+        value: number;
+        iconPath: string;
+    } | null;
     template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
     type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
     affects: {
@@ -12605,12 +13199,103 @@ export type DefaultIssueIconInfoFragment = {
     type: { __typename: "IssueType"; iconPath: string };
 };
 
+export type DefaultIssueBoardInfoFragment = {
+    __typename: "IssueBoard";
+    id: string;
+    name: string;
+    description: string;
+    issueBoardColumns: { __typename: "IssueBoardColumnConnection"; totalCount: number };
+    issueBoardItems: { __typename: "IssueBoardItemConnection"; totalCount: number };
+};
+
+export type IssueBoardColumnInfoFragment = {
+    __typename: "IssueBoardColumn";
+    id: string;
+    name: string;
+    description: string;
+    position: number;
+    issueStates: {
+        __typename: "IssueStateConnection";
+        nodes: Array<{ __typename: "IssueState"; id: string; name: string; description: string; isOpen: boolean }>;
+    };
+};
+
+export type IssueBoardCardInfoFragment = {
+    __typename: "Issue";
+    id: string;
+    title: string;
+    state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
+    priority: {
+        __typename: "IssuePriority";
+        id: string;
+        name: string;
+        description: string;
+        value: number;
+        iconPath: string;
+    } | null;
+    labels: {
+        __typename: "LabelConnection";
+        nodes: Array<{ __typename: "Label"; id: string; name: string; description: string; color: any }>;
+    };
+    assignments: {
+        __typename: "AssignmentConnection";
+        nodes: Array<{
+            __typename: "Assignment";
+            user:
+                | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
+                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        }>;
+    };
+    issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
+    incomingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
+    outgoingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
+    type: { __typename: "IssueType"; iconPath: string };
+};
+
+export type IssueBoardItemInfoFragment = {
+    __typename: "IssueBoardItem";
+    id: string;
+    position: number;
+    issue: {
+        __typename: "Issue";
+        id: string;
+        title: string;
+        state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
+        priority: {
+            __typename: "IssuePriority";
+            id: string;
+            name: string;
+            description: string;
+            value: number;
+            iconPath: string;
+        } | null;
+        labels: {
+            __typename: "LabelConnection";
+            nodes: Array<{ __typename: "Label"; id: string; name: string; description: string; color: any }>;
+        };
+        assignments: {
+            __typename: "AssignmentConnection";
+            nodes: Array<{
+                __typename: "Assignment";
+                user:
+                    | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
+                    | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+            }>;
+        };
+        issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
+        incomingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
+        outgoingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
+        type: { __typename: "IssueType"; iconPath: string };
+    };
+};
+
 export type DefaultIssuePriorityInfoFragment = {
     __typename: "IssuePriority";
     id: string;
     name: string;
     description: string;
     value: number;
+    iconPath: string;
 };
 
 export type DefaultIssueRelationTypeInfoFragment = {
@@ -12640,8 +13325,6 @@ export type IssueTemplateFieldsFragment = {
     __typename: "IssueTemplate";
     id: string;
     name: string;
-    description: string;
-    extends: { __typename: "IssueTemplateConnection"; nodes: Array<{ __typename: "IssueTemplate"; id: string }> };
     issueTypes: {
         __typename: "IssueTypeConnection";
         nodes: Array<{ __typename: "IssueType"; name: string; description: string; iconPath: string }>;
@@ -12668,7 +13351,6 @@ export type IssueTemplateFieldsFragment = {
         __typename: "IssueRelationTypeConnection";
         nodes: Array<{ __typename: "IssueRelationType"; name: string; description: string; inverseName: string }>;
     };
-    templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
 };
 
 export type DefaultIssueTypeInfoFragment = {
@@ -13228,8 +13910,22 @@ type DefaultTimelineItemInfo_PriorityChangedEvent_Fragment = {
     __typename: "PriorityChangedEvent";
     id: string;
     createdAt: any;
-    oldPriority: { __typename: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
-    newPriority: { __typename: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+    oldPriority: {
+        __typename: "IssuePriority";
+        id: string;
+        name: string;
+        description: string;
+        value: number;
+        iconPath: string;
+    } | null;
+    newPriority: {
+        __typename: "IssuePriority";
+        id: string;
+        name: string;
+        description: string;
+        value: number;
+        iconPath: string;
+    } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
         | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
@@ -14167,8 +14863,22 @@ export type PriorityChangedEventTimelineInfoFragment = {
     __typename: "PriorityChangedEvent";
     id: string;
     createdAt: any;
-    oldPriority: { __typename: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
-    newPriority: { __typename: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+    oldPriority: {
+        __typename: "IssuePriority";
+        id: string;
+        name: string;
+        description: string;
+        value: number;
+        iconPath: string;
+    } | null;
+    newPriority: {
+        __typename: "IssuePriority";
+        id: string;
+        name: string;
+        description: string;
+        value: number;
+        iconPath: string;
+    } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
         | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
@@ -14788,6 +15498,7 @@ export type IssuePriorityTimelineInfoFragment = {
     name: string;
     description: string;
     value: number;
+    iconPath: string;
 };
 
 export type IssueStateTimelineInfoFragment = {
@@ -14929,6 +15640,26 @@ export type LegalInformationQuery = {
         __typename: "LegalInformationConnection";
         nodes: Array<{ __typename: "LegalInformation"; id: string; label: string; priority: number }>;
     };
+};
+
+export type AddIssueStateToBoardColumnMutationVariables = Exact<{
+    column: string;
+    state: string;
+}>;
+
+export type AddIssueStateToBoardColumnMutation = {
+    __typename: "Mutation";
+    addIssueStateToBoardColumn: { __typename: "IssueBoardColumn"; id: string };
+};
+
+export type RemoveIssueStateFromBoardColumnMutationVariables = Exact<{
+    column: string;
+    state: string;
+}>;
+
+export type RemoveIssueStateFromBoardColumnMutation = {
+    __typename: "Mutation";
+    removeIssueStateFromBoardColumn: { __typename: "IssueBoardColumn"; id: string };
 };
 
 export type GetIssueTemplateListQueryVariables = Exact<{
@@ -15267,6 +15998,9 @@ export type GetLegalInformationQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -15356,6 +16090,9 @@ export type GetUserQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -15608,6 +16345,7 @@ export type GetComponentDetailsQuery = {
                           name: string;
                           description: string;
                           value: number;
+                          iconPath: string;
                       } | null;
                       template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
                       type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
@@ -15695,6 +16433,7 @@ export type GetComponentDetailsQuery = {
                           name: string;
                           description: string;
                           value: number;
+                          iconPath: string;
                       } | null;
                       template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
                       type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
@@ -15745,6 +16484,9 @@ export type GetComponentDetailsQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -15811,6 +16553,7 @@ export type GetComponentQuery = {
               createIssues: boolean;
               manageLabels: boolean;
               manageIssues: boolean;
+              manageIssueBoards: boolean;
               manageIMS: boolean;
               admin: boolean;
               openIssues: { __typename: "IssueConnection"; totalCount: number };
@@ -15845,6 +16588,9 @@ export type GetComponentQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -15934,6 +16680,9 @@ export type GetVersionedNodeQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -16023,6 +16772,9 @@ export type GetNamedNodeComponentQuery = {
         | { __typename: "IntraComponentDependencySpecification"; name: string; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; name: string; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; name: string; id: string }
+        | { __typename: "IssueBoardColumn"; name: string; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; name: string; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -16130,6 +16882,9 @@ export type GetComponentGeneralDetailsQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -16228,6 +16983,9 @@ export type GetComponentTemplateDetailsQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -16339,6 +17097,9 @@ export type GetInterfaceSpecificationListQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -16483,6 +17244,9 @@ export type GetComponentPermissionListQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -16645,6 +17409,9 @@ export type GetInterfaceSpecificationGeneralDetailsQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -16765,6 +17532,9 @@ export type GetInterfaceSpecificationVersionGeneralDetailsQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -16881,6 +17651,9 @@ export type GetInterfaceSpecificationVersionListQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -17005,6 +17778,9 @@ export type GetComponentVersionGeneralDetailsQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -17141,6 +17917,9 @@ export type GetInterfaceDefinitionListQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -17326,6 +18105,9 @@ export type GetComponentVersionListQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -17508,6 +18290,7 @@ export type GetParticipatingIssueListQuery = {
                     name: string;
                     description: string;
                     value: number;
+                    iconPath: string;
                 } | null;
                 template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
                 type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
@@ -17582,7 +18365,14 @@ export type GetParticipatingFilteredIssueListQuery = {
                     | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
             }>;
         };
-        priority: { __typename: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+        priority: {
+            __typename: "IssuePriority";
+            id: string;
+            name: string;
+            description: string;
+            value: number;
+            iconPath: string;
+        } | null;
         template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
         type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
         affects: {
@@ -17753,6 +18543,9 @@ export type GetComponentVersionTemplateQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -17852,6 +18645,9 @@ export type GetInterfaceSpecificationVersionTemplateQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -17951,6 +18747,9 @@ export type GetInterfacePartTemplateQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -18116,6 +18915,9 @@ export type GetTemplateFieldSpecificationsQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -18233,6 +19035,9 @@ export type GetTemplateGeneralDetailsQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -18390,6 +19195,9 @@ export type GetTemplateNameQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -18492,6 +19300,9 @@ export type GetComponentTemplateDependencyTypesQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -18602,6 +19413,9 @@ export type GetComponentTemplateInterfaceSpecificationsQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -18702,6 +19516,9 @@ export type GetInterfaceSpecificationTemplateComponentsQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -18791,6 +19608,9 @@ export type GetIssueTemplateIssueAttributesQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -18917,6 +19737,9 @@ export type GetIssueTemplateLinkageAttributesQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -19030,6 +19853,9 @@ export type GetRelationTemplateConditionsQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -19175,6 +20001,9 @@ export type GetImsQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -19264,6 +20093,9 @@ export type GetNamedNodeQuery = {
         | { __typename: "IntraComponentDependencySpecification"; name: string; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; name: string; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; name: string; id: string }
+        | { __typename: "IssueBoardColumn"; name: string; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; name: string; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -19370,6 +20202,9 @@ export type GetImsGeneralDetailsQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -19491,6 +20326,9 @@ export type GetImsPermissionListQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -19656,6 +20494,9 @@ export type GetImsProjectGeneralDetailsQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -19777,6 +20618,9 @@ export type GetImsProjectListFromImsQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -20463,6 +21307,7 @@ export type GetIssueQuery = {
                                 name: string;
                                 description: string;
                                 value: number;
+                                iconPath: string;
                             } | null;
                             newPriority: {
                                 __typename: "IssuePriority";
@@ -20470,6 +21315,7 @@ export type GetIssueQuery = {
                                 name: string;
                                 description: string;
                                 value: number;
+                                iconPath: string;
                             } | null;
                             createdBy:
                                 | {
@@ -21211,6 +22057,7 @@ export type GetIssueQuery = {
                   name: string;
                   description: string;
                   value: number;
+                  iconPath: string;
               } | null;
               trackables: {
                   __typename: "TrackableConnection";
@@ -21228,6 +22075,9 @@ export type GetIssueQuery = {
                   templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
               };
           }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -21329,6 +22179,7 @@ export type ChangeIssuePriorityMutation = {
                 name: string;
                 description: string;
                 value: number;
+                iconPath: string;
             } | null;
             newPriority: {
                 __typename: "IssuePriority";
@@ -21336,6 +22187,7 @@ export type ChangeIssuePriorityMutation = {
                 name: string;
                 description: string;
                 value: number;
+                iconPath: string;
             } | null;
             createdBy:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
@@ -21952,6 +22804,7 @@ export type GetIssueListQuery = {
                           name: string;
                           description: string;
                           value: number;
+                          iconPath: string;
                       } | null;
                       template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
                       type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
@@ -22002,6 +22855,9 @@ export type GetIssueListQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -22084,6 +22940,7 @@ export type GetIssueListQuery = {
                           name: string;
                           description: string;
                           value: number;
+                          iconPath: string;
                       } | null;
                       template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
                       type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
@@ -22174,7 +23031,14 @@ export type GetFilteredIssueListQuery = {
                     | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
             }>;
         };
-        priority: { __typename: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+        priority: {
+            __typename: "IssuePriority";
+            id: string;
+            name: string;
+            description: string;
+            value: number;
+            iconPath: string;
+        } | null;
         template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
         type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
         affects: {
@@ -22249,6 +23113,9 @@ export type GetComponentIssueListQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -22339,6 +23206,7 @@ export type GetComponentIssueListQuery = {
                           name: string;
                           description: string;
                           value: number;
+                          iconPath: string;
                       } | null;
                       template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
                       type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
@@ -22438,7 +23306,14 @@ export type GetComponentFilteredIssueListQuery = {
                     | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
             }>;
         };
-        priority: { __typename: "IssuePriority"; id: string; name: string; description: string; value: number } | null;
+        priority: {
+            __typename: "IssuePriority";
+            id: string;
+            name: string;
+            description: string;
+            value: number;
+            iconPath: string;
+        } | null;
         template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
         type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
         affects: {
@@ -22509,6 +23384,9 @@ export type GetViewQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -22689,6 +23567,9 @@ export type GetProjectGraphQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -22955,6 +23836,9 @@ export type GetProjectQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -22975,6 +23859,7 @@ export type GetProjectQuery = {
               manageLabels: boolean;
               manageComponents: boolean;
               manageIssues: boolean;
+              manageIssueBoards: boolean;
               manageIMS: boolean;
               manageViews: boolean;
               admin: boolean;
@@ -23003,6 +23888,98 @@ export type GetProjectQuery = {
         | { __typename: "TitleChangedEvent"; id: string }
         | { __typename: "TypeChangedEvent"; id: string }
         | { __typename: "View"; id: string }
+        | null;
+};
+
+export type GetIssueBoardNameProjectQueryVariables = Exact<{
+    id: string;
+}>;
+
+export type GetIssueBoardNameProjectQuery = {
+    __typename: "Query";
+    node:
+        | { __typename: "AddedAffectedEntityEvent"; id: string }
+        | { __typename: "AddedArtefactEvent"; id: string }
+        | { __typename: "AddedLabelEvent"; id: string }
+        | { __typename: "AddedToPinnedIssuesEvent"; id: string }
+        | { __typename: "AddedToTrackableEvent"; id: string }
+        | { __typename: "AggregatedIssue"; id: string }
+        | { __typename: "AggregatedIssueRelation"; id: string }
+        | { __typename: "Artefact"; id: string }
+        | { __typename: "ArtefactTemplate"; name: string; id: string }
+        | { __typename: "Assignment"; id: string }
+        | { __typename: "AssignmentType"; name: string; id: string }
+        | { __typename: "AssignmentTypeChangedEvent"; id: string }
+        | { __typename: "Body"; id: string }
+        | { __typename: "Component"; name: string; id: string }
+        | { __typename: "ComponentPermission"; name: string; id: string }
+        | { __typename: "ComponentTemplate"; name: string; id: string }
+        | { __typename: "ComponentVersion"; id: string }
+        | { __typename: "ComponentVersionTemplate"; name: string; id: string }
+        | { __typename: "FillStyle"; id: string }
+        | { __typename: "GlobalPermission"; name: string; id: string }
+        | { __typename: "GropiusUser"; id: string }
+        | { __typename: "IMS"; name: string; id: string }
+        | { __typename: "IMSIssue"; id: string }
+        | { __typename: "IMSIssueTemplate"; name: string; id: string }
+        | { __typename: "IMSPermission"; name: string; id: string }
+        | { __typename: "IMSProject"; name: string; id: string }
+        | { __typename: "IMSProjectTemplate"; name: string; id: string }
+        | { __typename: "IMSTemplate"; name: string; id: string }
+        | { __typename: "IMSUser"; id: string }
+        | { __typename: "IMSUserTemplate"; name: string; id: string }
+        | { __typename: "IncomingRelationTypeChangedEvent"; id: string }
+        | { __typename: "Interface"; id: string }
+        | { __typename: "InterfaceDefinition"; id: string }
+        | { __typename: "InterfacePart"; name: string; id: string }
+        | { __typename: "InterfacePartTemplate"; name: string; id: string }
+        | { __typename: "InterfaceSpecification"; name: string; id: string }
+        | { __typename: "InterfaceSpecificationDerivationCondition"; id: string }
+        | { __typename: "InterfaceSpecificationTemplate"; name: string; id: string }
+        | { __typename: "InterfaceSpecificationVersion"; id: string }
+        | { __typename: "InterfaceSpecificationVersionTemplate"; name: string; id: string }
+        | { __typename: "IntraComponentDependencyParticipant"; id: string }
+        | { __typename: "IntraComponentDependencySpecification"; name: string; id: string }
+        | { __typename: "IntraComponentDependencySpecificationType"; name: string; id: string }
+        | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; name: string; id: string }
+        | { __typename: "IssueBoardColumn"; name: string; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
+        | { __typename: "IssueComment"; id: string }
+        | { __typename: "IssuePriority"; name: string; id: string }
+        | { __typename: "IssueRelation"; id: string }
+        | { __typename: "IssueRelationType"; name: string; id: string }
+        | { __typename: "IssueState"; name: string; id: string }
+        | { __typename: "IssueTemplate"; name: string; id: string }
+        | { __typename: "IssueType"; name: string; id: string }
+        | { __typename: "Label"; name: string; id: string }
+        | { __typename: "LegalInformation"; id: string }
+        | { __typename: "OutgoingRelationTypeChangedEvent"; id: string }
+        | { __typename: "PriorityChangedEvent"; id: string }
+        | { __typename: "Project"; name: string; id: string }
+        | { __typename: "ProjectPermission"; name: string; id: string }
+        | { __typename: "RelatedByIssueEvent"; id: string }
+        | { __typename: "Relation"; id: string }
+        | { __typename: "RelationCondition"; id: string }
+        | { __typename: "RelationLayout"; id: string }
+        | { __typename: "RelationPartnerLayout"; id: string }
+        | { __typename: "RelationTemplate"; name: string; id: string }
+        | { __typename: "RemovedAffectedEntityEvent"; id: string }
+        | { __typename: "RemovedArtefactEvent"; id: string }
+        | { __typename: "RemovedAssignmentEvent"; id: string }
+        | { __typename: "RemovedFromPinnedIssuesEvent"; id: string }
+        | { __typename: "RemovedFromTrackableEvent"; id: string }
+        | { __typename: "RemovedIncomingRelationEvent"; id: string }
+        | { __typename: "RemovedLabelEvent"; id: string }
+        | { __typename: "RemovedOutgoingRelationEvent"; id: string }
+        | { __typename: "RemovedTemplatedFieldEvent"; id: string }
+        | { __typename: "StateChangedEvent"; id: string }
+        | { __typename: "StrokeStyle"; id: string }
+        | { __typename: "TemplateChangedEvent"; id: string }
+        | { __typename: "TemplatedFieldChangedEvent"; id: string }
+        | { __typename: "TitleChangedEvent"; id: string }
+        | { __typename: "TypeChangedEvent"; id: string }
+        | { __typename: "View"; name: string; id: string }
         | null;
 };
 
@@ -23063,6 +24040,9 @@ export type GetProjectGeneralDetailsQuery = {
         | { __typename: "IntraComponentDependencySpecification"; id: string }
         | { __typename: "IntraComponentDependencySpecificationType"; id: string }
         | { __typename: "Issue"; id: string }
+        | { __typename: "IssueBoard"; id: string }
+        | { __typename: "IssueBoardColumn"; id: string }
+        | { __typename: "IssueBoardItem"; id: string }
         | { __typename: "IssueComment"; id: string }
         | { __typename: "IssuePriority"; id: string }
         | { __typename: "IssueRelation"; id: string }
@@ -23164,6 +24144,9 @@ export type GetProjectPermissionListQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -23330,6 +24313,9 @@ export type GetViewListQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -23470,6 +24456,9 @@ export type GetProjectComponentTemplatesQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -23601,6 +24590,9 @@ export type GetImsProjectListFromTrackableQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -23657,6 +24649,378 @@ export type GetImsProjectListFromTrackableQuery = {
         | { __typename: "TypeChangedEvent" }
         | { __typename: "View" }
         | null;
+};
+
+export type GetIssueBoardQueryVariables = Exact<{
+    id: string;
+}>;
+
+export type GetIssueBoardQuery = {
+    __typename: "Query";
+    node:
+        | { __typename: "AddedAffectedEntityEvent" }
+        | { __typename: "AddedArtefactEvent" }
+        | { __typename: "AddedLabelEvent" }
+        | { __typename: "AddedToPinnedIssuesEvent" }
+        | { __typename: "AddedToTrackableEvent" }
+        | { __typename: "AggregatedIssue" }
+        | { __typename: "AggregatedIssueRelation" }
+        | { __typename: "Artefact" }
+        | { __typename: "ArtefactTemplate" }
+        | { __typename: "Assignment" }
+        | { __typename: "AssignmentType" }
+        | { __typename: "AssignmentTypeChangedEvent" }
+        | { __typename: "Body" }
+        | { __typename: "Component" }
+        | { __typename: "ComponentPermission" }
+        | { __typename: "ComponentTemplate" }
+        | { __typename: "ComponentVersion" }
+        | { __typename: "ComponentVersionTemplate" }
+        | { __typename: "FillStyle" }
+        | { __typename: "GlobalPermission" }
+        | { __typename: "GropiusUser" }
+        | { __typename: "IMS" }
+        | { __typename: "IMSIssue" }
+        | { __typename: "IMSIssueTemplate" }
+        | { __typename: "IMSPermission" }
+        | { __typename: "IMSProject" }
+        | { __typename: "IMSProjectTemplate" }
+        | { __typename: "IMSTemplate" }
+        | { __typename: "IMSUser" }
+        | { __typename: "IMSUserTemplate" }
+        | { __typename: "IncomingRelationTypeChangedEvent" }
+        | { __typename: "Interface" }
+        | { __typename: "InterfaceDefinition" }
+        | { __typename: "InterfacePart" }
+        | { __typename: "InterfacePartTemplate" }
+        | { __typename: "InterfaceSpecification" }
+        | { __typename: "InterfaceSpecificationDerivationCondition" }
+        | { __typename: "InterfaceSpecificationTemplate" }
+        | { __typename: "InterfaceSpecificationVersion" }
+        | { __typename: "InterfaceSpecificationVersionTemplate" }
+        | { __typename: "IntraComponentDependencyParticipant" }
+        | { __typename: "IntraComponentDependencySpecification" }
+        | { __typename: "IntraComponentDependencySpecificationType" }
+        | { __typename: "Issue" }
+        | {
+              __typename: "IssueBoard";
+              id: string;
+              name: string;
+              description: string;
+              issueBoardColumns: {
+                  __typename: "IssueBoardColumnConnection";
+                  nodes: Array<{
+                      __typename: "IssueBoardColumn";
+                      id: string;
+                      name: string;
+                      description: string;
+                      position: number;
+                      issueStates: {
+                          __typename: "IssueStateConnection";
+                          nodes: Array<{
+                              __typename: "IssueState";
+                              id: string;
+                              name: string;
+                              description: string;
+                              isOpen: boolean;
+                          }>;
+                      };
+                  }>;
+              };
+              issueBoardItems: {
+                  __typename: "IssueBoardItemConnection";
+                  nodes: Array<{
+                      __typename: "IssueBoardItem";
+                      id: string;
+                      position: number;
+                      issue: {
+                          __typename: "Issue";
+                          id: string;
+                          title: string;
+                          state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
+                          priority: {
+                              __typename: "IssuePriority";
+                              id: string;
+                              name: string;
+                              description: string;
+                              value: number;
+                              iconPath: string;
+                          } | null;
+                          labels: {
+                              __typename: "LabelConnection";
+                              nodes: Array<{
+                                  __typename: "Label";
+                                  id: string;
+                                  name: string;
+                                  description: string;
+                                  color: any;
+                              }>;
+                          };
+                          assignments: {
+                              __typename: "AssignmentConnection";
+                              nodes: Array<{
+                                  __typename: "Assignment";
+                                  user:
+                                      | {
+                                            __typename: "GropiusUser";
+                                            id: string;
+                                            username: string;
+                                            displayName: string;
+                                            avatar: any;
+                                        }
+                                      | {
+                                            __typename: "IMSUser";
+                                            id: string;
+                                            username: string | null;
+                                            displayName: string;
+                                            avatar: any;
+                                        };
+                              }>;
+                          };
+                          issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
+                          incomingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
+                          outgoingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
+                          type: { __typename: "IssueType"; iconPath: string };
+                      };
+                  }>;
+              };
+          }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
+        | { __typename: "IssueComment" }
+        | { __typename: "IssuePriority" }
+        | { __typename: "IssueRelation" }
+        | { __typename: "IssueRelationType" }
+        | { __typename: "IssueState" }
+        | { __typename: "IssueTemplate" }
+        | { __typename: "IssueType" }
+        | { __typename: "Label" }
+        | { __typename: "LegalInformation" }
+        | { __typename: "OutgoingRelationTypeChangedEvent" }
+        | { __typename: "PriorityChangedEvent" }
+        | { __typename: "Project" }
+        | { __typename: "ProjectPermission" }
+        | { __typename: "RelatedByIssueEvent" }
+        | { __typename: "Relation" }
+        | { __typename: "RelationCondition" }
+        | { __typename: "RelationLayout" }
+        | { __typename: "RelationPartnerLayout" }
+        | { __typename: "RelationTemplate" }
+        | { __typename: "RemovedAffectedEntityEvent" }
+        | { __typename: "RemovedArtefactEvent" }
+        | { __typename: "RemovedAssignmentEvent" }
+        | { __typename: "RemovedFromPinnedIssuesEvent" }
+        | { __typename: "RemovedFromTrackableEvent" }
+        | { __typename: "RemovedIncomingRelationEvent" }
+        | { __typename: "RemovedLabelEvent" }
+        | { __typename: "RemovedOutgoingRelationEvent" }
+        | { __typename: "RemovedTemplatedFieldEvent" }
+        | { __typename: "StateChangedEvent" }
+        | { __typename: "StrokeStyle" }
+        | { __typename: "TemplateChangedEvent" }
+        | { __typename: "TemplatedFieldChangedEvent" }
+        | { __typename: "TitleChangedEvent" }
+        | { __typename: "TypeChangedEvent" }
+        | { __typename: "View" }
+        | null;
+};
+
+export type DeleteIssueBoardColumnMutationVariables = Exact<{
+    id: string;
+}>;
+
+export type DeleteIssueBoardColumnMutation = {
+    __typename: "Mutation";
+    deleteIssueBoardColumn: { __typename: "DeleteNodePayload"; id: string };
+};
+
+export type UpdateIssueBoardColumnPositionMutationVariables = Exact<{
+    id: string;
+    position: number;
+}>;
+
+export type UpdateIssueBoardColumnPositionMutation = {
+    __typename: "Mutation";
+    updateIssueBoardColumn: {
+        __typename: "UpdateIssueBoardColumnPayload";
+        issueBoardColumn: { __typename: "IssueBoardColumn"; id: string; position: number };
+    };
+};
+
+export type UpdateIssueBoardItemPositionMutationVariables = Exact<{
+    id: string;
+    position: number;
+}>;
+
+export type UpdateIssueBoardItemPositionMutation = {
+    __typename: "Mutation";
+    updateIssueBoardItem: {
+        __typename: "UpdateIssueBoardItemPayload";
+        issueBoardItem: { __typename: "IssueBoardItem"; id: string; position: number };
+    };
+};
+
+export type DeleteIssueBoardItemMutationVariables = Exact<{
+    id: string;
+}>;
+
+export type DeleteIssueBoardItemMutation = {
+    __typename: "Mutation";
+    deleteIssueBoardItem: { __typename: "DeleteNodePayload"; id: string };
+};
+
+export type ChangeIssueStateOnBoardMutationVariables = Exact<{
+    issue: string;
+    state: string;
+}>;
+
+export type ChangeIssueStateOnBoardMutation = {
+    __typename: "Mutation";
+    changeIssueState: {
+        __typename: "ChangeIssueStatePayload";
+        stateChangedEvent: { __typename: "StateChangedEvent"; id: string } | null;
+    };
+};
+
+export type GetIssueBoardListQueryVariables = Exact<{
+    orderBy: Array<IssueBoardOrder> | IssueBoardOrder;
+    count: number;
+    skip: number;
+    trackable: string;
+}>;
+
+export type GetIssueBoardListQuery = {
+    __typename: "Query";
+    node:
+        | { __typename: "AddedAffectedEntityEvent" }
+        | { __typename: "AddedArtefactEvent" }
+        | { __typename: "AddedLabelEvent" }
+        | { __typename: "AddedToPinnedIssuesEvent" }
+        | { __typename: "AddedToTrackableEvent" }
+        | { __typename: "AggregatedIssue" }
+        | { __typename: "AggregatedIssueRelation" }
+        | { __typename: "Artefact" }
+        | { __typename: "ArtefactTemplate" }
+        | { __typename: "Assignment" }
+        | { __typename: "AssignmentType" }
+        | { __typename: "AssignmentTypeChangedEvent" }
+        | { __typename: "Body" }
+        | {
+              __typename: "Component";
+              issueBoards: {
+                  __typename: "IssueBoardConnection";
+                  totalCount: number;
+                  nodes: Array<{
+                      __typename: "IssueBoard";
+                      id: string;
+                      name: string;
+                      description: string;
+                      issueBoardColumns: { __typename: "IssueBoardColumnConnection"; totalCount: number };
+                      issueBoardItems: { __typename: "IssueBoardItemConnection"; totalCount: number };
+                  }>;
+              };
+          }
+        | { __typename: "ComponentPermission" }
+        | { __typename: "ComponentTemplate" }
+        | { __typename: "ComponentVersion" }
+        | { __typename: "ComponentVersionTemplate" }
+        | { __typename: "FillStyle" }
+        | { __typename: "GlobalPermission" }
+        | { __typename: "GropiusUser" }
+        | { __typename: "IMS" }
+        | { __typename: "IMSIssue" }
+        | { __typename: "IMSIssueTemplate" }
+        | { __typename: "IMSPermission" }
+        | { __typename: "IMSProject" }
+        | { __typename: "IMSProjectTemplate" }
+        | { __typename: "IMSTemplate" }
+        | { __typename: "IMSUser" }
+        | { __typename: "IMSUserTemplate" }
+        | { __typename: "IncomingRelationTypeChangedEvent" }
+        | { __typename: "Interface" }
+        | { __typename: "InterfaceDefinition" }
+        | { __typename: "InterfacePart" }
+        | { __typename: "InterfacePartTemplate" }
+        | { __typename: "InterfaceSpecification" }
+        | { __typename: "InterfaceSpecificationDerivationCondition" }
+        | { __typename: "InterfaceSpecificationTemplate" }
+        | { __typename: "InterfaceSpecificationVersion" }
+        | { __typename: "InterfaceSpecificationVersionTemplate" }
+        | { __typename: "IntraComponentDependencyParticipant" }
+        | { __typename: "IntraComponentDependencySpecification" }
+        | { __typename: "IntraComponentDependencySpecificationType" }
+        | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
+        | { __typename: "IssueComment" }
+        | { __typename: "IssuePriority" }
+        | { __typename: "IssueRelation" }
+        | { __typename: "IssueRelationType" }
+        | { __typename: "IssueState" }
+        | { __typename: "IssueTemplate" }
+        | { __typename: "IssueType" }
+        | { __typename: "Label" }
+        | { __typename: "LegalInformation" }
+        | { __typename: "OutgoingRelationTypeChangedEvent" }
+        | { __typename: "PriorityChangedEvent" }
+        | {
+              __typename: "Project";
+              issueBoards: {
+                  __typename: "IssueBoardConnection";
+                  totalCount: number;
+                  nodes: Array<{
+                      __typename: "IssueBoard";
+                      id: string;
+                      name: string;
+                      description: string;
+                      issueBoardColumns: { __typename: "IssueBoardColumnConnection"; totalCount: number };
+                      issueBoardItems: { __typename: "IssueBoardItemConnection"; totalCount: number };
+                  }>;
+              };
+          }
+        | { __typename: "ProjectPermission" }
+        | { __typename: "RelatedByIssueEvent" }
+        | { __typename: "Relation" }
+        | { __typename: "RelationCondition" }
+        | { __typename: "RelationLayout" }
+        | { __typename: "RelationPartnerLayout" }
+        | { __typename: "RelationTemplate" }
+        | { __typename: "RemovedAffectedEntityEvent" }
+        | { __typename: "RemovedArtefactEvent" }
+        | { __typename: "RemovedAssignmentEvent" }
+        | { __typename: "RemovedFromPinnedIssuesEvent" }
+        | { __typename: "RemovedFromTrackableEvent" }
+        | { __typename: "RemovedIncomingRelationEvent" }
+        | { __typename: "RemovedLabelEvent" }
+        | { __typename: "RemovedOutgoingRelationEvent" }
+        | { __typename: "RemovedTemplatedFieldEvent" }
+        | { __typename: "StateChangedEvent" }
+        | { __typename: "StrokeStyle" }
+        | { __typename: "TemplateChangedEvent" }
+        | { __typename: "TemplatedFieldChangedEvent" }
+        | { __typename: "TitleChangedEvent" }
+        | { __typename: "TypeChangedEvent" }
+        | { __typename: "View" }
+        | null;
+};
+
+export type GetFilteredIssueBoardListQueryVariables = Exact<{
+    query: string;
+    count: number;
+    trackable: string;
+}>;
+
+export type GetFilteredIssueBoardListQuery = {
+    __typename: "Query";
+    searchIssueBoards: Array<{
+        __typename: "IssueBoard";
+        id: string;
+        name: string;
+        description: string;
+        issueBoardColumns: { __typename: "IssueBoardColumnConnection"; totalCount: number };
+        issueBoardItems: { __typename: "IssueBoardItemConnection"; totalCount: number };
+    }>;
 };
 
 export type GetLabelListQueryVariables = Exact<{
@@ -23720,6 +25084,9 @@ export type GetLabelListQuery = {
         | { __typename: "IntraComponentDependencySpecification" }
         | { __typename: "IntraComponentDependencySpecificationType" }
         | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
         | { __typename: "IssueComment" }
         | { __typename: "IssuePriority" }
         | { __typename: "IssueRelation" }
@@ -26885,7 +28252,8 @@ export const DefaultIssuePriorityInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         }
@@ -27190,7 +28558,8 @@ export const IssueListItemInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         }
@@ -27338,7 +28707,8 @@ export const ParticipatingIssueListItemInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -27731,7 +29101,8 @@ export const ProjectComponentIssueListItemInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -27937,6 +29308,576 @@ export const ProjectComponentIssueListItemInfoFragmentDoc = {
         }
     ]
 } as unknown as DocumentNode<ProjectComponentIssueListItemInfoFragment, unknown>;
+export const DefaultIssueBoardInfoFragmentDoc = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssueBoardInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssueBoard" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueBoardColumns" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueBoardItems" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<DefaultIssueBoardInfoFragment, unknown>;
+export const DefaultIssueStateInfoFragmentDoc = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssueStateInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssueState" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    { kind: "Field", name: { kind: "Name", value: "isOpen" } }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<DefaultIssueStateInfoFragment, unknown>;
+export const IssueBoardColumnInfoFragmentDoc = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "IssueBoardColumnInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssueBoardColumn" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    { kind: "Field", name: { kind: "Name", value: "position" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueStates" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "FragmentSpread",
+                                                name: { kind: "Name", value: "DefaultIssueStateInfo" }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssueStateInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssueState" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    { kind: "Field", name: { kind: "Name", value: "isOpen" } }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<IssueBoardColumnInfoFragment, unknown>;
+export const IssueBoardCardInfoFragmentDoc = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "IssueBoardCardInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Issue" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "title" } },
+                    { kind: "FragmentSpread", name: { kind: "Name", value: "DefaultIssueIconInfo" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "state" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } },
+                                { kind: "Field", name: { kind: "Name", value: "isOpen" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "priority" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "FragmentSpread", name: { kind: "Name", value: "DefaultIssuePriorityInfo" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "labels" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "FragmentSpread",
+                                                name: { kind: "Name", value: "DefaultLabelInfo" }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "assignments" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "user" },
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "FragmentSpread",
+                                                            name: { kind: "Name", value: "DefaultUserInfo" }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueComments" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssueIconInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Issue" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "incomingRelations" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "outgoingRelations" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "state" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "isOpen" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "type" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "iconPath" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssuePriorityInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssuePriority" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultLabelInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Label" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    { kind: "Field", name: { kind: "Name", value: "color" } }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultUserInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "User" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "username" } },
+                    { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<IssueBoardCardInfoFragment, unknown>;
+export const IssueBoardItemInfoFragmentDoc = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "IssueBoardItemInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssueBoardItem" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "position" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issue" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "FragmentSpread", name: { kind: "Name", value: "IssueBoardCardInfo" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssueIconInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Issue" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "incomingRelations" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "outgoingRelations" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "state" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "isOpen" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "type" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "iconPath" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssuePriorityInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssuePriority" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultLabelInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Label" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    { kind: "Field", name: { kind: "Name", value: "color" } }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultUserInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "User" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "username" } },
+                    { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "IssueBoardCardInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Issue" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "title" } },
+                    { kind: "FragmentSpread", name: { kind: "Name", value: "DefaultIssueIconInfo" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "state" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } },
+                                { kind: "Field", name: { kind: "Name", value: "isOpen" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "priority" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "FragmentSpread", name: { kind: "Name", value: "DefaultIssuePriorityInfo" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "labels" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "FragmentSpread",
+                                                name: { kind: "Name", value: "DefaultLabelInfo" }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "assignments" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "user" },
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "FragmentSpread",
+                                                            name: { kind: "Name", value: "DefaultUserInfo" }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueComments" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<IssueBoardItemInfoFragment, unknown>;
 export const DefaultIssueRelationTypeInfoFragmentDoc = {
     kind: "Document",
     definitions: [
@@ -28000,28 +29941,6 @@ export const IssueTemplateFieldsFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "__typename" } },
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
-                    { kind: "Field", name: { kind: "Name", value: "description" } },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "extends" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "nodes" },
-                                    selectionSet: {
-                                        kind: "SelectionSet",
-                                        selections: [
-                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                            { kind: "Field", name: { kind: "Name", value: "id" } }
-                                        ]
-                                    }
-                                }
-                            ]
-                        }
-                    },
                     {
                         kind: "Field",
                         name: { kind: "Name", value: "issueTypes" },
@@ -28134,18 +30053,6 @@ export const IssueTemplateFieldsFragmentDoc = {
                                         ]
                                     }
                                 }
-                            ]
-                        }
-                    },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "templateFieldSpecifications" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "name" } },
-                                { kind: "Field", name: { kind: "Name", value: "value" } }
                             ]
                         }
                     }
@@ -31860,7 +33767,8 @@ export const IssuePriorityTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         }
@@ -31941,7 +33849,8 @@ export const PriorityChangedEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -33676,26 +35585,6 @@ export const RemovedTemplatedFieldEventTimelineInfoFragmentDoc = {
         }
     ]
 } as unknown as DocumentNode<RemovedTemplatedFieldEventTimelineInfoFragment, unknown>;
-export const DefaultIssueStateInfoFragmentDoc = {
-    kind: "Document",
-    definitions: [
-        {
-            kind: "FragmentDefinition",
-            name: { kind: "Name", value: "DefaultIssueStateInfo" },
-            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssueState" } },
-            selectionSet: {
-                kind: "SelectionSet",
-                selections: [
-                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                    { kind: "Field", name: { kind: "Name", value: "id" } },
-                    { kind: "Field", name: { kind: "Name", value: "name" } },
-                    { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "isOpen" } }
-                ]
-            }
-        }
-    ]
-} as unknown as DocumentNode<DefaultIssueStateInfoFragment, unknown>;
 export const IssueStateTimelineInfoFragmentDoc = {
     kind: "Document",
     definitions: [
@@ -35321,7 +37210,8 @@ export const DefaultTimelineItemInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -36584,7 +38474,8 @@ export const GetIssueListForProjectSidebarDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -37031,7 +38922,8 @@ export const GetIssueListOnAggregatedIssueDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -37392,7 +39284,8 @@ export const GetFilteredIssueListForProjectSidebarDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -37944,6 +39837,701 @@ export const AddInterfaceSpecificationVersionToComponentVersionDocument = {
     AddInterfaceSpecificationVersionToComponentVersionMutation,
     AddInterfaceSpecificationVersionToComponentVersionMutationVariables
 >;
+export const SearchIssuesForBoardDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "searchIssuesForBoard" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "query" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "trackable" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "searchIssues" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "query" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "query" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "first" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "filter" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "trackables" },
+                                            value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                    {
+                                                        kind: "ObjectField",
+                                                        name: { kind: "Name", value: "any" },
+                                                        value: {
+                                                            kind: "ObjectValue",
+                                                            fields: [
+                                                                {
+                                                                    kind: "ObjectField",
+                                                                    name: { kind: "Name", value: "id" },
+                                                                    value: {
+                                                                        kind: "ObjectValue",
+                                                                        fields: [
+                                                                            {
+                                                                                kind: "ObjectField",
+                                                                                name: { kind: "Name", value: "eq" },
+                                                                                value: {
+                                                                                    kind: "Variable",
+                                                                                    name: {
+                                                                                        kind: "Name",
+                                                                                        value: "trackable"
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "FragmentSpread", name: { kind: "Name", value: "IssueBoardCardInfo" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssueIconInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Issue" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "incomingRelations" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "outgoingRelations" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "state" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "isOpen" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "type" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "iconPath" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssuePriorityInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssuePriority" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultLabelInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Label" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    { kind: "Field", name: { kind: "Name", value: "color" } }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultUserInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "User" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "username" } },
+                    { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "IssueBoardCardInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Issue" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "title" } },
+                    { kind: "FragmentSpread", name: { kind: "Name", value: "DefaultIssueIconInfo" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "state" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } },
+                                { kind: "Field", name: { kind: "Name", value: "isOpen" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "priority" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "FragmentSpread", name: { kind: "Name", value: "DefaultIssuePriorityInfo" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "labels" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "FragmentSpread",
+                                                name: { kind: "Name", value: "DefaultLabelInfo" }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "assignments" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "user" },
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "FragmentSpread",
+                                                            name: { kind: "Name", value: "DefaultUserInfo" }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueComments" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<SearchIssuesForBoardQuery, SearchIssuesForBoardQueryVariables>;
+export const FirstIssuesForBoardDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "firstIssuesForBoard" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "trackable" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "node" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "id" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "trackable" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "InlineFragment",
+                                    typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Trackable" } },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "issues" },
+                                                arguments: [
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "first" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "count" }
+                                                        }
+                                                    },
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "orderBy" },
+                                                        value: {
+                                                            kind: "ListValue",
+                                                            values: [
+                                                                {
+                                                                    kind: "ObjectValue",
+                                                                    fields: [
+                                                                        {
+                                                                            kind: "ObjectField",
+                                                                            name: { kind: "Name", value: "field" },
+                                                                            value: {
+                                                                                kind: "EnumValue",
+                                                                                value: "LAST_UPDATED_AT"
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            kind: "ObjectField",
+                                                                            name: { kind: "Name", value: "direction" },
+                                                                            value: { kind: "EnumValue", value: "DESC" }
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ],
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "nodes" },
+                                                            selectionSet: {
+                                                                kind: "SelectionSet",
+                                                                selections: [
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "__typename" }
+                                                                    },
+                                                                    {
+                                                                        kind: "FragmentSpread",
+                                                                        name: {
+                                                                            kind: "Name",
+                                                                            value: "IssueBoardCardInfo"
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssueIconInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Issue" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "incomingRelations" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "outgoingRelations" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "state" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "isOpen" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "type" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "iconPath" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssuePriorityInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssuePriority" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultLabelInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Label" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    { kind: "Field", name: { kind: "Name", value: "color" } }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultUserInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "User" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "username" } },
+                    { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "IssueBoardCardInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Issue" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "title" } },
+                    { kind: "FragmentSpread", name: { kind: "Name", value: "DefaultIssueIconInfo" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "state" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } },
+                                { kind: "Field", name: { kind: "Name", value: "isOpen" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "priority" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "FragmentSpread", name: { kind: "Name", value: "DefaultIssuePriorityInfo" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "labels" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "FragmentSpread",
+                                                name: { kind: "Name", value: "DefaultLabelInfo" }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "assignments" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "user" },
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "FragmentSpread",
+                                                            name: { kind: "Name", value: "DefaultUserInfo" }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueComments" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<FirstIssuesForBoardQuery, FirstIssuesForBoardQueryVariables>;
+export const CreateIssueBoardItemDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "mutation",
+            name: { kind: "Name", value: "createIssueBoardItem" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "input" } },
+                    type: {
+                        kind: "NonNullType",
+                        type: { kind: "NamedType", name: { kind: "Name", value: "CreateIssueBoardItemInput" } }
+                    }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "createIssueBoardItem" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "input" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "input" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "issueBoardItem" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<CreateIssueBoardItemMutation, CreateIssueBoardItemMutationVariables>;
 export const CreateArtefactTemplateDocument = {
     kind: "Document",
     definitions: [
@@ -39110,6 +41698,153 @@ export const CreateInterfaceSpecificationVersionDocument = {
     CreateInterfaceSpecificationVersionMutation,
     CreateInterfaceSpecificationVersionMutationVariables
 >;
+export const CreateIssueBoardColumnDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "mutation",
+            name: { kind: "Name", value: "createIssueBoardColumn" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "input" } },
+                    type: {
+                        kind: "NonNullType",
+                        type: { kind: "NamedType", name: { kind: "Name", value: "CreateIssueBoardColumnInput" } }
+                    }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "createIssueBoardColumn" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "input" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "input" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "issueBoardColumn" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<CreateIssueBoardColumnMutation, CreateIssueBoardColumnMutationVariables>;
+export const CreateIssueBoardDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "mutation",
+            name: { kind: "Name", value: "createIssueBoard" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "input" } },
+                    type: {
+                        kind: "NonNullType",
+                        type: { kind: "NamedType", name: { kind: "Name", value: "CreateIssueBoardInput" } }
+                    }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "createIssueBoard" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "input" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "input" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "issueBoard" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "FragmentSpread",
+                                                name: { kind: "Name", value: "DefaultIssueBoardInfo" }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssueBoardInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssueBoard" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueBoardColumns" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueBoardItems" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<CreateIssueBoardMutation, CreateIssueBoardMutationVariables>;
 export const GetIssueTemplateForDialogDocument = {
     kind: "Document",
     definitions: [
@@ -39230,81 +41965,6 @@ export const CreateIssueFromDialogDocument = {
         }
     ]
 } as unknown as DocumentNode<CreateIssueFromDialogMutation, CreateIssueFromDialogMutationVariables>;
-export const SearchIssueTemplatesByNameDocument = {
-    kind: "Document",
-    definitions: [
-        {
-            kind: "OperationDefinition",
-            operation: "query",
-            name: { kind: "Name", value: "searchIssueTemplatesByName" },
-            variableDefinitions: [
-                {
-                    kind: "VariableDefinition",
-                    variable: { kind: "Variable", name: { kind: "Name", value: "query" } },
-                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } }
-                },
-                {
-                    kind: "VariableDefinition",
-                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
-                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
-                }
-            ],
-            selectionSet: {
-                kind: "SelectionSet",
-                selections: [
-                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "searchIssueTemplates" },
-                        arguments: [
-                            {
-                                kind: "Argument",
-                                name: { kind: "Name", value: "query" },
-                                value: { kind: "Variable", name: { kind: "Name", value: "query" } }
-                            },
-                            {
-                                kind: "Argument",
-                                name: { kind: "Name", value: "first" },
-                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
-                            },
-                            {
-                                kind: "Argument",
-                                name: { kind: "Name", value: "filter" },
-                                value: {
-                                    kind: "ObjectValue",
-                                    fields: [
-                                        {
-                                            kind: "ObjectField",
-                                            name: { kind: "Name", value: "isDeprecated" },
-                                            value: {
-                                                kind: "ObjectValue",
-                                                fields: [
-                                                    {
-                                                        kind: "ObjectField",
-                                                        name: { kind: "Name", value: "eq" },
-                                                        value: { kind: "BooleanValue", value: false }
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        ],
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "id" } },
-                                { kind: "Field", name: { kind: "Name", value: "name" } }
-                            ]
-                        }
-                    }
-                ]
-            }
-        }
-    ]
-} as unknown as DocumentNode<SearchIssueTemplatesByNameQuery, SearchIssueTemplatesByNameQueryVariables>;
 export const GetIssueTemplateFieldsDocument = {
     kind: "Document",
     definitions: [
@@ -39370,28 +42030,6 @@ export const GetIssueTemplateFieldsDocument = {
                     { kind: "Field", name: { kind: "Name", value: "__typename" } },
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
-                    { kind: "Field", name: { kind: "Name", value: "description" } },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "extends" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "nodes" },
-                                    selectionSet: {
-                                        kind: "SelectionSet",
-                                        selections: [
-                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                            { kind: "Field", name: { kind: "Name", value: "id" } }
-                                        ]
-                                    }
-                                }
-                            ]
-                        }
-                    },
                     {
                         kind: "Field",
                         name: { kind: "Name", value: "issueTypes" },
@@ -39506,79 +42144,12 @@ export const GetIssueTemplateFieldsDocument = {
                                 }
                             ]
                         }
-                    },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "templateFieldSpecifications" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "name" } },
-                                { kind: "Field", name: { kind: "Name", value: "value" } }
-                            ]
-                        }
                     }
                 ]
             }
         }
     ]
 } as unknown as DocumentNode<GetIssueTemplateFieldsQuery, GetIssueTemplateFieldsQueryVariables>;
-export const GetIssueTemplateNameDocument = {
-    kind: "Document",
-    definitions: [
-        {
-            kind: "OperationDefinition",
-            operation: "query",
-            name: { kind: "Name", value: "getIssueTemplateName" },
-            variableDefinitions: [
-                {
-                    kind: "VariableDefinition",
-                    variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
-                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
-                }
-            ],
-            selectionSet: {
-                kind: "SelectionSet",
-                selections: [
-                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "node" },
-                        arguments: [
-                            {
-                                kind: "Argument",
-                                name: { kind: "Name", value: "id" },
-                                value: { kind: "Variable", name: { kind: "Name", value: "id" } }
-                            }
-                        ],
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "id" } },
-                                {
-                                    kind: "InlineFragment",
-                                    typeCondition: {
-                                        kind: "NamedType",
-                                        name: { kind: "Name", value: "IssueTemplate" }
-                                    },
-                                    selectionSet: {
-                                        kind: "SelectionSet",
-                                        selections: [
-                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                            { kind: "Field", name: { kind: "Name", value: "name" } }
-                                        ]
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                ]
-            }
-        }
-    ]
-} as unknown as DocumentNode<GetIssueTemplateNameQuery, GetIssueTemplateNameQueryVariables>;
 export const CreateIssueTemplateDocument = {
     kind: "Document",
     definitions: [
@@ -40617,6 +43188,203 @@ export const GetFilteredPermissionUserListDocument = {
         }
     ]
 } as unknown as DocumentNode<GetFilteredPermissionUserListQuery, GetFilteredPermissionUserListQueryVariables>;
+export const UpdateIssueBoardColumnDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "mutation",
+            name: { kind: "Name", value: "updateIssueBoardColumn" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "input" } },
+                    type: {
+                        kind: "NonNullType",
+                        type: { kind: "NamedType", name: { kind: "Name", value: "UpdateIssueBoardColumnInput" } }
+                    }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "updateIssueBoardColumn" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "input" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "input" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "issueBoardColumn" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<UpdateIssueBoardColumnMutation, UpdateIssueBoardColumnMutationVariables>;
+export const UpdateIssueBoardDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "mutation",
+            name: { kind: "Name", value: "updateIssueBoard" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "input" } },
+                    type: {
+                        kind: "NonNullType",
+                        type: { kind: "NamedType", name: { kind: "Name", value: "UpdateIssueBoardInput" } }
+                    }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "updateIssueBoard" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "input" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "input" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "issueBoard" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "FragmentSpread",
+                                                name: { kind: "Name", value: "DefaultIssueBoardInfo" }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssueBoardInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssueBoard" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueBoardColumns" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueBoardItems" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<UpdateIssueBoardMutation, UpdateIssueBoardMutationVariables>;
+export const DeleteIssueBoardFromDialogDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "mutation",
+            name: { kind: "Name", value: "deleteIssueBoardFromDialog" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "deleteIssueBoard" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "input" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "id" },
+                                            value: { kind: "Variable", name: { kind: "Name", value: "id" } }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<DeleteIssueBoardFromDialogMutation, DeleteIssueBoardFromDialogMutationVariables>;
 export const UpdateLabelDocument = {
     kind: "Document",
     definitions: [
@@ -47109,7 +49877,8 @@ export const GetUsedIssuePrioritiesDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         }
@@ -49205,7 +51974,8 @@ export const SearchIssuePrioritiesDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         }
@@ -49347,7 +52117,8 @@ export const FirstIssuePrioritiesDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         }
@@ -49854,6 +52625,197 @@ export const FirstIssueStatesDocument = {
         }
     ]
 } as unknown as DocumentNode<FirstIssueStatesQuery, FirstIssueStatesQueryVariables>;
+export const SearchAllIssueStatesDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "searchAllIssueStates" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "query" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "searchIssueStates" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "query" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "query" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "first" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "FragmentSpread", name: { kind: "Name", value: "DefaultIssueStateInfo" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssueStateInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssueState" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    { kind: "Field", name: { kind: "Name", value: "isOpen" } }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<SearchAllIssueStatesQuery, SearchAllIssueStatesQueryVariables>;
+export const FirstAllIssueStatesDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "firstAllIssueStates" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueTemplates" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "first" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "issueStates" },
+                                                arguments: [
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "first" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "count" }
+                                                        }
+                                                    },
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "orderBy" },
+                                                        value: {
+                                                            kind: "ListValue",
+                                                            values: [
+                                                                {
+                                                                    kind: "ObjectValue",
+                                                                    fields: [
+                                                                        {
+                                                                            kind: "ObjectField",
+                                                                            name: { kind: "Name", value: "field" },
+                                                                            value: { kind: "EnumValue", value: "NAME" }
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ],
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "nodes" },
+                                                            selectionSet: {
+                                                                kind: "SelectionSet",
+                                                                selections: [
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "__typename" }
+                                                                    },
+                                                                    {
+                                                                        kind: "FragmentSpread",
+                                                                        name: {
+                                                                            kind: "Name",
+                                                                            value: "DefaultIssueStateInfo"
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssueStateInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssueState" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    { kind: "Field", name: { kind: "Name", value: "isOpen" } }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<FirstAllIssueStatesQuery, FirstAllIssueStatesQueryVariables>;
 export const SearchIssueTemplatesDocument = {
     kind: "Document",
     definitions: [
@@ -52060,6 +55022,126 @@ export const LegalInformationDocument = {
         }
     ]
 } as unknown as DocumentNode<LegalInformationQuery, LegalInformationQueryVariables>;
+export const AddIssueStateToBoardColumnDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "mutation",
+            name: { kind: "Name", value: "addIssueStateToBoardColumn" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "column" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "state" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "addIssueStateToBoardColumn" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "input" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "column" },
+                                            value: { kind: "Variable", name: { kind: "Name", value: "column" } }
+                                        },
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "state" },
+                                            value: { kind: "Variable", name: { kind: "Name", value: "state" } }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<AddIssueStateToBoardColumnMutation, AddIssueStateToBoardColumnMutationVariables>;
+export const RemoveIssueStateFromBoardColumnDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "mutation",
+            name: { kind: "Name", value: "removeIssueStateFromBoardColumn" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "column" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "state" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "removeIssueStateFromBoardColumn" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "input" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "column" },
+                                            value: { kind: "Variable", name: { kind: "Name", value: "column" } }
+                                        },
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "state" },
+                                            value: { kind: "Variable", name: { kind: "Name", value: "state" } }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<RemoveIssueStateFromBoardColumnMutation, RemoveIssueStateFromBoardColumnMutationVariables>;
 export const GetIssueTemplateListDocument = {
     kind: "Document",
     definitions: [
@@ -55162,7 +58244,8 @@ export const GetComponentDetailsDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -55444,6 +58527,18 @@ export const GetComponentDocument = {
                                                         kind: "Argument",
                                                         name: { kind: "Name", value: "permission" },
                                                         value: { kind: "EnumValue", value: "MANAGE_ISSUES" }
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                kind: "Field",
+                                                alias: { kind: "Name", value: "manageIssueBoards" },
+                                                name: { kind: "Name", value: "hasPermission" },
+                                                arguments: [
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "permission" },
+                                                        value: { kind: "EnumValue", value: "MANAGE_ISSUE_BOARDS" }
                                                     }
                                                 ]
                                             },
@@ -59209,7 +62304,8 @@ export const GetParticipatingIssueListDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -59616,7 +62712,8 @@ export const GetParticipatingFilteredIssueListDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -65223,7 +68320,8 @@ export const GetIssueDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -66653,7 +69751,8 @@ export const ChangeIssuePriorityDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -70216,7 +73315,8 @@ export const GetIssueListDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -70577,7 +73677,8 @@ export const GetFilteredIssueListDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -71021,7 +74122,8 @@ export const GetComponentIssueListDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -71558,7 +74660,8 @@ export const GetComponentFilteredIssueListDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "name" } },
                     { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } }
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
                 ]
             }
         },
@@ -73273,6 +76376,18 @@ export const GetProjectDocument = {
                                             },
                                             {
                                                 kind: "Field",
+                                                alias: { kind: "Name", value: "manageIssueBoards" },
+                                                name: { kind: "Name", value: "hasPermission" },
+                                                arguments: [
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "permission" },
+                                                        value: { kind: "EnumValue", value: "MANAGE_ISSUE_BOARDS" }
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                kind: "Field",
                                                 alias: { kind: "Name", value: "manageIMS" },
                                                 name: { kind: "Name", value: "hasPermission" },
                                                 arguments: [
@@ -73375,6 +76490,58 @@ export const GetProjectDocument = {
         }
     ]
 } as unknown as DocumentNode<GetProjectQuery, GetProjectQueryVariables>;
+export const GetIssueBoardNameProjectDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "getIssueBoardNameProject" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "node" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "id" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "id" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } },
+                                {
+                                    kind: "InlineFragment",
+                                    typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Named" } },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "name" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<GetIssueBoardNameProjectQuery, GetIssueBoardNameProjectQueryVariables>;
 export const DeleteProjectDocument = {
     kind: "Document",
     definitions: [
@@ -74733,6 +77900,1069 @@ export const GetImsProjectListFromTrackableDocument = {
         }
     ]
 } as unknown as DocumentNode<GetImsProjectListFromTrackableQuery, GetImsProjectListFromTrackableQueryVariables>;
+export const GetIssueBoardDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "getIssueBoard" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "node" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "id" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "id" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "InlineFragment",
+                                    typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssueBoard" } },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "name" } },
+                                            { kind: "Field", name: { kind: "Name", value: "description" } },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "issueBoardColumns" },
+                                                arguments: [
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "orderBy" },
+                                                        value: {
+                                                            kind: "ListValue",
+                                                            values: [
+                                                                {
+                                                                    kind: "ObjectValue",
+                                                                    fields: [
+                                                                        {
+                                                                            kind: "ObjectField",
+                                                                            name: { kind: "Name", value: "field" },
+                                                                            value: {
+                                                                                kind: "EnumValue",
+                                                                                value: "POSITION"
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "first" },
+                                                        value: { kind: "IntValue", value: "100" }
+                                                    }
+                                                ],
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "nodes" },
+                                                            selectionSet: {
+                                                                kind: "SelectionSet",
+                                                                selections: [
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "__typename" }
+                                                                    },
+                                                                    {
+                                                                        kind: "FragmentSpread",
+                                                                        name: {
+                                                                            kind: "Name",
+                                                                            value: "IssueBoardColumnInfo"
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "issueBoardItems" },
+                                                arguments: [
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "orderBy" },
+                                                        value: {
+                                                            kind: "ListValue",
+                                                            values: [
+                                                                {
+                                                                    kind: "ObjectValue",
+                                                                    fields: [
+                                                                        {
+                                                                            kind: "ObjectField",
+                                                                            name: { kind: "Name", value: "field" },
+                                                                            value: {
+                                                                                kind: "EnumValue",
+                                                                                value: "POSITION"
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "first" },
+                                                        value: { kind: "IntValue", value: "500" }
+                                                    }
+                                                ],
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "nodes" },
+                                                            selectionSet: {
+                                                                kind: "SelectionSet",
+                                                                selections: [
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "__typename" }
+                                                                    },
+                                                                    {
+                                                                        kind: "FragmentSpread",
+                                                                        name: {
+                                                                            kind: "Name",
+                                                                            value: "IssueBoardItemInfo"
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssueStateInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssueState" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    { kind: "Field", name: { kind: "Name", value: "isOpen" } }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssueIconInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Issue" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "incomingRelations" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "outgoingRelations" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "state" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "isOpen" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "type" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "iconPath" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssuePriorityInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssuePriority" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultLabelInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Label" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    { kind: "Field", name: { kind: "Name", value: "color" } }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultUserInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "User" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "username" } },
+                    { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "IssueBoardCardInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Issue" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "title" } },
+                    { kind: "FragmentSpread", name: { kind: "Name", value: "DefaultIssueIconInfo" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "state" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } },
+                                { kind: "Field", name: { kind: "Name", value: "isOpen" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "priority" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "FragmentSpread", name: { kind: "Name", value: "DefaultIssuePriorityInfo" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "labels" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "FragmentSpread",
+                                                name: { kind: "Name", value: "DefaultLabelInfo" }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "assignments" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "user" },
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "FragmentSpread",
+                                                            name: { kind: "Name", value: "DefaultUserInfo" }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueComments" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "IssueBoardColumnInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssueBoardColumn" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    { kind: "Field", name: { kind: "Name", value: "position" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueStates" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "FragmentSpread",
+                                                name: { kind: "Name", value: "DefaultIssueStateInfo" }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "IssueBoardItemInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssueBoardItem" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "position" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issue" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "FragmentSpread", name: { kind: "Name", value: "IssueBoardCardInfo" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<GetIssueBoardQuery, GetIssueBoardQueryVariables>;
+export const DeleteIssueBoardColumnDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "mutation",
+            name: { kind: "Name", value: "deleteIssueBoardColumn" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "deleteIssueBoardColumn" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "input" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "id" },
+                                            value: { kind: "Variable", name: { kind: "Name", value: "id" } }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<DeleteIssueBoardColumnMutation, DeleteIssueBoardColumnMutationVariables>;
+export const UpdateIssueBoardColumnPositionDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "mutation",
+            name: { kind: "Name", value: "updateIssueBoardColumnPosition" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "position" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Float" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "updateIssueBoardColumn" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "input" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "id" },
+                                            value: { kind: "Variable", name: { kind: "Name", value: "id" } }
+                                        },
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "position" },
+                                            value: { kind: "Variable", name: { kind: "Name", value: "position" } }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "issueBoardColumn" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "position" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<UpdateIssueBoardColumnPositionMutation, UpdateIssueBoardColumnPositionMutationVariables>;
+export const UpdateIssueBoardItemPositionDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "mutation",
+            name: { kind: "Name", value: "updateIssueBoardItemPosition" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "position" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Float" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "updateIssueBoardItem" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "input" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "id" },
+                                            value: { kind: "Variable", name: { kind: "Name", value: "id" } }
+                                        },
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "position" },
+                                            value: { kind: "Variable", name: { kind: "Name", value: "position" } }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "issueBoardItem" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "position" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<UpdateIssueBoardItemPositionMutation, UpdateIssueBoardItemPositionMutationVariables>;
+export const DeleteIssueBoardItemDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "mutation",
+            name: { kind: "Name", value: "deleteIssueBoardItem" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "id" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "deleteIssueBoardItem" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "input" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "id" },
+                                            value: { kind: "Variable", name: { kind: "Name", value: "id" } }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<DeleteIssueBoardItemMutation, DeleteIssueBoardItemMutationVariables>;
+export const ChangeIssueStateOnBoardDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "mutation",
+            name: { kind: "Name", value: "changeIssueStateOnBoard" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "issue" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "state" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "changeIssueState" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "input" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "issue" },
+                                            value: { kind: "Variable", name: { kind: "Name", value: "issue" } }
+                                        },
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "state" },
+                                            value: { kind: "Variable", name: { kind: "Name", value: "state" } }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "stateChangedEvent" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<ChangeIssueStateOnBoardMutation, ChangeIssueStateOnBoardMutationVariables>;
+export const GetIssueBoardListDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "getIssueBoardList" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "orderBy" } },
+                    type: {
+                        kind: "NonNullType",
+                        type: {
+                            kind: "ListType",
+                            type: {
+                                kind: "NonNullType",
+                                type: { kind: "NamedType", name: { kind: "Name", value: "IssueBoardOrder" } }
+                            }
+                        }
+                    }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "skip" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "trackable" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "node" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "id" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "trackable" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "InlineFragment",
+                                    typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Trackable" } },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "issueBoards" },
+                                                arguments: [
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "orderBy" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "orderBy" }
+                                                        }
+                                                    },
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "first" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "count" }
+                                                        }
+                                                    },
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "skip" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "skip" }
+                                                        }
+                                                    }
+                                                ],
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "nodes" },
+                                                            selectionSet: {
+                                                                kind: "SelectionSet",
+                                                                selections: [
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "__typename" }
+                                                                    },
+                                                                    {
+                                                                        kind: "FragmentSpread",
+                                                                        name: {
+                                                                            kind: "Name",
+                                                                            value: "DefaultIssueBoardInfo"
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        },
+                                                        { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssueBoardInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssueBoard" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueBoardColumns" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueBoardItems" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<GetIssueBoardListQuery, GetIssueBoardListQueryVariables>;
+export const GetFilteredIssueBoardListDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "getFilteredIssueBoardList" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "query" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "trackable" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "searchIssueBoards" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "query" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "query" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "first" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "filter" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "trackable" },
+                                            value: {
+                                                kind: "ObjectValue",
+                                                fields: [
+                                                    {
+                                                        kind: "ObjectField",
+                                                        name: { kind: "Name", value: "id" },
+                                                        value: {
+                                                            kind: "ObjectValue",
+                                                            fields: [
+                                                                {
+                                                                    kind: "ObjectField",
+                                                                    name: { kind: "Name", value: "eq" },
+                                                                    value: {
+                                                                        kind: "Variable",
+                                                                        name: { kind: "Name", value: "trackable" }
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "FragmentSpread", name: { kind: "Name", value: "DefaultIssueBoardInfo" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssueBoardInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssueBoard" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueBoardColumns" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueBoardItems" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<GetFilteredIssueBoardListQuery, GetFilteredIssueBoardListQueryVariables>;
 export const GetLabelListDocument = {
     kind: "Document",
     definitions: [
