@@ -73,6 +73,7 @@ type Documents = {
     "\n    mutation updateViewForDialog($input: UpdateViewInput!) {\n        updateView(input: $input) {\n            view {\n                id\n            }\n        }\n    }\n": typeof types.UpdateViewForDialogDocument;
     "\n    query searchAffectedByIssuesForAutocomplete($query: String!, $count: Int!, $trackable: ID!, $sublistCount: Int) {\n        searchAffectedByIssues(query: $query, first: $count, filter: { relatedTo: $trackable }) {\n            ...DetailedAffectedByIssueInfo\n        }\n    }\n": typeof types.SearchAffectedByIssuesForAutocompleteDocument;
     "\n    query firstComponentVersionsForAutocomplete($component: ID!, $count: Int!) {\n        node(id: $component) {\n            ... on Component {\n                versions(first: $count) {\n                    nodes {\n                        ...DefaultComponentVersionInfo\n                    }\n                }\n            }\n        }\n    }\n": typeof types.FirstComponentVersionsForAutocompleteDocument;
+    "\n    query firstProjectAffectedEntities($project: ID!, $count: Int!) {\n        node(id: $project) {\n            ... on Project {\n                components(first: $count) {\n                    nodes {\n                        ...DefaultAffectedByIssueInfo\n                        component {\n                            ...DefaultAffectedByIssueInfo\n                        }\n                    }\n                }\n            }\n        }\n    }\n": typeof types.FirstProjectAffectedEntitiesDocument;
     "\n    query searchTrackablesForAutocomplete($query: String!, $count: Int!) {\n        searchTrackables(query: $query, first: $count) {\n            ...DefaultTrackableInfo\n        }\n    }\n": typeof types.SearchTrackablesForAutocompleteDocument;
     "\n    query firstTrackablesForAutocomplete($count: Int!) {\n        trackables(first: $count) {\n            nodes {\n                ...DefaultTrackableInfo\n            }\n        }\n    }\n": typeof types.FirstTrackablesForAutocompleteDocument;
     "\n    query searchAssignmentTypes($template: ID!, $query: String!, $count: Int!) {\n        searchAssignmentTypes(query: $query, first: $count, filter: { partOf: { any: { id: { eq: $template } } } }) {\n            ...DefaultAssignmentTypeInfo\n        }\n    }\n": typeof types.SearchAssignmentTypesDocument;
@@ -473,6 +474,8 @@ const documents: Documents = {
         types.SearchAffectedByIssuesForAutocompleteDocument,
     "\n    query firstComponentVersionsForAutocomplete($component: ID!, $count: Int!) {\n        node(id: $component) {\n            ... on Component {\n                versions(first: $count) {\n                    nodes {\n                        ...DefaultComponentVersionInfo\n                    }\n                }\n            }\n        }\n    }\n":
         types.FirstComponentVersionsForAutocompleteDocument,
+    "\n    query firstProjectAffectedEntities($project: ID!, $count: Int!) {\n        node(id: $project) {\n            ... on Project {\n                components(first: $count) {\n                    nodes {\n                        ...DefaultAffectedByIssueInfo\n                        component {\n                            ...DefaultAffectedByIssueInfo\n                        }\n                    }\n                }\n            }\n        }\n    }\n":
+        types.FirstProjectAffectedEntitiesDocument,
     "\n    query searchTrackablesForAutocomplete($query: String!, $count: Int!) {\n        searchTrackables(query: $query, first: $count) {\n            ...DefaultTrackableInfo\n        }\n    }\n":
         types.SearchTrackablesForAutocompleteDocument,
     "\n    query firstTrackablesForAutocomplete($count: Int!) {\n        trackables(first: $count) {\n            nodes {\n                ...DefaultTrackableInfo\n            }\n        }\n    }\n":
@@ -1402,6 +1405,12 @@ export function graphql(
 export function graphql(
     source: "\n    query firstComponentVersionsForAutocomplete($component: ID!, $count: Int!) {\n        node(id: $component) {\n            ... on Component {\n                versions(first: $count) {\n                    nodes {\n                        ...DefaultComponentVersionInfo\n                    }\n                }\n            }\n        }\n    }\n"
 ): (typeof documents)["\n    query firstComponentVersionsForAutocomplete($component: ID!, $count: Int!) {\n        node(id: $component) {\n            ... on Component {\n                versions(first: $count) {\n                    nodes {\n                        ...DefaultComponentVersionInfo\n                    }\n                }\n            }\n        }\n    }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+    source: "\n    query firstProjectAffectedEntities($project: ID!, $count: Int!) {\n        node(id: $project) {\n            ... on Project {\n                components(first: $count) {\n                    nodes {\n                        ...DefaultAffectedByIssueInfo\n                        component {\n                            ...DefaultAffectedByIssueInfo\n                        }\n                    }\n                }\n            }\n        }\n    }\n"
+): (typeof documents)["\n    query firstProjectAffectedEntities($project: ID!, $count: Int!) {\n        node(id: $project) {\n            ... on Project {\n                components(first: $count) {\n                    nodes {\n                        ...DefaultAffectedByIssueInfo\n                        component {\n                            ...DefaultAffectedByIssueInfo\n                        }\n                    }\n                }\n            }\n        }\n    }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

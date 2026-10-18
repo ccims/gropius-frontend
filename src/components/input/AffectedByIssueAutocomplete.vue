@@ -65,6 +65,23 @@ const firstComponentVersionsForAutocompleteQuery = graphql(`
     }
 `);
 
+const firstProjectAffectedEntitiesQuery = graphql(`
+    query firstProjectAffectedEntities($project: ID!, $count: Int!) {
+        node(id: $project) {
+            ... on Project {
+                components(first: $count) {
+                    nodes {
+                        ...DefaultAffectedByIssueInfo
+                        component {
+                            ...DefaultAffectedByIssueInfo
+                        }
+                    }
+                }
+            }
+        }
+    }
+`);
+
 const searchTrackablesForAutocompleteQuery = graphql(`
     query searchTrackablesForAutocomplete($query: String!, $count: Int!) {
         searchTrackables(query: $query, first: $count) {
@@ -116,6 +133,13 @@ async function searchAffected(
                 count: count - 1
             });
             return [context!, ...node.versions.nodes];
+        } else if (context!.__typename == "Project") {
+            const node = await queryNodeThrow(firstProjectAffectedEntitiesQuery, "Project", {
+                project: context!.id,
+                count: count - 1
+            });
+            const entities = [context!, ...node.components.nodes.flatMap((version) => [version.component, version])];
+            return [...new Map(entities.map((entity) => [entity.id, entity])).values()];
         } else {
             return [context!];
         }
