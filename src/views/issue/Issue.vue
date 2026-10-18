@@ -285,7 +285,7 @@
                             hide-details
                             menu-mode="initial"
                             :template="issue.template.id"
-                            :initial-items="[issue.priority]"
+                            :initial-items="issue.priority ? [issue.priority] : []"
                             :model-value="issue.priority?.id"
                             @update:model-value="updateIssuePriority"
                         />
