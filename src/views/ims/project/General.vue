@@ -18,7 +18,16 @@
                 <v-textarea v-model="modelValue.value" label="Description" :readonly="!hasPermission" />
             </InputWrapper>
         </DetailCompartment>
+        <IPraktikumSyncPanel
+            v-if="isIPraktikum"
+            :fields="imsProject.templatedFields"
+            :readonly="!hasPermission"
+            :save="save"
+            @refresh="refresh++"
+            class="mt-4"
+        />
         <TemplatedFieldsDetailCompartment
+            v-else
             :templated-node="imsProject"
             :readonly="!hasPermission"
             :save="save"
@@ -30,12 +39,13 @@
 import DetailCompartment from "@/components/DetailCompartment.vue";
 import InputWrapper from "@/components/input/InputWrapper.vue";
 import TemplatedFieldsDetailCompartment from "@/components/TemplatedFieldsDetailCompartment.vue";
+import IPraktikumSyncPanel from "@/components/IPraktikumSyncPanel.vue";
 import { queryNodeThrow, requestThrow } from "@/gql/client";
 import { graphql } from "@/gql";
 import type { UpdateImsProjectInput } from "@/gql/graphql";
 import { eventBusKey } from "@/util/keys";
 import { computedAsync } from "@vueuse/core";
-import { computed, inject } from "vue";
+import { computed, inject, ref } from "vue";
 import { useRoute } from "vue-router";
 import { withErrorMessage } from "@/util/withErrorMessage";
 
@@ -81,9 +91,11 @@ const updateIMSProjectMutation = graphql(`
 const route = useRoute();
 const eventBus = inject(eventBusKey);
 const imsProjectId = computed(() => route.params.project as string);
+const refresh = ref(0);
 
 const imsProject = computedAsync(
     async () => {
+        refresh.value;
         if (!imsProjectId.value) {
             return null;
         }
@@ -95,6 +107,10 @@ const imsProject = computedAsync(
     },
     null,
     { shallow: false }
+);
+
+const isIPraktikum = computed(() =>
+    imsProject.value?.template.templateFieldSpecifications.some((field) => field.name === "sync-profile")
 );
 
 const hasPermission = computed(() => {
