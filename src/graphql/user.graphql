@@ -3,6 +3,14 @@ fragment DefaultUserInfo on User {
     username
     displayName
     avatar
+    ... on IMSUser {
+        gropiusUser {
+            id
+            username
+            displayName
+            avatar
+        }
+    }
 }
 
 fragment CurrentUserInfo on User {
@@ -12,4 +20,3 @@ fragment CurrentUserInfo on User {
         isAdmin
     }
 }
-
