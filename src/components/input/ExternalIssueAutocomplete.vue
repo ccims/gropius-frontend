@@ -24,7 +24,7 @@
     </FetchingAutocomplete>
 </template>
 <script setup lang="ts">
-import { requestThrow, queryNodeThrow } from "@/gql/client";
+import { requestThrow } from "@/gql/client";
 import { graphql } from "@/gql";
 import type { DefaultIssueInfoFragment, DefaultTrackableInfoFragment } from "@/gql/graphql";
 import { withErrorMessage } from "@/util/withErrorMessage";
@@ -61,7 +61,7 @@ const searchIssuesQuery = graphql(`
 const firstIssuesQuery = graphql(`
     query firstIssuesForExternalAutocomplete($trackable: ID!, $count: Int!) {
         node(id: $trackable) {
-            ... on Component {
+            ... on Trackable {
                 issues(first: $count, orderBy: [{ field: LAST_UPDATED_AT, direction: DESC }]) {
                     nodes {
                         ...DefaultIssueInfo
@@ -105,8 +105,9 @@ async function searchIssues(
             const res = await requestThrow(searchIssuesQuery, { query, count, trackable: context!.id });
             return res.searchIssues;
         } else {
-            const component = await queryNodeThrow(firstIssuesQuery, "Component", { trackable: context!.id, count });
-            return component.issues.nodes;
+            const res = await requestThrow(firstIssuesQuery, { trackable: context!.id, count });
+            if (!res.node || !("issues" in res.node)) throw new Error("Issue context is not a component or project");
+            return res.node.issues.nodes;
         }
     }, "Error searching issues");
     const ignoredIds = new Set(props.ignore);

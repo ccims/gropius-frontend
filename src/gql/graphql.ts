@@ -8962,7 +8962,28 @@ export type FirstIssuesForExternalAutocompleteQuery = {
         | { __typename: "LegalInformation" }
         | { __typename: "OutgoingRelationTypeChangedEvent" }
         | { __typename: "PriorityChangedEvent" }
-        | { __typename: "Project" }
+        | {
+              __typename: "Project";
+              issues: {
+                  __typename: "IssueConnection";
+                  nodes: Array<{
+                      __typename: "Issue";
+                      id: string;
+                      title: string;
+                      trackables: {
+                          __typename: "TrackableConnection";
+                          nodes: Array<
+                              | { __typename: "Component"; id: string; name: string; description: string }
+                              | { __typename: "Project"; id: string; name: string; description: string }
+                          >;
+                      };
+                      incomingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
+                      outgoingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
+                      state: { __typename: "IssueState"; isOpen: boolean };
+                      type: { __typename: "IssueType"; iconPath: string };
+                  }>;
+              };
+          }
         | { __typename: "ProjectPermission" }
         | { __typename: "RelatedByIssueEvent" }
         | { __typename: "Relation" }
@@ -46610,7 +46631,7 @@ export const FirstIssuesForExternalAutocompleteDocument = {
                                 { kind: "Field", name: { kind: "Name", value: "__typename" } },
                                 {
                                     kind: "InlineFragment",
-                                    typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Component" } },
+                                    typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Trackable" } },
                                     selectionSet: {
                                         kind: "SelectionSet",
                                         selections: [
