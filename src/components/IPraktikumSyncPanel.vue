@@ -168,6 +168,7 @@ type Profile = {
     defaultTemplate: string | null;
     templates: Record<string, Policy>;
     excludedComponents: string[];
+    componentLabels: Record<string, string>;
     primary: Record<string, string | null>;
     resolutions: Record<string, { fingerprint: string; side: string }>;
     detached: string[];
@@ -178,7 +179,7 @@ type Profile = {
 const props = defineProps<{
     fields: { name: string; value?: unknown }[];
     readonly: boolean;
-    save: (input: { templatedFields: { name: string; value: any }[] }) => Promise<unknown>;
+    save: (input: { templatedFields: { name: string; value: unknown }[] }) => Promise<unknown>;
 }>();
 defineEmits<{ refresh: [] }>();
 const error = ref("");
@@ -192,6 +193,7 @@ const profile = ref<Profile>({
     defaultTemplate: null,
     templates: {},
     excludedComponents: [],
+    componentLabels: {},
     primary: {},
     resolutions: {},
     detached: [],
