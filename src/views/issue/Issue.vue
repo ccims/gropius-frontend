@@ -1,5 +1,12 @@
 <template>
     <IssueDialogs />
+    <!-- Selecting a teleported menu item can close the inline label editor. -->
+    <CreateLabelDialog
+        v-if="trackable"
+        :trackable="trackable.id"
+        :initial-name="initialLabelName"
+        @created-label="addLabel"
+    />
     <div v-if="issue" class="pl-3 pt-3 h-100 d-flex flex-column">
         <div class="mb-5">
             <div class="d-flex">
@@ -215,11 +222,6 @@
                             @selected-item="addLabel"
                             @create-new="createLabel"
                         />
-                        <CreateLabelDialog
-                            :trackable="trackable!.id"
-                            :initial-name="initialLabelName"
-                            @created-label="addLabel"
-                        />
                     </template>
                 </EditableCompartment>
                 <v-divider class="mx-2" />
@@ -283,7 +285,7 @@
                             hide-details
                             menu-mode="initial"
                             :template="issue.template.id"
-                            :initial-items="[issue.priority]"
+                            :initial-items="issue.priority ? [issue.priority] : []"
                             :model-value="issue.priority?.id"
                             @update:model-value="updateIssuePriority"
                         />

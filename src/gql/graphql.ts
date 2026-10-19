@@ -5555,6 +5555,13 @@ export type GetIssueListForProjectSidebarQuery = {
                                 username: string | null;
                                 displayName: string;
                                 avatar: any;
+                                gropiusUser: {
+                                    __typename: "GropiusUser";
+                                    id: string;
+                                    username: string;
+                                    displayName: string;
+                                    avatar: any;
+                                } | null;
                             };
                       state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
                       issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
@@ -5593,6 +5600,13 @@ export type GetIssueListForProjectSidebarQuery = {
                                         username: string | null;
                                         displayName: string;
                                         avatar: any;
+                                        gropiusUser: {
+                                            __typename: "GropiusUser";
+                                            id: string;
+                                            username: string;
+                                            displayName: string;
+                                            avatar: any;
+                                        } | null;
                                     };
                           }>;
                       };
@@ -5691,6 +5705,13 @@ export type GetIssueListForProjectSidebarQuery = {
                                 username: string | null;
                                 displayName: string;
                                 avatar: any;
+                                gropiusUser: {
+                                    __typename: "GropiusUser";
+                                    id: string;
+                                    username: string;
+                                    displayName: string;
+                                    avatar: any;
+                                } | null;
                             };
                       state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
                       issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
@@ -5729,6 +5750,13 @@ export type GetIssueListForProjectSidebarQuery = {
                                         username: string | null;
                                         displayName: string;
                                         avatar: any;
+                                        gropiusUser: {
+                                            __typename: "GropiusUser";
+                                            id: string;
+                                            username: string;
+                                            displayName: string;
+                                            avatar: any;
+                                        } | null;
                                     };
                           }>;
                       };
@@ -5825,6 +5853,13 @@ export type GetIssueListOnAggregatedIssueQuery = {
                                 username: string | null;
                                 displayName: string;
                                 avatar: any;
+                                gropiusUser: {
+                                    __typename: "GropiusUser";
+                                    id: string;
+                                    username: string;
+                                    displayName: string;
+                                    avatar: any;
+                                } | null;
                             };
                       state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
                       issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
@@ -5863,6 +5898,13 @@ export type GetIssueListOnAggregatedIssueQuery = {
                                         username: string | null;
                                         displayName: string;
                                         avatar: any;
+                                        gropiusUser: {
+                                            __typename: "GropiusUser";
+                                            id: string;
+                                            username: string;
+                                            displayName: string;
+                                            avatar: any;
+                                        } | null;
                                     };
                           }>;
                       };
@@ -5987,7 +6029,20 @@ export type GetFilteredIssueListForProjectSidebarQuery = {
         createdAt: any;
         createdBy:
             | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-            | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+            | {
+                  __typename: "IMSUser";
+                  id: string;
+                  username: string | null;
+                  displayName: string;
+                  avatar: any;
+                  gropiusUser: {
+                      __typename: "GropiusUser";
+                      id: string;
+                      username: string;
+                      displayName: string;
+                      avatar: any;
+                  } | null;
+              };
         state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
         issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
         labels: {
@@ -6013,7 +6068,20 @@ export type GetFilteredIssueListForProjectSidebarQuery = {
                 __typename: "Assignment";
                 user:
                     | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                    | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                    | {
+                          __typename: "IMSUser";
+                          id: string;
+                          username: string | null;
+                          displayName: string;
+                          avatar: any;
+                          gropiusUser: {
+                              __typename: "GropiusUser";
+                              id: string;
+                              username: string;
+                              displayName: string;
+                              avatar: any;
+                          } | null;
+                      };
             }>;
         };
         priority: {
@@ -6296,7 +6364,20 @@ export type SearchIssuesForBoardQuery = {
                 __typename: "Assignment";
                 user:
                     | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                    | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                    | {
+                          __typename: "IMSUser";
+                          id: string;
+                          username: string | null;
+                          displayName: string;
+                          avatar: any;
+                          gropiusUser: {
+                              __typename: "GropiusUser";
+                              id: string;
+                              username: string;
+                              displayName: string;
+                              avatar: any;
+                          } | null;
+                      };
             }>;
         };
         issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
@@ -6372,6 +6453,13 @@ export type FirstIssuesForBoardQuery = {
                                         username: string | null;
                                         displayName: string;
                                         avatar: any;
+                                        gropiusUser: {
+                                            __typename: "GropiusUser";
+                                            id: string;
+                                            username: string;
+                                            displayName: string;
+                                            avatar: any;
+                                        } | null;
                                     };
                           }>;
                       };
@@ -6471,6 +6559,13 @@ export type FirstIssuesForBoardQuery = {
                                         username: string | null;
                                         displayName: string;
                                         avatar: any;
+                                        gropiusUser: {
+                                            __typename: "GropiusUser";
+                                            id: string;
+                                            username: string;
+                                            displayName: string;
+                                            avatar: any;
+                                        } | null;
                                     };
                           }>;
                       };
@@ -8232,6 +8327,110 @@ export type FirstComponentVersionsForAutocompleteQuery = {
         | null;
 };
 
+export type FirstProjectAffectedEntitiesQueryVariables = Exact<{
+    project: string;
+    count: number;
+}>;
+
+export type FirstProjectAffectedEntitiesQuery = {
+    __typename: "Query";
+    node:
+        | { __typename: "AddedAffectedEntityEvent" }
+        | { __typename: "AddedArtefactEvent" }
+        | { __typename: "AddedLabelEvent" }
+        | { __typename: "AddedToPinnedIssuesEvent" }
+        | { __typename: "AddedToTrackableEvent" }
+        | { __typename: "AggregatedIssue" }
+        | { __typename: "AggregatedIssueRelation" }
+        | { __typename: "Artefact" }
+        | { __typename: "ArtefactTemplate" }
+        | { __typename: "Assignment" }
+        | { __typename: "AssignmentType" }
+        | { __typename: "AssignmentTypeChangedEvent" }
+        | { __typename: "Body" }
+        | { __typename: "Component" }
+        | { __typename: "ComponentPermission" }
+        | { __typename: "ComponentTemplate" }
+        | { __typename: "ComponentVersion" }
+        | { __typename: "ComponentVersionTemplate" }
+        | { __typename: "FillStyle" }
+        | { __typename: "GlobalPermission" }
+        | { __typename: "GropiusUser" }
+        | { __typename: "IMS" }
+        | { __typename: "IMSIssue" }
+        | { __typename: "IMSIssueTemplate" }
+        | { __typename: "IMSPermission" }
+        | { __typename: "IMSProject" }
+        | { __typename: "IMSProjectTemplate" }
+        | { __typename: "IMSTemplate" }
+        | { __typename: "IMSUser" }
+        | { __typename: "IMSUserTemplate" }
+        | { __typename: "IncomingRelationTypeChangedEvent" }
+        | { __typename: "Interface" }
+        | { __typename: "InterfaceDefinition" }
+        | { __typename: "InterfacePart" }
+        | { __typename: "InterfacePartTemplate" }
+        | { __typename: "InterfaceSpecification" }
+        | { __typename: "InterfaceSpecificationDerivationCondition" }
+        | { __typename: "InterfaceSpecificationTemplate" }
+        | { __typename: "InterfaceSpecificationVersion" }
+        | { __typename: "InterfaceSpecificationVersionTemplate" }
+        | { __typename: "IntraComponentDependencyParticipant" }
+        | { __typename: "IntraComponentDependencySpecification" }
+        | { __typename: "IntraComponentDependencySpecificationType" }
+        | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
+        | { __typename: "IssueComment" }
+        | { __typename: "IssuePriority" }
+        | { __typename: "IssueRelation" }
+        | { __typename: "IssueRelationType" }
+        | { __typename: "IssueState" }
+        | { __typename: "IssueTemplate" }
+        | { __typename: "IssueType" }
+        | { __typename: "Label" }
+        | { __typename: "LegalInformation" }
+        | { __typename: "OutgoingRelationTypeChangedEvent" }
+        | { __typename: "PriorityChangedEvent" }
+        | {
+              __typename: "Project";
+              components: {
+                  __typename: "ComponentVersionConnection";
+                  nodes: Array<{
+                      __typename: "ComponentVersion";
+                      version: string;
+                      id: string;
+                      component: { __typename: "Component"; name: string; description: string; id: string };
+                  }>;
+              };
+          }
+        | { __typename: "ProjectPermission" }
+        | { __typename: "RelatedByIssueEvent" }
+        | { __typename: "Relation" }
+        | { __typename: "RelationCondition" }
+        | { __typename: "RelationLayout" }
+        | { __typename: "RelationPartnerLayout" }
+        | { __typename: "RelationTemplate" }
+        | { __typename: "RemovedAffectedEntityEvent" }
+        | { __typename: "RemovedArtefactEvent" }
+        | { __typename: "RemovedAssignmentEvent" }
+        | { __typename: "RemovedFromPinnedIssuesEvent" }
+        | { __typename: "RemovedFromTrackableEvent" }
+        | { __typename: "RemovedIncomingRelationEvent" }
+        | { __typename: "RemovedLabelEvent" }
+        | { __typename: "RemovedOutgoingRelationEvent" }
+        | { __typename: "RemovedTemplatedFieldEvent" }
+        | { __typename: "StateChangedEvent" }
+        | { __typename: "StrokeStyle" }
+        | { __typename: "TemplateChangedEvent" }
+        | { __typename: "TemplatedFieldChangedEvent" }
+        | { __typename: "TitleChangedEvent" }
+        | { __typename: "TypeChangedEvent" }
+        | { __typename: "View" }
+        | null;
+};
+
 export type SearchTrackablesForAutocompleteQueryVariables = Exact<{
     query: string;
     count: number;
@@ -8962,7 +9161,28 @@ export type FirstIssuesForExternalAutocompleteQuery = {
         | { __typename: "LegalInformation" }
         | { __typename: "OutgoingRelationTypeChangedEvent" }
         | { __typename: "PriorityChangedEvent" }
-        | { __typename: "Project" }
+        | {
+              __typename: "Project";
+              issues: {
+                  __typename: "IssueConnection";
+                  nodes: Array<{
+                      __typename: "Issue";
+                      id: string;
+                      title: string;
+                      trackables: {
+                          __typename: "TrackableConnection";
+                          nodes: Array<
+                              | { __typename: "Component"; id: string; name: string; description: string }
+                              | { __typename: "Project"; id: string; name: string; description: string }
+                          >;
+                      };
+                      incomingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
+                      outgoingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
+                      state: { __typename: "IssueState"; isOpen: boolean };
+                      type: { __typename: "IssueType"; iconPath: string };
+                  }>;
+              };
+          }
         | { __typename: "ProjectPermission" }
         | { __typename: "RelatedByIssueEvent" }
         | { __typename: "Relation" }
@@ -10520,7 +10740,20 @@ export type GetAssignedUsersQuery = {
                   __typename: "UserConnection";
                   nodes: Array<
                       | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                      | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any }
+                      | {
+                            __typename: "IMSUser";
+                            id: string;
+                            username: string | null;
+                            displayName: string;
+                            avatar: any;
+                            gropiusUser: {
+                                __typename: "GropiusUser";
+                                id: string;
+                                username: string;
+                                displayName: string;
+                                avatar: any;
+                            } | null;
+                        }
                   >;
               };
           }
@@ -10574,7 +10807,20 @@ export type GetAssignedUsersQuery = {
                   __typename: "UserConnection";
                   nodes: Array<
                       | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                      | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any }
+                      | {
+                            __typename: "IMSUser";
+                            id: string;
+                            username: string | null;
+                            displayName: string;
+                            avatar: any;
+                            gropiusUser: {
+                                __typename: "GropiusUser";
+                                id: string;
+                                username: string;
+                                displayName: string;
+                                avatar: any;
+                            } | null;
+                        }
                   >;
               };
           }
@@ -12122,7 +12368,20 @@ export type UpdateBodyForTimelineMutation = {
             bodyLastEditedAt: any;
             bodyLastEditedBy:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
         };
     };
 };
@@ -12143,7 +12402,20 @@ export type UpdateIssueCommentForTimelineMutation = {
             bodyLastEditedAt: any;
             bodyLastEditedBy:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
         };
     };
 };
@@ -12168,10 +12440,36 @@ export type CreateIssueCommentForTimelineMutation = {
             answers: { __typename: "Body"; id: string } | { __typename: "IssueComment"; id: string } | null;
             createdBy:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
             bodyLastEditedBy:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
         };
     };
 };
@@ -12194,10 +12492,36 @@ export type DeleteIssueCommentForTimelineMutation = {
             answers: { __typename: "Body"; id: string } | { __typename: "IssueComment"; id: string } | null;
             createdBy:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
             bodyLastEditedBy:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
         };
     };
 };
@@ -12361,7 +12685,20 @@ export type DefaultAssignmentInfoFragment = {
     id: string;
     user:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
     type: { __typename: "AssignmentType"; id: string; name: string; description: string } | null;
 };
 
@@ -12996,7 +13333,20 @@ export type IssueListItemInfoFragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
     state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
     issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
     labels: {
@@ -13022,7 +13372,20 @@ export type IssueListItemInfoFragment = {
             __typename: "Assignment";
             user:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
         }>;
     };
     priority: {
@@ -13066,7 +13429,20 @@ export type ParticipatingIssueListItemInfoFragment = {
     };
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
     state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
     issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
     labels: {
@@ -13092,7 +13468,20 @@ export type ParticipatingIssueListItemInfoFragment = {
             __typename: "Assignment";
             user:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
         }>;
     };
     priority: {
@@ -13136,7 +13525,20 @@ export type ProjectComponentIssueListItemInfoFragment = {
     };
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
     state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
     issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
     labels: {
@@ -13162,7 +13564,20 @@ export type ProjectComponentIssueListItemInfoFragment = {
             __typename: "Assignment";
             user:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
         }>;
     };
     priority: {
@@ -13243,7 +13658,20 @@ export type IssueBoardCardInfoFragment = {
             __typename: "Assignment";
             user:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
         }>;
     };
     issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
@@ -13279,7 +13707,20 @@ export type IssueBoardItemInfoFragment = {
                 __typename: "Assignment";
                 user:
                     | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                    | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                    | {
+                          __typename: "IMSUser";
+                          id: string;
+                          username: string | null;
+                          displayName: string;
+                          avatar: any;
+                          gropiusUser: {
+                              __typename: "GropiusUser";
+                              id: string;
+                              username: string;
+                              displayName: string;
+                              avatar: any;
+                          } | null;
+                      };
             }>;
         };
         issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
@@ -13636,7 +14077,20 @@ type DefaultTimelineItemInfo_AddedAffectedEntityEvent_Fragment = {
         | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type DefaultTimelineItemInfo_AddedArtefactEvent_Fragment = {
@@ -13646,7 +14100,20 @@ type DefaultTimelineItemInfo_AddedArtefactEvent_Fragment = {
     addedArtefact: { __typename: "Artefact"; file: any; id: string } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type DefaultTimelineItemInfo_AddedLabelEvent_Fragment = {
@@ -13656,7 +14123,20 @@ type DefaultTimelineItemInfo_AddedLabelEvent_Fragment = {
     addedLabel: { __typename: "Label"; id: string; name: string; description: string; color: any } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type DefaultTimelineItemInfo_AddedToPinnedIssuesEvent_Fragment = {
@@ -13669,7 +14149,20 @@ type DefaultTimelineItemInfo_AddedToPinnedIssuesEvent_Fragment = {
         | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type DefaultTimelineItemInfo_AddedToTrackableEvent_Fragment = {
@@ -13682,7 +14175,20 @@ type DefaultTimelineItemInfo_AddedToTrackableEvent_Fragment = {
         | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type DefaultTimelineItemInfo_Assignment_Fragment = {
@@ -13692,10 +14198,36 @@ type DefaultTimelineItemInfo_Assignment_Fragment = {
     initialType: { __typename: "AssignmentType"; id: string; name: string; description: string } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
     user:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
     type: { __typename: "AssignmentType"; id: string; name: string; description: string } | null;
 };
 
@@ -13710,17 +14242,56 @@ type DefaultTimelineItemInfo_AssignmentTypeChangedEvent_Fragment = {
         initialType: { __typename: "AssignmentType"; id: string; name: string; description: string } | null;
         createdBy:
             | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-            | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+            | {
+                  __typename: "IMSUser";
+                  id: string;
+                  username: string | null;
+                  displayName: string;
+                  avatar: any;
+                  gropiusUser: {
+                      __typename: "GropiusUser";
+                      id: string;
+                      username: string;
+                      displayName: string;
+                      avatar: any;
+                  } | null;
+              };
         user:
             | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-            | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+            | {
+                  __typename: "IMSUser";
+                  id: string;
+                  username: string | null;
+                  displayName: string;
+                  avatar: any;
+                  gropiusUser: {
+                      __typename: "GropiusUser";
+                      id: string;
+                      username: string;
+                      displayName: string;
+                      avatar: any;
+                  } | null;
+              };
         type: { __typename: "AssignmentType"; id: string; name: string; description: string } | null;
     };
     newAssignmentType: { __typename: "AssignmentType"; id: string; name: string; description: string } | null;
     oldAssignmentType: { __typename: "AssignmentType"; id: string; name: string; description: string } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type DefaultTimelineItemInfo_Body_Fragment = {
@@ -13731,10 +14302,36 @@ type DefaultTimelineItemInfo_Body_Fragment = {
     bodyLastEditedAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
     bodyLastEditedBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type DefaultTimelineItemInfo_IncomingRelationTypeChangedEvent_Fragment = {
@@ -13791,7 +14388,20 @@ type DefaultTimelineItemInfo_IncomingRelationTypeChangedEvent_Fragment = {
     } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type DefaultTimelineItemInfo_IssueComment_Fragment = {
@@ -13804,10 +14414,36 @@ type DefaultTimelineItemInfo_IssueComment_Fragment = {
     answers: { __typename: "Body"; id: string } | { __typename: "IssueComment"; id: string } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
     bodyLastEditedBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type DefaultTimelineItemInfo_IssueRelation_Fragment = {
@@ -13816,7 +14452,20 @@ type DefaultTimelineItemInfo_IssueRelation_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
     relatedIssue: {
         __typename: "Issue";
         id: string;
@@ -13903,7 +14552,20 @@ type DefaultTimelineItemInfo_OutgoingRelationTypeChangedEvent_Fragment = {
     } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type DefaultTimelineItemInfo_PriorityChangedEvent_Fragment = {
@@ -13928,7 +14590,20 @@ type DefaultTimelineItemInfo_PriorityChangedEvent_Fragment = {
     } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type DefaultTimelineItemInfo_RelatedByIssueEvent_Fragment = {
@@ -13971,7 +14646,20 @@ type DefaultTimelineItemInfo_RelatedByIssueEvent_Fragment = {
     } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type DefaultTimelineItemInfo_RemovedAffectedEntityEvent_Fragment = {
@@ -14014,7 +14702,20 @@ type DefaultTimelineItemInfo_RemovedAffectedEntityEvent_Fragment = {
         | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type DefaultTimelineItemInfo_RemovedArtefactEvent_Fragment = {
@@ -14024,7 +14725,20 @@ type DefaultTimelineItemInfo_RemovedArtefactEvent_Fragment = {
     removedArtefact: { __typename: "Artefact"; file: any; id: string } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type DefaultTimelineItemInfo_RemovedAssignmentEvent_Fragment = {
@@ -14038,15 +14752,54 @@ type DefaultTimelineItemInfo_RemovedAssignmentEvent_Fragment = {
         initialType: { __typename: "AssignmentType"; id: string; name: string; description: string } | null;
         createdBy:
             | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-            | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+            | {
+                  __typename: "IMSUser";
+                  id: string;
+                  username: string | null;
+                  displayName: string;
+                  avatar: any;
+                  gropiusUser: {
+                      __typename: "GropiusUser";
+                      id: string;
+                      username: string;
+                      displayName: string;
+                      avatar: any;
+                  } | null;
+              };
         user:
             | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-            | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+            | {
+                  __typename: "IMSUser";
+                  id: string;
+                  username: string | null;
+                  displayName: string;
+                  avatar: any;
+                  gropiusUser: {
+                      __typename: "GropiusUser";
+                      id: string;
+                      username: string;
+                      displayName: string;
+                      avatar: any;
+                  } | null;
+              };
         type: { __typename: "AssignmentType"; id: string; name: string; description: string } | null;
     };
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type DefaultTimelineItemInfo_RemovedFromPinnedIssuesEvent_Fragment = {
@@ -14059,7 +14812,20 @@ type DefaultTimelineItemInfo_RemovedFromPinnedIssuesEvent_Fragment = {
         | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type DefaultTimelineItemInfo_RemovedFromTrackableEvent_Fragment = {
@@ -14072,7 +14838,20 @@ type DefaultTimelineItemInfo_RemovedFromTrackableEvent_Fragment = {
         | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type DefaultTimelineItemInfo_RemovedIncomingRelationEvent_Fragment = {
@@ -14115,7 +14894,20 @@ type DefaultTimelineItemInfo_RemovedIncomingRelationEvent_Fragment = {
     } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type DefaultTimelineItemInfo_RemovedLabelEvent_Fragment = {
@@ -14125,7 +14917,20 @@ type DefaultTimelineItemInfo_RemovedLabelEvent_Fragment = {
     removedLabel: { __typename: "Label"; id: string; name: string; description: string; color: any } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type DefaultTimelineItemInfo_RemovedOutgoingRelationEvent_Fragment = {
@@ -14168,7 +14973,20 @@ type DefaultTimelineItemInfo_RemovedOutgoingRelationEvent_Fragment = {
     } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type DefaultTimelineItemInfo_RemovedTemplatedFieldEvent_Fragment = {
@@ -14178,7 +14996,20 @@ type DefaultTimelineItemInfo_RemovedTemplatedFieldEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type DefaultTimelineItemInfo_StateChangedEvent_Fragment = {
@@ -14189,7 +15020,20 @@ type DefaultTimelineItemInfo_StateChangedEvent_Fragment = {
     newState: { __typename: "IssueState"; id: string; name: string; description: string; isOpen: boolean };
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type DefaultTimelineItemInfo_TemplateChangedEvent_Fragment = {
@@ -14200,7 +15044,20 @@ type DefaultTimelineItemInfo_TemplateChangedEvent_Fragment = {
     newTemplate: { __typename: "IssueTemplate"; name: string; description: string };
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type DefaultTimelineItemInfo_TemplatedFieldChangedEvent_Fragment = {
@@ -14212,7 +15069,20 @@ type DefaultTimelineItemInfo_TemplatedFieldChangedEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type DefaultTimelineItemInfo_TitleChangedEvent_Fragment = {
@@ -14223,7 +15093,20 @@ type DefaultTimelineItemInfo_TitleChangedEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type DefaultTimelineItemInfo_TypeChangedEvent_Fragment = {
@@ -14234,7 +15117,20 @@ type DefaultTimelineItemInfo_TypeChangedEvent_Fragment = {
     oldIssueType: { __typename: "IssueType"; id: string; name: string; description: string; iconPath: string };
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type DefaultTimelineItemInfoFragment =
@@ -14273,7 +15169,20 @@ type TimelineItemInfo_AddedAffectedEntityEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_AddedArtefactEvent_Fragment = {
@@ -14282,7 +15191,20 @@ type TimelineItemInfo_AddedArtefactEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_AddedLabelEvent_Fragment = {
@@ -14291,7 +15213,20 @@ type TimelineItemInfo_AddedLabelEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_AddedToPinnedIssuesEvent_Fragment = {
@@ -14300,7 +15235,20 @@ type TimelineItemInfo_AddedToPinnedIssuesEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_AddedToTrackableEvent_Fragment = {
@@ -14309,7 +15257,20 @@ type TimelineItemInfo_AddedToTrackableEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_Assignment_Fragment = {
@@ -14318,7 +15279,20 @@ type TimelineItemInfo_Assignment_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_AssignmentTypeChangedEvent_Fragment = {
@@ -14327,7 +15301,20 @@ type TimelineItemInfo_AssignmentTypeChangedEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_Body_Fragment = {
@@ -14336,7 +15323,20 @@ type TimelineItemInfo_Body_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_IncomingRelationTypeChangedEvent_Fragment = {
@@ -14345,7 +15345,20 @@ type TimelineItemInfo_IncomingRelationTypeChangedEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_IssueComment_Fragment = {
@@ -14354,7 +15367,20 @@ type TimelineItemInfo_IssueComment_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_IssueRelation_Fragment = {
@@ -14363,7 +15389,20 @@ type TimelineItemInfo_IssueRelation_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_OutgoingRelationTypeChangedEvent_Fragment = {
@@ -14372,7 +15411,20 @@ type TimelineItemInfo_OutgoingRelationTypeChangedEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_PriorityChangedEvent_Fragment = {
@@ -14381,7 +15433,20 @@ type TimelineItemInfo_PriorityChangedEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_RelatedByIssueEvent_Fragment = {
@@ -14390,7 +15455,20 @@ type TimelineItemInfo_RelatedByIssueEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_RemovedAffectedEntityEvent_Fragment = {
@@ -14399,7 +15477,20 @@ type TimelineItemInfo_RemovedAffectedEntityEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_RemovedArtefactEvent_Fragment = {
@@ -14408,7 +15499,20 @@ type TimelineItemInfo_RemovedArtefactEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_RemovedAssignmentEvent_Fragment = {
@@ -14417,7 +15521,20 @@ type TimelineItemInfo_RemovedAssignmentEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_RemovedFromPinnedIssuesEvent_Fragment = {
@@ -14426,7 +15543,20 @@ type TimelineItemInfo_RemovedFromPinnedIssuesEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_RemovedFromTrackableEvent_Fragment = {
@@ -14435,7 +15565,20 @@ type TimelineItemInfo_RemovedFromTrackableEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_RemovedIncomingRelationEvent_Fragment = {
@@ -14444,7 +15587,20 @@ type TimelineItemInfo_RemovedIncomingRelationEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_RemovedLabelEvent_Fragment = {
@@ -14453,7 +15609,20 @@ type TimelineItemInfo_RemovedLabelEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_RemovedOutgoingRelationEvent_Fragment = {
@@ -14462,7 +15631,20 @@ type TimelineItemInfo_RemovedOutgoingRelationEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_RemovedTemplatedFieldEvent_Fragment = {
@@ -14471,7 +15653,20 @@ type TimelineItemInfo_RemovedTemplatedFieldEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_StateChangedEvent_Fragment = {
@@ -14480,7 +15675,20 @@ type TimelineItemInfo_StateChangedEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_TemplateChangedEvent_Fragment = {
@@ -14489,7 +15697,20 @@ type TimelineItemInfo_TemplateChangedEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_TemplatedFieldChangedEvent_Fragment = {
@@ -14498,7 +15719,20 @@ type TimelineItemInfo_TemplatedFieldChangedEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_TitleChangedEvent_Fragment = {
@@ -14507,7 +15741,20 @@ type TimelineItemInfo_TitleChangedEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type TimelineItemInfo_TypeChangedEvent_Fragment = {
@@ -14516,7 +15763,20 @@ type TimelineItemInfo_TypeChangedEvent_Fragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type TimelineItemInfoFragment =
@@ -14589,7 +15849,20 @@ export type AddedAffectedEntityEventTimelineInfoFragment = {
         | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type AddedArtefactEventTimelineInfoFragment = {
@@ -14599,7 +15872,20 @@ export type AddedArtefactEventTimelineInfoFragment = {
     addedArtefact: { __typename: "Artefact"; file: any; id: string } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type AddedLabelEventTimelineInfoFragment = {
@@ -14609,7 +15895,20 @@ export type AddedLabelEventTimelineInfoFragment = {
     addedLabel: { __typename: "Label"; id: string; name: string; description: string; color: any } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type AddedToPinnedIssuesEventTimelineInfoFragment = {
@@ -14622,7 +15921,20 @@ export type AddedToPinnedIssuesEventTimelineInfoFragment = {
         | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type AddedToTrackableEventTimelineInfoFragment = {
@@ -14635,7 +15947,20 @@ export type AddedToTrackableEventTimelineInfoFragment = {
         | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type AssignmentTimelineInfoFragment = {
@@ -14645,10 +15970,36 @@ export type AssignmentTimelineInfoFragment = {
     initialType: { __typename: "AssignmentType"; id: string; name: string; description: string } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
     user:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
     type: { __typename: "AssignmentType"; id: string; name: string; description: string } | null;
 };
 
@@ -14663,17 +16014,56 @@ export type AssignmentTypeChangedEventTimelineInfoFragment = {
         initialType: { __typename: "AssignmentType"; id: string; name: string; description: string } | null;
         createdBy:
             | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-            | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+            | {
+                  __typename: "IMSUser";
+                  id: string;
+                  username: string | null;
+                  displayName: string;
+                  avatar: any;
+                  gropiusUser: {
+                      __typename: "GropiusUser";
+                      id: string;
+                      username: string;
+                      displayName: string;
+                      avatar: any;
+                  } | null;
+              };
         user:
             | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-            | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+            | {
+                  __typename: "IMSUser";
+                  id: string;
+                  username: string | null;
+                  displayName: string;
+                  avatar: any;
+                  gropiusUser: {
+                      __typename: "GropiusUser";
+                      id: string;
+                      username: string;
+                      displayName: string;
+                      avatar: any;
+                  } | null;
+              };
         type: { __typename: "AssignmentType"; id: string; name: string; description: string } | null;
     };
     newAssignmentType: { __typename: "AssignmentType"; id: string; name: string; description: string } | null;
     oldAssignmentType: { __typename: "AssignmentType"; id: string; name: string; description: string } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type BodyTimelineInfoFragment = {
@@ -14684,10 +16074,36 @@ export type BodyTimelineInfoFragment = {
     bodyLastEditedAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
     bodyLastEditedBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type IncomingRelationTypeChangedEventTimelineInfoFragment = {
@@ -14744,7 +16160,20 @@ export type IncomingRelationTypeChangedEventTimelineInfoFragment = {
     } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type IssueCommentTimelineInfoFragment = {
@@ -14757,10 +16186,36 @@ export type IssueCommentTimelineInfoFragment = {
     answers: { __typename: "Body"; id: string } | { __typename: "IssueComment"; id: string } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
     bodyLastEditedBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type IssueRelationTimelineInfoFragment = {
@@ -14769,7 +16224,20 @@ export type IssueRelationTimelineInfoFragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
     relatedIssue: {
         __typename: "Issue";
         id: string;
@@ -14856,7 +16324,20 @@ export type OutgoingRelationTypeChangedEventTimelineInfoFragment = {
     } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type PriorityChangedEventTimelineInfoFragment = {
@@ -14881,7 +16362,20 @@ export type PriorityChangedEventTimelineInfoFragment = {
     } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type RelatedByIssueEventTimelineInfoFragment = {
@@ -14924,7 +16418,20 @@ export type RelatedByIssueEventTimelineInfoFragment = {
     } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type RelationTypeChangedEventTimelineInfo_IncomingRelationTypeChangedEvent_Fragment = {
@@ -14947,7 +16454,20 @@ type RelationTypeChangedEventTimelineInfo_IncomingRelationTypeChangedEvent_Fragm
     } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type RelationTypeChangedEventTimelineInfo_OutgoingRelationTypeChangedEvent_Fragment = {
@@ -14970,7 +16490,20 @@ type RelationTypeChangedEventTimelineInfo_OutgoingRelationTypeChangedEvent_Fragm
     } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type RelationTypeChangedEventTimelineInfoFragment =
@@ -15017,7 +16550,20 @@ export type RemovedAffectedEntityEventTimelineInfoFragment = {
         | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type RemovedArtefactEventTimelineInfoFragment = {
@@ -15027,7 +16573,20 @@ export type RemovedArtefactEventTimelineInfoFragment = {
     removedArtefact: { __typename: "Artefact"; file: any; id: string } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type RemovedAssignmentEventTimelineInfoFragment = {
@@ -15041,15 +16600,54 @@ export type RemovedAssignmentEventTimelineInfoFragment = {
         initialType: { __typename: "AssignmentType"; id: string; name: string; description: string } | null;
         createdBy:
             | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-            | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+            | {
+                  __typename: "IMSUser";
+                  id: string;
+                  username: string | null;
+                  displayName: string;
+                  avatar: any;
+                  gropiusUser: {
+                      __typename: "GropiusUser";
+                      id: string;
+                      username: string;
+                      displayName: string;
+                      avatar: any;
+                  } | null;
+              };
         user:
             | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-            | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+            | {
+                  __typename: "IMSUser";
+                  id: string;
+                  username: string | null;
+                  displayName: string;
+                  avatar: any;
+                  gropiusUser: {
+                      __typename: "GropiusUser";
+                      id: string;
+                      username: string;
+                      displayName: string;
+                      avatar: any;
+                  } | null;
+              };
         type: { __typename: "AssignmentType"; id: string; name: string; description: string } | null;
     };
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type RemovedFromPinnedIssuesEventTimelineInfoFragment = {
@@ -15062,7 +16660,20 @@ export type RemovedFromPinnedIssuesEventTimelineInfoFragment = {
         | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type RemovedFromTrackableEventTimelineInfoFragment = {
@@ -15075,7 +16686,20 @@ export type RemovedFromTrackableEventTimelineInfoFragment = {
         | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type RemovedIncomingRelationEventTimelineInfoFragment = {
@@ -15118,7 +16742,20 @@ export type RemovedIncomingRelationEventTimelineInfoFragment = {
     } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type RemovedLabelEventTimelineInfoFragment = {
@@ -15128,7 +16765,20 @@ export type RemovedLabelEventTimelineInfoFragment = {
     removedLabel: { __typename: "Label"; id: string; name: string; description: string; color: any } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type RemovedOutgoingRelationEventTimelineInfoFragment = {
@@ -15171,7 +16821,20 @@ export type RemovedOutgoingRelationEventTimelineInfoFragment = {
     } | null;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type RemovedTemplatedFieldEventTimelineInfoFragment = {
@@ -15181,7 +16844,20 @@ export type RemovedTemplatedFieldEventTimelineInfoFragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type StateChangedEventTimelineInfoFragment = {
@@ -15192,7 +16868,20 @@ export type StateChangedEventTimelineInfoFragment = {
     newState: { __typename: "IssueState"; id: string; name: string; description: string; isOpen: boolean };
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type TemplateChangedEventTimelineInfoFragment = {
@@ -15203,7 +16892,20 @@ export type TemplateChangedEventTimelineInfoFragment = {
     newTemplate: { __typename: "IssueTemplate"; name: string; description: string };
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type TemplatedFieldChangedEventTimelineInfoFragment = {
@@ -15215,7 +16917,20 @@ export type TemplatedFieldChangedEventTimelineInfoFragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type TitleChangedEventTimelineInfoFragment = {
@@ -15226,7 +16941,20 @@ export type TitleChangedEventTimelineInfoFragment = {
     createdAt: any;
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type TypeChangedEventTimelineInfoFragment = {
@@ -15237,7 +16965,20 @@ export type TypeChangedEventTimelineInfoFragment = {
     oldIssueType: { __typename: "IssueType"; id: string; name: string; description: string; iconPath: string };
     createdBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type IssueTypeTimelineInfoFragment = {
@@ -15328,6 +17069,7 @@ type UserTimelineInfo_ImsUser_Fragment = {
     username: string | null;
     displayName: string;
     avatar: any;
+    gropiusUser: { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any } | null;
 };
 
 export type UserTimelineInfoFragment = UserTimelineInfo_GropiusUser_Fragment | UserTimelineInfo_ImsUser_Fragment;
@@ -15365,7 +17107,20 @@ type CommentTimelineInfo_Body_Fragment = {
     bodyLastEditedAt: any;
     bodyLastEditedBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 type CommentTimelineInfo_IssueComment_Fragment = {
@@ -15374,7 +17129,20 @@ type CommentTimelineInfo_IssueComment_Fragment = {
     bodyLastEditedAt: any;
     bodyLastEditedBy:
         | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          };
 };
 
 export type CommentTimelineInfoFragment = CommentTimelineInfo_Body_Fragment | CommentTimelineInfo_IssueComment_Fragment;
@@ -15549,6 +17317,7 @@ type DefaultUserInfo_ImsUser_Fragment = {
     username: string | null;
     displayName: string;
     avatar: any;
+    gropiusUser: { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any } | null;
 };
 
 export type DefaultUserInfoFragment = DefaultUserInfo_GropiusUser_Fragment | DefaultUserInfo_ImsUser_Fragment;
@@ -15570,6 +17339,7 @@ type CurrentUserInfo_ImsUser_Fragment = {
     username: string | null;
     displayName: string;
     avatar: any;
+    gropiusUser: { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any } | null;
 };
 
 export type CurrentUserInfoFragment = CurrentUserInfo_GropiusUser_Fragment | CurrentUserInfo_ImsUser_Fragment;
@@ -16074,7 +17844,20 @@ export type GetUserQuery = {
         | { __typename: "IMSProject" }
         | { __typename: "IMSProjectTemplate" }
         | { __typename: "IMSTemplate" }
-        | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any }
+        | {
+              __typename: "IMSUser";
+              id: string;
+              username: string | null;
+              displayName: string;
+              avatar: any;
+              gropiusUser: {
+                  __typename: "GropiusUser";
+                  id: string;
+                  username: string;
+                  displayName: string;
+                  avatar: any;
+              } | null;
+          }
         | { __typename: "IMSUserTemplate" }
         | { __typename: "IncomingRelationTypeChangedEvent" }
         | { __typename: "Interface" }
@@ -16298,6 +18081,13 @@ export type GetComponentDetailsQuery = {
                                 username: string | null;
                                 displayName: string;
                                 avatar: any;
+                                gropiusUser: {
+                                    __typename: "GropiusUser";
+                                    id: string;
+                                    username: string;
+                                    displayName: string;
+                                    avatar: any;
+                                } | null;
                             };
                       state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
                       issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
@@ -16336,6 +18126,13 @@ export type GetComponentDetailsQuery = {
                                         username: string | null;
                                         displayName: string;
                                         avatar: any;
+                                        gropiusUser: {
+                                            __typename: "GropiusUser";
+                                            id: string;
+                                            username: string;
+                                            displayName: string;
+                                            avatar: any;
+                                        } | null;
                                     };
                           }>;
                       };
@@ -16386,6 +18183,13 @@ export type GetComponentDetailsQuery = {
                                 username: string | null;
                                 displayName: string;
                                 avatar: any;
+                                gropiusUser: {
+                                    __typename: "GropiusUser";
+                                    id: string;
+                                    username: string;
+                                    displayName: string;
+                                    avatar: any;
+                                } | null;
                             };
                       state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
                       issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
@@ -16424,6 +18228,13 @@ export type GetComponentDetailsQuery = {
                                         username: string | null;
                                         displayName: string;
                                         avatar: any;
+                                        gropiusUser: {
+                                            __typename: "GropiusUser";
+                                            id: string;
+                                            username: string;
+                                            displayName: string;
+                                            avatar: any;
+                                        } | null;
                                     };
                           }>;
                       };
@@ -18243,7 +20054,20 @@ export type GetParticipatingIssueListQuery = {
                 };
                 createdBy:
                     | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                    | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                    | {
+                          __typename: "IMSUser";
+                          id: string;
+                          username: string | null;
+                          displayName: string;
+                          avatar: any;
+                          gropiusUser: {
+                              __typename: "GropiusUser";
+                              id: string;
+                              username: string;
+                              displayName: string;
+                              avatar: any;
+                          } | null;
+                      };
                 state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
                 issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
                 labels: {
@@ -18281,6 +20105,13 @@ export type GetParticipatingIssueListQuery = {
                                   username: string | null;
                                   displayName: string;
                                   avatar: any;
+                                  gropiusUser: {
+                                      __typename: "GropiusUser";
+                                      id: string;
+                                      username: string;
+                                      displayName: string;
+                                      avatar: any;
+                                  } | null;
                               };
                     }>;
                 };
@@ -18336,7 +20167,20 @@ export type GetParticipatingFilteredIssueListQuery = {
         };
         createdBy:
             | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-            | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+            | {
+                  __typename: "IMSUser";
+                  id: string;
+                  username: string | null;
+                  displayName: string;
+                  avatar: any;
+                  gropiusUser: {
+                      __typename: "GropiusUser";
+                      id: string;
+                      username: string;
+                      displayName: string;
+                      avatar: any;
+                  } | null;
+              };
         state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
         issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
         labels: {
@@ -18362,7 +20206,20 @@ export type GetParticipatingFilteredIssueListQuery = {
                 __typename: "Assignment";
                 user:
                     | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                    | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                    | {
+                          __typename: "IMSUser";
+                          id: string;
+                          username: string | null;
+                          displayName: string;
+                          avatar: any;
+                          gropiusUser: {
+                              __typename: "GropiusUser";
+                              id: string;
+                              username: string;
+                              displayName: string;
+                              avatar: any;
+                          } | null;
+                      };
             }>;
         };
         priority: {
@@ -20745,7 +22602,20 @@ export type GetIssueQuery = {
               exportIssues: boolean;
               createdBy:
                   | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                  | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                  | {
+                        __typename: "IMSUser";
+                        id: string;
+                        username: string | null;
+                        displayName: string;
+                        avatar: any;
+                        gropiusUser: {
+                            __typename: "GropiusUser";
+                            id: string;
+                            username: string;
+                            displayName: string;
+                            avatar: any;
+                        } | null;
+                    };
               timelineItems: {
                   __typename: "TimelineItemConnection";
                   nodes: Array<
@@ -20810,6 +22680,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                         }
                       | {
@@ -20831,6 +22708,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                         }
                       | {
@@ -20858,6 +22742,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                         }
                       | {
@@ -20882,6 +22773,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                         }
                       | {
@@ -20906,6 +22804,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                         }
                       | {
@@ -20932,6 +22837,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                             user:
                                 | {
@@ -20947,6 +22859,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                             type: {
                                 __typename: "AssignmentType";
@@ -20983,6 +22902,13 @@ export type GetIssueQuery = {
                                           username: string | null;
                                           displayName: string;
                                           avatar: any;
+                                          gropiusUser: {
+                                              __typename: "GropiusUser";
+                                              id: string;
+                                              username: string;
+                                              displayName: string;
+                                              avatar: any;
+                                          } | null;
                                       };
                                 user:
                                     | {
@@ -20998,6 +22924,13 @@ export type GetIssueQuery = {
                                           username: string | null;
                                           displayName: string;
                                           avatar: any;
+                                          gropiusUser: {
+                                              __typename: "GropiusUser";
+                                              id: string;
+                                              username: string;
+                                              displayName: string;
+                                              avatar: any;
+                                          } | null;
                                       };
                                 type: {
                                     __typename: "AssignmentType";
@@ -21032,6 +22965,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                         }
                       | {
@@ -21054,6 +22994,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                             bodyLastEditedBy:
                                 | {
@@ -21069,6 +23016,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                         }
                       | {
@@ -21137,6 +23091,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                         }
                       | {
@@ -21162,6 +23123,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                             bodyLastEditedBy:
                                 | {
@@ -21177,6 +23145,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                         }
                       | {
@@ -21197,6 +23172,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                             relatedIssue: {
                                 __typename: "Issue";
@@ -21295,6 +23277,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                         }
                       | {
@@ -21331,6 +23320,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                         }
                       | {
@@ -21385,6 +23381,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                         }
                       | {
@@ -21448,6 +23451,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                         }
                       | {
@@ -21469,6 +23479,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                         }
                       | {
@@ -21499,6 +23516,13 @@ export type GetIssueQuery = {
                                           username: string | null;
                                           displayName: string;
                                           avatar: any;
+                                          gropiusUser: {
+                                              __typename: "GropiusUser";
+                                              id: string;
+                                              username: string;
+                                              displayName: string;
+                                              avatar: any;
+                                          } | null;
                                       };
                                 user:
                                     | {
@@ -21514,6 +23538,13 @@ export type GetIssueQuery = {
                                           username: string | null;
                                           displayName: string;
                                           avatar: any;
+                                          gropiusUser: {
+                                              __typename: "GropiusUser";
+                                              id: string;
+                                              username: string;
+                                              displayName: string;
+                                              avatar: any;
+                                          } | null;
                                       };
                                 type: {
                                     __typename: "AssignmentType";
@@ -21536,6 +23567,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                         }
                       | {
@@ -21560,6 +23598,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                         }
                       | {
@@ -21584,6 +23629,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                         }
                       | {
@@ -21638,6 +23690,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                         }
                       | {
@@ -21665,6 +23724,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                         }
                       | {
@@ -21719,6 +23785,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                         }
                       | {
@@ -21740,6 +23813,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                         }
                       | {
@@ -21774,6 +23854,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                         }
                       | {
@@ -21796,6 +23883,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                         }
                       | {
@@ -21819,6 +23913,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                         }
                       | {
@@ -21841,6 +23942,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                         }
                       | {
@@ -21875,6 +23983,13 @@ export type GetIssueQuery = {
                                       username: string | null;
                                       displayName: string;
                                       avatar: any;
+                                      gropiusUser: {
+                                          __typename: "GropiusUser";
+                                          id: string;
+                                          username: string;
+                                          displayName: string;
+                                          avatar: any;
+                                      } | null;
                                   };
                         }
                   >;
@@ -22030,6 +24145,13 @@ export type GetIssueQuery = {
                                 username: string | null;
                                 displayName: string;
                                 avatar: any;
+                                gropiusUser: {
+                                    __typename: "GropiusUser";
+                                    id: string;
+                                    username: string;
+                                    displayName: string;
+                                    avatar: any;
+                                } | null;
                             };
                       user:
                           | {
@@ -22045,6 +24167,13 @@ export type GetIssueQuery = {
                                 username: string | null;
                                 displayName: string;
                                 avatar: any;
+                                gropiusUser: {
+                                    __typename: "GropiusUser";
+                                    id: string;
+                                    username: string;
+                                    displayName: string;
+                                    avatar: any;
+                                } | null;
                             };
                       type: { __typename: "AssignmentType"; id: string; name: string; description: string } | null;
                   }>;
@@ -22133,7 +24262,20 @@ export type ChangeIssueTypeMutation = {
             oldIssueType: { __typename: "IssueType"; id: string; name: string; description: string; iconPath: string };
             createdBy:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
         } | null;
     };
 };
@@ -22155,7 +24297,20 @@ export type ChangeIssueStateMutation = {
             newState: { __typename: "IssueState"; id: string; name: string; description: string; isOpen: boolean };
             createdBy:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
         } | null;
     };
 };
@@ -22191,7 +24346,20 @@ export type ChangeIssuePriorityMutation = {
             } | null;
             createdBy:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
         } | null;
     };
 };
@@ -22212,7 +24380,20 @@ export type AddLabelToIssueMutation = {
             addedLabel: { __typename: "Label"; id: string; name: string; description: string; color: any } | null;
             createdBy:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
         } | null;
     };
 };
@@ -22233,7 +24414,20 @@ export type RemoveLabelFromIssueMutation = {
             removedLabel: { __typename: "Label"; id: string; name: string; description: string; color: any } | null;
             createdBy:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
         } | null;
     };
 };
@@ -22257,15 +24451,54 @@ export type RemoveAssignmentMutation = {
                 initialType: { __typename: "AssignmentType"; id: string; name: string; description: string } | null;
                 createdBy:
                     | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                    | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                    | {
+                          __typename: "IMSUser";
+                          id: string;
+                          username: string | null;
+                          displayName: string;
+                          avatar: any;
+                          gropiusUser: {
+                              __typename: "GropiusUser";
+                              id: string;
+                              username: string;
+                              displayName: string;
+                              avatar: any;
+                          } | null;
+                      };
                 user:
                     | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                    | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                    | {
+                          __typename: "IMSUser";
+                          id: string;
+                          username: string | null;
+                          displayName: string;
+                          avatar: any;
+                          gropiusUser: {
+                              __typename: "GropiusUser";
+                              id: string;
+                              username: string;
+                              displayName: string;
+                              avatar: any;
+                          } | null;
+                      };
                 type: { __typename: "AssignmentType"; id: string; name: string; description: string } | null;
             };
             createdBy:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
         } | null;
     };
 };
@@ -22290,17 +24523,56 @@ export type ChangeAssignmentTypeMutation = {
                 initialType: { __typename: "AssignmentType"; id: string; name: string; description: string } | null;
                 createdBy:
                     | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                    | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                    | {
+                          __typename: "IMSUser";
+                          id: string;
+                          username: string | null;
+                          displayName: string;
+                          avatar: any;
+                          gropiusUser: {
+                              __typename: "GropiusUser";
+                              id: string;
+                              username: string;
+                              displayName: string;
+                              avatar: any;
+                          } | null;
+                      };
                 user:
                     | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                    | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                    | {
+                          __typename: "IMSUser";
+                          id: string;
+                          username: string | null;
+                          displayName: string;
+                          avatar: any;
+                          gropiusUser: {
+                              __typename: "GropiusUser";
+                              id: string;
+                              username: string;
+                              displayName: string;
+                              avatar: any;
+                          } | null;
+                      };
                 type: { __typename: "AssignmentType"; id: string; name: string; description: string } | null;
             };
             newAssignmentType: { __typename: "AssignmentType"; id: string; name: string; description: string } | null;
             oldAssignmentType: { __typename: "AssignmentType"; id: string; name: string; description: string } | null;
             createdBy:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
         } | null;
     };
 };
@@ -22321,10 +24593,36 @@ export type CreateAssignmentMutation = {
             initialType: { __typename: "AssignmentType"; id: string; name: string; description: string } | null;
             createdBy:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
             user:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
             type: { __typename: "AssignmentType"; id: string; name: string; description: string } | null;
         };
     };
@@ -22378,7 +24676,20 @@ export type RemoveIssueRelationMutation = {
             } | null;
             createdBy:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
         } | null;
     };
 };
@@ -22446,7 +24757,20 @@ export type ChangeIssueRelationTypeMutation = {
             } | null;
             createdBy:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
         } | null;
     };
 };
@@ -22466,7 +24790,20 @@ export type CreateIssueRelationMutation = {
             createdAt: any;
             createdBy:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
             relatedIssue: {
                 __typename: "Issue";
                 id: string;
@@ -22518,7 +24855,20 @@ export type ChangeIssueTitleMutation = {
             createdAt: any;
             createdBy:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
         } | null;
     };
 };
@@ -22576,7 +24926,20 @@ export type AddAffectedEntityToIssueMutation = {
                 | null;
             createdBy:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
         } | null;
     };
 };
@@ -22634,7 +24997,20 @@ export type RemoveAffectedEntityFromIssueMutation = {
                 | null;
             createdBy:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
         } | null;
     };
 };
@@ -22656,7 +25032,20 @@ export type ChangeIssueTemplatedFieldMutation = {
             createdAt: any;
             createdBy:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
         } | null;
     };
 };
@@ -22680,7 +25069,20 @@ export type AddIssueToTrackableMutation = {
                 | null;
             createdBy:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
         } | null;
     };
 };
@@ -22704,7 +25106,20 @@ export type RemoveIssueFromTrackableMutation = {
                 | null;
             createdBy:
                 | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                | {
+                      __typename: "IMSUser";
+                      id: string;
+                      username: string | null;
+                      displayName: string;
+                      avatar: any;
+                      gropiusUser: {
+                          __typename: "GropiusUser";
+                          id: string;
+                          username: string;
+                          displayName: string;
+                          avatar: any;
+                      } | null;
+                  };
         } | null;
     };
 };
@@ -22757,6 +25172,13 @@ export type GetIssueListQuery = {
                                 username: string | null;
                                 displayName: string;
                                 avatar: any;
+                                gropiusUser: {
+                                    __typename: "GropiusUser";
+                                    id: string;
+                                    username: string;
+                                    displayName: string;
+                                    avatar: any;
+                                } | null;
                             };
                       state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
                       issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
@@ -22795,6 +25217,13 @@ export type GetIssueListQuery = {
                                         username: string | null;
                                         displayName: string;
                                         avatar: any;
+                                        gropiusUser: {
+                                            __typename: "GropiusUser";
+                                            id: string;
+                                            username: string;
+                                            displayName: string;
+                                            avatar: any;
+                                        } | null;
                                     };
                           }>;
                       };
@@ -22893,6 +25322,13 @@ export type GetIssueListQuery = {
                                 username: string | null;
                                 displayName: string;
                                 avatar: any;
+                                gropiusUser: {
+                                    __typename: "GropiusUser";
+                                    id: string;
+                                    username: string;
+                                    displayName: string;
+                                    avatar: any;
+                                } | null;
                             };
                       state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
                       issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
@@ -22931,6 +25367,13 @@ export type GetIssueListQuery = {
                                         username: string | null;
                                         displayName: string;
                                         avatar: any;
+                                        gropiusUser: {
+                                            __typename: "GropiusUser";
+                                            id: string;
+                                            username: string;
+                                            displayName: string;
+                                            avatar: any;
+                                        } | null;
                                     };
                           }>;
                       };
@@ -23002,7 +25445,20 @@ export type GetFilteredIssueListQuery = {
         createdAt: any;
         createdBy:
             | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-            | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+            | {
+                  __typename: "IMSUser";
+                  id: string;
+                  username: string | null;
+                  displayName: string;
+                  avatar: any;
+                  gropiusUser: {
+                      __typename: "GropiusUser";
+                      id: string;
+                      username: string;
+                      displayName: string;
+                      avatar: any;
+                  } | null;
+              };
         state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
         issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
         labels: {
@@ -23028,7 +25484,20 @@ export type GetFilteredIssueListQuery = {
                 __typename: "Assignment";
                 user:
                     | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                    | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                    | {
+                          __typename: "IMSUser";
+                          id: string;
+                          username: string | null;
+                          displayName: string;
+                          avatar: any;
+                          gropiusUser: {
+                              __typename: "GropiusUser";
+                              id: string;
+                              username: string;
+                              displayName: string;
+                              avatar: any;
+                          } | null;
+                      };
             }>;
         };
         priority: {
@@ -23159,6 +25628,13 @@ export type GetComponentIssueListQuery = {
                                 username: string | null;
                                 displayName: string;
                                 avatar: any;
+                                gropiusUser: {
+                                    __typename: "GropiusUser";
+                                    id: string;
+                                    username: string;
+                                    displayName: string;
+                                    avatar: any;
+                                } | null;
                             };
                       state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
                       issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
@@ -23197,6 +25673,13 @@ export type GetComponentIssueListQuery = {
                                         username: string | null;
                                         displayName: string;
                                         avatar: any;
+                                        gropiusUser: {
+                                            __typename: "GropiusUser";
+                                            id: string;
+                                            username: string;
+                                            displayName: string;
+                                            avatar: any;
+                                        } | null;
                                     };
                           }>;
                       };
@@ -23277,7 +25760,20 @@ export type GetComponentFilteredIssueListQuery = {
         };
         createdBy:
             | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-            | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+            | {
+                  __typename: "IMSUser";
+                  id: string;
+                  username: string | null;
+                  displayName: string;
+                  avatar: any;
+                  gropiusUser: {
+                      __typename: "GropiusUser";
+                      id: string;
+                      username: string;
+                      displayName: string;
+                      avatar: any;
+                  } | null;
+              };
         state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
         issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
         labels: {
@@ -23303,7 +25799,20 @@ export type GetComponentFilteredIssueListQuery = {
                 __typename: "Assignment";
                 user:
                     | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                    | { __typename: "IMSUser"; id: string; username: string | null; displayName: string; avatar: any };
+                    | {
+                          __typename: "IMSUser";
+                          id: string;
+                          username: string | null;
+                          displayName: string;
+                          avatar: any;
+                          gropiusUser: {
+                              __typename: "GropiusUser";
+                              id: string;
+                              username: string;
+                              displayName: string;
+                              avatar: any;
+                          } | null;
+                      };
             }>;
         };
         priority: {
@@ -24774,6 +27283,13 @@ export type GetIssueBoardQuery = {
                                             username: string | null;
                                             displayName: string;
                                             avatar: any;
+                                            gropiusUser: {
+                                                __typename: "GropiusUser";
+                                                id: string;
+                                                username: string;
+                                                displayName: string;
+                                                avatar: any;
+                                            } | null;
                                         };
                               }>;
                           };
@@ -28152,7 +30668,31 @@ export const DefaultUserInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         }
@@ -28473,7 +31013,31 @@ export const IssueListItemInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -28622,7 +31186,31 @@ export const ParticipatingIssueListItemInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -29016,7 +31604,31 @@ export const ProjectComponentIssueListItemInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -29635,7 +32247,31 @@ export const IssueBoardCardInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         }
@@ -29765,7 +32401,31 @@ export const IssueBoardItemInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -30362,7 +33022,31 @@ export const UserTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         }
@@ -30406,7 +33090,31 @@ export const TimelineItemInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -30603,7 +33311,31 @@ export const AddedAffectedEntityEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -30837,7 +33569,31 @@ export const AddedArtefactEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -30961,7 +33717,31 @@ export const AddedLabelEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -31117,7 +33897,31 @@ export const AddedToPinnedIssuesEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -31222,7 +34026,31 @@ export const AddedToTrackableEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -31357,7 +34185,31 @@ export const DefaultAssignmentInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -31458,7 +34310,31 @@ export const AssignmentTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -31621,7 +34497,31 @@ export const AssignmentTypeChangedEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -31785,7 +34685,31 @@ export const CommentTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -31830,7 +34754,31 @@ export const BodyTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -31972,7 +34920,31 @@ export const RelationTypeChangedEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -32566,7 +35538,31 @@ export const IncomingRelationTypeChangedEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -32886,7 +35882,31 @@ export const IssueCommentTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -33181,7 +36201,31 @@ export const IssueRelationTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -33460,7 +36504,31 @@ export const OutgoingRelationTypeChangedEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -33822,7 +36890,31 @@ export const PriorityChangedEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -33932,7 +37024,31 @@ export const RelatedByIssueEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -34208,7 +37324,31 @@ export const RemovedAffectedEntityEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -34424,7 +37564,31 @@ export const RemovedArtefactEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -34516,7 +37680,31 @@ export const RemovedAssignmentEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -34679,7 +37867,31 @@ export const RemovedFromPinnedIssuesEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -34784,7 +37996,31 @@ export const RemovedFromTrackableEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -34892,7 +38128,31 @@ export const RemovedIncomingRelationEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -35168,7 +38428,31 @@ export const RemovedLabelEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -35277,7 +38561,31 @@ export const RemovedOutgoingRelationEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -35543,7 +38851,31 @@ export const RemovedTemplatedFieldEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -35665,7 +38997,31 @@ export const StateChangedEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -35800,7 +39156,31 @@ export const TemplateChangedEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -35884,7 +39264,31 @@ export const TemplatedFieldChangedEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -35954,7 +39358,31 @@ export const TitleChangedEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -36098,7 +39526,31 @@ export const TypeChangedEventTimelineInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -36599,7 +40051,31 @@ export const DefaultTimelineItemInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -37995,7 +41471,31 @@ export const CurrentUserInfoFragmentDoc = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         }
@@ -38389,7 +41889,31 @@ export const GetIssueListForProjectSidebarDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -38837,7 +42361,31 @@ export const GetIssueListOnAggregatedIssueDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -39199,7 +42747,31 @@ export const GetFilteredIssueListForProjectSidebarDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -40035,7 +43607,31 @@ export const SearchIssuesForBoardDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -40365,7 +43961,31 @@ export const FirstIssuesForBoardDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -43064,7 +46684,31 @@ export const GetPermissionUserListDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         }
@@ -43182,7 +46826,31 @@ export const GetFilteredPermissionUserListDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         }
@@ -44540,6 +48208,249 @@ export const FirstComponentVersionsForAutocompleteDocument = {
     FirstComponentVersionsForAutocompleteQuery,
     FirstComponentVersionsForAutocompleteQueryVariables
 >;
+export const FirstProjectAffectedEntitiesDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "firstProjectAffectedEntities" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "project" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "node" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "id" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "project" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "InlineFragment",
+                                    typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Project" } },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "components" },
+                                                arguments: [
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "first" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "count" }
+                                                        }
+                                                    }
+                                                ],
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "nodes" },
+                                                            selectionSet: {
+                                                                kind: "SelectionSet",
+                                                                selections: [
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "__typename" }
+                                                                    },
+                                                                    {
+                                                                        kind: "FragmentSpread",
+                                                                        name: {
+                                                                            kind: "Name",
+                                                                            value: "DefaultAffectedByIssueInfo"
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "component" },
+                                                                        selectionSet: {
+                                                                            kind: "SelectionSet",
+                                                                            selections: [
+                                                                                {
+                                                                                    kind: "Field",
+                                                                                    name: {
+                                                                                        kind: "Name",
+                                                                                        value: "__typename"
+                                                                                    }
+                                                                                },
+                                                                                {
+                                                                                    kind: "FragmentSpread",
+                                                                                    name: {
+                                                                                        kind: "Name",
+                                                                                        value: "DefaultAffectedByIssueInfo"
+                                                                                    }
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultAffectedByIssueInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AffectedByIssue" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Named" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } },
+                                { kind: "Field", name: { kind: "Name", value: "description" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ComponentVersion" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "version" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "component" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "name" } },
+                                            { kind: "Field", name: { kind: "Name", value: "description" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: {
+                            kind: "NamedType",
+                            name: { kind: "Name", value: "InterfaceSpecificationVersion" }
+                        },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "version" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "interfaceSpecification" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "name" } },
+                                            { kind: "Field", name: { kind: "Name", value: "description" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Interface" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "interfaceDefinition" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "interfaceSpecificationVersion" },
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        { kind: "Field", name: { kind: "Name", value: "version" } },
+                                                        {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "interfaceSpecification" },
+                                                            selectionSet: {
+                                                                kind: "SelectionSet",
+                                                                selections: [
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "__typename" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "name" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "description" }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<FirstProjectAffectedEntitiesQuery, FirstProjectAffectedEntitiesQueryVariables>;
 export const SearchTrackablesForAutocompleteDocument = {
     kind: "Document",
     definitions: [
@@ -46610,7 +50521,7 @@ export const FirstIssuesForExternalAutocompleteDocument = {
                                 { kind: "Field", name: { kind: "Name", value: "__typename" } },
                                 {
                                     kind: "InlineFragment",
-                                    typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Component" } },
+                                    typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Trackable" } },
                                     selectionSet: {
                                         kind: "SelectionSet",
                                         selections: [
@@ -47695,7 +51606,31 @@ export const SearchGropiusUsersDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         }
@@ -50143,7 +54078,31 @@ export const GetAssignedUsersDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         }
@@ -54375,7 +58334,31 @@ export const UpdateBodyForTimelineDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         }
@@ -54476,7 +58459,31 @@ export const UpdateIssueCommentForTimelineDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         }
@@ -54574,7 +58581,31 @@ export const CreateIssueCommentForTimelineDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -54737,7 +58768,31 @@ export const DeleteIssueCommentForTimelineDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -54912,7 +58967,31 @@ export const GetCurrentUserDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -57375,7 +61454,31 @@ export const GetUserDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         }
@@ -58159,7 +62262,31 @@ export const GetComponentDetailsDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -62219,7 +66346,31 @@ export const GetParticipatingIssueListDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -62627,7 +66778,31 @@ export const GetParticipatingFilteredIssueListDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -67444,7 +71619,31 @@ export const GetIssueDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -69328,7 +73527,31 @@ export const ChangeIssueTypeDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -69515,7 +73738,31 @@ export const ChangeIssueStateDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -69700,7 +73947,31 @@ export const ChangeIssuePriorityDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -69886,7 +74157,31 @@ export const AddLabelToIssueDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -70060,7 +74355,31 @@ export const RemoveLabelFromIssueDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -70224,7 +74543,31 @@ export const RemoveAssignmentDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -70455,7 +74798,31 @@ export const ChangeAssignmentTypeDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -70710,7 +75077,31 @@ export const CreateAssignmentDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -70911,7 +75302,31 @@ export const RemoveIssueRelationDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -71261,7 +75676,31 @@ export const ChangeIssueRelationTypeDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -71650,7 +76089,31 @@ export const CreateIssueRelationDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -71984,7 +76447,31 @@ export const ChangeIssueTitleDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -72122,7 +76609,31 @@ export const AddAffectedEntityToIssueDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -72406,7 +76917,31 @@ export const RemoveAffectedEntityFromIssueDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -72674,7 +77209,31 @@ export const ChangeIssueTemplatedFieldDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -72813,7 +77372,31 @@ export const AddIssueToTrackableDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -72986,7 +77569,31 @@ export const RemoveIssueFromTrackableDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -73230,7 +77837,31 @@ export const GetIssueListDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -73592,7 +78223,31 @@ export const GetFilteredIssueListDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -74037,7 +78692,31 @@ export const GetComponentIssueListDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -74575,7 +79254,31 @@ export const GetComponentFilteredIssueListDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },
@@ -78181,7 +82884,31 @@ export const GetIssueBoardDocument = {
                     { kind: "Field", name: { kind: "Name", value: "id" } },
                     { kind: "Field", name: { kind: "Name", value: "username" } },
                     { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
                 ]
             }
         },

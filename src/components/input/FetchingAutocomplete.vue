@@ -303,7 +303,8 @@ function transformToContextItem(item: C): C {
 function untransformContextItem(item: C): C {
     return {
         ...item,
-        id: item.id.replace("context-", "")
+        id: item.id.replace("context-", ""),
+        hidden: false
     };
 }
 
