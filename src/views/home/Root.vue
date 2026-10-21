@@ -30,10 +30,12 @@ const tabs = computed(() => {
     const tabs = [
         { name: "Home", path: "/" },
         { name: "Components", path: "/components" },
-        { name: "Projects", path: "/projects" },
-        { name: "IMSs", path: "/imss" },
-        { name: "Templates", path: "/templates" }
+        { name: "Projects", path: "/projects" }
     ];
+    if (store.canAccessIMSs) {
+        tabs.push({ name: "IMSs", path: "/imss" });
+    }
+    tabs.push({ name: "Templates", path: "/templates" });
     const user = store.user;
     if (user?.__typename == "GropiusUser" && user.isAdmin) {
         tabs.push({ name: "Admin", path: "/admin" });

@@ -17400,6 +17400,7 @@ export type GetCurrentUserQuery = {
         displayName: string;
         avatar: any;
     } | null;
+    accessibleIMSs: { __typename: "IMSConnection"; nodes: Array<{ __typename: "IMS"; id: string }> };
 };
 
 export type LegalInformationQueryVariables = Exact<{ [key: string]: never }>;
@@ -58952,6 +58953,35 @@ export const GetCurrentUserDocument = {
                                 value: { kind: "EnumValue", value: "CAN_CREATE_TEMPLATES" }
                             }
                         ]
+                    },
+                    {
+                        kind: "Field",
+                        alias: { kind: "Name", value: "accessibleIMSs" },
+                        name: { kind: "Name", value: "imss" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "first" },
+                                value: { kind: "IntValue", value: "1" }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
                     }
                 ]
             }
