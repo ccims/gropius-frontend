@@ -100,6 +100,11 @@ watch(
 
 function onClickOutside(e: MouseEvent) {
     if (editMode.value) {
+        // Vuetify menus and dialogs are teleported outside the compartment sheet.
+        // Selecting an option or answering the discard dialog is still an editor interaction.
+        if (e.target instanceof Element && e.target.closest(".v-overlay__content")) {
+            return;
+        }
         if (compartmentSheet.value!.$el.contains(e.target as Node)) {
             return;
         }
