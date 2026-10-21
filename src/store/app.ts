@@ -27,6 +27,11 @@ const getCurrentUserQuery = graphql(`
         canCreateComponents: hasGlobalPermission(permission: CAN_CREATE_COMPONENTS)
         canCreateIMSs: hasGlobalPermission(permission: CAN_CREATE_IMSS)
         canCreateTemplates: hasGlobalPermission(permission: CAN_CREATE_TEMPLATES)
+        accessibleIMSs: imss(first: 1) {
+            nodes {
+                id
+            }
+        }
     }
 `);
 
@@ -45,6 +50,7 @@ export const useAppStore = defineStore("app", {
         tokenRefreshLock: shallowRef(new Mutex()),
         accessTokenLock: shallowRef(new Mutex()),
         user: undefined as undefined | (CurrentUserInfoFragment & GlobalUserPermissions),
+        hasAccessibleIMSs: false,
         accessToken: "",
         refreshToken: "",
         accessTokenValidUntil: 0,
@@ -56,6 +62,9 @@ export const useAppStore = defineStore("app", {
         legalInformation: undefined as undefined | BaseLegalInformationInfoFragment[]
     }),
     getters: {
+        canAccessIMSs(): boolean {
+            return this.user != undefined && (this.user.canCreateIMSs || this.hasAccessibleIMSs);
+        },
         tokenValidityDuration(): number {
             if (!this.accessToken) {
                 return 0;
@@ -76,6 +85,8 @@ export const useAppStore = defineStore("app", {
             await this.validateUser();
         },
         logout(): void {
+            this.user = undefined;
+            this.hasAccessibleIMSs = false;
             this.accessToken = "";
             this.refreshToken = "";
             this.redirectTo = "";
@@ -83,9 +94,11 @@ export const useAppStore = defineStore("app", {
         async validateUser(): Promise<void> {
             if (!(await this.isLoggedIn())) {
                 this.user = undefined;
+                this.hasAccessibleIMSs = false;
             } else {
                 const res = await request(getCurrentUserQuery, {});
                 if (res?.currentUser) {
+                    this.hasAccessibleIMSs = res.accessibleIMSs.nodes.length > 0;
                     this.user = {
                         ...res.currentUser,
                         canCreateProjects: res.canCreateProjects,
@@ -95,6 +108,7 @@ export const useAppStore = defineStore("app", {
                     };
                 } else {
                     this.user = undefined;
+                    this.hasAccessibleIMSs = false;
                 }
             }
         },
