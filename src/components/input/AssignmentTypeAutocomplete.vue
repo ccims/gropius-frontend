@@ -1,5 +1,11 @@
 <template>
-    <FetchingAutocomplete mode="model" :fetch="searchAssignmentTypes" :dependency="template" label="Assignment type">
+    <FetchingAutocomplete
+        mode="model"
+        :fetch="searchAssignmentTypes"
+        :dependency="template"
+        label="Assignment type"
+        item-title="name"
+    >
         <template #item="{ props, item }">
             <v-list-item :title="item.raw.name" :subtitle="item.raw.description" v-bind="props"> </v-list-item>
         </template>
