@@ -42,7 +42,21 @@
                 size="small"
             />
         </template>
-        <template #title-prepend v-if="trackablesInfo != undefined">
+        <template #append-line v-if="contextProjectId">
+            <div class="d-flex flex-wrap ga-1 mt-1">
+                <v-chip
+                    v-for="trackable in contextualTrackables"
+                    :key="trackable.id"
+                    color="primary"
+                    size="small"
+                    :prepend-icon="trackable.__typename === 'Component' ? '$component' : '$project'"
+                >
+                    {{ trackable.id === contextProjectId ? "This project" : trackable.name }}
+                    <v-tooltip activator="parent" location="bottom">{{ trackable.name }}</v-tooltip>
+                </v-chip>
+            </div>
+        </template>
+        <template #title-prepend v-else-if="trackablesInfo != undefined">
             <v-chip color="primary" size="small" class="mr-2 flex-shrink-0" :prepend-icon="trackablesInfo.icon">
                 {{ trackablesInfo.trackable.name }}
                 <template v-if="trackablesInfo.totalCount > 1"> +{{ trackablesInfo.totalCount - 1 }}</template>
@@ -69,16 +83,22 @@ const props = defineProps({
         type: Object as PropType<IssueListItemInfoFragment | ParticipatingIssueListItemInfoFragment>,
         required: true
     },
+    contextProjectId: {
+        type: String,
+        required: false
+    },
     hideDetails: {
         type: Boolean,
         default: false
     }
 });
 
+const contextualTrackables = computed(() => ("trackables" in props.item ? props.item.trackables.nodes : []));
 const trackablesInfo = computed(() => {
     const item = props.item;
     if ("trackables" in item) {
         const trackable = item.trackables.nodes[0];
+        if (!trackable) return undefined;
         return {
             trackable,
             totalCount: item.trackables.totalCount,

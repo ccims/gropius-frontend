@@ -2,7 +2,7 @@ import { addTypenameSelectionDocumentTransform } from "@graphql-codegen/client-p
 import type { CodegenConfig } from "@graphql-codegen/cli";
 
 const config: CodegenConfig = {
-    schema: "http://localhost:8082/graphql",
+    schema: process.env.GROPIUS_GRAPHQL_SCHEMA ?? "http://localhost:8082/graphql",
     documents: ["src/**/*.vue", "src/**/*.graphql", "src/**/*.ts", "!src/gql/**"],
     generates: {
         "src/gql/": {

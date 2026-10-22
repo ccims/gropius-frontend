@@ -32,9 +32,21 @@
         <div class="mx-3 mb-1">
             <slot name="additional-filter" />
         </div>
+        <v-progress-linear v-if="loading" indeterminate aria-label="Loading results" />
+        <v-alert v-if="loadError" type="error" class="mx-3 mb-2" density="compact">
+            Could not load {{ name }}. <v-btn variant="text" @click="updateItems(false)">Retry</v-btn>
+        </v-alert>
         <div class="overflow-y-auto flex-1-1 px-3">
             <div v-if="currentItems.length == 0 && loadedInitially" class="text-medium-emphasis">
                 No {{ name }} found
+            </div>
+            <div v-if="searchPageInfo" class="d-flex align-center justify-center ga-3 my-3">
+                <span class="text-medium-emphasis">Sorted by relevance</span>
+                <v-btn variant="text" :disabled="loading || currentPage <= 1" @click="currentPage--">Previous</v-btn>
+                <span>Page {{ currentPage }}</span>
+                <v-btn variant="text" :disabled="loading || !searchPageInfo.hasNextPage" @click="currentPage++"
+                    >Next</v-btn
+                >
             </div>
             <CustomList :items="currentItems" :to="to">
                 <template #item="{ item }">
@@ -52,7 +64,7 @@
     </div>
 </template>
 <script setup lang="ts" generic="T, S extends string, K extends string">
-import { watch } from "vue";
+import { watch, unref, nextTick, onBeforeUnmount } from "vue";
 import { type Ref, onMounted } from "vue";
 import { type PropType, ref } from "vue";
 import { type RouteLocationRaw, useRoute, useRouter } from "vue-router";
@@ -111,7 +123,7 @@ const searchString = useQueryParam(
     (value) => value,
     (value) => value
 );
-const transformedSearchQuery = computed(() => transformSearchQuery(searchString.value));
+const transformedSearchQuery = computed(() => transformSearchQuery(searchString.value ?? ""));
 const currentSortField = useQueryParam<K>(
     "sort",
     Object.keys(props.sortFields as Record<K, unknown>)[0] as K,
@@ -125,12 +137,19 @@ const sortAscending = useQueryParam(
     (value) => value.toString()
 );
 const loadedInitially = ref(false);
+const loading = ref(false);
+const loadError = ref(false);
+const searchPageInfo = ref<{ hasNextPage: boolean }>();
+let requestGeneration = 0;
 
 const pageCount = ref(0);
 const currentPage = useQueryParam(
     "page",
     1,
-    (value) => parseInt(value),
+    (value) => {
+        const page = Number(value);
+        return Number.isSafeInteger(page) && page > 0 ? page : 1;
+    },
     (value) => value.toString()
 );
 const currentItems = ref<T[]>([]) as Ref<T[]>;
@@ -139,8 +158,15 @@ function toggleSortDirection() {
     sortAscending.value = !sortAscending.value;
 }
 
+let dependenciesReady = false;
 onMounted(async () => {
+    // Let slot refs and URL-backed dropdown filters hydrate before the initial fetch.
+    await nextTick();
+    dependenciesReady = true;
     await updateItems(false);
+});
+onBeforeUnmount(() => {
+    ++requestGeneration;
 });
 
 watch([transformedSearchQuery, currentSortField, sortAscending], async () => {
@@ -150,35 +176,61 @@ watch([transformedSearchQuery, currentSortField, sortAscending], async () => {
 watch(currentPage, async () => {
     await updateItems(false);
 });
+watch(
+    () => props.itemCount,
+    () => updateItems(true)
+);
 
 watch(
-    () => props.dependencies,
+    () => JSON.stringify(props.dependencies.map((dependency) => unref(dependency))),
     async () => {
-        await updateItems(false);
-    },
-    { deep: true }
+        if (dependenciesReady) await updateItems(true);
+    }
 );
 
 async function updateItems(resetPage: boolean) {
-    if (resetPage) {
+    if (resetPage && currentPage.value !== 1) {
+        ++requestGeneration;
         currentPage.value = 1;
+        return; // The page watcher loads the new first page.
     }
-    const sortField: S | S[] | "ID" = (props.sortFields as Record<K, S | S[]>)[currentSortField.value];
+    const generation = ++requestGeneration;
+    loading.value = true;
+    loadError.value = false;
+    const fields = props.sortFields as Record<K, S | S[]>;
+    const sortField: S | S[] | "ID" = fields[currentSortField.value] ?? (Object.values(fields)[0] as S | S[]);
     const sortFields = Array.isArray(sortField) ? sortField : [sortField];
     const sortFieldsWithId = sortFields.includes("ID") ? sortFields : ([...sortFields, "ID"] as const);
 
-    const [items, count] = await props.itemManager.fetchItemsCaching(
-        transformedSearchQuery.value,
-        sortFieldsWithId.map((field) => ({
-            field,
-            direction: sortAscending.value ? "ASC" : "DESC"
-        })),
-        props.itemCount,
-        currentPage.value - 1
-    );
-    loadedInitially.value = true;
-    currentItems.value = items;
-    pageCount.value = Math.ceil(count / props.itemCount);
+    try {
+        const [items, count] = await props.itemManager.fetchItemsCaching(
+            transformedSearchQuery.value,
+            sortFieldsWithId.map((field) => ({
+                field,
+                direction: sortAscending.value ? "ASC" : "DESC"
+            })),
+            props.itemCount,
+            currentPage.value - 1
+        );
+        if (generation !== requestGeneration) return;
+        if (typeof count === "number" && currentPage.value > Math.max(1, Math.ceil(count / props.itemCount))) {
+            currentPage.value = Math.max(1, Math.ceil(count / props.itemCount));
+            return;
+        }
+        loadedInitially.value = true;
+        currentItems.value = items;
+        pageCount.value = typeof count === "number" ? Math.ceil(count / props.itemCount) : 0;
+        searchPageInfo.value = typeof count === "number" ? undefined : count;
+    } catch (error) {
+        if (generation !== requestGeneration) return;
+        console.error(error);
+        loadError.value = true;
+        currentItems.value = [];
+        pageCount.value = 0;
+        searchPageInfo.value = undefined;
+    } finally {
+        if (generation === requestGeneration) loading.value = false;
+    }
 }
 
 function useQueryParam<T>(
@@ -201,7 +253,7 @@ function useQueryParam<T>(
             return _value.value;
         },
         set: (value: T) => {
-            if (queryMode.value != undefined) {
+            if (queryMode.value) {
                 updateQuery(key, value === "" ? undefined : stringify(value));
             } else {
                 _value.value = value;

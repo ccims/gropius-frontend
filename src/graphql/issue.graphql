@@ -76,15 +76,15 @@ fragment ParticipatingIssueListItemInfo on Issue {
     }
 }
 
-fragment ProjectComponentIssueListItemInfo on Issue {
+fragment ProjectIssueListItemInfo on Issue {
     ...IssueListItemInfo
-    trackables(filter: { isComponentAnd: { versions: { any: { partOfProject: $project } } } }) {
-        nodes {
-            __typename
-            id
-            name
-            description
-        }
+    lastUpdatedAt
+    priority { id name value }
+    trackables(filter: { or: [
+        { id: { eq: $project } },
+        { isComponentAnd: { versions: { any: { partOfProject: $project } } } }
+    ] }, orderBy: [{field: ID}]) {
+        nodes { __typename id name description }
         totalCount
     }
 }

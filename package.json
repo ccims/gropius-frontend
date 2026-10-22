@@ -11,7 +11,8 @@
         "build": "vite build",
         "preview": "vite preview",
         "codegen": "scripts/codegen.sh",
-        "format": "prettier --write \"**/*.{ts,json,js,tsx,jsx,vue}\""
+        "format": "prettier --write \"**/*.{ts,json,js,tsx,jsx,vue}\"",
+        "test:project-issues": "node --experimental-strip-types --test tests/projectIssues.test.ts"
     },
     "dependencies": {
         "@fontsource/roboto": "^5.3.0",

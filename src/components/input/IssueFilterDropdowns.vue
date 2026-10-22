@@ -5,6 +5,8 @@
             label="Template"
             :item-manager="itemManager"
             :mapper="(item) => item.template"
+            :initial-items="options?.templates"
+            :additional-initial-values="() => templateFetch('')"
             :fetch-on-search="templateFetch"
         />
         <FilterDropdown
@@ -12,6 +14,7 @@
             label="Label"
             :item-manager="itemManager"
             :mapper="(item) => item.labels.nodes"
+            :initial-items="options?.labels"
             :additional-initial-values="labelInitialFetch"
             :fetch-on-search="labelFetch"
         >
@@ -23,7 +26,7 @@
                         color="primary"
                         size="small"
                         class="ml-2 flex-shrink-0"
-                        v-if="item.trackables.nodes[0].id !== trackableId"
+                        v-if="item.trackables.nodes[0] && item.trackables.nodes[0].id !== trackableId"
                     >
                         {{ item.trackables.nodes[0].name }}
                         <v-tooltip v-if="item.trackables.nodes[0].description" activator="parent" location="bottom">
@@ -39,6 +42,8 @@
             :item-manager="itemManager"
             :mapper="(item) => item.priority"
             :sorter="(a, b) => a.value - b.value"
+            :initial-items="options?.priorities"
+            :additional-initial-values="() => priorityFetch('')"
             :fetch-on-search="priorityFetch"
         >
             <template #default="{ item }">
@@ -53,6 +58,8 @@
             label="Type"
             :item-manager="itemManager"
             :mapper="(item) => item.type"
+            :initial-items="options?.types"
+            :additional-initial-values="() => typeFetch('')"
             :fetch-on-search="typeFetch"
         >
             <template #default="{ item }">
@@ -68,6 +75,10 @@
             :item-manager="itemManager"
             :mapper="assignedToMapper"
             :sorter="assignedToSorter"
+            :initial-items="
+                options?.users.map((user) => ({ ...user, name: user.id === userId ? 'Me' : user.displayName }))
+            "
+            :additional-initial-values="() => assignedToFetch('')"
             :fetch-on-search="assignedToFetch"
         >
             <template #default="{ item }">
@@ -80,6 +91,8 @@
             :filter="stateFilter"
             :mapper="(item) => item.state"
             :item-manager="itemManager"
+            :initial-items="options?.states"
+            :additional-initial-values="() => stateFetch('')"
             :fetch-on-search="stateFetch"
         >
             <template #default="{ item }">
@@ -98,6 +111,7 @@
             label="Affects"
             :mapper="() => null"
             :item-manager="itemManager"
+            :initial-items="options ? scopedAffected() : undefined"
             :additional-initial-values="affectsInitialFetch"
             :fetch-on-search="affectsFetch"
         >
@@ -125,6 +139,7 @@ import {
     type IssueListItemInfoFragment,
     type IssueOrderField
 } from "@/gql/graphql";
+import type { IssueFilterOptions } from "@/util/issueFilterOptions";
 import { useFilterOption } from "@/util/useFilterOption";
 import type { IdObject } from "@/util/types";
 import { useAppStore } from "@/store/app";
@@ -351,6 +366,10 @@ const searchAffectedByIssuesWithoutTrackableForFilterQuery = graphql(`
 `);
 
 const props = defineProps({
+    options: {
+        type: Object as PropType<IssueFilterOptions>,
+        required: false
+    },
     itemManager: {
         type: Object as PropType<ItemManager<T, S>>,
         required: true
@@ -384,6 +403,8 @@ const templateInput = computed(() => {
     return templateIds.value.length > 0 ? { id: { in: templateIds.value } } : undefined;
 });
 const templateFetch = async (search: string) => {
+    if (props.options)
+        return props.options.templates.filter((item) => item.name.toLowerCase().includes(search.toLowerCase()));
     if (!props.trackableId) return [];
     const node = await queryNodeThrow(getUsedIssueTemplatesQuery, "Component", {
         trackable: props.trackableId,
@@ -397,6 +418,8 @@ const labelInput = computed(() => {
     return labelIds.value.length > 0 ? { any: { id: { in: labelIds.value } } } : undefined;
 });
 const labelFetch = async (search: string) => {
+    if (props.options)
+        return props.options.labels.filter((item) => item.name.toLowerCase().includes(search.toLowerCase()));
     if (!props.trackableId) return [];
     const node = await queryNodeThrow(getUsedLabelsQuery, "Component", {
         trackable: props.trackableId,
@@ -405,6 +428,7 @@ const labelFetch = async (search: string) => {
     return node.usedLabels.nodes;
 };
 const labelInitialFetch = async () => {
+    if (props.options) return props.options.labels;
     if (!props.trackableId) return [];
     const node = await queryNodeThrow(firstTrackableLabelsForFilterQuery, "Component", {
         trackable: props.trackableId,
@@ -418,6 +442,8 @@ const priorityInput = computed(() => {
     return priorityIds.value.length > 0 ? { id: { in: priorityIds.value } } : undefined;
 });
 const priorityFetch = async (search: string) => {
+    if (props.options)
+        return props.options.priorities.filter((item) => item.name.toLowerCase().includes(search.toLowerCase()));
     if (!props.trackableId) return [];
     const node = await queryNodeThrow(getUsedIssuePrioritiesQuery, "Component", {
         trackable: props.trackableId,
@@ -431,6 +457,8 @@ const typeInput = computed(() => {
     return typeIds.value.length > 0 ? { id: { in: typeIds.value } } : undefined;
 });
 const typeFetch = async (search: string) => {
+    if (props.options)
+        return props.options.types.filter((item) => item.name.toLowerCase().includes(search.toLowerCase()));
     if (!props.trackableId) return [];
     const node = await queryNodeThrow(getUsedIssueTypesQuery, "Component", {
         trackable: props.trackableId,
@@ -474,6 +502,13 @@ const assignedToMapper = (item: T) =>
         };
     });
 const assignedToFetch = async (search: string) => {
+    if (props.options)
+        return props.options.users
+            .filter((item) => item.displayName.toLowerCase().includes(search.toLowerCase()))
+            .map((item) => {
+                const name = item.id === userId.value ? "Me" : item.displayName;
+                return { ...item, displayName: name, name };
+            });
     if (!props.trackableId) return [];
     const node = await queryNodeThrow(getAssignedUsersQuery, "Component", {
         trackable: props.trackableId,
@@ -514,6 +549,8 @@ const stateInput = computed(() => {
     };
 });
 const stateFetch = async (search: string) => {
+    if (props.options)
+        return props.options.states.filter((item) => item.name.toLowerCase().includes(search.toLowerCase()));
     if (!props.trackableId) return [];
     const node = await queryNodeThrow(getUsedIssueStatesQuery, "Component", {
         trackable: props.trackableId,
@@ -539,7 +576,15 @@ const parseAffectedByIssues = (items: DetailedAffectedByIssueInfoFragment[]) =>
         description: affectedByIssueDescription(itm),
         typename: itm.__typename
     }));
+const scopedAffected = () =>
+    props.options?.affected.map((item) => ({
+        id: item.id,
+        name: affectedByIssueName(item),
+        description: affectedByIssueDescription(item),
+        typename: item.__typename
+    })) ?? [];
 const affectsInitialFetch = async () => {
+    if (props.options) return scopedAffected();
     if (!props.trackableId) return [];
     const node = await queryNodeThrow(firstAffectedByIssuesForFilterQuery, "Component", {
         trackable: props.trackableId,
@@ -549,6 +594,7 @@ const affectsInitialFetch = async () => {
     return parseAffectedByIssues(node.affectedEntities.nodes);
 };
 const affectsFetch = async (search: string) => {
+    if (props.options) return scopedAffected().filter((item) => item.name.toLowerCase().includes(search.toLowerCase()));
     if (props.trackableId) {
         const res = await requestThrow(searchAffectedByIssuesForFilterQuery, {
             trackable: props.trackableId,
