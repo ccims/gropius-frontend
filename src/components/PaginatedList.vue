@@ -1,6 +1,6 @@
 <template>
     <div class="d-flex h-100 flex-column">
-        <div class="d-flex align-center mt-3 mb-2 ml-3 top-bar">
+        <div class="d-flex flex-wrap flex-shrink-0 align-center mt-3 mb-2 ml-3 top-bar">
             <v-text-field
                 v-model="searchString"
                 label="Search"
@@ -286,6 +286,10 @@ function updateQuery(key: string, value: string | undefined) {
 
 .search-field {
     flex: 1 1 250px;
+}
+
+.top-bar {
+    row-gap: 8px;
 }
 
 .top-bar :deep(.v-input__details) {

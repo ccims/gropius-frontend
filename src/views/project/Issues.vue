@@ -16,68 +16,66 @@
         <template #item="{ item }"
             ><IssueListItem :item="item" :context-project-id="projectId" :hide-details="smAndDown"
         /></template>
-        <template #search-append><IssueStateSegmentedButton v-model="issueStateIndices" class="ml-2" /></template>
+        <template #search-append>
+            <v-select
+                :model-value="scope"
+                @update:model-value="setScope"
+                label="Sources"
+                :items="scopeOptions"
+                item-title="title"
+                item-value="value"
+                density="comfortable"
+                hide-details
+                class="ml-2 source-select"
+            />
+            <IssueStateSegmentedButton v-model="issueStateIndices" class="ml-2" />
+        </template>
         <template #additional-filter>
-            <div class="d-flex flex-wrap align-center ga-2 mb-2">
-                <v-select
-                    :model-value="scope"
-                    @update:model-value="setScope"
-                    label="Sources"
-                    :items="scopeOptions"
-                    item-title="title"
-                    item-value="value"
+            <div v-if="scope === 'custom'" class="d-flex flex-wrap align-center ga-2 mb-2">
+                <v-checkbox
+                    :model-value="includeProject"
+                    @update:model-value="setProjectIncluded"
+                    label="This project"
                     density="compact"
                     hide-details
-                    class="source-select"
                 />
-                <template v-if="scope === 'custom'">
-                    <v-checkbox
-                        :model-value="includeProject"
-                        @update:model-value="setProjectIncluded"
-                        label="This project"
-                        density="compact"
-                        hide-details
-                    />
-                    <v-autocomplete
-                        :model-value="componentIds"
-                        @update:model-value="setComponents"
-                        label="Components"
-                        :items="components"
-                        item-title="name"
-                        item-value="id"
-                        multiple
-                        chips
-                        closable-chips
-                        clearable
-                        density="compact"
-                        hide-details
-                        class="component-select"
-                    />
-                    <v-autocomplete
-                        :model-value="versionIds"
-                        @update:model-value="setVersions"
-                        label="Relevant to versions"
-                        :items="availableVersions"
-                        item-title="name"
-                        item-value="id"
-                        multiple
-                        chips
-                        closable-chips
-                        clearable
-                        density="compact"
-                        hide-details
-                        class="component-select"
-                        :disabled="componentIds.length === 0"
-                    />
-                    <v-tooltip
-                        text="Versions restrict their component's issues. Component-wide issues and issues without affected entities are included. This project remains an independent source."
-                    >
-                        <template #activator="{ props }"
-                            ><v-icon v-bind="props" icon="mdi-information-outline"
-                        /></template>
-                    </v-tooltip>
-                </template>
-                <v-btn v-if="scope !== 'all'" variant="text" size="small" @click="setScope('all')">All sources</v-btn>
+                <v-autocomplete
+                    :model-value="componentIds"
+                    @update:model-value="setComponents"
+                    label="Components"
+                    :items="components"
+                    item-title="name"
+                    item-value="id"
+                    multiple
+                    chips
+                    closable-chips
+                    clearable
+                    density="compact"
+                    hide-details
+                    class="component-select"
+                />
+                <v-autocomplete
+                    :model-value="versionIds"
+                    @update:model-value="setVersions"
+                    label="Relevant to versions"
+                    :items="availableVersions"
+                    item-title="name"
+                    item-value="id"
+                    multiple
+                    chips
+                    closable-chips
+                    clearable
+                    density="compact"
+                    hide-details
+                    class="component-select"
+                    :disabled="componentIds.length === 0"
+                />
+                <v-tooltip
+                    text="Versions restrict their component's issues. Component-wide issues and issues without affected entities are included. This project remains an independent source."
+                >
+                    <template #activator="{ props }"><v-icon v-bind="props" icon="mdi-information-outline" /></template>
+                </v-tooltip>
+                <v-btn variant="text" size="small" @click="setScope('all')">All sources</v-btn>
             </div>
             <v-alert v-if="invalidSelection" type="warning" density="compact" class="mb-2">
                 A selected component or version is no longer in this project. Update Sources or choose All sources.
