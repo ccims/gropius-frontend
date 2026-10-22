@@ -13,7 +13,9 @@
         :dependencies="[projectId, scopeFilter, ...(filterDropdowns?.dependencyArray ?? [])]"
         query-param-prefix=""
     >
-        <template #item="{ item }"><IssueListItem :item="item" :context-project-id="projectId" /></template>
+        <template #item="{ item }"
+            ><IssueListItem :item="item" :context-project-id="projectId" :hide-details="smAndDown"
+        /></template>
         <template #search-append><IssueStateSegmentedButton v-model="issueStateIndices" class="ml-2" /></template>
         <template #additional-filter>
             <div class="d-flex flex-wrap align-center ga-2 mb-2">
@@ -96,6 +98,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, shallowRef, useTemplateRef, watch } from "vue";
 import { useRoute, useRouter, type RouteLocationRaw } from "vue-router";
+import { useDisplay } from "vuetify";
 import { graphql } from "@/gql";
 import { queryNodeThrow, requestThrow } from "@/gql/client";
 import type { IssueFilterInput, IssueOrder, IssueOrderField, ProjectIssueListItemInfoFragment } from "@/gql/graphql";
@@ -236,6 +239,7 @@ const getProjectIssueFilterOptions = graphql(`
 `);
 
 type Issue = ProjectIssueListItemInfoFragment;
+const { smAndDown } = useDisplay();
 const route = useRoute();
 const router = useRouter();
 const projectId = computed(() => route.params.trackable as string);
