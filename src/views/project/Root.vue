@@ -122,7 +122,6 @@ const tabs = computed(() => [
     { name: "Home", path: projectPath("project") },
     { name: "Details", path: projectPath("project-details-general"), exact: false },
     { name: "Issues", path: projectPath("project-issues"), exact: false },
-    { name: "Component Issues", path: projectPath("project-component-issues"), exact: false },
     { name: "Boards", path: projectPath("project-issue-boards"), exact: false }
 ]);
 

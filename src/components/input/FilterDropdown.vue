@@ -62,6 +62,10 @@ const props = defineProps({
         type: Object as PropType<ItemManager<T, S | "ID">>,
         required: true
     },
+    initialItems: {
+        type: Array as PropType<I[]>,
+        required: false
+    },
     mapper: {
         type: Function as PropType<(item: T) => I | I[] | undefined | null>,
         required: true
@@ -152,7 +156,7 @@ watch(searchText, async (newValue) => {
 });
 const allItems = computed((previous?: I[]) => {
     const result: I[] = [];
-    if (previous) {
+    if (previous && props.initialItems === undefined) {
         result.push(...previous);
     }
     const idSet = new Set<string>();
@@ -169,6 +173,7 @@ const allItems = computed((previous?: I[]) => {
             result.push(mappedItem);
         }
     }
+    handleItems(props.initialItems ?? []);
     handleItems(fromItemManager.value);
     handleItems(fromFunction.value as I[]);
     handleItems(fromSearchFetch.value as I[]);

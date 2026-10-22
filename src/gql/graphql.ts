@@ -13510,11 +13510,20 @@ export type ParticipatingIssueListItemInfoFragment = {
     outgoingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
 };
 
-export type ProjectComponentIssueListItemInfoFragment = {
+export type ProjectIssueListItemInfoFragment = {
     __typename: "Issue";
+    lastUpdatedAt: any;
     id: string;
     title: string;
     createdAt: any;
+    priority: {
+        __typename: "IssuePriority";
+        id: string;
+        name: string;
+        value: number;
+        description: string;
+        iconPath: string;
+    } | null;
     trackables: {
         __typename: "TrackableConnection";
         totalCount: number;
@@ -13580,14 +13589,6 @@ export type ProjectComponentIssueListItemInfoFragment = {
                   };
         }>;
     };
-    priority: {
-        __typename: "IssuePriority";
-        id: string;
-        name: string;
-        description: string;
-        value: number;
-        iconPath: string;
-    } | null;
     template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
     type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
     affects: {
@@ -25528,321 +25529,6 @@ export type GetFilteredIssueListQuery = {
     }>;
 };
 
-export type GetComponentIssueListQueryVariables = Exact<{
-    orderBy: Array<IssueOrder> | IssueOrder;
-    count: number;
-    skip: number;
-    filter?: IssueFilterInput | null | undefined;
-    project: string;
-}>;
-
-export type GetComponentIssueListQuery = {
-    __typename: "Query";
-    node:
-        | { __typename: "AddedAffectedEntityEvent" }
-        | { __typename: "AddedArtefactEvent" }
-        | { __typename: "AddedLabelEvent" }
-        | { __typename: "AddedToPinnedIssuesEvent" }
-        | { __typename: "AddedToTrackableEvent" }
-        | { __typename: "AggregatedIssue" }
-        | { __typename: "AggregatedIssueRelation" }
-        | { __typename: "Artefact" }
-        | { __typename: "ArtefactTemplate" }
-        | { __typename: "Assignment" }
-        | { __typename: "AssignmentType" }
-        | { __typename: "AssignmentTypeChangedEvent" }
-        | { __typename: "Body" }
-        | { __typename: "Component" }
-        | { __typename: "ComponentPermission" }
-        | { __typename: "ComponentTemplate" }
-        | { __typename: "ComponentVersion" }
-        | { __typename: "ComponentVersionTemplate" }
-        | { __typename: "FillStyle" }
-        | { __typename: "GlobalPermission" }
-        | { __typename: "GropiusUser" }
-        | { __typename: "IMS" }
-        | { __typename: "IMSIssue" }
-        | { __typename: "IMSIssueTemplate" }
-        | { __typename: "IMSPermission" }
-        | { __typename: "IMSProject" }
-        | { __typename: "IMSProjectTemplate" }
-        | { __typename: "IMSTemplate" }
-        | { __typename: "IMSUser" }
-        | { __typename: "IMSUserTemplate" }
-        | { __typename: "IncomingRelationTypeChangedEvent" }
-        | { __typename: "Interface" }
-        | { __typename: "InterfaceDefinition" }
-        | { __typename: "InterfacePart" }
-        | { __typename: "InterfacePartTemplate" }
-        | { __typename: "InterfaceSpecification" }
-        | { __typename: "InterfaceSpecificationDerivationCondition" }
-        | { __typename: "InterfaceSpecificationTemplate" }
-        | { __typename: "InterfaceSpecificationVersion" }
-        | { __typename: "InterfaceSpecificationVersionTemplate" }
-        | { __typename: "IntraComponentDependencyParticipant" }
-        | { __typename: "IntraComponentDependencySpecification" }
-        | { __typename: "IntraComponentDependencySpecificationType" }
-        | { __typename: "Issue" }
-        | { __typename: "IssueBoard" }
-        | { __typename: "IssueBoardColumn" }
-        | { __typename: "IssueBoardItem" }
-        | { __typename: "IssueComment" }
-        | { __typename: "IssuePriority" }
-        | { __typename: "IssueRelation" }
-        | { __typename: "IssueRelationType" }
-        | { __typename: "IssueState" }
-        | { __typename: "IssueTemplate" }
-        | { __typename: "IssueType" }
-        | { __typename: "Label" }
-        | { __typename: "LegalInformation" }
-        | { __typename: "OutgoingRelationTypeChangedEvent" }
-        | { __typename: "PriorityChangedEvent" }
-        | {
-              __typename: "Project";
-              componentIssues: {
-                  __typename: "IssueConnection";
-                  totalCount: number;
-                  nodes: Array<{
-                      __typename: "Issue";
-                      id: string;
-                      title: string;
-                      createdAt: any;
-                      trackables: {
-                          __typename: "TrackableConnection";
-                          totalCount: number;
-                          nodes: Array<
-                              | { __typename: "Component"; id: string; name: string; description: string }
-                              | { __typename: "Project"; id: string; name: string; description: string }
-                          >;
-                      };
-                      createdBy:
-                          | {
-                                __typename: "GropiusUser";
-                                id: string;
-                                username: string;
-                                displayName: string;
-                                avatar: any;
-                            }
-                          | {
-                                __typename: "IMSUser";
-                                id: string;
-                                username: string | null;
-                                displayName: string;
-                                avatar: any;
-                                gropiusUser: {
-                                    __typename: "GropiusUser";
-                                    id: string;
-                                    username: string;
-                                    displayName: string;
-                                    avatar: any;
-                                } | null;
-                            };
-                      state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
-                      issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
-                      labels: {
-                          __typename: "LabelConnection";
-                          nodes: Array<{
-                              __typename: "Label";
-                              id: string;
-                              name: string;
-                              description: string;
-                              color: any;
-                              trackables: {
-                                  __typename: "TrackableConnection";
-                                  nodes: Array<
-                                      | { __typename: "Component"; id: string; name: string; description: string }
-                                      | { __typename: "Project"; id: string; name: string; description: string }
-                                  >;
-                              };
-                          }>;
-                      };
-                      assignments: {
-                          __typename: "AssignmentConnection";
-                          nodes: Array<{
-                              __typename: "Assignment";
-                              user:
-                                  | {
-                                        __typename: "GropiusUser";
-                                        id: string;
-                                        username: string;
-                                        displayName: string;
-                                        avatar: any;
-                                    }
-                                  | {
-                                        __typename: "IMSUser";
-                                        id: string;
-                                        username: string | null;
-                                        displayName: string;
-                                        avatar: any;
-                                        gropiusUser: {
-                                            __typename: "GropiusUser";
-                                            id: string;
-                                            username: string;
-                                            displayName: string;
-                                            avatar: any;
-                                        } | null;
-                                    };
-                          }>;
-                      };
-                      priority: {
-                          __typename: "IssuePriority";
-                          id: string;
-                          name: string;
-                          description: string;
-                          value: number;
-                          iconPath: string;
-                      } | null;
-                      template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
-                      type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
-                      affects: {
-                          __typename: "AffectedByIssueConnection";
-                          nodes: Array<
-                              | { __typename: "Component"; id: string }
-                              | { __typename: "ComponentVersion"; id: string }
-                              | { __typename: "Interface"; id: string }
-                              | { __typename: "InterfacePart"; id: string }
-                              | { __typename: "InterfaceSpecification"; id: string }
-                              | { __typename: "InterfaceSpecificationVersion"; id: string }
-                              | { __typename: "Project"; id: string }
-                          >;
-                      };
-                      incomingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
-                      outgoingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
-                  }>;
-              };
-          }
-        | { __typename: "ProjectPermission" }
-        | { __typename: "RelatedByIssueEvent" }
-        | { __typename: "Relation" }
-        | { __typename: "RelationCondition" }
-        | { __typename: "RelationLayout" }
-        | { __typename: "RelationPartnerLayout" }
-        | { __typename: "RelationTemplate" }
-        | { __typename: "RemovedAffectedEntityEvent" }
-        | { __typename: "RemovedArtefactEvent" }
-        | { __typename: "RemovedAssignmentEvent" }
-        | { __typename: "RemovedFromPinnedIssuesEvent" }
-        | { __typename: "RemovedFromTrackableEvent" }
-        | { __typename: "RemovedIncomingRelationEvent" }
-        | { __typename: "RemovedLabelEvent" }
-        | { __typename: "RemovedOutgoingRelationEvent" }
-        | { __typename: "RemovedTemplatedFieldEvent" }
-        | { __typename: "StateChangedEvent" }
-        | { __typename: "StrokeStyle" }
-        | { __typename: "TemplateChangedEvent" }
-        | { __typename: "TemplatedFieldChangedEvent" }
-        | { __typename: "TitleChangedEvent" }
-        | { __typename: "TypeChangedEvent" }
-        | { __typename: "View" }
-        | null;
-};
-
-export type GetComponentFilteredIssueListQueryVariables = Exact<{
-    query: string;
-    count: number;
-    project: string;
-    filter: IssueFilterInput;
-}>;
-
-export type GetComponentFilteredIssueListQuery = {
-    __typename: "Query";
-    searchIssues: Array<{
-        __typename: "Issue";
-        id: string;
-        title: string;
-        createdAt: any;
-        trackables: {
-            __typename: "TrackableConnection";
-            totalCount: number;
-            nodes: Array<
-                | { __typename: "Component"; id: string; name: string; description: string }
-                | { __typename: "Project"; id: string; name: string; description: string }
-            >;
-        };
-        createdBy:
-            | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-            | {
-                  __typename: "IMSUser";
-                  id: string;
-                  username: string | null;
-                  displayName: string;
-                  avatar: any;
-                  gropiusUser: {
-                      __typename: "GropiusUser";
-                      id: string;
-                      username: string;
-                      displayName: string;
-                      avatar: any;
-                  } | null;
-              };
-        state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
-        issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
-        labels: {
-            __typename: "LabelConnection";
-            nodes: Array<{
-                __typename: "Label";
-                id: string;
-                name: string;
-                description: string;
-                color: any;
-                trackables: {
-                    __typename: "TrackableConnection";
-                    nodes: Array<
-                        | { __typename: "Component"; id: string; name: string; description: string }
-                        | { __typename: "Project"; id: string; name: string; description: string }
-                    >;
-                };
-            }>;
-        };
-        assignments: {
-            __typename: "AssignmentConnection";
-            nodes: Array<{
-                __typename: "Assignment";
-                user:
-                    | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
-                    | {
-                          __typename: "IMSUser";
-                          id: string;
-                          username: string | null;
-                          displayName: string;
-                          avatar: any;
-                          gropiusUser: {
-                              __typename: "GropiusUser";
-                              id: string;
-                              username: string;
-                              displayName: string;
-                              avatar: any;
-                          } | null;
-                      };
-            }>;
-        };
-        priority: {
-            __typename: "IssuePriority";
-            id: string;
-            name: string;
-            description: string;
-            value: number;
-            iconPath: string;
-        } | null;
-        template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
-        type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
-        affects: {
-            __typename: "AffectedByIssueConnection";
-            nodes: Array<
-                | { __typename: "Component"; id: string }
-                | { __typename: "ComponentVersion"; id: string }
-                | { __typename: "Interface"; id: string }
-                | { __typename: "InterfacePart"; id: string }
-                | { __typename: "InterfaceSpecification"; id: string }
-                | { __typename: "InterfaceSpecificationVersion"; id: string }
-                | { __typename: "Project"; id: string }
-            >;
-        };
-        incomingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
-        outgoingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
-    }>;
-};
-
 export type GetViewQueryVariables = Exact<{
     id: string;
 }>;
@@ -26268,6 +25954,894 @@ export type GetProjectGraphQuery = {
                   }>;
               };
               defaultView: { __typename: "View"; id: string } | null;
+          }
+        | { __typename: "ProjectPermission" }
+        | { __typename: "RelatedByIssueEvent" }
+        | { __typename: "Relation" }
+        | { __typename: "RelationCondition" }
+        | { __typename: "RelationLayout" }
+        | { __typename: "RelationPartnerLayout" }
+        | { __typename: "RelationTemplate" }
+        | { __typename: "RemovedAffectedEntityEvent" }
+        | { __typename: "RemovedArtefactEvent" }
+        | { __typename: "RemovedAssignmentEvent" }
+        | { __typename: "RemovedFromPinnedIssuesEvent" }
+        | { __typename: "RemovedFromTrackableEvent" }
+        | { __typename: "RemovedIncomingRelationEvent" }
+        | { __typename: "RemovedLabelEvent" }
+        | { __typename: "RemovedOutgoingRelationEvent" }
+        | { __typename: "RemovedTemplatedFieldEvent" }
+        | { __typename: "StateChangedEvent" }
+        | { __typename: "StrokeStyle" }
+        | { __typename: "TemplateChangedEvent" }
+        | { __typename: "TemplatedFieldChangedEvent" }
+        | { __typename: "TitleChangedEvent" }
+        | { __typename: "TypeChangedEvent" }
+        | { __typename: "View" }
+        | null;
+};
+
+export type GetProjectIssueSourcesQueryVariables = Exact<{
+    project: string;
+    skip: number;
+    count: number;
+}>;
+
+export type GetProjectIssueSourcesQuery = {
+    __typename: "Query";
+    node:
+        | { __typename: "AddedAffectedEntityEvent" }
+        | { __typename: "AddedArtefactEvent" }
+        | { __typename: "AddedLabelEvent" }
+        | { __typename: "AddedToPinnedIssuesEvent" }
+        | { __typename: "AddedToTrackableEvent" }
+        | { __typename: "AggregatedIssue" }
+        | { __typename: "AggregatedIssueRelation" }
+        | { __typename: "Artefact" }
+        | { __typename: "ArtefactTemplate" }
+        | { __typename: "Assignment" }
+        | { __typename: "AssignmentType" }
+        | { __typename: "AssignmentTypeChangedEvent" }
+        | { __typename: "Body" }
+        | { __typename: "Component" }
+        | { __typename: "ComponentPermission" }
+        | { __typename: "ComponentTemplate" }
+        | { __typename: "ComponentVersion" }
+        | { __typename: "ComponentVersionTemplate" }
+        | { __typename: "FillStyle" }
+        | { __typename: "GlobalPermission" }
+        | { __typename: "GropiusUser" }
+        | { __typename: "IMS" }
+        | { __typename: "IMSIssue" }
+        | { __typename: "IMSIssueTemplate" }
+        | { __typename: "IMSPermission" }
+        | { __typename: "IMSProject" }
+        | { __typename: "IMSProjectTemplate" }
+        | { __typename: "IMSTemplate" }
+        | { __typename: "IMSUser" }
+        | { __typename: "IMSUserTemplate" }
+        | { __typename: "IncomingRelationTypeChangedEvent" }
+        | { __typename: "Interface" }
+        | { __typename: "InterfaceDefinition" }
+        | { __typename: "InterfacePart" }
+        | { __typename: "InterfacePartTemplate" }
+        | { __typename: "InterfaceSpecification" }
+        | { __typename: "InterfaceSpecificationDerivationCondition" }
+        | { __typename: "InterfaceSpecificationTemplate" }
+        | { __typename: "InterfaceSpecificationVersion" }
+        | { __typename: "InterfaceSpecificationVersionTemplate" }
+        | { __typename: "IntraComponentDependencyParticipant" }
+        | { __typename: "IntraComponentDependencySpecification" }
+        | { __typename: "IntraComponentDependencySpecificationType" }
+        | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
+        | { __typename: "IssueComment" }
+        | { __typename: "IssuePriority" }
+        | { __typename: "IssueRelation" }
+        | { __typename: "IssueRelationType" }
+        | { __typename: "IssueState" }
+        | { __typename: "IssueTemplate" }
+        | { __typename: "IssueType" }
+        | { __typename: "Label" }
+        | { __typename: "LegalInformation" }
+        | { __typename: "OutgoingRelationTypeChangedEvent" }
+        | { __typename: "PriorityChangedEvent" }
+        | {
+              __typename: "Project";
+              components: {
+                  __typename: "ComponentVersionConnection";
+                  totalCount: number;
+                  nodes: Array<{
+                      __typename: "ComponentVersion";
+                      id: string;
+                      version: string;
+                      component: { __typename: "Component"; id: string; name: string };
+                  }>;
+              };
+          }
+        | { __typename: "ProjectPermission" }
+        | { __typename: "RelatedByIssueEvent" }
+        | { __typename: "Relation" }
+        | { __typename: "RelationCondition" }
+        | { __typename: "RelationLayout" }
+        | { __typename: "RelationPartnerLayout" }
+        | { __typename: "RelationTemplate" }
+        | { __typename: "RemovedAffectedEntityEvent" }
+        | { __typename: "RemovedArtefactEvent" }
+        | { __typename: "RemovedAssignmentEvent" }
+        | { __typename: "RemovedFromPinnedIssuesEvent" }
+        | { __typename: "RemovedFromTrackableEvent" }
+        | { __typename: "RemovedIncomingRelationEvent" }
+        | { __typename: "RemovedLabelEvent" }
+        | { __typename: "RemovedOutgoingRelationEvent" }
+        | { __typename: "RemovedTemplatedFieldEvent" }
+        | { __typename: "StateChangedEvent" }
+        | { __typename: "StrokeStyle" }
+        | { __typename: "TemplateChangedEvent" }
+        | { __typename: "TemplatedFieldChangedEvent" }
+        | { __typename: "TitleChangedEvent" }
+        | { __typename: "TypeChangedEvent" }
+        | { __typename: "View" }
+        | null;
+};
+
+export type GetComponentIssueListQueryVariables = Exact<{
+    project: string;
+    filter: IssueFilterInput;
+    orderBy: Array<IssueOrder> | IssueOrder;
+    count: number;
+    skip: number;
+    direct: boolean;
+    component: boolean;
+}>;
+
+export type GetComponentIssueListQuery = {
+    __typename: "Query";
+    node:
+        | { __typename: "AddedAffectedEntityEvent" }
+        | { __typename: "AddedArtefactEvent" }
+        | { __typename: "AddedLabelEvent" }
+        | { __typename: "AddedToPinnedIssuesEvent" }
+        | { __typename: "AddedToTrackableEvent" }
+        | { __typename: "AggregatedIssue" }
+        | { __typename: "AggregatedIssueRelation" }
+        | { __typename: "Artefact" }
+        | { __typename: "ArtefactTemplate" }
+        | { __typename: "Assignment" }
+        | { __typename: "AssignmentType" }
+        | { __typename: "AssignmentTypeChangedEvent" }
+        | { __typename: "Body" }
+        | { __typename: "Component" }
+        | { __typename: "ComponentPermission" }
+        | { __typename: "ComponentTemplate" }
+        | { __typename: "ComponentVersion" }
+        | { __typename: "ComponentVersionTemplate" }
+        | { __typename: "FillStyle" }
+        | { __typename: "GlobalPermission" }
+        | { __typename: "GropiusUser" }
+        | { __typename: "IMS" }
+        | { __typename: "IMSIssue" }
+        | { __typename: "IMSIssueTemplate" }
+        | { __typename: "IMSPermission" }
+        | { __typename: "IMSProject" }
+        | { __typename: "IMSProjectTemplate" }
+        | { __typename: "IMSTemplate" }
+        | { __typename: "IMSUser" }
+        | { __typename: "IMSUserTemplate" }
+        | { __typename: "IncomingRelationTypeChangedEvent" }
+        | { __typename: "Interface" }
+        | { __typename: "InterfaceDefinition" }
+        | { __typename: "InterfacePart" }
+        | { __typename: "InterfacePartTemplate" }
+        | { __typename: "InterfaceSpecification" }
+        | { __typename: "InterfaceSpecificationDerivationCondition" }
+        | { __typename: "InterfaceSpecificationTemplate" }
+        | { __typename: "InterfaceSpecificationVersion" }
+        | { __typename: "InterfaceSpecificationVersionTemplate" }
+        | { __typename: "IntraComponentDependencyParticipant" }
+        | { __typename: "IntraComponentDependencySpecification" }
+        | { __typename: "IntraComponentDependencySpecificationType" }
+        | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
+        | { __typename: "IssueComment" }
+        | { __typename: "IssuePriority" }
+        | { __typename: "IssueRelation" }
+        | { __typename: "IssueRelationType" }
+        | { __typename: "IssueState" }
+        | { __typename: "IssueTemplate" }
+        | { __typename: "IssueType" }
+        | { __typename: "Label" }
+        | { __typename: "LegalInformation" }
+        | { __typename: "OutgoingRelationTypeChangedEvent" }
+        | { __typename: "PriorityChangedEvent" }
+        | {
+              __typename: "Project";
+              issues?: {
+                  __typename: "IssueConnection";
+                  totalCount: number;
+                  nodes: Array<{
+                      __typename: "Issue";
+                      lastUpdatedAt: any;
+                      id: string;
+                      title: string;
+                      createdAt: any;
+                      priority: {
+                          __typename: "IssuePriority";
+                          id: string;
+                          name: string;
+                          value: number;
+                          description: string;
+                          iconPath: string;
+                      } | null;
+                      trackables: {
+                          __typename: "TrackableConnection";
+                          totalCount: number;
+                          nodes: Array<
+                              | { __typename: "Component"; id: string; name: string; description: string }
+                              | { __typename: "Project"; id: string; name: string; description: string }
+                          >;
+                      };
+                      createdBy:
+                          | {
+                                __typename: "GropiusUser";
+                                id: string;
+                                username: string;
+                                displayName: string;
+                                avatar: any;
+                            }
+                          | {
+                                __typename: "IMSUser";
+                                id: string;
+                                username: string | null;
+                                displayName: string;
+                                avatar: any;
+                                gropiusUser: {
+                                    __typename: "GropiusUser";
+                                    id: string;
+                                    username: string;
+                                    displayName: string;
+                                    avatar: any;
+                                } | null;
+                            };
+                      state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
+                      issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
+                      labels: {
+                          __typename: "LabelConnection";
+                          nodes: Array<{
+                              __typename: "Label";
+                              id: string;
+                              name: string;
+                              description: string;
+                              color: any;
+                              trackables: {
+                                  __typename: "TrackableConnection";
+                                  nodes: Array<
+                                      | { __typename: "Component"; id: string; name: string; description: string }
+                                      | { __typename: "Project"; id: string; name: string; description: string }
+                                  >;
+                              };
+                          }>;
+                      };
+                      assignments: {
+                          __typename: "AssignmentConnection";
+                          nodes: Array<{
+                              __typename: "Assignment";
+                              user:
+                                  | {
+                                        __typename: "GropiusUser";
+                                        id: string;
+                                        username: string;
+                                        displayName: string;
+                                        avatar: any;
+                                    }
+                                  | {
+                                        __typename: "IMSUser";
+                                        id: string;
+                                        username: string | null;
+                                        displayName: string;
+                                        avatar: any;
+                                        gropiusUser: {
+                                            __typename: "GropiusUser";
+                                            id: string;
+                                            username: string;
+                                            displayName: string;
+                                            avatar: any;
+                                        } | null;
+                                    };
+                          }>;
+                      };
+                      template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
+                      type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
+                      affects: {
+                          __typename: "AffectedByIssueConnection";
+                          nodes: Array<
+                              | { __typename: "Component"; id: string }
+                              | { __typename: "ComponentVersion"; id: string }
+                              | { __typename: "Interface"; id: string }
+                              | { __typename: "InterfacePart"; id: string }
+                              | { __typename: "InterfaceSpecification"; id: string }
+                              | { __typename: "InterfaceSpecificationVersion"; id: string }
+                              | { __typename: "Project"; id: string }
+                          >;
+                      };
+                      incomingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
+                      outgoingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
+                  }>;
+              };
+              componentIssues?: {
+                  __typename: "IssueConnection";
+                  totalCount: number;
+                  nodes: Array<{
+                      __typename: "Issue";
+                      lastUpdatedAt: any;
+                      id: string;
+                      title: string;
+                      createdAt: any;
+                      priority: {
+                          __typename: "IssuePriority";
+                          id: string;
+                          name: string;
+                          value: number;
+                          description: string;
+                          iconPath: string;
+                      } | null;
+                      trackables: {
+                          __typename: "TrackableConnection";
+                          totalCount: number;
+                          nodes: Array<
+                              | { __typename: "Component"; id: string; name: string; description: string }
+                              | { __typename: "Project"; id: string; name: string; description: string }
+                          >;
+                      };
+                      createdBy:
+                          | {
+                                __typename: "GropiusUser";
+                                id: string;
+                                username: string;
+                                displayName: string;
+                                avatar: any;
+                            }
+                          | {
+                                __typename: "IMSUser";
+                                id: string;
+                                username: string | null;
+                                displayName: string;
+                                avatar: any;
+                                gropiusUser: {
+                                    __typename: "GropiusUser";
+                                    id: string;
+                                    username: string;
+                                    displayName: string;
+                                    avatar: any;
+                                } | null;
+                            };
+                      state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
+                      issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
+                      labels: {
+                          __typename: "LabelConnection";
+                          nodes: Array<{
+                              __typename: "Label";
+                              id: string;
+                              name: string;
+                              description: string;
+                              color: any;
+                              trackables: {
+                                  __typename: "TrackableConnection";
+                                  nodes: Array<
+                                      | { __typename: "Component"; id: string; name: string; description: string }
+                                      | { __typename: "Project"; id: string; name: string; description: string }
+                                  >;
+                              };
+                          }>;
+                      };
+                      assignments: {
+                          __typename: "AssignmentConnection";
+                          nodes: Array<{
+                              __typename: "Assignment";
+                              user:
+                                  | {
+                                        __typename: "GropiusUser";
+                                        id: string;
+                                        username: string;
+                                        displayName: string;
+                                        avatar: any;
+                                    }
+                                  | {
+                                        __typename: "IMSUser";
+                                        id: string;
+                                        username: string | null;
+                                        displayName: string;
+                                        avatar: any;
+                                        gropiusUser: {
+                                            __typename: "GropiusUser";
+                                            id: string;
+                                            username: string;
+                                            displayName: string;
+                                            avatar: any;
+                                        } | null;
+                                    };
+                          }>;
+                      };
+                      template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
+                      type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
+                      affects: {
+                          __typename: "AffectedByIssueConnection";
+                          nodes: Array<
+                              | { __typename: "Component"; id: string }
+                              | { __typename: "ComponentVersion"; id: string }
+                              | { __typename: "Interface"; id: string }
+                              | { __typename: "InterfacePart"; id: string }
+                              | { __typename: "InterfaceSpecification"; id: string }
+                              | { __typename: "InterfaceSpecificationVersion"; id: string }
+                              | { __typename: "Project"; id: string }
+                          >;
+                      };
+                      incomingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
+                      outgoingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
+                  }>;
+              };
+          }
+        | { __typename: "ProjectPermission" }
+        | { __typename: "RelatedByIssueEvent" }
+        | { __typename: "Relation" }
+        | { __typename: "RelationCondition" }
+        | { __typename: "RelationLayout" }
+        | { __typename: "RelationPartnerLayout" }
+        | { __typename: "RelationTemplate" }
+        | { __typename: "RemovedAffectedEntityEvent" }
+        | { __typename: "RemovedArtefactEvent" }
+        | { __typename: "RemovedAssignmentEvent" }
+        | { __typename: "RemovedFromPinnedIssuesEvent" }
+        | { __typename: "RemovedFromTrackableEvent" }
+        | { __typename: "RemovedIncomingRelationEvent" }
+        | { __typename: "RemovedLabelEvent" }
+        | { __typename: "RemovedOutgoingRelationEvent" }
+        | { __typename: "RemovedTemplatedFieldEvent" }
+        | { __typename: "StateChangedEvent" }
+        | { __typename: "StrokeStyle" }
+        | { __typename: "TemplateChangedEvent" }
+        | { __typename: "TemplatedFieldChangedEvent" }
+        | { __typename: "TitleChangedEvent" }
+        | { __typename: "TypeChangedEvent" }
+        | { __typename: "View" }
+        | null;
+};
+
+export type GetComponentFilteredIssueListQueryVariables = Exact<{
+    project: string;
+    query: string;
+    count: number;
+    skip: number;
+    filter: IssueFilterInput;
+}>;
+
+export type GetComponentFilteredIssueListQuery = {
+    __typename: "Query";
+    searchIssues: Array<{
+        __typename: "Issue";
+        lastUpdatedAt: any;
+        id: string;
+        title: string;
+        createdAt: any;
+        priority: {
+            __typename: "IssuePriority";
+            id: string;
+            name: string;
+            value: number;
+            description: string;
+            iconPath: string;
+        } | null;
+        trackables: {
+            __typename: "TrackableConnection";
+            totalCount: number;
+            nodes: Array<
+                | { __typename: "Component"; id: string; name: string; description: string }
+                | { __typename: "Project"; id: string; name: string; description: string }
+            >;
+        };
+        createdBy:
+            | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
+            | {
+                  __typename: "IMSUser";
+                  id: string;
+                  username: string | null;
+                  displayName: string;
+                  avatar: any;
+                  gropiusUser: {
+                      __typename: "GropiusUser";
+                      id: string;
+                      username: string;
+                      displayName: string;
+                      avatar: any;
+                  } | null;
+              };
+        state: { __typename: "IssueState"; id: string; name: string; isOpen: boolean };
+        issueComments: { __typename: "IssueCommentConnection"; totalCount: number };
+        labels: {
+            __typename: "LabelConnection";
+            nodes: Array<{
+                __typename: "Label";
+                id: string;
+                name: string;
+                description: string;
+                color: any;
+                trackables: {
+                    __typename: "TrackableConnection";
+                    nodes: Array<
+                        | { __typename: "Component"; id: string; name: string; description: string }
+                        | { __typename: "Project"; id: string; name: string; description: string }
+                    >;
+                };
+            }>;
+        };
+        assignments: {
+            __typename: "AssignmentConnection";
+            nodes: Array<{
+                __typename: "Assignment";
+                user:
+                    | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
+                    | {
+                          __typename: "IMSUser";
+                          id: string;
+                          username: string | null;
+                          displayName: string;
+                          avatar: any;
+                          gropiusUser: {
+                              __typename: "GropiusUser";
+                              id: string;
+                              username: string;
+                              displayName: string;
+                              avatar: any;
+                          } | null;
+                      };
+            }>;
+        };
+        template: { __typename: "IssueTemplate"; id: string; name: string; description: string };
+        type: { __typename: "IssueType"; id: string; name: string; iconPath: string };
+        affects: {
+            __typename: "AffectedByIssueConnection";
+            nodes: Array<
+                | { __typename: "Component"; id: string }
+                | { __typename: "ComponentVersion"; id: string }
+                | { __typename: "Interface"; id: string }
+                | { __typename: "InterfacePart"; id: string }
+                | { __typename: "InterfaceSpecification"; id: string }
+                | { __typename: "InterfaceSpecificationVersion"; id: string }
+                | { __typename: "Project"; id: string }
+            >;
+        };
+        incomingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
+        outgoingRelations: { __typename: "IssueRelationConnection"; totalCount: number };
+    }>;
+};
+
+export type GetProjectIssueFilterOptionsQueryVariables = Exact<{
+    trackable: string;
+    skip: number;
+    count: number;
+}>;
+
+export type GetProjectIssueFilterOptionsQuery = {
+    __typename: "Query";
+    node:
+        | { __typename: "AddedAffectedEntityEvent" }
+        | { __typename: "AddedArtefactEvent" }
+        | { __typename: "AddedLabelEvent" }
+        | { __typename: "AddedToPinnedIssuesEvent" }
+        | { __typename: "AddedToTrackableEvent" }
+        | { __typename: "AggregatedIssue" }
+        | { __typename: "AggregatedIssueRelation" }
+        | { __typename: "Artefact" }
+        | { __typename: "ArtefactTemplate" }
+        | { __typename: "Assignment" }
+        | { __typename: "AssignmentType" }
+        | { __typename: "AssignmentTypeChangedEvent" }
+        | { __typename: "Body" }
+        | {
+              __typename: "Component";
+              usedIssueTemplates: {
+                  __typename: "IssueTemplateConnection";
+                  totalCount: number;
+                  nodes: Array<{
+                      __typename: "IssueTemplate";
+                      id: string;
+                      name: string;
+                      description: string;
+                      templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+                  }>;
+              };
+              usedLabels: {
+                  __typename: "LabelConnection";
+                  totalCount: number;
+                  nodes: Array<{
+                      __typename: "Label";
+                      id: string;
+                      name: string;
+                      description: string;
+                      color: any;
+                      trackables: {
+                          __typename: "TrackableConnection";
+                          nodes: Array<
+                              | { __typename: "Component"; id: string; name: string; description: string }
+                              | { __typename: "Project"; id: string; name: string; description: string }
+                          >;
+                      };
+                  }>;
+              };
+              usedIssuePriorities: {
+                  __typename: "IssuePriorityConnection";
+                  totalCount: number;
+                  nodes: Array<{
+                      __typename: "IssuePriority";
+                      id: string;
+                      name: string;
+                      description: string;
+                      value: number;
+                      iconPath: string;
+                  }>;
+              };
+              usedIssueTypes: {
+                  __typename: "IssueTypeConnection";
+                  totalCount: number;
+                  nodes: Array<{
+                      __typename: "IssueType";
+                      id: string;
+                      name: string;
+                      description: string;
+                      iconPath: string;
+                  }>;
+              };
+              usedIssueStates: {
+                  __typename: "IssueStateConnection";
+                  totalCount: number;
+                  nodes: Array<{
+                      __typename: "IssueState";
+                      id: string;
+                      name: string;
+                      description: string;
+                      isOpen: boolean;
+                  }>;
+              };
+              assignedUsers: {
+                  __typename: "UserConnection";
+                  totalCount: number;
+                  nodes: Array<
+                      | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
+                      | {
+                            __typename: "IMSUser";
+                            id: string;
+                            username: string | null;
+                            displayName: string;
+                            avatar: any;
+                            gropiusUser: {
+                                __typename: "GropiusUser";
+                                id: string;
+                                username: string;
+                                displayName: string;
+                                avatar: any;
+                            } | null;
+                        }
+                  >;
+              };
+              affectedEntities: {
+                  __typename: "AffectedByIssueConnection";
+                  totalCount: number;
+                  nodes: Array<
+                      | { __typename: "Component"; name: string; description: string; id: string }
+                      | {
+                            __typename: "ComponentVersion";
+                            version: string;
+                            id: string;
+                            component: { __typename: "Component"; name: string; description: string };
+                        }
+                      | {
+                            __typename: "Interface";
+                            id: string;
+                            interfaceDefinition: {
+                                __typename: "InterfaceDefinition";
+                                interfaceSpecificationVersion: {
+                                    __typename: "InterfaceSpecificationVersion";
+                                    version: string;
+                                    interfaceSpecification: {
+                                        __typename: "InterfaceSpecification";
+                                        name: string;
+                                        description: string;
+                                    };
+                                };
+                            };
+                        }
+                      | { __typename: "InterfacePart"; name: string; description: string; id: string }
+                      | { __typename: "InterfaceSpecification"; name: string; description: string; id: string }
+                      | {
+                            __typename: "InterfaceSpecificationVersion";
+                            version: string;
+                            id: string;
+                            interfaceSpecification: {
+                                __typename: "InterfaceSpecification";
+                                name: string;
+                                description: string;
+                            };
+                        }
+                      | { __typename: "Project"; name: string; description: string; id: string }
+                  >;
+              };
+          }
+        | { __typename: "ComponentPermission" }
+        | { __typename: "ComponentTemplate" }
+        | { __typename: "ComponentVersion" }
+        | { __typename: "ComponentVersionTemplate" }
+        | { __typename: "FillStyle" }
+        | { __typename: "GlobalPermission" }
+        | { __typename: "GropiusUser" }
+        | { __typename: "IMS" }
+        | { __typename: "IMSIssue" }
+        | { __typename: "IMSIssueTemplate" }
+        | { __typename: "IMSPermission" }
+        | { __typename: "IMSProject" }
+        | { __typename: "IMSProjectTemplate" }
+        | { __typename: "IMSTemplate" }
+        | { __typename: "IMSUser" }
+        | { __typename: "IMSUserTemplate" }
+        | { __typename: "IncomingRelationTypeChangedEvent" }
+        | { __typename: "Interface" }
+        | { __typename: "InterfaceDefinition" }
+        | { __typename: "InterfacePart" }
+        | { __typename: "InterfacePartTemplate" }
+        | { __typename: "InterfaceSpecification" }
+        | { __typename: "InterfaceSpecificationDerivationCondition" }
+        | { __typename: "InterfaceSpecificationTemplate" }
+        | { __typename: "InterfaceSpecificationVersion" }
+        | { __typename: "InterfaceSpecificationVersionTemplate" }
+        | { __typename: "IntraComponentDependencyParticipant" }
+        | { __typename: "IntraComponentDependencySpecification" }
+        | { __typename: "IntraComponentDependencySpecificationType" }
+        | { __typename: "Issue" }
+        | { __typename: "IssueBoard" }
+        | { __typename: "IssueBoardColumn" }
+        | { __typename: "IssueBoardItem" }
+        | { __typename: "IssueComment" }
+        | { __typename: "IssuePriority" }
+        | { __typename: "IssueRelation" }
+        | { __typename: "IssueRelationType" }
+        | { __typename: "IssueState" }
+        | { __typename: "IssueTemplate" }
+        | { __typename: "IssueType" }
+        | { __typename: "Label" }
+        | { __typename: "LegalInformation" }
+        | { __typename: "OutgoingRelationTypeChangedEvent" }
+        | { __typename: "PriorityChangedEvent" }
+        | {
+              __typename: "Project";
+              usedIssueTemplates: {
+                  __typename: "IssueTemplateConnection";
+                  totalCount: number;
+                  nodes: Array<{
+                      __typename: "IssueTemplate";
+                      id: string;
+                      name: string;
+                      description: string;
+                      templateFieldSpecifications: Array<{ __typename: "JSONField"; name: string; value: any }>;
+                  }>;
+              };
+              usedLabels: {
+                  __typename: "LabelConnection";
+                  totalCount: number;
+                  nodes: Array<{
+                      __typename: "Label";
+                      id: string;
+                      name: string;
+                      description: string;
+                      color: any;
+                      trackables: {
+                          __typename: "TrackableConnection";
+                          nodes: Array<
+                              | { __typename: "Component"; id: string; name: string; description: string }
+                              | { __typename: "Project"; id: string; name: string; description: string }
+                          >;
+                      };
+                  }>;
+              };
+              usedIssuePriorities: {
+                  __typename: "IssuePriorityConnection";
+                  totalCount: number;
+                  nodes: Array<{
+                      __typename: "IssuePriority";
+                      id: string;
+                      name: string;
+                      description: string;
+                      value: number;
+                      iconPath: string;
+                  }>;
+              };
+              usedIssueTypes: {
+                  __typename: "IssueTypeConnection";
+                  totalCount: number;
+                  nodes: Array<{
+                      __typename: "IssueType";
+                      id: string;
+                      name: string;
+                      description: string;
+                      iconPath: string;
+                  }>;
+              };
+              usedIssueStates: {
+                  __typename: "IssueStateConnection";
+                  totalCount: number;
+                  nodes: Array<{
+                      __typename: "IssueState";
+                      id: string;
+                      name: string;
+                      description: string;
+                      isOpen: boolean;
+                  }>;
+              };
+              assignedUsers: {
+                  __typename: "UserConnection";
+                  totalCount: number;
+                  nodes: Array<
+                      | { __typename: "GropiusUser"; id: string; username: string; displayName: string; avatar: any }
+                      | {
+                            __typename: "IMSUser";
+                            id: string;
+                            username: string | null;
+                            displayName: string;
+                            avatar: any;
+                            gropiusUser: {
+                                __typename: "GropiusUser";
+                                id: string;
+                                username: string;
+                                displayName: string;
+                                avatar: any;
+                            } | null;
+                        }
+                  >;
+              };
+              affectedEntities: {
+                  __typename: "AffectedByIssueConnection";
+                  totalCount: number;
+                  nodes: Array<
+                      | { __typename: "Component"; name: string; description: string; id: string }
+                      | {
+                            __typename: "ComponentVersion";
+                            version: string;
+                            id: string;
+                            component: { __typename: "Component"; name: string; description: string };
+                        }
+                      | {
+                            __typename: "Interface";
+                            id: string;
+                            interfaceDefinition: {
+                                __typename: "InterfaceDefinition";
+                                interfaceSpecificationVersion: {
+                                    __typename: "InterfaceSpecificationVersion";
+                                    version: string;
+                                    interfaceSpecification: {
+                                        __typename: "InterfaceSpecification";
+                                        name: string;
+                                        description: string;
+                                    };
+                                };
+                            };
+                        }
+                      | { __typename: "InterfacePart"; name: string; description: string; id: string }
+                      | { __typename: "InterfaceSpecification"; name: string; description: string; id: string }
+                      | {
+                            __typename: "InterfaceSpecificationVersion";
+                            version: string;
+                            id: string;
+                            interfaceSpecification: {
+                                __typename: "InterfaceSpecification";
+                                name: string;
+                                description: string;
+                            };
+                        }
+                      | { __typename: "Project"; name: string; description: string; id: string }
+                  >;
+              };
           }
         | { __typename: "ProjectPermission" }
         | { __typename: "RelatedByIssueEvent" }
@@ -31503,18 +32077,32 @@ export const ParticipatingIssueListItemInfoFragmentDoc = {
         }
     ]
 } as unknown as DocumentNode<ParticipatingIssueListItemInfoFragment, unknown>;
-export const ProjectComponentIssueListItemInfoFragmentDoc = {
+export const ProjectIssueListItemInfoFragmentDoc = {
     kind: "Document",
     definitions: [
         {
             kind: "FragmentDefinition",
-            name: { kind: "Name", value: "ProjectComponentIssueListItemInfo" },
+            name: { kind: "Name", value: "ProjectIssueListItemInfo" },
             typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Issue" } },
             selectionSet: {
                 kind: "SelectionSet",
                 selections: [
                     { kind: "Field", name: { kind: "Name", value: "__typename" } },
                     { kind: "FragmentSpread", name: { kind: "Name", value: "IssueListItemInfo" } },
+                    { kind: "Field", name: { kind: "Name", value: "lastUpdatedAt" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "priority" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } },
+                                { kind: "Field", name: { kind: "Name", value: "value" } }
+                            ]
+                        }
+                    },
                     {
                         kind: "Field",
                         name: { kind: "Name", value: "trackables" },
@@ -31527,44 +32115,102 @@ export const ProjectComponentIssueListItemInfoFragmentDoc = {
                                     fields: [
                                         {
                                             kind: "ObjectField",
-                                            name: { kind: "Name", value: "isComponentAnd" },
+                                            name: { kind: "Name", value: "or" },
                                             value: {
-                                                kind: "ObjectValue",
-                                                fields: [
+                                                kind: "ListValue",
+                                                values: [
                                                     {
-                                                        kind: "ObjectField",
-                                                        name: { kind: "Name", value: "versions" },
-                                                        value: {
-                                                            kind: "ObjectValue",
-                                                            fields: [
-                                                                {
-                                                                    kind: "ObjectField",
-                                                                    name: { kind: "Name", value: "any" },
-                                                                    value: {
-                                                                        kind: "ObjectValue",
-                                                                        fields: [
-                                                                            {
-                                                                                kind: "ObjectField",
-                                                                                name: {
-                                                                                    kind: "Name",
-                                                                                    value: "partOfProject"
-                                                                                },
-                                                                                value: {
-                                                                                    kind: "Variable",
-                                                                                    name: {
-                                                                                        kind: "Name",
-                                                                                        value: "project"
-                                                                                    }
-                                                                                }
+                                                        kind: "ObjectValue",
+                                                        fields: [
+                                                            {
+                                                                kind: "ObjectField",
+                                                                name: { kind: "Name", value: "id" },
+                                                                value: {
+                                                                    kind: "ObjectValue",
+                                                                    fields: [
+                                                                        {
+                                                                            kind: "ObjectField",
+                                                                            name: { kind: "Name", value: "eq" },
+                                                                            value: {
+                                                                                kind: "Variable",
+                                                                                name: { kind: "Name", value: "project" }
                                                                             }
-                                                                        ]
-                                                                    }
+                                                                        }
+                                                                    ]
                                                                 }
-                                                            ]
-                                                        }
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        kind: "ObjectValue",
+                                                        fields: [
+                                                            {
+                                                                kind: "ObjectField",
+                                                                name: { kind: "Name", value: "isComponentAnd" },
+                                                                value: {
+                                                                    kind: "ObjectValue",
+                                                                    fields: [
+                                                                        {
+                                                                            kind: "ObjectField",
+                                                                            name: { kind: "Name", value: "versions" },
+                                                                            value: {
+                                                                                kind: "ObjectValue",
+                                                                                fields: [
+                                                                                    {
+                                                                                        kind: "ObjectField",
+                                                                                        name: {
+                                                                                            kind: "Name",
+                                                                                            value: "any"
+                                                                                        },
+                                                                                        value: {
+                                                                                            kind: "ObjectValue",
+                                                                                            fields: [
+                                                                                                {
+                                                                                                    kind: "ObjectField",
+                                                                                                    name: {
+                                                                                                        kind: "Name",
+                                                                                                        value: "partOfProject"
+                                                                                                    },
+                                                                                                    value: {
+                                                                                                        kind: "Variable",
+                                                                                                        name: {
+                                                                                                            kind: "Name",
+                                                                                                            value: "project"
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            ]
+                                                                                        }
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            }
+                                                        ]
                                                     }
                                                 ]
                                             }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "orderBy" },
+                                value: {
+                                    kind: "ListValue",
+                                    values: [
+                                        {
+                                            kind: "ObjectValue",
+                                            fields: [
+                                                {
+                                                    kind: "ObjectField",
+                                                    name: { kind: "Name", value: "field" },
+                                                    value: { kind: "EnumValue", value: "ID" }
+                                                }
+                                            ]
                                         }
                                     ]
                                 }
@@ -31920,7 +32566,7 @@ export const ProjectComponentIssueListItemInfoFragmentDoc = {
             }
         }
     ]
-} as unknown as DocumentNode<ProjectComponentIssueListItemInfoFragment, unknown>;
+} as unknown as DocumentNode<ProjectIssueListItemInfoFragment, unknown>;
 export const DefaultIssueBoardInfoFragmentDoc = {
     kind: "Document",
     definitions: [
@@ -78569,1125 +79215,6 @@ export const GetFilteredIssueListDocument = {
         }
     ]
 } as unknown as DocumentNode<GetFilteredIssueListQuery, GetFilteredIssueListQueryVariables>;
-export const GetComponentIssueListDocument = {
-    kind: "Document",
-    definitions: [
-        {
-            kind: "OperationDefinition",
-            operation: "query",
-            name: { kind: "Name", value: "getComponentIssueList" },
-            variableDefinitions: [
-                {
-                    kind: "VariableDefinition",
-                    variable: { kind: "Variable", name: { kind: "Name", value: "orderBy" } },
-                    type: {
-                        kind: "NonNullType",
-                        type: {
-                            kind: "ListType",
-                            type: {
-                                kind: "NonNullType",
-                                type: { kind: "NamedType", name: { kind: "Name", value: "IssueOrder" } }
-                            }
-                        }
-                    }
-                },
-                {
-                    kind: "VariableDefinition",
-                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
-                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
-                },
-                {
-                    kind: "VariableDefinition",
-                    variable: { kind: "Variable", name: { kind: "Name", value: "skip" } },
-                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
-                },
-                {
-                    kind: "VariableDefinition",
-                    variable: { kind: "Variable", name: { kind: "Name", value: "filter" } },
-                    type: { kind: "NamedType", name: { kind: "Name", value: "IssueFilterInput" } }
-                },
-                {
-                    kind: "VariableDefinition",
-                    variable: { kind: "Variable", name: { kind: "Name", value: "project" } },
-                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
-                }
-            ],
-            selectionSet: {
-                kind: "SelectionSet",
-                selections: [
-                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "node" },
-                        arguments: [
-                            {
-                                kind: "Argument",
-                                name: { kind: "Name", value: "id" },
-                                value: { kind: "Variable", name: { kind: "Name", value: "project" } }
-                            }
-                        ],
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                {
-                                    kind: "InlineFragment",
-                                    typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Project" } },
-                                    selectionSet: {
-                                        kind: "SelectionSet",
-                                        selections: [
-                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                            {
-                                                kind: "Field",
-                                                name: { kind: "Name", value: "componentIssues" },
-                                                arguments: [
-                                                    {
-                                                        kind: "Argument",
-                                                        name: { kind: "Name", value: "filter" },
-                                                        value: {
-                                                            kind: "Variable",
-                                                            name: { kind: "Name", value: "filter" }
-                                                        }
-                                                    },
-                                                    {
-                                                        kind: "Argument",
-                                                        name: { kind: "Name", value: "orderBy" },
-                                                        value: {
-                                                            kind: "Variable",
-                                                            name: { kind: "Name", value: "orderBy" }
-                                                        }
-                                                    },
-                                                    {
-                                                        kind: "Argument",
-                                                        name: { kind: "Name", value: "first" },
-                                                        value: {
-                                                            kind: "Variable",
-                                                            name: { kind: "Name", value: "count" }
-                                                        }
-                                                    },
-                                                    {
-                                                        kind: "Argument",
-                                                        name: { kind: "Name", value: "skip" },
-                                                        value: {
-                                                            kind: "Variable",
-                                                            name: { kind: "Name", value: "skip" }
-                                                        }
-                                                    }
-                                                ],
-                                                selectionSet: {
-                                                    kind: "SelectionSet",
-                                                    selections: [
-                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                                        {
-                                                            kind: "Field",
-                                                            name: { kind: "Name", value: "nodes" },
-                                                            selectionSet: {
-                                                                kind: "SelectionSet",
-                                                                selections: [
-                                                                    {
-                                                                        kind: "Field",
-                                                                        name: { kind: "Name", value: "__typename" }
-                                                                    },
-                                                                    {
-                                                                        kind: "FragmentSpread",
-                                                                        name: {
-                                                                            kind: "Name",
-                                                                            value: "ProjectComponentIssueListItemInfo"
-                                                                        }
-                                                                    }
-                                                                ]
-                                                            }
-                                                        },
-                                                        { kind: "Field", name: { kind: "Name", value: "totalCount" } }
-                                                    ]
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            kind: "FragmentDefinition",
-            name: { kind: "Name", value: "DefaultUserInfo" },
-            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "User" } },
-            selectionSet: {
-                kind: "SelectionSet",
-                selections: [
-                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                    { kind: "Field", name: { kind: "Name", value: "id" } },
-                    { kind: "Field", name: { kind: "Name", value: "username" } },
-                    { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
-                    {
-                        kind: "InlineFragment",
-                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "gropiusUser" },
-                                    selectionSet: {
-                                        kind: "SelectionSet",
-                                        selections: [
-                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                            { kind: "Field", name: { kind: "Name", value: "id" } },
-                                            { kind: "Field", name: { kind: "Name", value: "username" } },
-                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
-                                        ]
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            kind: "FragmentDefinition",
-            name: { kind: "Name", value: "DefaultIssueIconInfo" },
-            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Issue" } },
-            selectionSet: {
-                kind: "SelectionSet",
-                selections: [
-                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "incomingRelations" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
-                            ]
-                        }
-                    },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "outgoingRelations" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
-                            ]
-                        }
-                    },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "state" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "isOpen" } }
-                            ]
-                        }
-                    },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "type" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "iconPath" } }
-                            ]
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            kind: "FragmentDefinition",
-            name: { kind: "Name", value: "DefaultLabelInfo" },
-            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Label" } },
-            selectionSet: {
-                kind: "SelectionSet",
-                selections: [
-                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                    { kind: "Field", name: { kind: "Name", value: "id" } },
-                    { kind: "Field", name: { kind: "Name", value: "name" } },
-                    { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "color" } }
-                ]
-            }
-        },
-        {
-            kind: "FragmentDefinition",
-            name: { kind: "Name", value: "DefaultIssuePriorityInfo" },
-            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssuePriority" } },
-            selectionSet: {
-                kind: "SelectionSet",
-                selections: [
-                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                    { kind: "Field", name: { kind: "Name", value: "id" } },
-                    { kind: "Field", name: { kind: "Name", value: "name" } },
-                    { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } },
-                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
-                ]
-            }
-        },
-        {
-            kind: "FragmentDefinition",
-            name: { kind: "Name", value: "IssueListItemInfo" },
-            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Issue" } },
-            selectionSet: {
-                kind: "SelectionSet",
-                selections: [
-                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                    { kind: "Field", name: { kind: "Name", value: "id" } },
-                    { kind: "Field", name: { kind: "Name", value: "title" } },
-                    { kind: "Field", name: { kind: "Name", value: "createdAt" } },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "createdBy" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "FragmentSpread", name: { kind: "Name", value: "DefaultUserInfo" } }
-                            ]
-                        }
-                    },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "state" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "id" } },
-                                { kind: "Field", name: { kind: "Name", value: "name" } }
-                            ]
-                        }
-                    },
-                    { kind: "FragmentSpread", name: { kind: "Name", value: "DefaultIssueIconInfo" } },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "issueComments" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
-                            ]
-                        }
-                    },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "labels" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "nodes" },
-                                    selectionSet: {
-                                        kind: "SelectionSet",
-                                        selections: [
-                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                            {
-                                                kind: "FragmentSpread",
-                                                name: { kind: "Name", value: "DefaultLabelInfo" }
-                                            },
-                                            {
-                                                kind: "Field",
-                                                name: { kind: "Name", value: "trackables" },
-                                                selectionSet: {
-                                                    kind: "SelectionSet",
-                                                    selections: [
-                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                                        {
-                                                            kind: "Field",
-                                                            name: { kind: "Name", value: "nodes" },
-                                                            selectionSet: {
-                                                                kind: "SelectionSet",
-                                                                selections: [
-                                                                    {
-                                                                        kind: "Field",
-                                                                        name: { kind: "Name", value: "__typename" }
-                                                                    },
-                                                                    {
-                                                                        kind: "Field",
-                                                                        name: { kind: "Name", value: "id" }
-                                                                    },
-                                                                    {
-                                                                        kind: "Field",
-                                                                        name: { kind: "Name", value: "name" }
-                                                                    },
-                                                                    {
-                                                                        kind: "Field",
-                                                                        name: { kind: "Name", value: "description" }
-                                                                    }
-                                                                ]
-                                                            }
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "assignments" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "nodes" },
-                                    selectionSet: {
-                                        kind: "SelectionSet",
-                                        selections: [
-                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                            {
-                                                kind: "Field",
-                                                name: { kind: "Name", value: "user" },
-                                                selectionSet: {
-                                                    kind: "SelectionSet",
-                                                    selections: [
-                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                                        {
-                                                            kind: "FragmentSpread",
-                                                            name: { kind: "Name", value: "DefaultUserInfo" }
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "priority" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "FragmentSpread", name: { kind: "Name", value: "DefaultIssuePriorityInfo" } }
-                            ]
-                        }
-                    },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "template" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "id" } },
-                                { kind: "Field", name: { kind: "Name", value: "name" } },
-                                { kind: "Field", name: { kind: "Name", value: "description" } }
-                            ]
-                        }
-                    },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "type" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "id" } },
-                                { kind: "Field", name: { kind: "Name", value: "name" } },
-                                { kind: "Field", name: { kind: "Name", value: "iconPath" } }
-                            ]
-                        }
-                    },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "affects" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "nodes" },
-                                    selectionSet: {
-                                        kind: "SelectionSet",
-                                        selections: [
-                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                            { kind: "Field", name: { kind: "Name", value: "id" } }
-                                        ]
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            kind: "FragmentDefinition",
-            name: { kind: "Name", value: "ProjectComponentIssueListItemInfo" },
-            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Issue" } },
-            selectionSet: {
-                kind: "SelectionSet",
-                selections: [
-                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                    { kind: "FragmentSpread", name: { kind: "Name", value: "IssueListItemInfo" } },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "trackables" },
-                        arguments: [
-                            {
-                                kind: "Argument",
-                                name: { kind: "Name", value: "filter" },
-                                value: {
-                                    kind: "ObjectValue",
-                                    fields: [
-                                        {
-                                            kind: "ObjectField",
-                                            name: { kind: "Name", value: "isComponentAnd" },
-                                            value: {
-                                                kind: "ObjectValue",
-                                                fields: [
-                                                    {
-                                                        kind: "ObjectField",
-                                                        name: { kind: "Name", value: "versions" },
-                                                        value: {
-                                                            kind: "ObjectValue",
-                                                            fields: [
-                                                                {
-                                                                    kind: "ObjectField",
-                                                                    name: { kind: "Name", value: "any" },
-                                                                    value: {
-                                                                        kind: "ObjectValue",
-                                                                        fields: [
-                                                                            {
-                                                                                kind: "ObjectField",
-                                                                                name: {
-                                                                                    kind: "Name",
-                                                                                    value: "partOfProject"
-                                                                                },
-                                                                                value: {
-                                                                                    kind: "Variable",
-                                                                                    name: {
-                                                                                        kind: "Name",
-                                                                                        value: "project"
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        ]
-                                                                    }
-                                                                }
-                                                            ]
-                                                        }
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        ],
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "nodes" },
-                                    selectionSet: {
-                                        kind: "SelectionSet",
-                                        selections: [
-                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                            { kind: "Field", name: { kind: "Name", value: "id" } },
-                                            { kind: "Field", name: { kind: "Name", value: "name" } },
-                                            { kind: "Field", name: { kind: "Name", value: "description" } }
-                                        ]
-                                    }
-                                },
-                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
-                            ]
-                        }
-                    }
-                ]
-            }
-        }
-    ]
-} as unknown as DocumentNode<GetComponentIssueListQuery, GetComponentIssueListQueryVariables>;
-export const GetComponentFilteredIssueListDocument = {
-    kind: "Document",
-    definitions: [
-        {
-            kind: "OperationDefinition",
-            operation: "query",
-            name: { kind: "Name", value: "getComponentFilteredIssueList" },
-            variableDefinitions: [
-                {
-                    kind: "VariableDefinition",
-                    variable: { kind: "Variable", name: { kind: "Name", value: "query" } },
-                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } }
-                },
-                {
-                    kind: "VariableDefinition",
-                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
-                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
-                },
-                {
-                    kind: "VariableDefinition",
-                    variable: { kind: "Variable", name: { kind: "Name", value: "project" } },
-                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
-                },
-                {
-                    kind: "VariableDefinition",
-                    variable: { kind: "Variable", name: { kind: "Name", value: "filter" } },
-                    type: {
-                        kind: "NonNullType",
-                        type: { kind: "NamedType", name: { kind: "Name", value: "IssueFilterInput" } }
-                    }
-                }
-            ],
-            selectionSet: {
-                kind: "SelectionSet",
-                selections: [
-                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "searchIssues" },
-                        arguments: [
-                            {
-                                kind: "Argument",
-                                name: { kind: "Name", value: "query" },
-                                value: { kind: "Variable", name: { kind: "Name", value: "query" } }
-                            },
-                            {
-                                kind: "Argument",
-                                name: { kind: "Name", value: "first" },
-                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
-                            },
-                            {
-                                kind: "Argument",
-                                name: { kind: "Name", value: "filter" },
-                                value: {
-                                    kind: "ObjectValue",
-                                    fields: [
-                                        {
-                                            kind: "ObjectField",
-                                            name: { kind: "Name", value: "and" },
-                                            value: {
-                                                kind: "ListValue",
-                                                values: [{ kind: "Variable", name: { kind: "Name", value: "filter" } }]
-                                            }
-                                        },
-                                        {
-                                            kind: "ObjectField",
-                                            name: { kind: "Name", value: "trackables" },
-                                            value: {
-                                                kind: "ObjectValue",
-                                                fields: [
-                                                    {
-                                                        kind: "ObjectField",
-                                                        name: { kind: "Name", value: "any" },
-                                                        value: {
-                                                            kind: "ObjectValue",
-                                                            fields: [
-                                                                {
-                                                                    kind: "ObjectField",
-                                                                    name: { kind: "Name", value: "isComponentAnd" },
-                                                                    value: {
-                                                                        kind: "ObjectValue",
-                                                                        fields: [
-                                                                            {
-                                                                                kind: "ObjectField",
-                                                                                name: {
-                                                                                    kind: "Name",
-                                                                                    value: "versions"
-                                                                                },
-                                                                                value: {
-                                                                                    kind: "ObjectValue",
-                                                                                    fields: [
-                                                                                        {
-                                                                                            kind: "ObjectField",
-                                                                                            name: {
-                                                                                                kind: "Name",
-                                                                                                value: "any"
-                                                                                            },
-                                                                                            value: {
-                                                                                                kind: "ObjectValue",
-                                                                                                fields: [
-                                                                                                    {
-                                                                                                        kind: "ObjectField",
-                                                                                                        name: {
-                                                                                                            kind: "Name",
-                                                                                                            value: "partOfProject"
-                                                                                                        },
-                                                                                                        value: {
-                                                                                                            kind: "Variable",
-                                                                                                            name: {
-                                                                                                                kind: "Name",
-                                                                                                                value: "project"
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }
-                                                                                                ]
-                                                                                            }
-                                                                                        }
-                                                                                    ]
-                                                                                }
-                                                                            }
-                                                                        ]
-                                                                    }
-                                                                }
-                                                            ]
-                                                        }
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        ],
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                {
-                                    kind: "FragmentSpread",
-                                    name: { kind: "Name", value: "ProjectComponentIssueListItemInfo" }
-                                }
-                            ]
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            kind: "FragmentDefinition",
-            name: { kind: "Name", value: "DefaultUserInfo" },
-            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "User" } },
-            selectionSet: {
-                kind: "SelectionSet",
-                selections: [
-                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                    { kind: "Field", name: { kind: "Name", value: "id" } },
-                    { kind: "Field", name: { kind: "Name", value: "username" } },
-                    { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
-                    {
-                        kind: "InlineFragment",
-                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "gropiusUser" },
-                                    selectionSet: {
-                                        kind: "SelectionSet",
-                                        selections: [
-                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                            { kind: "Field", name: { kind: "Name", value: "id" } },
-                                            { kind: "Field", name: { kind: "Name", value: "username" } },
-                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
-                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
-                                        ]
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            kind: "FragmentDefinition",
-            name: { kind: "Name", value: "DefaultIssueIconInfo" },
-            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Issue" } },
-            selectionSet: {
-                kind: "SelectionSet",
-                selections: [
-                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "incomingRelations" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
-                            ]
-                        }
-                    },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "outgoingRelations" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
-                            ]
-                        }
-                    },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "state" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "isOpen" } }
-                            ]
-                        }
-                    },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "type" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "iconPath" } }
-                            ]
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            kind: "FragmentDefinition",
-            name: { kind: "Name", value: "DefaultLabelInfo" },
-            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Label" } },
-            selectionSet: {
-                kind: "SelectionSet",
-                selections: [
-                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                    { kind: "Field", name: { kind: "Name", value: "id" } },
-                    { kind: "Field", name: { kind: "Name", value: "name" } },
-                    { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "color" } }
-                ]
-            }
-        },
-        {
-            kind: "FragmentDefinition",
-            name: { kind: "Name", value: "DefaultIssuePriorityInfo" },
-            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssuePriority" } },
-            selectionSet: {
-                kind: "SelectionSet",
-                selections: [
-                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                    { kind: "Field", name: { kind: "Name", value: "id" } },
-                    { kind: "Field", name: { kind: "Name", value: "name" } },
-                    { kind: "Field", name: { kind: "Name", value: "description" } },
-                    { kind: "Field", name: { kind: "Name", value: "value" } },
-                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
-                ]
-            }
-        },
-        {
-            kind: "FragmentDefinition",
-            name: { kind: "Name", value: "IssueListItemInfo" },
-            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Issue" } },
-            selectionSet: {
-                kind: "SelectionSet",
-                selections: [
-                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                    { kind: "Field", name: { kind: "Name", value: "id" } },
-                    { kind: "Field", name: { kind: "Name", value: "title" } },
-                    { kind: "Field", name: { kind: "Name", value: "createdAt" } },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "createdBy" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "FragmentSpread", name: { kind: "Name", value: "DefaultUserInfo" } }
-                            ]
-                        }
-                    },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "state" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "id" } },
-                                { kind: "Field", name: { kind: "Name", value: "name" } }
-                            ]
-                        }
-                    },
-                    { kind: "FragmentSpread", name: { kind: "Name", value: "DefaultIssueIconInfo" } },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "issueComments" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
-                            ]
-                        }
-                    },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "labels" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "nodes" },
-                                    selectionSet: {
-                                        kind: "SelectionSet",
-                                        selections: [
-                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                            {
-                                                kind: "FragmentSpread",
-                                                name: { kind: "Name", value: "DefaultLabelInfo" }
-                                            },
-                                            {
-                                                kind: "Field",
-                                                name: { kind: "Name", value: "trackables" },
-                                                selectionSet: {
-                                                    kind: "SelectionSet",
-                                                    selections: [
-                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                                        {
-                                                            kind: "Field",
-                                                            name: { kind: "Name", value: "nodes" },
-                                                            selectionSet: {
-                                                                kind: "SelectionSet",
-                                                                selections: [
-                                                                    {
-                                                                        kind: "Field",
-                                                                        name: { kind: "Name", value: "__typename" }
-                                                                    },
-                                                                    {
-                                                                        kind: "Field",
-                                                                        name: { kind: "Name", value: "id" }
-                                                                    },
-                                                                    {
-                                                                        kind: "Field",
-                                                                        name: { kind: "Name", value: "name" }
-                                                                    },
-                                                                    {
-                                                                        kind: "Field",
-                                                                        name: { kind: "Name", value: "description" }
-                                                                    }
-                                                                ]
-                                                            }
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "assignments" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "nodes" },
-                                    selectionSet: {
-                                        kind: "SelectionSet",
-                                        selections: [
-                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                            {
-                                                kind: "Field",
-                                                name: { kind: "Name", value: "user" },
-                                                selectionSet: {
-                                                    kind: "SelectionSet",
-                                                    selections: [
-                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                                        {
-                                                            kind: "FragmentSpread",
-                                                            name: { kind: "Name", value: "DefaultUserInfo" }
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        ]
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "priority" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "FragmentSpread", name: { kind: "Name", value: "DefaultIssuePriorityInfo" } }
-                            ]
-                        }
-                    },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "template" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "id" } },
-                                { kind: "Field", name: { kind: "Name", value: "name" } },
-                                { kind: "Field", name: { kind: "Name", value: "description" } }
-                            ]
-                        }
-                    },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "type" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                { kind: "Field", name: { kind: "Name", value: "id" } },
-                                { kind: "Field", name: { kind: "Name", value: "name" } },
-                                { kind: "Field", name: { kind: "Name", value: "iconPath" } }
-                            ]
-                        }
-                    },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "affects" },
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "nodes" },
-                                    selectionSet: {
-                                        kind: "SelectionSet",
-                                        selections: [
-                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                            { kind: "Field", name: { kind: "Name", value: "id" } }
-                                        ]
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            kind: "FragmentDefinition",
-            name: { kind: "Name", value: "ProjectComponentIssueListItemInfo" },
-            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Issue" } },
-            selectionSet: {
-                kind: "SelectionSet",
-                selections: [
-                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                    { kind: "FragmentSpread", name: { kind: "Name", value: "IssueListItemInfo" } },
-                    {
-                        kind: "Field",
-                        name: { kind: "Name", value: "trackables" },
-                        arguments: [
-                            {
-                                kind: "Argument",
-                                name: { kind: "Name", value: "filter" },
-                                value: {
-                                    kind: "ObjectValue",
-                                    fields: [
-                                        {
-                                            kind: "ObjectField",
-                                            name: { kind: "Name", value: "isComponentAnd" },
-                                            value: {
-                                                kind: "ObjectValue",
-                                                fields: [
-                                                    {
-                                                        kind: "ObjectField",
-                                                        name: { kind: "Name", value: "versions" },
-                                                        value: {
-                                                            kind: "ObjectValue",
-                                                            fields: [
-                                                                {
-                                                                    kind: "ObjectField",
-                                                                    name: { kind: "Name", value: "any" },
-                                                                    value: {
-                                                                        kind: "ObjectValue",
-                                                                        fields: [
-                                                                            {
-                                                                                kind: "ObjectField",
-                                                                                name: {
-                                                                                    kind: "Name",
-                                                                                    value: "partOfProject"
-                                                                                },
-                                                                                value: {
-                                                                                    kind: "Variable",
-                                                                                    name: {
-                                                                                        kind: "Name",
-                                                                                        value: "project"
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        ]
-                                                                    }
-                                                                }
-                                                            ]
-                                                        }
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        ],
-                        selectionSet: {
-                            kind: "SelectionSet",
-                            selections: [
-                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                {
-                                    kind: "Field",
-                                    name: { kind: "Name", value: "nodes" },
-                                    selectionSet: {
-                                        kind: "SelectionSet",
-                                        selections: [
-                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
-                                            { kind: "Field", name: { kind: "Name", value: "id" } },
-                                            { kind: "Field", name: { kind: "Name", value: "name" } },
-                                            { kind: "Field", name: { kind: "Name", value: "description" } }
-                                        ]
-                                    }
-                                },
-                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
-                            ]
-                        }
-                    }
-                ]
-            }
-        }
-    ]
-} as unknown as DocumentNode<GetComponentFilteredIssueListQuery, GetComponentFilteredIssueListQueryVariables>;
 export const GetViewDocument = {
     kind: "Document",
     definitions: [
@@ -81016,6 +80543,2172 @@ export const GetProjectGraphDocument = {
         }
     ]
 } as unknown as DocumentNode<GetProjectGraphQuery, GetProjectGraphQueryVariables>;
+export const GetProjectIssueSourcesDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "getProjectIssueSources" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "project" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "skip" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "node" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "id" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "project" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "InlineFragment",
+                                    typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Project" } },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "components" },
+                                                arguments: [
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "first" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "count" }
+                                                        }
+                                                    },
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "skip" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "skip" }
+                                                        }
+                                                    },
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "orderBy" },
+                                                        value: {
+                                                            kind: "ListValue",
+                                                            values: [
+                                                                {
+                                                                    kind: "ObjectValue",
+                                                                    fields: [
+                                                                        {
+                                                                            kind: "ObjectField",
+                                                                            name: { kind: "Name", value: "field" },
+                                                                            value: { kind: "EnumValue", value: "ID" }
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ],
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "nodes" },
+                                                            selectionSet: {
+                                                                kind: "SelectionSet",
+                                                                selections: [
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "__typename" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "id" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "version" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "component" },
+                                                                        selectionSet: {
+                                                                            kind: "SelectionSet",
+                                                                            selections: [
+                                                                                {
+                                                                                    kind: "Field",
+                                                                                    name: {
+                                                                                        kind: "Name",
+                                                                                        value: "__typename"
+                                                                                    }
+                                                                                },
+                                                                                {
+                                                                                    kind: "Field",
+                                                                                    name: { kind: "Name", value: "id" }
+                                                                                },
+                                                                                {
+                                                                                    kind: "Field",
+                                                                                    name: {
+                                                                                        kind: "Name",
+                                                                                        value: "name"
+                                                                                    }
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        },
+                                                        { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<GetProjectIssueSourcesQuery, GetProjectIssueSourcesQueryVariables>;
+export const GetComponentIssueListDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "getComponentIssueList" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "project" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "filter" } },
+                    type: {
+                        kind: "NonNullType",
+                        type: { kind: "NamedType", name: { kind: "Name", value: "IssueFilterInput" } }
+                    }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "orderBy" } },
+                    type: {
+                        kind: "NonNullType",
+                        type: {
+                            kind: "ListType",
+                            type: {
+                                kind: "NonNullType",
+                                type: { kind: "NamedType", name: { kind: "Name", value: "IssueOrder" } }
+                            }
+                        }
+                    }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "skip" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "direct" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Boolean" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "component" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Boolean" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "node" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "id" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "project" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "InlineFragment",
+                                    typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Project" } },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "issues" },
+                                                arguments: [
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "filter" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "filter" }
+                                                        }
+                                                    },
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "orderBy" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "orderBy" }
+                                                        }
+                                                    },
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "first" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "count" }
+                                                        }
+                                                    },
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "skip" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "skip" }
+                                                        }
+                                                    }
+                                                ],
+                                                directives: [
+                                                    {
+                                                        kind: "Directive",
+                                                        name: { kind: "Name", value: "include" },
+                                                        arguments: [
+                                                            {
+                                                                kind: "Argument",
+                                                                name: { kind: "Name", value: "if" },
+                                                                value: {
+                                                                    kind: "Variable",
+                                                                    name: { kind: "Name", value: "direct" }
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                ],
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "nodes" },
+                                                            selectionSet: {
+                                                                kind: "SelectionSet",
+                                                                selections: [
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "__typename" }
+                                                                    },
+                                                                    {
+                                                                        kind: "FragmentSpread",
+                                                                        name: {
+                                                                            kind: "Name",
+                                                                            value: "ProjectIssueListItemInfo"
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        },
+                                                        { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "componentIssues" },
+                                                arguments: [
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "filter" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "filter" }
+                                                        }
+                                                    },
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "orderBy" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "orderBy" }
+                                                        }
+                                                    },
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "first" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "count" }
+                                                        }
+                                                    },
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "skip" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "skip" }
+                                                        }
+                                                    }
+                                                ],
+                                                directives: [
+                                                    {
+                                                        kind: "Directive",
+                                                        name: { kind: "Name", value: "include" },
+                                                        arguments: [
+                                                            {
+                                                                kind: "Argument",
+                                                                name: { kind: "Name", value: "if" },
+                                                                value: {
+                                                                    kind: "Variable",
+                                                                    name: { kind: "Name", value: "component" }
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                ],
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "nodes" },
+                                                            selectionSet: {
+                                                                kind: "SelectionSet",
+                                                                selections: [
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "__typename" }
+                                                                    },
+                                                                    {
+                                                                        kind: "FragmentSpread",
+                                                                        name: {
+                                                                            kind: "Name",
+                                                                            value: "ProjectIssueListItemInfo"
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        },
+                                                        { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultUserInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "User" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "username" } },
+                    { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssueIconInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Issue" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "incomingRelations" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "outgoingRelations" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "state" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "isOpen" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "type" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "iconPath" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultLabelInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Label" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    { kind: "Field", name: { kind: "Name", value: "color" } }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssuePriorityInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssuePriority" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "IssueListItemInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Issue" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "title" } },
+                    { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "createdBy" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "FragmentSpread", name: { kind: "Name", value: "DefaultUserInfo" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "state" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } }
+                            ]
+                        }
+                    },
+                    { kind: "FragmentSpread", name: { kind: "Name", value: "DefaultIssueIconInfo" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueComments" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "labels" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "FragmentSpread",
+                                                name: { kind: "Name", value: "DefaultLabelInfo" }
+                                            },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "trackables" },
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "nodes" },
+                                                            selectionSet: {
+                                                                kind: "SelectionSet",
+                                                                selections: [
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "__typename" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "id" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "name" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "description" }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "assignments" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "user" },
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "FragmentSpread",
+                                                            name: { kind: "Name", value: "DefaultUserInfo" }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "priority" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "FragmentSpread", name: { kind: "Name", value: "DefaultIssuePriorityInfo" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "template" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } },
+                                { kind: "Field", name: { kind: "Name", value: "description" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "type" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } },
+                                { kind: "Field", name: { kind: "Name", value: "iconPath" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "affects" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "ProjectIssueListItemInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Issue" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "FragmentSpread", name: { kind: "Name", value: "IssueListItemInfo" } },
+                    { kind: "Field", name: { kind: "Name", value: "lastUpdatedAt" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "priority" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } },
+                                { kind: "Field", name: { kind: "Name", value: "value" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "trackables" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "filter" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "or" },
+                                            value: {
+                                                kind: "ListValue",
+                                                values: [
+                                                    {
+                                                        kind: "ObjectValue",
+                                                        fields: [
+                                                            {
+                                                                kind: "ObjectField",
+                                                                name: { kind: "Name", value: "id" },
+                                                                value: {
+                                                                    kind: "ObjectValue",
+                                                                    fields: [
+                                                                        {
+                                                                            kind: "ObjectField",
+                                                                            name: { kind: "Name", value: "eq" },
+                                                                            value: {
+                                                                                kind: "Variable",
+                                                                                name: { kind: "Name", value: "project" }
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        kind: "ObjectValue",
+                                                        fields: [
+                                                            {
+                                                                kind: "ObjectField",
+                                                                name: { kind: "Name", value: "isComponentAnd" },
+                                                                value: {
+                                                                    kind: "ObjectValue",
+                                                                    fields: [
+                                                                        {
+                                                                            kind: "ObjectField",
+                                                                            name: { kind: "Name", value: "versions" },
+                                                                            value: {
+                                                                                kind: "ObjectValue",
+                                                                                fields: [
+                                                                                    {
+                                                                                        kind: "ObjectField",
+                                                                                        name: {
+                                                                                            kind: "Name",
+                                                                                            value: "any"
+                                                                                        },
+                                                                                        value: {
+                                                                                            kind: "ObjectValue",
+                                                                                            fields: [
+                                                                                                {
+                                                                                                    kind: "ObjectField",
+                                                                                                    name: {
+                                                                                                        kind: "Name",
+                                                                                                        value: "partOfProject"
+                                                                                                    },
+                                                                                                    value: {
+                                                                                                        kind: "Variable",
+                                                                                                        name: {
+                                                                                                            kind: "Name",
+                                                                                                            value: "project"
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            ]
+                                                                                        }
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "orderBy" },
+                                value: {
+                                    kind: "ListValue",
+                                    values: [
+                                        {
+                                            kind: "ObjectValue",
+                                            fields: [
+                                                {
+                                                    kind: "ObjectField",
+                                                    name: { kind: "Name", value: "field" },
+                                                    value: { kind: "EnumValue", value: "ID" }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "name" } },
+                                            { kind: "Field", name: { kind: "Name", value: "description" } }
+                                        ]
+                                    }
+                                },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<GetComponentIssueListQuery, GetComponentIssueListQueryVariables>;
+export const GetComponentFilteredIssueListDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "getComponentFilteredIssueList" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "project" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "query" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "String" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "skip" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "filter" } },
+                    type: {
+                        kind: "NonNullType",
+                        type: { kind: "NamedType", name: { kind: "Name", value: "IssueFilterInput" } }
+                    }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "searchIssues" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "query" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "query" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "first" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "count" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "skip" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "skip" } }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "filter" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "filter" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "FragmentSpread", name: { kind: "Name", value: "ProjectIssueListItemInfo" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultUserInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "User" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "username" } },
+                    { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssueIconInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Issue" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "incomingRelations" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "outgoingRelations" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "state" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "isOpen" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "type" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "iconPath" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultLabelInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Label" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    { kind: "Field", name: { kind: "Name", value: "color" } }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssuePriorityInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssuePriority" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "IssueListItemInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Issue" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "title" } },
+                    { kind: "Field", name: { kind: "Name", value: "createdAt" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "createdBy" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "FragmentSpread", name: { kind: "Name", value: "DefaultUserInfo" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "state" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } }
+                            ]
+                        }
+                    },
+                    { kind: "FragmentSpread", name: { kind: "Name", value: "DefaultIssueIconInfo" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "issueComments" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "labels" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "FragmentSpread",
+                                                name: { kind: "Name", value: "DefaultLabelInfo" }
+                                            },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "trackables" },
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "nodes" },
+                                                            selectionSet: {
+                                                                kind: "SelectionSet",
+                                                                selections: [
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "__typename" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "id" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "name" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "description" }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "assignments" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "user" },
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "FragmentSpread",
+                                                            name: { kind: "Name", value: "DefaultUserInfo" }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "priority" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "FragmentSpread", name: { kind: "Name", value: "DefaultIssuePriorityInfo" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "template" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } },
+                                { kind: "Field", name: { kind: "Name", value: "description" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "type" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } },
+                                { kind: "Field", name: { kind: "Name", value: "iconPath" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "affects" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "ProjectIssueListItemInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Issue" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "FragmentSpread", name: { kind: "Name", value: "IssueListItemInfo" } },
+                    { kind: "Field", name: { kind: "Name", value: "lastUpdatedAt" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "priority" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "id" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } },
+                                { kind: "Field", name: { kind: "Name", value: "value" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "trackables" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "filter" },
+                                value: {
+                                    kind: "ObjectValue",
+                                    fields: [
+                                        {
+                                            kind: "ObjectField",
+                                            name: { kind: "Name", value: "or" },
+                                            value: {
+                                                kind: "ListValue",
+                                                values: [
+                                                    {
+                                                        kind: "ObjectValue",
+                                                        fields: [
+                                                            {
+                                                                kind: "ObjectField",
+                                                                name: { kind: "Name", value: "id" },
+                                                                value: {
+                                                                    kind: "ObjectValue",
+                                                                    fields: [
+                                                                        {
+                                                                            kind: "ObjectField",
+                                                                            name: { kind: "Name", value: "eq" },
+                                                                            value: {
+                                                                                kind: "Variable",
+                                                                                name: { kind: "Name", value: "project" }
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        kind: "ObjectValue",
+                                                        fields: [
+                                                            {
+                                                                kind: "ObjectField",
+                                                                name: { kind: "Name", value: "isComponentAnd" },
+                                                                value: {
+                                                                    kind: "ObjectValue",
+                                                                    fields: [
+                                                                        {
+                                                                            kind: "ObjectField",
+                                                                            name: { kind: "Name", value: "versions" },
+                                                                            value: {
+                                                                                kind: "ObjectValue",
+                                                                                fields: [
+                                                                                    {
+                                                                                        kind: "ObjectField",
+                                                                                        name: {
+                                                                                            kind: "Name",
+                                                                                            value: "any"
+                                                                                        },
+                                                                                        value: {
+                                                                                            kind: "ObjectValue",
+                                                                                            fields: [
+                                                                                                {
+                                                                                                    kind: "ObjectField",
+                                                                                                    name: {
+                                                                                                        kind: "Name",
+                                                                                                        value: "partOfProject"
+                                                                                                    },
+                                                                                                    value: {
+                                                                                                        kind: "Variable",
+                                                                                                        name: {
+                                                                                                            kind: "Name",
+                                                                                                            value: "project"
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            ]
+                                                                                        }
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "orderBy" },
+                                value: {
+                                    kind: "ListValue",
+                                    values: [
+                                        {
+                                            kind: "ObjectValue",
+                                            fields: [
+                                                {
+                                                    kind: "ObjectField",
+                                                    name: { kind: "Name", value: "field" },
+                                                    value: { kind: "EnumValue", value: "ID" }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "nodes" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "name" } },
+                                            { kind: "Field", name: { kind: "Name", value: "description" } }
+                                        ]
+                                    }
+                                },
+                                { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<GetComponentFilteredIssueListQuery, GetComponentFilteredIssueListQueryVariables>;
+export const GetProjectIssueFilterOptionsDocument = {
+    kind: "Document",
+    definitions: [
+        {
+            kind: "OperationDefinition",
+            operation: "query",
+            name: { kind: "Name", value: "getProjectIssueFilterOptions" },
+            variableDefinitions: [
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "trackable" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "ID" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "skip" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                },
+                {
+                    kind: "VariableDefinition",
+                    variable: { kind: "Variable", name: { kind: "Name", value: "count" } },
+                    type: { kind: "NonNullType", type: { kind: "NamedType", name: { kind: "Name", value: "Int" } } }
+                }
+            ],
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "node" },
+                        arguments: [
+                            {
+                                kind: "Argument",
+                                name: { kind: "Name", value: "id" },
+                                value: { kind: "Variable", name: { kind: "Name", value: "trackable" } }
+                            }
+                        ],
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "InlineFragment",
+                                    typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Trackable" } },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "usedIssueTemplates" },
+                                                arguments: [
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "first" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "count" }
+                                                        }
+                                                    },
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "skip" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "skip" }
+                                                        }
+                                                    }
+                                                ],
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "nodes" },
+                                                            selectionSet: {
+                                                                kind: "SelectionSet",
+                                                                selections: [
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "__typename" }
+                                                                    },
+                                                                    {
+                                                                        kind: "FragmentSpread",
+                                                                        name: {
+                                                                            kind: "Name",
+                                                                            value: "DefaultIssueTemplateInfo"
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        },
+                                                        { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "usedLabels" },
+                                                arguments: [
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "first" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "count" }
+                                                        }
+                                                    },
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "skip" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "skip" }
+                                                        }
+                                                    }
+                                                ],
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "nodes" },
+                                                            selectionSet: {
+                                                                kind: "SelectionSet",
+                                                                selections: [
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "__typename" }
+                                                                    },
+                                                                    {
+                                                                        kind: "FragmentSpread",
+                                                                        name: {
+                                                                            kind: "Name",
+                                                                            value: "DefaultLabelInfo"
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "trackables" },
+                                                                        selectionSet: {
+                                                                            kind: "SelectionSet",
+                                                                            selections: [
+                                                                                {
+                                                                                    kind: "Field",
+                                                                                    name: {
+                                                                                        kind: "Name",
+                                                                                        value: "__typename"
+                                                                                    }
+                                                                                },
+                                                                                {
+                                                                                    kind: "Field",
+                                                                                    name: {
+                                                                                        kind: "Name",
+                                                                                        value: "nodes"
+                                                                                    },
+                                                                                    selectionSet: {
+                                                                                        kind: "SelectionSet",
+                                                                                        selections: [
+                                                                                            {
+                                                                                                kind: "Field",
+                                                                                                name: {
+                                                                                                    kind: "Name",
+                                                                                                    value: "__typename"
+                                                                                                }
+                                                                                            },
+                                                                                            {
+                                                                                                kind: "Field",
+                                                                                                name: {
+                                                                                                    kind: "Name",
+                                                                                                    value: "id"
+                                                                                                }
+                                                                                            },
+                                                                                            {
+                                                                                                kind: "Field",
+                                                                                                name: {
+                                                                                                    kind: "Name",
+                                                                                                    value: "name"
+                                                                                                }
+                                                                                            },
+                                                                                            {
+                                                                                                kind: "Field",
+                                                                                                name: {
+                                                                                                    kind: "Name",
+                                                                                                    value: "description"
+                                                                                                }
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        },
+                                                        { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "usedIssuePriorities" },
+                                                arguments: [
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "first" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "count" }
+                                                        }
+                                                    },
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "skip" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "skip" }
+                                                        }
+                                                    }
+                                                ],
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "nodes" },
+                                                            selectionSet: {
+                                                                kind: "SelectionSet",
+                                                                selections: [
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "__typename" }
+                                                                    },
+                                                                    {
+                                                                        kind: "FragmentSpread",
+                                                                        name: {
+                                                                            kind: "Name",
+                                                                            value: "DefaultIssuePriorityInfo"
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        },
+                                                        { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "usedIssueTypes" },
+                                                arguments: [
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "first" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "count" }
+                                                        }
+                                                    },
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "skip" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "skip" }
+                                                        }
+                                                    }
+                                                ],
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "nodes" },
+                                                            selectionSet: {
+                                                                kind: "SelectionSet",
+                                                                selections: [
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "__typename" }
+                                                                    },
+                                                                    {
+                                                                        kind: "FragmentSpread",
+                                                                        name: {
+                                                                            kind: "Name",
+                                                                            value: "DefaultIssueTypeInfo"
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        },
+                                                        { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "usedIssueStates" },
+                                                arguments: [
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "first" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "count" }
+                                                        }
+                                                    },
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "skip" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "skip" }
+                                                        }
+                                                    }
+                                                ],
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "nodes" },
+                                                            selectionSet: {
+                                                                kind: "SelectionSet",
+                                                                selections: [
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "__typename" }
+                                                                    },
+                                                                    {
+                                                                        kind: "FragmentSpread",
+                                                                        name: {
+                                                                            kind: "Name",
+                                                                            value: "DefaultIssueStateInfo"
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        },
+                                                        { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "assignedUsers" },
+                                                arguments: [
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "first" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "count" }
+                                                        }
+                                                    },
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "skip" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "skip" }
+                                                        }
+                                                    }
+                                                ],
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "nodes" },
+                                                            selectionSet: {
+                                                                kind: "SelectionSet",
+                                                                selections: [
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "__typename" }
+                                                                    },
+                                                                    {
+                                                                        kind: "FragmentSpread",
+                                                                        name: { kind: "Name", value: "DefaultUserInfo" }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        },
+                                                        { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "affectedEntities" },
+                                                arguments: [
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "first" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "count" }
+                                                        }
+                                                    },
+                                                    {
+                                                        kind: "Argument",
+                                                        name: { kind: "Name", value: "skip" },
+                                                        value: {
+                                                            kind: "Variable",
+                                                            name: { kind: "Name", value: "skip" }
+                                                        }
+                                                    }
+                                                ],
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "nodes" },
+                                                            selectionSet: {
+                                                                kind: "SelectionSet",
+                                                                selections: [
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "__typename" }
+                                                                    },
+                                                                    {
+                                                                        kind: "FragmentSpread",
+                                                                        name: {
+                                                                            kind: "Name",
+                                                                            value: "DefaultAffectedByIssueInfo"
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        },
+                                                        { kind: "Field", name: { kind: "Name", value: "totalCount" } }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssueTemplateInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssueTemplate" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    {
+                        kind: "Field",
+                        name: { kind: "Name", value: "templateFieldSpecifications" },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } },
+                                { kind: "Field", name: { kind: "Name", value: "value" } }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultLabelInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Label" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    { kind: "Field", name: { kind: "Name", value: "color" } }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssuePriorityInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssuePriority" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    { kind: "Field", name: { kind: "Name", value: "value" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssueTypeInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssueType" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    { kind: "Field", name: { kind: "Name", value: "iconPath" } }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultIssueStateInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IssueState" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "name" } },
+                    { kind: "Field", name: { kind: "Name", value: "description" } },
+                    { kind: "Field", name: { kind: "Name", value: "isOpen" } }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultUserInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "User" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    { kind: "Field", name: { kind: "Name", value: "username" } },
+                    { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                    { kind: "Field", name: { kind: "Name", value: "avatar" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "IMSUser" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "gropiusUser" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "id" } },
+                                            { kind: "Field", name: { kind: "Name", value: "username" } },
+                                            { kind: "Field", name: { kind: "Name", value: "displayName" } },
+                                            { kind: "Field", name: { kind: "Name", value: "avatar" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            kind: "FragmentDefinition",
+            name: { kind: "Name", value: "DefaultAffectedByIssueInfo" },
+            typeCondition: { kind: "NamedType", name: { kind: "Name", value: "AffectedByIssue" } },
+            selectionSet: {
+                kind: "SelectionSet",
+                selections: [
+                    { kind: "Field", name: { kind: "Name", value: "id" } },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Named" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "name" } },
+                                { kind: "Field", name: { kind: "Name", value: "description" } }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "ComponentVersion" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "version" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "component" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "name" } },
+                                            { kind: "Field", name: { kind: "Name", value: "description" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: {
+                            kind: "NamedType",
+                            name: { kind: "Name", value: "InterfaceSpecificationVersion" }
+                        },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                { kind: "Field", name: { kind: "Name", value: "version" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "interfaceSpecification" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            { kind: "Field", name: { kind: "Name", value: "name" } },
+                                            { kind: "Field", name: { kind: "Name", value: "description" } }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        kind: "InlineFragment",
+                        typeCondition: { kind: "NamedType", name: { kind: "Name", value: "Interface" } },
+                        selectionSet: {
+                            kind: "SelectionSet",
+                            selections: [
+                                { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                {
+                                    kind: "Field",
+                                    name: { kind: "Name", value: "interfaceDefinition" },
+                                    selectionSet: {
+                                        kind: "SelectionSet",
+                                        selections: [
+                                            { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                            {
+                                                kind: "Field",
+                                                name: { kind: "Name", value: "interfaceSpecificationVersion" },
+                                                selectionSet: {
+                                                    kind: "SelectionSet",
+                                                    selections: [
+                                                        { kind: "Field", name: { kind: "Name", value: "__typename" } },
+                                                        { kind: "Field", name: { kind: "Name", value: "version" } },
+                                                        {
+                                                            kind: "Field",
+                                                            name: { kind: "Name", value: "interfaceSpecification" },
+                                                            selectionSet: {
+                                                                kind: "SelectionSet",
+                                                                selections: [
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "__typename" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "name" }
+                                                                    },
+                                                                    {
+                                                                        kind: "Field",
+                                                                        name: { kind: "Name", value: "description" }
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    { kind: "Field", name: { kind: "Name", value: "__typename" } }
+                ]
+            }
+        }
+    ]
+} as unknown as DocumentNode<GetProjectIssueFilterOptionsQuery, GetProjectIssueFilterOptionsQueryVariables>;
 export const GetProjectDocument = {
     kind: "Document",
     definitions: [

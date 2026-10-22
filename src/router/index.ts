@@ -403,17 +403,12 @@ const routes: RouteRecordRaw[] = [
             },
             {
                 path: "issues",
-                name: "project-issues",
-                component: () => import("../views/issue/Issues.vue")
-            },
-            {
-                path: "issues",
                 component: () => import("../views/RouterOnly.vue"),
                 children: [
                     {
                         path: "",
                         name: "project-issues",
-                        component: () => import("../views/issue/Issues.vue")
+                        component: () => import("../views/project/Issues.vue")
                     },
                     {
                         path: ":issue",
@@ -425,7 +420,11 @@ const routes: RouteRecordRaw[] = [
             {
                 path: "component-issues",
                 name: "project-component-issues",
-                component: () => import("../views/project/ComponentIssues.vue")
+                redirect: (to) => ({
+                    name: "project-issues",
+                    params: to.params,
+                    query: { ...to.query, scope: "components", page: undefined }
+                })
             },
             {
                 path: "boards",
