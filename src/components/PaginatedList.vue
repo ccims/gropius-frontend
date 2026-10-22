@@ -29,7 +29,7 @@
                 </v-btn>
             </div>
         </div>
-        <div class="mx-3 mb-1">
+        <div class="mx-3 mb-1 flex-shrink-0">
             <slot name="additional-filter" />
         </div>
         <v-progress-linear v-if="loading" indeterminate aria-label="Loading results" />
